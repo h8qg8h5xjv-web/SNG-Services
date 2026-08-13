@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { getSlots, createBooking } from '@/lib/booking/actions'
+import { getSlots, createBooking, getSlotParticipants } from '@/lib/booking/actions'
 import { formatPrice } from '@/lib/format'
 import type { Slot } from '@/lib/slots/compute'
 
@@ -61,20 +61,22 @@ export default function BookingWidget({
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const [done, setDone] = useState<{ when: string; people: number } | null>(null)
+  const [visibleToGroup, setVisibleToGroup] = useState(false)
+  const [done, setDone] = useState<
+    { when: string; people: number; participants: string[] } | null
+  >(null)
 
   const service = services.find((s) => s.id === serviceId)
+  const isGroup = (service?.capacity ?? 1) > 1
 
   useEffect(() => {
     if (!serviceId) return
     let ignore = false
     // Reset the picker and show a loading state before fetching slots for the
-    // new service/date. This is a data-fetch effect, hence the intentional sync
-    // setState.
-    /* eslint-disable react-hooks/set-state-in-effect */
+    // new service/date (a data-fetch effect).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     setSelected(null)
-    /* eslint-enable react-hooks/set-state-in-effect */
     getSlots(serviceId, date).then((result) => {
       if (ignore) return
       setSlots(result.filter((s) => s.capacityRemaining > 0))
@@ -109,6 +111,7 @@ export default function BookingWidget({
     if (!selected || !service) return
     setSubmitting(true)
     setError('')
+    const isGroupService = (service.capacity ?? 1) > 1
     const result = await createBooking({
       service_id: service.id,
       starts_at: selected.start,
@@ -116,10 +119,19 @@ export default function BookingWidget({
       customer_name: name,
       customer_phone: phone,
       customer_email: email || null,
+      is_visible_to_group: isGroupService && visibleToGroup,
     })
     setSubmitting(false)
     if (result.ok) {
-      setDone({ when: dateTimeFmt.format(new Date(result.startsAt)), people: result.partySize })
+      const participants =
+        isGroupService && visibleToGroup
+          ? await getSlotParticipants(service.id, result.startsAt)
+          : []
+      setDone({
+        when: dateTimeFmt.format(new Date(result.startsAt)),
+        people: result.partySize,
+        participants,
+      })
     } else {
       setError(result.error)
       // The slot may have just filled — refresh availability.
@@ -134,6 +146,29 @@ export default function BookingWidget({
         <p className="mt-2 text-sm">
           {t('confirmedBody', { when: done.when, people: done.people })}
         </p>
+
+        {isGroup && (
+          <div className="mt-4">
+            {done.participants.length > 0 ? (
+              <>
+                <p className="mb-2 text-sm text-foreground/70">{t('othersComing')}</p>
+                <ul className="flex flex-wrap gap-3">
+                  {done.participants.map((n, i) => (
+                    <li key={`${n}-${i}`} className="flex items-center gap-2 text-sm">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground/10 text-xs font-medium">
+                        {n.trim().charAt(0).toUpperCase()}
+                      </span>
+                      {n}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <p className="text-sm text-foreground/60">{t('aloneSoFar')}</p>
+            )}
+          </div>
+        )}
+
         <button
           type="button"
           onClick={() => {
@@ -142,6 +177,7 @@ export default function BookingWidget({
             setName('')
             setPhone('')
             setEmail('')
+            setVisibleToGroup(false)
           }}
           className="mt-4 min-h-11 rounded-lg border border-black/15 px-4 text-sm dark:border-white/20"
         >
@@ -152,7 +188,6 @@ export default function BookingWidget({
   }
 
   const maxParty = selected ? selected.capacityRemaining : 1
-  const isGroup = (service?.capacity ?? 1) > 1
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -276,6 +311,18 @@ export default function BookingWidget({
               className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20 sm:col-span-2"
             />
           </div>
+
+          {isGroup && (
+            <label className="flex items-center gap-2 text-sm text-foreground/80">
+              <input
+                type="checkbox"
+                checked={visibleToGroup}
+                onChange={(e) => setVisibleToGroup(e.target.checked)}
+                className="h-4 w-4"
+              />
+              {t('visibleToGroup')}
+            </label>
+          )}
 
           {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 

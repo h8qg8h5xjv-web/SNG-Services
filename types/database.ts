@@ -489,6 +489,10 @@ export interface Database {
     Views: Record<never, never>
     Functions: {
       is_admin: { Args: Record<string, never>; Returns: boolean }
+      slot_participants: {
+        Args: { p_service_id: string; p_starts_at: string }
+        Returns: { name: string }[]
+      }
     }
     Enums: Record<never, never>
     CompositeTypes: Record<never, never>

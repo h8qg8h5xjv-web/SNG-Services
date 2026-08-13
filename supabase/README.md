@@ -16,6 +16,7 @@ Supabase UI — every change is a new numbered file here (see `CLAUDE.md`).
 | `0009_storage.sql` | Public `images` bucket + admin-only write policies |
 | `0010_booking_capacity_pending.sql` | Capacity guard counts pending + confirmed |
 | `0011_provider_events.sql` | Pseudonymous analytics log (no IP/UA) + indexes |
+| `0012_slot_participants.sql` | Security-definer function: opted-in group-slot names only |
 
 ## Applying
 

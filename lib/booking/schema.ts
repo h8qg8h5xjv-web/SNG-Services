@@ -12,6 +12,7 @@ export const bookingInputSchema = z.object({
     .nullable()
     .or(z.literal('').transform(() => null))
     .default(null),
+  is_visible_to_group: z.boolean().default(false),
 })
 
 export type BookingInput = z.infer<typeof bookingInputSchema>

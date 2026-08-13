@@ -12,6 +12,26 @@ export async function getSlots(serviceId: string, date: string): Promise<Slot[]>
   return getSlotsForServiceDate(serviceId, date)
 }
 
+/**
+ * Names of people who opted into being visible on a group slot (Phase 2).
+ * Presence only — the security-definer function returns names, never contacts.
+ */
+export async function getSlotParticipants(
+  serviceId: string,
+  startsAt: string,
+): Promise<string[]> {
+  try {
+    const supabase = createAdminClient()
+    const { data } = await supabase.rpc('slot_participants', {
+      p_service_id: serviceId,
+      p_starts_at: startsAt,
+    })
+    return (data ?? []).map((r) => r.name)
+  } catch {
+    return []
+  }
+}
+
 export type CreateBookingResult =
   | { ok: true; startsAt: string; endsAt: string; partySize: number }
   | { ok: false; error: string }
@@ -49,6 +69,7 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
     customer_name: d.customer_name,
     customer_phone: d.customer_phone,
     customer_email: d.customer_email,
+    is_visible_to_group: d.is_visible_to_group,
     status: 'pending',
   })
 
