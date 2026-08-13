@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "title": "SNG Services",
+    "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
+  },
+  "common": {
+    "appName": "SNG Services",
+    "city": "London"
+  },
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "bookings": "Bookings",
+    "profile": "Profile"
+  },
+  "language": {
+    "label": "Language",
+    "change": "Change language"
+  },
+  "home": {
+    "heroTitle": "CIS services in the UK, in your language",
+    "heroSubtitle": "Salons, masters, tutors, doctors — find them and book online.",
+    "searchPlaceholder": "Search masters, services and boroughs",
+    "availableToday": "Available today",
+    "recentlyViewed": "Recently viewed",
+    "categoriesTitle": "Categories",
+    "more": "More"
+  },
+  "empty": {
+    "noResults": "Nothing here yet."
+  }
+}
