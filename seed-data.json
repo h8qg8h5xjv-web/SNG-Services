@@ -1,0 +1,821 @@
+{
+  "_note": "Демо-данные. Все названия вымышленные, совпадения с реальными бизнесами случайны. Заменить на настоящие перед запуском. Картинки — плейсхолдеры Lorem Picsum по image_seed, реальные фото загружаются в Supabase Storage. fulfillment_type: native_booking = запись через нас, external_order = кнопка наружу, enquiry = только контакты.",
+  "_images": {
+    "provider": "https://picsum.photos/seed/{image_seed}/800/600",
+    "event": "https://picsum.photos/seed/{image_seed}/1200/630",
+    "rule": "Никогда не копируй фото реальных бизнесов из Google Maps, Instagram или их сайтов. Это чужие изображения. Для демо только плейсхолдеры, для продакшена только то, что прислал сам бизнес."
+  },
+  "providers": [
+    {
+      "slug": "vesna-hair-studio",
+      "name_en": "Vesna Hair Studio",
+      "name_ru": "Студия Весна",
+      "category": "beauty",
+      "borough": "Ealing",
+      "description_en": "Small salon on the Uxbridge Road. Colour correction, cuts and blow-dries. Two chairs, booking essential.",
+      "description_ru": "Небольшой салон на Uxbridge Road. Окрашивание, коррекция цвета, стрижки и укладки. Два кресла, запись обязательна.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "vesna",
+      "services": [
+        {
+          "name_en": "Women's cut and blow-dry",
+          "name_ru": "Женская стрижка и укладка",
+          "duration_min": 60,
+          "price_pence": 4500,
+          "capacity": 1
+        },
+        {
+          "name_en": "Root colour",
+          "name_ru": "Окрашивание корней",
+          "duration_min": 90,
+          "price_pence": 7000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Full balayage",
+          "name_ru": "Балаяж",
+          "duration_min": 180,
+          "price_pence": 18000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "anna-nails-w3",
+      "name_en": "Anna Nails W3",
+      "name_ru": "Anna Nails W3",
+      "category": "beauty",
+      "borough": "Ealing",
+      "description_en": "Home studio near Acton Central. Gel manicure, pedicure, nail repair. Evenings and weekends.",
+      "description_ru": "Домашняя студия рядом с Acton Central. Гель-лак, педикюр, наращивание и ремонт. Работает вечерами и по выходным.",
+      "languages": [
+        "ru"
+      ],
+      "image_seed": "annanails",
+      "services": [
+        {
+          "name_en": "Gel manicure",
+          "name_ru": "Маникюр с гель-лаком",
+          "duration_min": 75,
+          "price_pence": 3000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Pedicure",
+          "name_ru": "Педикюр",
+          "duration_min": 60,
+          "price_pence": 3500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "kavkaz-barbers",
+      "name_en": "Kavkaz Barbers",
+      "name_ru": "Барбершоп Кавказ",
+      "category": "beauty",
+      "borough": "Brent",
+      "description_en": "Traditional barbershop in Kilburn. Skin fades, beard work, hot towel shaves. Walk-ins welcome.",
+      "description_ru": "Классический барбершоп в Килберне. Фейды, работа с бородой, бритьё опасной бритвой. Можно без записи.",
+      "languages": [
+        "ru",
+        "az",
+        "hy"
+      ],
+      "image_seed": "kavkazbarbers",
+      "services": [
+        {
+          "name_en": "Haircut",
+          "name_ru": "Мужская стрижка",
+          "duration_min": 40,
+          "price_pence": 2500,
+          "capacity": 1
+        },
+        {
+          "name_en": "Beard trim",
+          "name_ru": "Оформление бороды",
+          "duration_min": 25,
+          "price_pence": 1500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "smile-dental-chiswick",
+      "name_en": "Smile Dental Chiswick",
+      "name_ru": "Стоматология Smile Chiswick",
+      "category": "health",
+      "borough": "Hounslow",
+      "description_en": "Private dental practice. Check-ups, hygiene, implants. Russian and Ukrainian speaking staff.",
+      "description_ru": "Частная стоматология. Осмотры, гигиена, лечение, имплантация. Врачи и администраторы говорят по-русски и по-украински.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "smiledental",
+      "services": [
+        {
+          "name_en": "Check-up and X-ray",
+          "name_ru": "Осмотр и снимок",
+          "duration_min": 30,
+          "price_pence": 6000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Hygiene appointment",
+          "name_ru": "Профессиональная гигиена",
+          "duration_min": 45,
+          "price_pence": 9500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "marina-psychologist",
+      "name_en": "Marina K. Counselling",
+      "name_ru": "Психолог Марина К.",
+      "category": "health",
+      "borough": "Camden",
+      "description_en": "Counselling for adults. Relocation, burnout, family. Online and in person near Kentish Town.",
+      "description_ru": "Консультации для взрослых. Переезд и адаптация, выгорание, семейные отношения. Онлайн и очно рядом с Kentish Town.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "marinacounsel",
+      "services": [
+        {
+          "name_en": "Individual session",
+          "name_ru": "Индивидуальная консультация",
+          "duration_min": 50,
+          "price_pence": 7000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Couples session",
+          "name_ru": "Парная консультация",
+          "duration_min": 80,
+          "price_pence": 11000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "raduga-russian-school",
+      "name_en": "Raduga Saturday School",
+      "name_ru": "Субботняя школа Радуга",
+      "category": "kids",
+      "borough": "Barnet",
+      "description_en": "Saturday school for children aged 4 to 14. Russian language, reading, maths and art.",
+      "description_ru": "Субботняя школа для детей от 4 до 14 лет. Русский язык, чтение, математика и творчество.",
+      "languages": [
+        "ru"
+      ],
+      "image_seed": "raduga",
+      "services": [
+        {
+          "name_en": "Trial lesson",
+          "name_ru": "Пробное занятие",
+          "duration_min": 60,
+          "price_pence": 1500,
+          "capacity": 12
+        },
+        {
+          "name_en": "Art class",
+          "name_ru": "Занятие по рисованию",
+          "duration_min": 60,
+          "price_pence": 1800,
+          "capacity": 10
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "logoped-online-uk",
+      "name_en": "Speech Therapy UK",
+      "name_ru": "Логопед онлайн",
+      "category": "kids",
+      "borough": "Wandsworth",
+      "description_en": "Bilingual speech therapy for children growing up between two languages.",
+      "description_ru": "Логопед для детей-билингвов. Постановка звуков, запуск речи, поддержка русского языка в англоязычной среде.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "logoped",
+      "services": [
+        {
+          "name_en": "Assessment",
+          "name_ru": "Диагностика",
+          "duration_min": 45,
+          "price_pence": 5000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Session",
+          "name_ru": "Занятие",
+          "duration_min": 40,
+          "price_pence": 4000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "english-with-dina",
+      "name_en": "English with Dina",
+      "name_ru": "Английский с Диной",
+      "category": "education",
+      "borough": "Hammersmith and Fulham",
+      "description_en": "IELTS and conversational English. Small groups and one to one.",
+      "description_ru": "Подготовка к IELTS и разговорный английский. Малые группы и индивидуально.",
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "image_seed": "englishdina",
+      "services": [
+        {
+          "name_en": "One to one lesson",
+          "name_ru": "Индивидуальное занятие",
+          "duration_min": 60,
+          "price_pence": 4000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Group lesson",
+          "name_ru": "Групповое занятие",
+          "duration_min": 90,
+          "price_pence": 2000,
+          "capacity": 6
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "maths-tutor-nw",
+      "name_en": "North London Maths Tutor",
+      "name_ru": "Репетитор по математике",
+      "category": "education",
+      "borough": "Harrow",
+      "description_en": "GCSE and A-level maths. Exam technique and past papers.",
+      "description_ru": "Математика GCSE и A-level. Разбор экзаменационных заданий и техника решения.",
+      "languages": [
+        "ru",
+        "uk",
+        "ka"
+      ],
+      "image_seed": "mathstutor",
+      "services": [
+        {
+          "name_en": "GCSE lesson",
+          "name_ru": "Занятие GCSE",
+          "duration_min": 60,
+          "price_pence": 4500,
+          "capacity": 1
+        },
+        {
+          "name_en": "A-level lesson",
+          "name_ru": "Занятие A-level",
+          "duration_min": 60,
+          "price_pence": 5500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "master-na-chas-london",
+      "name_en": "Handyman London",
+      "name_ru": "Мастер на час",
+      "category": "home",
+      "borough": "Southwark",
+      "description_en": "Furniture assembly, shelves, small repairs, TV mounting. Own tools.",
+      "description_ru": "Сборка мебели, полки, мелкий ремонт, навеска телевизора. Свой инструмент.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "handyman",
+      "services": [
+        {
+          "name_en": "One hour visit",
+          "name_ru": "Час работы",
+          "duration_min": 60,
+          "price_pence": 4000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Flat-pack assembly",
+          "name_ru": "Сборка мебели",
+          "duration_min": 120,
+          "price_pence": 7000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "chisto-cleaning",
+      "name_en": "Chisto Cleaning",
+      "name_ru": "Уборка Чисто",
+      "category": "home",
+      "borough": "Croydon",
+      "description_en": "Regular and deep cleaning, end of tenancy. Insured, own materials.",
+      "description_ru": "Регулярная и генеральная уборка, уборка при съезде с квартиры. Страховка, свои средства.",
+      "languages": [
+        "ru",
+        "uk",
+        "ky"
+      ],
+      "image_seed": "chisto",
+      "services": [
+        {
+          "name_en": "Regular clean, 2 bed",
+          "name_ru": "Регулярная уборка, 2 спальни",
+          "duration_min": 180,
+          "price_pence": 8500,
+          "capacity": 1
+        },
+        {
+          "name_en": "Deep clean",
+          "name_ru": "Генеральная уборка",
+          "duration_min": 300,
+          "price_pence": 18000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "vango-movers",
+      "name_en": "VanGo Movers",
+      "name_ru": "Переезды VanGo",
+      "category": "moving",
+      "borough": "Newham",
+      "description_en": "Man and van across London. Flat moves, single items, packing on request.",
+      "description_ru": "Переезды по Лондону. Квартирные переезды, отдельные вещи, упаковка по запросу.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "vangomovers",
+      "services": [
+        {
+          "name_en": "Man and van, 2 hours",
+          "name_ru": "Грузчик с фургоном, 2 часа",
+          "duration_min": 120,
+          "price_pence": 9000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Studio flat move",
+          "name_ru": "Переезд студии",
+          "duration_min": 240,
+          "price_pence": 22000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "posylka-cis",
+      "name_en": "Posylka Parcels",
+      "name_ru": "Посылка в СНГ",
+      "category": "moving",
+      "borough": "Tower Hamlets",
+      "description_en": "Parcels to CIS countries. Collection from your door, tracking included.",
+      "description_ru": "Посылки в страны СНГ. Забор от двери, отслеживание, документы.",
+      "languages": [
+        "ru",
+        "uz",
+        "tg"
+      ],
+      "image_seed": "posylka",
+      "services": [
+        {
+          "name_en": "Parcel up to 10 kg",
+          "name_ru": "Посылка до 10 кг",
+          "duration_min": 30,
+          "price_pence": 4500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "enquiry",
+      "external_order_url": null
+    },
+    {
+      "slug": "vizu-immigration",
+      "name_en": "Vizu Immigration Advice",
+      "name_ru": "Иммиграционный консультант Vizu",
+      "category": "legal",
+      "borough": "City of Westminster",
+      "description_en": "Visa applications, settlement, citizenship. Regulated adviser.",
+      "description_ru": "Визы, ILR, гражданство. Консультант с регистрацией.",
+      "languages": [
+        "ru",
+        "uk",
+        "kk"
+      ],
+      "image_seed": "vizu",
+      "services": [
+        {
+          "name_en": "Initial consultation",
+          "name_ru": "Первичная консультация",
+          "duration_min": 45,
+          "price_pence": 12000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "buhgalter-london",
+      "name_en": "London Accounts",
+      "name_ru": "Бухгалтер в Лондоне",
+      "category": "legal",
+      "borough": "Islington",
+      "description_en": "Self assessment, limited company accounts, VAT. For small businesses and sole traders.",
+      "description_ru": "Self assessment, отчётность limited company, VAT. Для小 малого бизнеса и self-employed.",
+      "languages": [
+        "ru",
+        "uk",
+        "be"
+      ],
+      "image_seed": "buhgalter",
+      "services": [
+        {
+          "name_en": "Consultation",
+          "name_ru": "Консультация",
+          "duration_min": 45,
+          "price_pence": 8000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "chaikhana-samarkand",
+      "name_en": "Chaikhana Samarkand",
+      "name_ru": "Чайхана Самарканд",
+      "category": "restaurants",
+      "borough": "Ealing",
+      "description_en": "Uzbek food. Plov cooked to order, lagman, samsa from the tandoor.",
+      "description_ru": "Узбекская кухня. Плов на заказ, лагман, самса из тандыра.",
+      "languages": [
+        "ru",
+        "uz",
+        "tg"
+      ],
+      "image_seed": "chaikhana",
+      "services": [
+        {
+          "name_en": "Table booking",
+          "name_ru": "Бронь столика",
+          "duration_min": 90,
+          "price_pence": 0,
+          "capacity": 6
+        }
+      ],
+      "fulfillment_type": "external_order",
+      "external_order_url": "https://www.ubereats.com/gb"
+    },
+    {
+      "slug": "kafe-babushka",
+      "name_en": "Cafe Babushka",
+      "name_ru": "Кафе Бабушка",
+      "category": "restaurants",
+      "borough": "Kensington and Chelsea",
+      "description_en": "Home cooking and pastries. Borscht, pelmeni, syrniki all day.",
+      "description_ru": "Домашняя кухня и выпечка. Борщ, пельмени, сырники весь день.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "babushka",
+      "services": [],
+      "fulfillment_type": "external_order",
+      "external_order_url": "https://deliveroo.co.uk"
+    },
+    {
+      "slug": "torty-na-zakaz",
+      "name_en": "Layla Cakes",
+      "name_ru": "Торты на заказ Layla",
+      "category": "food",
+      "borough": "Barnet",
+      "description_en": "Custom celebration cakes. Napoleon, medovik, bento cakes. Order a week ahead.",
+      "description_ru": "Торты на заказ. Наполеон, медовик, бенто-торты. Заказ за неделю.",
+      "languages": [
+        "ru",
+        "az"
+      ],
+      "image_seed": "laylacakes",
+      "services": [
+        {
+          "name_en": "Consultation and tasting",
+          "name_ru": "Консультация и дегустация",
+          "duration_min": 30,
+          "price_pence": 1500,
+          "capacity": 2
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "strong-studio-fulham",
+      "name_en": "Strong Studio Fulham",
+      "name_ru": "Strong Studio Fulham",
+      "category": "sport",
+      "borough": "Hammersmith and Fulham",
+      "description_en": "Small group training and personal sessions. Strength, mobility, post-natal.",
+      "description_ru": "Групповые тренировки и персональные занятия. Силовые, мобильность, восстановление после родов.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "strongstudio",
+      "services": [
+        {
+          "name_en": "Group strength class",
+          "name_ru": "Групповая силовая тренировка",
+          "duration_min": 55,
+          "price_pence": 1800,
+          "capacity": 12
+        },
+        {
+          "name_en": "Personal training",
+          "name_ru": "Персональная тренировка",
+          "duration_min": 60,
+          "price_pence": 5500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "yoga-with-alina",
+      "name_en": "Yoga with Alina",
+      "name_ru": "Йога с Алиной",
+      "category": "sport",
+      "borough": "Camden",
+      "description_en": "Hatha and restorative yoga in a small studio. Mats provided.",
+      "description_ru": "Хатха и восстановительная йога в небольшой студии. Коврики есть.",
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "image_seed": "yogaalina",
+      "services": [
+        {
+          "name_en": "Morning hatha",
+          "name_ru": "Утренняя хатха",
+          "duration_min": 75,
+          "price_pence": 1600,
+          "capacity": 15
+        },
+        {
+          "name_en": "Restorative evening",
+          "name_ru": "Вечерняя восстановительная",
+          "duration_min": 60,
+          "price_pence": 1600,
+          "capacity": 15
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "auto-service-kirill",
+      "name_en": "Kirill Auto Service",
+      "name_ru": "Автосервис Кирилла",
+      "category": "auto",
+      "borough": "Enfield",
+      "description_en": "Servicing, MOT prep, diagnostics. Independent garage.",
+      "description_ru": "Обслуживание, подготовка к MOT, диагностика. Независимый сервис.",
+      "languages": [
+        "ru",
+        "uk",
+        "hy"
+      ],
+      "image_seed": "kirillauto",
+      "services": [
+        {
+          "name_en": "Diagnostics",
+          "name_ru": "Диагностика",
+          "duration_min": 60,
+          "price_pence": 4500,
+          "capacity": 1
+        },
+        {
+          "name_en": "Full service",
+          "name_ru": "Полное ТО",
+          "duration_min": 180,
+          "price_pence": 18000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "foto-svetlana",
+      "name_en": "Svetlana Photography",
+      "name_ru": "Фотограф Светлана",
+      "category": "celebrations",
+      "borough": "Richmond upon Thames",
+      "description_en": "Family, newborn and event photography. Studio and outdoor.",
+      "description_ru": "Семейная, новорождённых и репортажная съёмка. Студия и на природе.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "svetlanafoto",
+      "services": [
+        {
+          "name_en": "Family session",
+          "name_ru": "Семейная съёмка",
+          "duration_min": 90,
+          "price_pence": 25000,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    },
+    {
+      "slug": "groom-lapki",
+      "name_en": "Lapki Grooming",
+      "name_ru": "Груминг Лапки",
+      "category": "pets",
+      "borough": "Merton",
+      "description_en": "Dog and cat grooming. Small salon, one animal at a time.",
+      "description_ru": "Груминг собак и кошек. Маленький салон, одно животное за раз.",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "image_seed": "lapki",
+      "services": [
+        {
+          "name_en": "Small dog groom",
+          "name_ru": "Груминг мелкой собаки",
+          "duration_min": 90,
+          "price_pence": 5000,
+          "capacity": 1
+        },
+        {
+          "name_en": "Cat groom",
+          "name_ru": "Груминг кошки",
+          "duration_min": 60,
+          "price_pence": 5500,
+          "capacity": 1
+        }
+      ],
+      "fulfillment_type": "native_booking",
+      "external_order_url": null
+    }
+  ],
+  "events": [
+    {
+      "slug": "standup-night-shoreditch",
+      "title_en": "Stand-up night in Russian",
+      "title_ru": "Стендап на русском",
+      "category": "стендап",
+      "venue_name": "Basement bar, Shoreditch",
+      "borough": "Hackney",
+      "price_from_pence": 1500,
+      "languages": [
+        "ru"
+      ],
+      "days_from_now": 4,
+      "image_seed": "standupnight"
+    },
+    {
+      "slug": "ukrainian-choir-concert",
+      "title_en": "Ukrainian choir evening",
+      "title_ru": "Вечер украинского хора",
+      "category": "концерт",
+      "venue_name": "Community hall, Acton",
+      "borough": "Ealing",
+      "price_from_pence": 0,
+      "languages": [
+        "uk"
+      ],
+      "days_from_now": 9,
+      "image_seed": "choirevening"
+    },
+    {
+      "slug": "kids-theatre-teremok",
+      "title_en": "Children's play: Teremok",
+      "title_ru": "Детский спектакль «Теремок»",
+      "category": "дети",
+      "venue_name": "Small theatre, Barnet",
+      "borough": "Barnet",
+      "price_from_pence": 1200,
+      "languages": [
+        "ru"
+      ],
+      "days_from_now": 12,
+      "image_seed": "teremok"
+    },
+    {
+      "slug": "networking-founders-cis",
+      "title_en": "CIS founders meetup",
+      "title_ru": "Митап основателей из СНГ",
+      "category": "нетворкинг",
+      "venue_name": "Co-working space, Old Street",
+      "borough": "Islington",
+      "price_from_pence": 0,
+      "languages": [
+        "ru",
+        "en"
+      ],
+      "days_from_now": 6,
+      "image_seed": "foundersmeetup"
+    },
+    {
+      "slug": "georgian-wine-tasting",
+      "title_en": "Georgian wine tasting",
+      "title_ru": "Дегустация грузинских вин",
+      "category": "выставка",
+      "venue_name": "Wine bar, Fitzrovia",
+      "borough": "Camden",
+      "price_from_pence": 3500,
+      "languages": [
+        "ka",
+        "ru",
+        "en"
+      ],
+      "days_from_now": 15,
+      "image_seed": "winetasting"
+    },
+    {
+      "slug": "sunday-football-hyde-park",
+      "title_en": "Sunday amateur football",
+      "title_ru": "Воскресный любительский футбол",
+      "category": "спорт",
+      "venue_name": "Hyde Park pitches",
+      "borough": "City of Westminster",
+      "price_from_pence": 800,
+      "languages": [
+        "ru",
+        "uz"
+      ],
+      "days_from_now": 3,
+      "image_seed": "sundayfootball"
+    },
+    {
+      "slug": "new-year-party-2027",
+      "title_en": "New Year party",
+      "title_ru": "Новогодняя вечеринка",
+      "category": "вечеринка",
+      "venue_name": "Event space, Vauxhall",
+      "borough": "Lambeth",
+      "price_from_pence": 4500,
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "days_from_now": 21,
+      "image_seed": "nyparty"
+    },
+    {
+      "slug": "kazakh-language-club",
+      "title_en": "Kazakh language club",
+      "title_ru": "Разговорный клуб казахского",
+      "category": "нетворкинг",
+      "venue_name": "Library room, Kensington",
+      "borough": "Kensington and Chelsea",
+      "price_from_pence": 0,
+      "languages": [
+        "kk"
+      ],
+      "days_from_now": 8,
+      "image_seed": "kazakhclub"
+    }
+  ]
+}
