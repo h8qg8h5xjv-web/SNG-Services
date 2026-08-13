@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconExternalLink, IconMapPin, IconCalendarEvent } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import Header from '@/components/Header'
+import JsonLd from '@/components/JsonLd'
 import { getEventBySlug } from '@/lib/queries/events'
 import {
   pickEventTitle,
@@ -26,9 +27,16 @@ export async function generateMetadata({
   const event = await getEventBySlug(slug)
   if (!event) return {}
   const description = pickEventDescription(event, locale)
+  const image = resolveImageUrl(event.cover_image)
   return {
     title: pickEventTitle(event, locale),
     description: description?.slice(0, 160) ?? undefined,
+    openGraph: {
+      type: 'website',
+      title: pickEventTitle(event, locale),
+      description: description?.slice(0, 200) ?? undefined,
+      images: image ? [image] : undefined,
+    },
   }
 }
 
@@ -49,6 +57,42 @@ export default async function EventPage({
   const image = resolveImageUrl(event.cover_image)
   const place = [event.venue_name, event.borough].filter(Boolean).join(', ')
 
+  const eventLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: title,
+    startDate: event.starts_at,
+    ...(event.ends_at ? { endDate: event.ends_at } : {}),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    ...(description ? { description } : {}),
+    ...(image ? { image: [image] } : {}),
+    location: {
+      '@type': 'Place',
+      name: event.venue_name ?? place,
+      address: {
+        '@type': 'PostalAddress',
+        ...(event.borough ? { addressLocality: event.borough } : {}),
+        addressCountry: 'GB',
+        ...(event.address ? { streetAddress: event.address } : {}),
+      },
+      ...(event.lat != null && event.lng != null
+        ? { geo: { '@type': 'GeoCoordinates', latitude: event.lat, longitude: event.lng } }
+        : {}),
+    },
+    ...(event.ticket_url || event.price_from_pence != null
+      ? {
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'GBP',
+            price: (event.price_from_pence ?? 0) / 100,
+            availability: 'https://schema.org/InStock',
+            ...(event.ticket_url ? { url: event.ticket_url } : {}),
+          },
+        }
+      : {}),
+  }
+
   const tickets = event.ticket_url ? (
     <a
       href={event.ticket_url}
@@ -64,6 +108,7 @@ export default async function EventPage({
   return (
     <>
       <Header />
+      <JsonLd data={eventLd} />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-12">
         <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
           {image && (

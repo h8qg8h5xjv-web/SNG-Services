@@ -15,6 +15,7 @@ import Header from '@/components/Header'
 import ProviderHours from '@/components/ProviderHours'
 import RecordRecentView from '@/components/RecordRecentView'
 import EventCard from '@/components/EventCard'
+import JsonLd from '@/components/JsonLd'
 import { getProviderDetail } from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
 import { pickProviderContent } from '@/lib/i18n/content'
@@ -37,7 +38,17 @@ export async function generateMetadata({
     provider.provider_translations,
     locale,
   )
-  return { title: name, description: description.slice(0, 160) }
+  const image = resolveImageUrl(provider.cover_image)
+  return {
+    title: name,
+    description: description.slice(0, 160),
+    openGraph: {
+      type: 'website',
+      title: name,
+      description: description.slice(0, 200),
+      images: image ? [image] : undefined,
+    },
+  }
 }
 
 export default async function ProviderPage({
@@ -67,6 +78,33 @@ export default async function ProviderPage({
 
   const durationLabels = { hour: t('units.hour'), min: t('units.min') }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const businessLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name,
+    description,
+    url: `${siteUrl}/${locale}/${category}/${slug}`,
+    ...(image ? { image } : {}),
+    ...(provider.phone ? { telephone: provider.phone } : {}),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: provider.borough,
+      addressRegion: 'London',
+      addressCountry: 'GB',
+      ...(provider.address ? { streetAddress: provider.address } : {}),
+    },
+    ...(provider.lat != null && provider.lng != null
+      ? {
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: provider.lat,
+            longitude: provider.lng,
+          },
+        }
+      : {}),
+  }
+
   // Primary CTA reused inline and in the mobile sticky bar.
   const cta = isNative ? (
     <Link
@@ -90,6 +128,7 @@ export default async function ProviderPage({
   return (
     <>
       <Header />
+      <JsonLd data={businessLd} />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-12">
         <RecordRecentView
           item={{

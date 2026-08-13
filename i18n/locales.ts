@@ -41,3 +41,17 @@ export function isEnabledLocale(value: string): boolean {
 export function localeName(code: string): string {
   return localeConfigs.find((l) => l.code === code)?.name ?? code
 }
+
+// Open Graph locale codes (language_TERRITORY) for og:locale.
+const OG_LOCALES: Record<string, string> = {
+  en: 'en_GB',
+  ru: 'ru_RU',
+  uk: 'uk_UA',
+  kk: 'kk_KZ',
+  ka: 'ka_GE',
+  hy: 'hy_AM',
+}
+
+export function ogLocale(code: string): string {
+  return OG_LOCALES[code] ?? 'en_GB'
+}

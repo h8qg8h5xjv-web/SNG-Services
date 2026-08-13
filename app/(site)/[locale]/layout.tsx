@@ -6,6 +6,7 @@ import { hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { routing } from '@/i18n/routing'
+import { ogLocale } from '@/i18n/locales'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import '../../globals.css'
@@ -40,6 +41,14 @@ export async function generateMetadata({
     title: { default: t('title'), template: `%s · ${t('title')}` },
     description: t('description'),
     alternates: { languages },
+    openGraph: {
+      type: 'website',
+      siteName: t('title'),
+      title: t('title'),
+      description: t('description'),
+      locale: ogLocale(locale),
+    },
+    twitter: { card: 'summary_large_image' },
   }
 }
 
