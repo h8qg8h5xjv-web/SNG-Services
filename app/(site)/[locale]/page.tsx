@@ -3,9 +3,13 @@ import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import RecentlyViewed from '@/components/RecentlyViewed'
 import CategoryGrid from '@/components/CategoryGrid'
-import { ProviderGridSkeleton } from '@/components/ui/Skeleton'
+import AvailableToday from '@/components/AvailableToday'
 import { getHomeCategories } from '@/lib/queries/categories'
+import { getAvailableTodayProviders } from '@/lib/slots/service'
 import { pickCategoryName } from '@/lib/i18n/content'
+
+// Live "available today" data is request-time; never statically prerendered.
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage({
   params,
@@ -15,7 +19,10 @@ export default async function HomePage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations()
-  const categories = await getHomeCategories()
+  const [categories, availableToday] = await Promise.all([
+    getHomeCategories(),
+    getAvailableTodayProviders(),
+  ])
   const tiles = categories.map(({ category, count }) => ({
     slug: category.slug,
     name: pickCategoryName(category, locale),
@@ -37,13 +44,7 @@ export default async function HomePage({
 
         <RecentlyViewed />
 
-        {/* "Available today" is the main return hook. Live slots are wired after
-            the slot engine (step 7); until then this is a marked placeholder. */}
-        <section className="py-6">
-          <h2 className="mb-1 text-lg font-medium">{t('home.availableToday')}</h2>
-          <p className="mb-3 text-sm text-foreground/50">{t('home.availableTodaySoon')}</p>
-          <ProviderGridSkeleton count={3} />
-        </section>
+        <AvailableToday providers={availableToday} locale={locale} />
 
         <section className="py-6">
           <h2 className="mb-3 text-lg font-medium">{t('home.categoriesTitle')}</h2>

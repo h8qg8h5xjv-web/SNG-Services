@@ -102,6 +102,27 @@
   "misc": {
     "comingSoon": "Coming soon."
   },
+  "booking": {
+    "title": "Book {name}",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "loading": "Loading…",
+    "noSlots": "No free slots on this day.",
+    "partySize": "People",
+    "name": "Your name",
+    "phone": "Phone",
+    "email": "Email (optional)",
+    "submit": "Confirm booking",
+    "submitting": "Booking…",
+    "remaining": "{n} left",
+    "confirmedTitle": "Booking requested",
+    "confirmedBody": "We’ll confirm shortly. {when} · {people} people.",
+    "bookAnother": "Book another time",
+    "notBookableTitle": "Online booking isn’t available here",
+    "notBookableBody": "Contact this provider directly to arrange a visit.",
+    "backToProvider": "Back to provider"
+  },
   "units": {
     "hour": "h",
     "min": "min"

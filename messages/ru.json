@@ -102,6 +102,27 @@
   "misc": {
     "comingSoon": "Скоро."
   },
+  "booking": {
+    "title": "Запись — {name}",
+    "service": "Услуга",
+    "date": "Дата",
+    "time": "Время",
+    "loading": "Загрузка…",
+    "noSlots": "На этот день свободных слотов нет.",
+    "partySize": "Человек",
+    "name": "Ваше имя",
+    "phone": "Телефон",
+    "email": "Email (необязательно)",
+    "submit": "Подтвердить запись",
+    "submitting": "Записываем…",
+    "remaining": "осталось {n}",
+    "confirmedTitle": "Заявка отправлена",
+    "confirmedBody": "Скоро подтвердим. {when} · {people} чел.",
+    "bookAnother": "Записаться на другое время",
+    "notBookableTitle": "Онлайн-запись здесь недоступна",
+    "notBookableBody": "Свяжитесь с мастером напрямую, чтобы договориться.",
+    "backToProvider": "Назад к провайдеру"
+  },
   "units": {
     "hour": "ч",
     "min": "мин"

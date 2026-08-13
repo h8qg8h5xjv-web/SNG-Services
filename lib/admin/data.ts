@@ -178,3 +178,41 @@ export async function listProviderOptions(): Promise<{ id: string; name_en: stri
   if (error) throw error
   return data ?? []
 }
+
+export type AdminBookingRow = {
+  id: string
+  starts_at: string
+  ends_at: string
+  party_size: number
+  customer_name: string
+  customer_phone: string
+  customer_email: string | null
+  status: 'pending' | 'confirmed' | 'cancelled'
+  services: { name_en: string } | null
+  providers: { name_en: string } | null
+}
+
+export async function listAdminBookings(filters: {
+  providerId?: string
+  date?: string
+}): Promise<AdminBookingRow[]> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('bookings')
+    .select(
+      'id, starts_at, ends_at, party_size, customer_name, customer_phone, customer_email, status, ' +
+        'services(name_en), providers(name_en)',
+    )
+    .order('starts_at', { ascending: false })
+
+  if (filters.providerId) query = query.eq('provider_id', filters.providerId)
+  if (filters.date && /^\d{4}-\d{2}-\d{2}$/.test(filters.date)) {
+    query = query
+      .gte('starts_at', `${filters.date}T00:00:00Z`)
+      .lt('starts_at', `${filters.date}T23:59:59Z`)
+  }
+
+  const { data, error } = await query.returns<AdminBookingRow[]>()
+  if (error) throw error
+  return data ?? []
+}
