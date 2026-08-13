@@ -1,5 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
+import SearchBar from '@/components/SearchBar'
+import RecentlyViewed from '@/components/RecentlyViewed'
+import CategoryGrid from '@/components/CategoryGrid'
+import { ProviderGridSkeleton } from '@/components/ui/Skeleton'
+import { getHomeCategories } from '@/lib/queries/categories'
+import { pickCategoryName } from '@/lib/i18n/content'
 
 export default async function HomePage({
   params,
@@ -8,33 +14,44 @@ export default async function HomePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations('home')
+  const t = await getTranslations()
+  const categories = await getHomeCategories()
+  const tiles = categories.map(({ category, count }) => ({
+    slug: category.slug,
+    name: pickCategoryName(category, locale),
+    icon: category.icon,
+    count,
+  }))
 
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
         <section className="py-8">
-          <h1 className="text-2xl font-semibold sm:text-3xl">
-            {t('heroTitle')}
-          </h1>
-          <p className="mt-3 max-w-2xl text-foreground/70">{t('heroSubtitle')}</p>
-
-          {/* Search wiring lands in step 4 (catalog); this is the translated shell. */}
+          <h1 className="text-2xl font-semibold sm:text-3xl">{t('home.heroTitle')}</h1>
+          <p className="mt-3 max-w-2xl text-foreground/70">{t('home.heroSubtitle')}</p>
           <div className="mt-6">
-            <input
-              type="search"
-              disabled
-              placeholder={t('searchPlaceholder')}
-              className="min-h-11 w-full max-w-xl rounded-lg border border-black/10 bg-transparent px-4 py-2 dark:border-white/20"
-            />
+            <SearchBar />
           </div>
         </section>
 
-        {/* Live data for these blocks is connected in later steps (see PROMPTS.md). */}
+        <RecentlyViewed />
+
+        {/* "Available today" is the main return hook. Live slots are wired after
+            the slot engine (step 7); until then this is a marked placeholder. */}
         <section className="py-6">
-          <h2 className="text-lg font-medium">{t('availableToday')}</h2>
-          <p className="mt-2 text-sm text-foreground/50">{t('categoriesTitle')}</p>
+          <h2 className="mb-1 text-lg font-medium">{t('home.availableToday')}</h2>
+          <p className="mb-3 text-sm text-foreground/50">{t('home.availableTodaySoon')}</p>
+          <ProviderGridSkeleton count={3} />
+        </section>
+
+        <section className="py-6">
+          <h2 className="mb-3 text-lg font-medium">{t('home.categoriesTitle')}</h2>
+          {tiles.length > 0 ? (
+            <CategoryGrid items={tiles} />
+          ) : (
+            <p className="text-sm text-foreground/50">{t('empty.noResults')}</p>
+          )}
         </section>
       </main>
     </>

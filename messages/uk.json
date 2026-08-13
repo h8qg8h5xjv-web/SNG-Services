@@ -5,7 +5,9 @@
   },
   "common": {
     "appName": "SNG Services",
-    "city": "London"
+    "city": "London",
+    "back": "Back",
+    "viewAll": "View all"
   },
   "nav": {
     "home": "Home",
@@ -21,10 +23,67 @@
     "heroTitle": "CIS services in the UK, in your language",
     "heroSubtitle": "Salons, masters, tutors, doctors — find them and book online.",
     "searchPlaceholder": "Search masters, services and boroughs",
+    "search": "Search",
     "availableToday": "Available today",
+    "availableTodaySoon": "Live availability arrives with online booking.",
     "recentlyViewed": "Recently viewed",
     "categoriesTitle": "Categories",
-    "more": "More"
+    "more": "More",
+    "less": "Less"
+  },
+  "catalog": {
+    "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
+    "filtersBorough": "Borough",
+    "filtersAllBoroughs": "All boroughs",
+    "sortLabel": "Sort",
+    "sortRelevance": "Relevance",
+    "sortPrice": "Price",
+    "sortSlot": "Soonest slot",
+    "sortSlotSoon": "Sorting by slot arrives with online booking.",
+    "emptyCategory": "No providers here yet.",
+    "emptyFiltered": "Nothing matches these filters.",
+    "from": "from",
+    "priceOnRequest": "Price on request"
+  },
+  "fulfillment": {
+    "nativeBadge": "Book here",
+    "externalBadge": "Order outside",
+    "enquiryBadge": "Enquiry only"
+  },
+  "provider": {
+    "services": "Services",
+    "languagesServed": "Languages spoken",
+    "hours": "Opening hours",
+    "contacts": "Contacts",
+    "phone": "Phone",
+    "telegram": "Telegram",
+    "instagram": "Instagram",
+    "website": "Website",
+    "address": "Address",
+    "book": "Book",
+    "orderOn": "Order on {platform}",
+    "enquiryHint": "Contact the provider directly to arrange this service.",
+    "closed": "Closed"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search masters, services and boroughs",
+    "resultsFor": "Results for “{query}”",
+    "prompt": "Type to search the catalogue.",
+    "empty": "Nothing found for “{query}”."
+  },
+  "units": {
+    "hour": "h",
+    "min": "min"
+  },
+  "days": {
+    "1": "Mon",
+    "2": "Tue",
+    "3": "Wed",
+    "4": "Thu",
+    "5": "Fri",
+    "6": "Sat",
+    "0": "Sun"
   },
   "empty": {
     "noResults": "Nothing here yet."

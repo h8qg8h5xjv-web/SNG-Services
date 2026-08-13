@@ -1,0 +1,42 @@
+'use client'
+
+import { useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { IconSearch } from '@tabler/icons-react'
+import { useRouter } from '@/i18n/navigation'
+
+export default function SearchBar({
+  initialQuery = '',
+}: {
+  initialQuery?: string
+}) {
+  const t = useTranslations('home')
+  const router = useRouter()
+  const [query, setQuery] = useState(initialQuery)
+
+  function onSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    const q = query.trim()
+    router.push(q ? `/search?q=${encodeURIComponent(q)}` : '/search')
+  }
+
+  return (
+    <form role="search" onSubmit={onSubmit} className="flex w-full max-w-xl gap-2">
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t('searchPlaceholder')}
+        aria-label={t('searchPlaceholder')}
+        className="min-h-11 flex-1 rounded-lg border border-black/10 bg-transparent px-4 py-2 dark:border-white/20"
+      />
+      <button
+        type="submit"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg bg-foreground px-4 text-background"
+      >
+        <IconSearch className="h-5 w-5" stroke={2} />
+        <span className="sr-only sm:not-sr-only">{t('search')}</span>
+      </button>
+    </form>
+  )
+}

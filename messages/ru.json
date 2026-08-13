@@ -5,7 +5,9 @@
   },
   "common": {
     "appName": "SNG Services",
-    "city": "Лондон"
+    "city": "Лондон",
+    "back": "Назад",
+    "viewAll": "Показать все"
   },
   "nav": {
     "home": "Главная",
@@ -21,10 +23,67 @@
     "heroTitle": "Услуги для своих в Великобритании, на вашем языке",
     "heroSubtitle": "Салоны, мастера, репетиторы, врачи — найдите и запишитесь онлайн.",
     "searchPlaceholder": "Поиск по мастерам, услугам и районам",
+    "search": "Найти",
     "availableToday": "Свободно сегодня",
+    "availableTodaySoon": "Живые слоты появятся вместе с онлайн-записью.",
     "recentlyViewed": "Недавно смотрели",
     "categoriesTitle": "Категории",
-    "more": "Ещё"
+    "more": "Ещё",
+    "less": "Свернуть"
+  },
+  "catalog": {
+    "providersCount": "{count, plural, =0 {Нет мастеров} one {# мастер} few {# мастера} many {# мастеров} other {# мастера}}",
+    "filtersBorough": "Район",
+    "filtersAllBoroughs": "Все районы",
+    "sortLabel": "Сортировка",
+    "sortRelevance": "По релевантности",
+    "sortPrice": "По цене",
+    "sortSlot": "По ближайшему слоту",
+    "sortSlotSoon": "Сортировка по слоту появится вместе с онлайн-записью.",
+    "emptyCategory": "Здесь пока нет мастеров.",
+    "emptyFiltered": "По этим фильтрам ничего нет.",
+    "from": "от",
+    "priceOnRequest": "Цена по запросу"
+  },
+  "fulfillment": {
+    "nativeBadge": "Запись здесь",
+    "externalBadge": "Заказ снаружи",
+    "enquiryBadge": "Только контакты"
+  },
+  "provider": {
+    "services": "Услуги",
+    "languagesServed": "Языки обслуживания",
+    "hours": "Часы работы",
+    "contacts": "Контакты",
+    "phone": "Телефон",
+    "telegram": "Telegram",
+    "instagram": "Instagram",
+    "website": "Сайт",
+    "address": "Адрес",
+    "book": "Записаться",
+    "orderOn": "Заказать на {platform}",
+    "enquiryHint": "Свяжитесь с мастером напрямую, чтобы договориться об услуге.",
+    "closed": "Выходной"
+  },
+  "search": {
+    "title": "Поиск",
+    "placeholder": "Поиск по мастерам, услугам и районам",
+    "resultsFor": "Результаты по запросу «{query}»",
+    "prompt": "Начните вводить, чтобы искать по каталогу.",
+    "empty": "По запросу «{query}» ничего не найдено."
+  },
+  "units": {
+    "hour": "ч",
+    "min": "мин"
+  },
+  "days": {
+    "1": "Пн",
+    "2": "Вт",
+    "3": "Ср",
+    "4": "Чт",
+    "5": "Пт",
+    "6": "Сб",
+    "0": "Вс"
   },
   "empty": {
     "noResults": "Здесь пока ничего нет."
