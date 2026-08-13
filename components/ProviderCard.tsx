@@ -22,14 +22,23 @@ const BADGE: Record<FulfillmentType, { key: string; className: string }> = {
   },
 }
 
-export default function ProviderCard({ card }: { card: ProviderCardVM }) {
+export default function ProviderCard({
+  card,
+  surface,
+}: {
+  card: ProviderCardVM
+  surface?: string
+}) {
   const t = useTranslations()
   const badge = BADGE[card.fulfillment]
   const image = resolveImageUrl(card.coverImage)
+  const href = surface
+    ? `/${card.categorySlug}/${card.slug}?from=${surface}`
+    : `/${card.categorySlug}/${card.slug}`
 
   return (
     <Link
-      href={`/${card.categorySlug}/${card.slug}`}
+      href={href}
       className="group flex flex-col overflow-hidden rounded-xl border border-black/10 transition-colors hover:border-black/20 dark:border-white/10 dark:hover:border-white/20"
     >
       <div className="relative aspect-[4/3] w-full bg-foreground/5">

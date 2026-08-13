@@ -8,6 +8,7 @@ const NAV = [
   { href: '/admin/providers', label: 'Providers' },
   { href: '/admin/events', label: 'Events' },
   { href: '/admin/bookings', label: 'Bookings' },
+  { href: '/admin/analytics', label: 'Analytics' },
 ]
 
 export default async function DashboardLayout({

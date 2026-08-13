@@ -1,8 +1,10 @@
 'use server'
 
+import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getSlotsForServiceDate } from '@/lib/slots/service'
 import { bookingInputSchema } from '@/lib/booking/schema'
+import { recordEvents } from '@/lib/tracking/events'
 import type { Slot } from '@/lib/slots/compute'
 
 export async function getSlots(serviceId: string, date: string): Promise<Slot[]> {
@@ -26,7 +28,7 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
   // Recompute the end time from the service duration server-side (don't trust the client).
   const { data: service, error: serviceError } = await supabase
     .from('services')
-    .select('duration_min')
+    .select('duration_min, provider_id')
     .eq('id', d.service_id)
     .maybeSingle()
   if (serviceError || !service) {
@@ -60,6 +62,12 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
         : 'Could not create the booking. Please try again.',
     }
   }
+
+  const sessionId = (await cookies()).get('sng_sid')?.value ?? null
+  await recordEvents(
+    [{ provider_id: service.provider_id, event_type: 'booking_completed', surface: 'booking' }],
+    sessionId,
+  )
 
   return {
     ok: true,

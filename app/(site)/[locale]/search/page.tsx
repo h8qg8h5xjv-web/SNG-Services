@@ -3,8 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import ProviderGrid from '@/components/ProviderGrid'
+import TrackImpressions from '@/components/TrackImpressions'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
-import { matchesQuery, sortProviders, toCard } from '@/lib/catalog/transform'
+import { matchesQuery, toCard } from '@/lib/catalog/transform'
+import { rankProviders } from '@/lib/ranking'
 
 export async function generateMetadata({
   params,
@@ -30,10 +32,9 @@ export default async function SearchPage({
   const t = await getTranslations('search')
 
   const cards = q
-    ? sortProviders(
+    ? rankProviders(
         (await listAllPublishedProviders()).filter((p) => matchesQuery(p, q, locale)),
-        'relevance',
-        locale,
+        { locale, sort: 'relevance' },
       ).map((p) => toCard(p, p.categories?.slug ?? '', locale))
     : []
 
@@ -57,7 +58,12 @@ export default async function SearchPage({
             <p className="mb-4 text-sm text-foreground/60">
               {t('resultsFor', { query: q })}
             </p>
-            <ProviderGrid cards={cards} />
+            <ProviderGrid cards={cards} surface="search" />
+            <TrackImpressions
+              surface="search"
+              locale={locale}
+              items={cards.map((c, i) => ({ providerId: c.id, position: i + 1 }))}
+            />
           </>
         )}
       </main>

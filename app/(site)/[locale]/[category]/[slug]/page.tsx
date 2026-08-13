@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
 import Image from 'next/image'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import {
@@ -18,6 +19,7 @@ import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
 import { getProviderDetail } from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
+import { recordEvents } from '@/lib/tracking/events'
 import { pickProviderContent } from '@/lib/i18n/content'
 import { formatPrice, formatDuration } from '@/lib/format'
 import { resolveImageUrl } from '@/lib/images'
@@ -53,14 +55,25 @@ export async function generateMetadata({
 
 export default async function ProviderPage({
   params,
+  searchParams,
 }: {
   params: Promise<Params>
+  searchParams: Promise<{ from?: string }>
 }) {
   const { locale, category, slug } = await params
   setRequestLocale(locale)
 
   const provider = await getProviderDetail(category, slug)
   if (!provider) notFound()
+
+  // Log the visit as a click (surface = where it came from, else "provider").
+  const { from } = await searchParams
+  const surface = from === 'category' || from === 'search' ? from : 'provider'
+  const sessionId = (await cookies()).get('sng_sid')?.value ?? null
+  await recordEvents(
+    [{ provider_id: provider.id, event_type: 'click', surface, locale }],
+    sessionId,
+  )
 
   const organizerEvents = await listEventsByOrganizer(provider.id)
   const t = await getTranslations()

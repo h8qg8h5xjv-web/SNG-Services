@@ -4,13 +4,14 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
 import CategoryFilters from '@/components/CategoryFilters'
 import ProviderGrid from '@/components/ProviderGrid'
+import TrackImpressions from '@/components/TrackImpressions'
 import { getCategoryBySlug } from '@/lib/queries/categories'
 import { listProvidersByCategory } from '@/lib/queries/providers'
 import { pickCategoryName } from '@/lib/i18n/content'
+import { rankProviders } from '@/lib/ranking'
 import {
   toCard,
   filterByBorough,
-  sortProviders,
   boroughsOf,
   type SortKey,
 } from '@/lib/catalog/transform'
@@ -51,7 +52,11 @@ export default async function CategoryPage({
   const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
   const sort = parseSort(sp.sort)
 
-  const filtered = sortProviders(filterByBorough(all, borough || null), sort, locale)
+  const filtered = rankProviders(filterByBorough(all, borough || null), {
+    locale,
+    sort,
+    categorySlug: category,
+  })
   const cards = filtered.map((p) => toCard(p, category, locale))
 
   const t = await getTranslations('catalog')
@@ -86,7 +91,18 @@ export default async function CategoryPage({
             {t('emptyFiltered')}
           </p>
         ) : (
-          <ProviderGrid cards={cards} />
+          <>
+            <ProviderGrid cards={cards} surface="category" />
+            <TrackImpressions
+              surface="category"
+              locale={locale}
+              items={cards.map((c, i) => ({
+                providerId: c.id,
+                position: i + 1,
+                categoryId: cat.id,
+              }))}
+            />
+          </>
         )}
       </main>
     </>

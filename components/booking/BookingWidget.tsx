@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { getSlots, createBooking } from '@/lib/booking/actions'
 import { formatPrice } from '@/lib/format'
@@ -26,11 +26,28 @@ function localDate(offsetDays: number): string {
 
 export default function BookingWidget({
   services,
+  providerId,
 }: {
   services: BookingService[]
+  providerId: string
 }) {
   const t = useTranslations('booking')
   const locale = useLocale()
+
+  // booking_started: fires once when the booking flow opens.
+  const startedRef = useRef(false)
+  useEffect(() => {
+    if (startedRef.current) return
+    startedRef.current = true
+    const body = JSON.stringify({
+      events: [{ provider_id: providerId, event_type: 'booking_started', surface: 'booking', locale }],
+    })
+    try {
+      navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }))
+    } catch {
+      fetch('/api/track', { method: 'POST', body, keepalive: true }).catch(() => {})
+    }
+  }, [providerId, locale])
 
   const dates = useMemo(() => Array.from({ length: 30 }, (_, i) => localDate(i)), [])
   const [serviceId, setServiceId] = useState(services[0]?.id ?? '')

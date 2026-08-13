@@ -38,7 +38,7 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
         <h1 className="mb-6 text-2xl font-semibold">{t('booking.title', { name })}</h1>
 
         {provider.fulfillment_type === 'native_booking' && provider.services.length > 0 ? (
-          <BookingWidget services={provider.services} />
+          <BookingWidget services={provider.services} providerId={provider.id} />
         ) : (
           <div className="rounded-2xl border border-black/10 p-6 dark:border-white/10">
             <h2 className="text-lg font-medium">{t('booking.notBookableTitle')}</h2>

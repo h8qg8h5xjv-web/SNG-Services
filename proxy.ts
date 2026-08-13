@@ -37,6 +37,15 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   }
   const response = handleI18n(request)
   response.headers.set('x-pathname', request.nextUrl.pathname)
+  // Pseudonymous session id for analytics (no identity, no IP/UA stored).
+  if (!request.cookies.get('sng_sid')) {
+    response.cookies.set('sng_sid', crypto.randomUUID(), {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+    })
+  }
   return response
 }
 

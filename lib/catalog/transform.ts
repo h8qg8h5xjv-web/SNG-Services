@@ -27,6 +27,7 @@ export type ProviderWithRelations = {
 export type PriceRange = { min: number; max: number }
 
 export type ProviderCardVM = {
+  id: string
   slug: string
   categorySlug: string
   name: string
@@ -54,6 +55,7 @@ export function toCard(
 ): ProviderCardVM {
   const { name } = pickProviderContent(provider, provider.provider_translations, locale)
   return {
+    id: provider.id,
     slug: provider.slug,
     categorySlug,
     name,
