@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/seed.ts",
+    "seed:dry": "node --experimental-strip-types scripts/seed.ts --dry-run"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
