@@ -14,7 +14,9 @@ import { Link } from '@/i18n/navigation'
 import Header from '@/components/Header'
 import ProviderHours from '@/components/ProviderHours'
 import RecordRecentView from '@/components/RecordRecentView'
+import EventCard from '@/components/EventCard'
 import { getProviderDetail } from '@/lib/queries/providers'
+import { listEventsByOrganizer } from '@/lib/queries/events'
 import { pickProviderContent } from '@/lib/i18n/content'
 import { formatPrice, formatDuration } from '@/lib/format'
 import { resolveImageUrl } from '@/lib/images'
@@ -49,6 +51,7 @@ export default async function ProviderPage({
   const provider = await getProviderDetail(category, slug)
   if (!provider) notFound()
 
+  const organizerEvents = await listEventsByOrganizer(provider.id)
   const t = await getTranslations()
   const { name, description } = pickProviderContent(
     provider,
@@ -158,6 +161,18 @@ export default async function ProviderPage({
           </section>
         )}
 
+        {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}
+        {organizerEvents.length > 0 && (
+          <section className="border-t border-black/10 py-5 dark:border-white/10">
+            <h2 className="mb-3 text-lg font-medium">{t('events.upcoming')}</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {organizerEvents.map((event) => (
+                <EventCard key={event.id} event={event} locale={locale} />
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className="border-t border-black/10 py-5 dark:border-white/10">
           <h2 className="mb-3 text-lg font-medium">{t('provider.contacts')}</h2>
           <ul className="space-y-2 text-sm">
@@ -232,7 +247,7 @@ export default async function ProviderPage({
 
       {/* Mobile: booking/order CTA pinned to the bottom of the screen. */}
       {cta && (
-        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-black/10 bg-background/95 p-3 backdrop-blur sm:hidden dark:border-white/10">
+        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-black/10 bg-background/95 p-3 backdrop-blur sm:hidden dark:border-white/10">
           {cta}
         </div>
       )}

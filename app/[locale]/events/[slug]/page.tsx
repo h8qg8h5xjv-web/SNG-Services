@@ -1,0 +1,140 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { IconExternalLink, IconMapPin, IconCalendarEvent } from '@tabler/icons-react'
+import { Link } from '@/i18n/navigation'
+import Header from '@/components/Header'
+import { getEventBySlug } from '@/lib/queries/events'
+import {
+  pickEventTitle,
+  pickEventDescription,
+  eventCategorySlug,
+} from '@/lib/events/constants'
+import { formatEventDateTime } from '@/lib/events/format'
+import { formatPrice } from '@/lib/format'
+import { resolveImageUrl } from '@/lib/images'
+
+type Params = { locale: string; slug: string }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>
+}): Promise<Metadata> {
+  const { locale, slug } = await params
+  const event = await getEventBySlug(slug)
+  if (!event) return {}
+  const description = pickEventDescription(event, locale)
+  return {
+    title: pickEventTitle(event, locale),
+    description: description?.slice(0, 160) ?? undefined,
+  }
+}
+
+export default async function EventPage({
+  params,
+}: {
+  params: Promise<Params>
+}) {
+  const { locale, slug } = await params
+  setRequestLocale(locale)
+
+  const event = await getEventBySlug(slug)
+  if (!event) notFound()
+
+  const t = await getTranslations()
+  const title = pickEventTitle(event, locale)
+  const description = pickEventDescription(event, locale)
+  const image = resolveImageUrl(event.cover_image)
+  const place = [event.venue_name, event.borough].filter(Boolean).join(', ')
+
+  const tickets = event.ticket_url ? (
+    <a
+      href={event.ticket_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground px-6 font-medium text-background sm:w-auto"
+    >
+      {t('events.tickets')}
+      <IconExternalLink className="h-4 w-4" stroke={2} />
+    </a>
+  ) : null
+
+  return (
+    <>
+      <Header />
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-12">
+        <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
+          {image && (
+            <Image
+              src={image}
+              alt=""
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+              priority
+            />
+          )}
+        </div>
+
+        <div className="py-5">
+          <p className="text-sm font-medium text-foreground/70">
+            {t(`eventCategory.${eventCategorySlug(event.category)}`)} ·{' '}
+            {formatEventDateTime(event.starts_at, locale)}
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold">{title}</h1>
+          {place && <p className="mt-1 text-foreground/60">{place}</p>}
+          <p className="mt-3 font-medium">
+            {event.price_from_pence == null
+              ? t('events.free')
+              : `${t('catalog.from')} ${formatPrice(event.price_from_pence)}`}
+          </p>
+
+          {description && (
+            <p className="mt-4 whitespace-pre-line text-foreground/80">
+              {description}
+            </p>
+          )}
+
+          {tickets && <div className="mt-6 hidden sm:block">{tickets}</div>}
+        </div>
+
+        {event.organizer && event.organizer.categories && (
+          <section className="border-t border-black/10 py-5 dark:border-white/10">
+            <h2 className="mb-2 text-sm font-medium text-foreground/60">
+              {t('events.organizer')}
+            </h2>
+            <Link
+              href={`/${event.organizer.categories.slug}/${event.organizer.slug}`}
+              className="inline-flex items-center gap-2 font-medium hover:underline"
+            >
+              <IconCalendarEvent className="h-4 w-4" stroke={1.5} />
+              {event.organizer.name_en}
+            </Link>
+          </section>
+        )}
+
+        {event.lat != null && event.lng != null && (
+          <section className="border-t border-black/10 py-5 dark:border-white/10">
+            <a
+              href={`https://www.openstreetmap.org/?mlat=${event.lat}&mlon=${event.lng}#map=15/${event.lat}/${event.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:underline"
+            >
+              <IconMapPin className="h-4 w-4" stroke={1.5} />
+              {event.address ?? place}
+            </a>
+          </section>
+        )}
+      </main>
+
+      {tickets && (
+        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-black/10 bg-background/95 p-3 backdrop-blur sm:hidden dark:border-white/10">
+          {tickets}
+        </div>
+      )}
+    </>
+  )
+}

@@ -7,6 +7,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
+import BottomNav from '@/components/BottomNav'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -61,8 +62,9 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col pb-14 sm:pb-0">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <BottomNav />
       </body>
     </html>
   )

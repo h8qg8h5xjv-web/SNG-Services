@@ -72,6 +72,36 @@
     "prompt": "Type to search the catalogue.",
     "empty": "Nothing found for “{query}”."
   },
+  "events": {
+    "title": "Events",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "weekend": "This weekend",
+    "later": "Later",
+    "empty": "No upcoming events.",
+    "free": "Free",
+    "filterCategory": "Type",
+    "allCategories": "All types",
+    "filterPrice": "Price",
+    "priceAll": "Any price",
+    "priceFree": "Free",
+    "pricePaid": "Paid",
+    "tickets": "Tickets",
+    "organizer": "Organiser",
+    "upcoming": "Upcoming events"
+  },
+  "eventCategory": {
+    "concert": "Concert",
+    "standup": "Stand-up",
+    "party": "Party",
+    "exhibition": "Exhibition",
+    "kids": "For kids",
+    "sport": "Sport",
+    "networking": "Networking"
+  },
+  "misc": {
+    "comingSoon": "Coming soon."
+  },
   "units": {
     "hour": "h",
     "min": "min"

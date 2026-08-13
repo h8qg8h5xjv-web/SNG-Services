@@ -72,6 +72,36 @@
     "prompt": "Начните вводить, чтобы искать по каталогу.",
     "empty": "По запросу «{query}» ничего не найдено."
   },
+  "events": {
+    "title": "Афиша",
+    "today": "Сегодня",
+    "tomorrow": "Завтра",
+    "weekend": "Эти выходные",
+    "later": "Дальше",
+    "empty": "Ближайших событий нет.",
+    "free": "Бесплатно",
+    "filterCategory": "Тип",
+    "allCategories": "Все типы",
+    "filterPrice": "Цена",
+    "priceAll": "Любая цена",
+    "priceFree": "Бесплатно",
+    "pricePaid": "Платно",
+    "tickets": "Билеты",
+    "organizer": "Организатор",
+    "upcoming": "Ближайшие события"
+  },
+  "eventCategory": {
+    "concert": "Концерт",
+    "standup": "Стендап",
+    "party": "Вечеринка",
+    "exhibition": "Выставка",
+    "kids": "Детям",
+    "sport": "Спорт",
+    "networking": "Нетворкинг"
+  },
+  "misc": {
+    "comingSoon": "Скоро."
+  },
   "units": {
     "hour": "ч",
     "min": "мин"
