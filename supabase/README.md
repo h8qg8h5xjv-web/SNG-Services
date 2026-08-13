@@ -13,6 +13,7 @@ Supabase UI — every change is a new numbered file here (see `CLAUDE.md`).
 | `0006_events.sql` | `events` (afisha) |
 | `0007_indexes.sql` | Indexes for the catalog and afisha query patterns |
 | `0008_rls.sql` | RLS enabled on every table + read/write policies |
+| `0009_storage.sql` | Public `images` bucket + admin-only write policies |
 
 ## Applying
 
@@ -43,3 +44,13 @@ already exist on a Supabase project.
   bookings overlapping the slot, would exceed the service `capacity`.
 - **Types.** Regenerate `types/database.ts` after a schema change with
   `supabase gen types typescript --local > types/database.ts`.
+- **Admin access.** The admin panel (`/admin`) and all writes require an
+  authenticated user whose JWT carries `app_metadata.is_admin = true`. Grant it
+  once per admin account:
+  ```sql
+  update auth.users
+     set raw_app_meta_data = raw_app_meta_data || '{"is_admin": true}'
+   where email = 'you@example.com';
+  ```
+  Enable the Email provider (magic link) in Supabase Auth, and add
+  `.../admin/auth/confirm` to the allowed redirect URLs.

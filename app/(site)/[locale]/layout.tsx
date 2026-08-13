@@ -8,7 +8,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
-import '../globals.css'
+import '../../globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
