@@ -21,6 +21,7 @@ name after it is the logical step.
 | `…12_slot_participants` | Security-definer function: opted-in group-slot names only |
 | `…13_service_role_grants` | Table grants for service_role + default privileges |
 | `…14_cabinets_roles` | `provider_members`/`provider_invites`, 4-principal RLS, invite flow |
+| `…15_requests` | Request/broadcast model, contact-hiding RLS, atomic accept, stats view |
 
 ## Local development (Docker required)
 

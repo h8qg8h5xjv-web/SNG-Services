@@ -28,6 +28,16 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// The provider_request_stats view (query with .returns<ProviderRequestStats[]>()).
+export type ProviderRequestStats = {
+  provider_id: string
+  received: number
+  accepted: number
+  accept_rate: number | null
+  median_response_seconds: number | null
+  cancellations_after_accept: number
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -39,6 +49,7 @@ export interface Database {
           name_ru: string
           icon: string
           sort_order: number
+          default_request_type: string
         }
         Insert: {
           id?: string
@@ -47,6 +58,7 @@ export interface Database {
           name_ru: string
           icon: string
           sort_order?: number
+          default_request_type?: string
         }
         Update: {
           id?: string
@@ -55,6 +67,7 @@ export interface Database {
           name_ru?: string
           icon?: string
           sort_order?: number
+          default_request_type?: string
         }
         Relationships: []
       }
@@ -83,6 +96,7 @@ export interface Database {
           fulfillment_type: FulfillmentType
           external_order_url: string | null
           status: ContentStatus
+          broadcast_paused_until: string | null
           created_at: string
           updated_at: string
         }
@@ -104,6 +118,7 @@ export interface Database {
           fulfillment_type: FulfillmentType
           external_order_url?: string | null
           status?: ContentStatus
+          broadcast_paused_until?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -125,6 +140,7 @@ export interface Database {
           fulfillment_type?: FulfillmentType
           external_order_url?: string | null
           status?: ContentStatus
+          broadcast_paused_until?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -425,6 +441,153 @@ export interface Database {
           },
         ]
       }
+      requests: {
+        Row: {
+          id: string
+          public_ref: string
+          guest_token: string
+          customer_id: string | null
+          type: string
+          category_id: string
+          service_id: string | null
+          target_provider_id: string | null
+          borough: string
+          description: string | null
+          budget_max_pence: number | null
+          status: string
+          created_at: string
+          expires_at: string | null
+        }
+        Insert: {
+          id?: string
+          public_ref?: string
+          guest_token?: string
+          customer_id?: string | null
+          type: string
+          category_id: string
+          service_id?: string | null
+          target_provider_id?: string | null
+          borough: string
+          description?: string | null
+          budget_max_pence?: number | null
+          status?: string
+          created_at?: string
+          expires_at?: string | null
+        }
+        Update: {
+          status?: string
+          expires_at?: string | null
+          description?: string | null
+          budget_max_pence?: number | null
+        }
+        Relationships: []
+      }
+      request_contacts: {
+        Row: {
+          request_id: string
+          contact_name: string
+          contact_phone: string
+          contact_email: string | null
+          address: string | null
+        }
+        Insert: {
+          request_id: string
+          contact_name: string
+          contact_phone: string
+          contact_email?: string | null
+          address?: string | null
+        }
+        Update: {
+          contact_name?: string
+          contact_phone?: string
+          contact_email?: string | null
+          address?: string | null
+        }
+        Relationships: []
+      }
+      request_windows: {
+        Row: { id: string; request_id: string; starts_at: string; ends_at: string }
+        Insert: { id?: string; request_id: string; starts_at: string; ends_at: string }
+        Update: { starts_at?: string; ends_at?: string }
+        Relationships: []
+      }
+      request_targets: {
+        Row: {
+          id: string
+          request_id: string
+          provider_id: string
+          wave: number
+          channel: string | null
+          notified_at: string | null
+          response: string
+          responded_at: string | null
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          provider_id: string
+          wave: number
+          channel?: string | null
+          notified_at?: string | null
+          response?: string
+          responded_at?: string | null
+        }
+        Update: {
+          channel?: string | null
+          notified_at?: string | null
+          response?: string
+          responded_at?: string | null
+        }
+        Relationships: []
+      }
+      request_offers: {
+        Row: {
+          id: string
+          request_id: string
+          provider_id: string
+          price_pence: number
+          message: string | null
+          proposed_start: string | null
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          provider_id: string
+          price_pence: number
+          message?: string | null
+          proposed_start?: string | null
+          status?: string
+          created_at?: string
+        }
+        Update: { price_pence?: number; message?: string | null; status?: string }
+        Relationships: []
+      }
+      request_matches: {
+        Row: {
+          request_id: string
+          provider_id: string
+          service_id: string | null
+          starts_at: string | null
+          ends_at: string | null
+          price_pence: number | null
+          booking_id: string | null
+          created_at: string
+        }
+        Insert: {
+          request_id: string
+          provider_id: string
+          service_id?: string | null
+          starts_at?: string | null
+          ends_at?: string | null
+          price_pence?: number | null
+          booking_id?: string | null
+          created_at?: string
+        }
+        Update: { booking_id?: string | null }
+        Relationships: []
+      }
       provider_events: {
         Row: {
           id: string
@@ -559,6 +722,17 @@ export interface Database {
       slot_participants: {
         Args: { p_service_id: string; p_starts_at: string }
         Returns: { name: string }[]
+      }
+      accept_request: {
+        Args: {
+          p_request_id: string
+          p_provider_id: string
+          p_service_id: string | null
+          p_starts_at: string | null
+          p_ends_at: string | null
+          p_price_pence: number | null
+        }
+        Returns: boolean
       }
     }
     Enums: Record<never, never>
