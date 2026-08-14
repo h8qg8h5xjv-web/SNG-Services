@@ -311,6 +311,7 @@ export interface Database {
           customer_email: string | null
           status: BookingStatus
           is_visible_to_group: boolean
+          customer_id: string | null
           created_at: string
           updated_at: string
         }
@@ -327,6 +328,7 @@ export interface Database {
           customer_email?: string | null
           status?: BookingStatus
           is_visible_to_group?: boolean
+          customer_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -342,6 +344,7 @@ export interface Database {
           customer_email?: string | null
           status?: BookingStatus
           is_visible_to_group?: boolean
+          customer_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -354,6 +357,68 @@ export interface Database {
           },
           {
             foreignKeyName: 'bookings_provider_id_fkey'
+            columns: ['provider_id']
+            referencedRelation: 'providers'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      provider_members: {
+        Row: {
+          provider_id: string
+          user_id: string
+          role: string
+          created_at: string
+        }
+        Insert: {
+          provider_id: string
+          user_id: string
+          role?: string
+          created_at?: string
+        }
+        Update: {
+          provider_id?: string
+          user_id?: string
+          role?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'provider_members_provider_id_fkey'
+            columns: ['provider_id']
+            referencedRelation: 'providers'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      provider_invites: {
+        Row: {
+          id: string
+          provider_id: string
+          token: string
+          expires_at: string
+          used_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          provider_id: string
+          token: string
+          expires_at: string
+          used_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          provider_id?: string
+          token?: string
+          expires_at?: string
+          used_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'provider_invites_provider_id_fkey'
             columns: ['provider_id']
             referencedRelation: 'providers'
             referencedColumns: ['id']
@@ -489,6 +554,8 @@ export interface Database {
     Views: Record<never, never>
     Functions: {
       is_admin: { Args: Record<string, never>; Returns: boolean }
+      is_provider_member: { Args: { p_provider_id: string }; Returns: boolean }
+      accept_provider_invite: { Args: { p_token: string }; Returns: string }
       slot_participants: {
         Args: { p_service_id: string; p_starts_at: string }
         Returns: { name: string }[]

@@ -19,6 +19,8 @@ name after it is the logical step.
 | `…10_booking_capacity_pending` | Capacity guard counts pending + confirmed |
 | `…11_provider_events` | Pseudonymous analytics log (no IP/UA) + indexes |
 | `…12_slot_participants` | Security-definer function: opted-in group-slot names only |
+| `…13_service_role_grants` | Table grants for service_role + default privileges |
+| `…14_cabinets_roles` | `provider_members`/`provider_invites`, 4-principal RLS, invite flow |
 
 ## Local development (Docker required)
 
