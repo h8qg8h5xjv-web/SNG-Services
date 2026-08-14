@@ -11,7 +11,7 @@ import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
 const LIST_SELECT =
-  'id, slug, name_en, description_en, borough, cover_image, fulfillment_type, external_order_url, created_at, ' +
+  'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, created_at, ' +
   'categories(slug), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
@@ -50,7 +50,7 @@ export type ProviderDetail = {
   id: string
   slug: string
   name_en: string
-  description_en: string
+  description_en: string | null
   borough: string
   address: string | null
   lat: number | null

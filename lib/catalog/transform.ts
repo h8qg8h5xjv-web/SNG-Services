@@ -6,9 +6,10 @@ export type ProviderWithRelations = {
   id: string
   slug: string
   name_en: string
-  description_en: string
+  description_en: string | null
   borough: string
   cover_image: string | null
+  venue_photos: string[] | null
   fulfillment_type: FulfillmentType
   external_order_url: string | null
   created_at: string
@@ -60,7 +61,7 @@ export function toCard(
     categorySlug,
     name,
     borough: provider.borough,
-    coverImage: provider.cover_image,
+    coverImage: provider.venue_photos?.[0] ?? provider.cover_image,
     fulfillment: provider.fulfillment_type,
     externalUrl: provider.external_order_url,
     priceRange: priceRangeOf(provider),
@@ -78,9 +79,9 @@ function haystack(provider: ProviderWithRelations, locale: string): string {
   )
   const parts = [
     provider.name_en,
-    provider.description_en,
+    provider.description_en ?? '',
     name,
-    description,
+    description ?? '',
     provider.borough,
     ...provider.provider_translations.flatMap((t) => [t.name ?? '', t.description ?? '']),
     ...provider.services.flatMap((s) => [s.name_en, s.name_ru ?? '']),

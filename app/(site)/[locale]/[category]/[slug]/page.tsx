@@ -10,6 +10,7 @@ import {
   IconWorld,
   IconMapPin,
   IconExternalLink,
+  IconPhoto,
 } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import Header from '@/components/Header'
@@ -46,14 +47,14 @@ export async function generateMetadata({
     provider.provider_translations,
     locale,
   )
-  const image = resolveImageUrl(provider.cover_image)
+  const image = resolveImageUrl(provider.venue_photos?.[0] ?? provider.cover_image)
   return {
     title: name,
-    description: description.slice(0, 160),
+    description: description?.slice(0, 160) ?? undefined,
     openGraph: {
       type: 'website',
       title: name,
-      description: description.slice(0, 200),
+      description: description?.slice(0, 200) ?? undefined,
       images: image ? [image] : undefined,
     },
   }
@@ -161,7 +162,7 @@ export default async function ProviderPage({
         />
 
         <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
-          {image && (
+          {image ? (
             <Image
               src={image}
               alt=""
@@ -170,6 +171,13 @@ export default async function ProviderPage({
               className="object-cover"
               priority
             />
+          ) : (
+            // No photo (e.g. an unclaimed place — we don't take others' images).
+            // A calm placeholder, not a broken/loading-looking empty box.
+            <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-foreground/30">
+              <IconPhoto className="h-10 w-10" stroke={1.5} />
+              <span className="text-sm">{name}</span>
+            </div>
           )}
         </div>
 
@@ -219,7 +227,9 @@ export default async function ProviderPage({
               )}
             </div>
           )}
-          <p className="mt-4 whitespace-pre-line text-foreground/80">{description}</p>
+          {description && description.trim() && (
+            <p className="mt-4 whitespace-pre-line text-foreground/80">{description}</p>
+          )}
 
           {cta && <div className="mt-6 hidden sm:block">{cta}</div>}
         </div>

@@ -123,10 +123,9 @@ export default function ProviderForm({
     const payload = {
       slug: f.slug.trim(),
       name_en: f.name_en.trim(),
-      // Quick-create places may have no description yet — fall back to the name
-      // so the NOT NULL base field is satisfied.
-      description_en:
-        quickCreate && !f.description_en.trim() ? f.name_en.trim() : f.description_en.trim(),
+      // Empty is allowed for an unclaimed card (server normalises "" → null);
+      // required otherwise (enforced by the schema).
+      description_en: f.description_en.trim(),
       category_id: f.category_id,
       borough: f.borough.trim(),
       address: orNull(f.address),
@@ -248,14 +247,21 @@ export default function ProviderForm({
       </div>
 
       <label className="block text-sm">
-        <span className="text-foreground/70">Description (EN)</span>
+        <span className="text-foreground/70">
+          Description (EN)
+          {f.claim_status === 'unclaimed' && (
+            <span className="ml-2 text-foreground/40">(необязательно для unclaimed)</span>
+          )}
+        </span>
         <textarea
           value={f.description_en}
           onChange={(e) => set('description_en', e.target.value)}
-          required
           rows={3}
           className="mt-1 w-full rounded-lg border border-black/15 bg-transparent p-3 dark:border-white/20"
         />
+        {errors['description_en'] && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors['description_en']}</p>
+        )}
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">

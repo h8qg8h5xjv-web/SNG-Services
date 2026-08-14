@@ -45,7 +45,13 @@ export const providerInputSchema = z
   .object({
     slug,
     name_en: z.string().min(1, 'Required'),
-    description_en: z.string().min(1, 'Required'),
+    // Required for claimed/invited cards; an unclaimed public-data place may omit
+    // it (checked in superRefine). Empty string is normalised to null.
+    description_en: z
+      .string()
+      .nullable()
+      .default(null)
+      .transform((v) => (v && v.trim() !== '' ? v.trim() : null)),
     category_id: z.string().uuid('Pick a category'),
     borough: z.string().min(1, 'Required'),
     address: z.string().nullable().default(null),
@@ -76,6 +82,13 @@ export const providerInputSchema = z
         path: ['external_order_url'],
         code: z.ZodIssueCode.custom,
         message: 'Required when fulfillment is “order outside”.',
+      })
+    }
+    if (!val.description_en && val.claim_status !== 'unclaimed') {
+      ctx.addIssue({
+        path: ['description_en'],
+        code: z.ZodIssueCode.custom,
+        message: 'Description is required unless the card is unclaimed.',
       })
     }
     if (val.status === 'published' && val.languages.length === 0) {

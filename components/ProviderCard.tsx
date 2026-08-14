@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { IconExternalLink } from '@tabler/icons-react'
+import { IconExternalLink, IconPhoto } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { resolveImageUrl } from '@/lib/images'
 import { formatPriceRange } from '@/lib/format'
@@ -42,7 +42,7 @@ export default function ProviderCard({
       className="group flex flex-col overflow-hidden rounded-xl border border-black/10 transition-colors hover:border-black/20 dark:border-white/10 dark:hover:border-white/20"
     >
       <div className="relative aspect-[4/3] w-full bg-foreground/5">
-        {image && (
+        {image ? (
           <Image
             src={image}
             alt=""
@@ -50,6 +50,10 @@ export default function ProviderCard({
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
           />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-foreground/25">
+            <IconPhoto className="h-8 w-8" stroke={1.5} />
+          </div>
         )}
         <span
           className={`absolute left-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${badge.className}`}

@@ -7,7 +7,7 @@ export type Translation = {
   description: string | null
 }
 
-export type LocalizedContent = { name: string; description: string }
+export type LocalizedContent = { name: string; description: string | null }
 
 function nonEmpty(value: string | null | undefined): value is string {
   return typeof value === 'string' && value.trim().length > 0
@@ -15,7 +15,7 @@ function nonEmpty(value: string | null | undefined): value is string {
 
 /** Provider name/description for a locale, falling back to the English base. */
 export function pickProviderContent(
-  base: { name_en: string; description_en: string },
+  base: { name_en: string; description_en: string | null },
   translations: Translation[],
   locale: string,
 ): LocalizedContent {

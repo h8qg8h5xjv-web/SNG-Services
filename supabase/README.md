@@ -25,6 +25,7 @@ name after it is the logical step.
 | `…16_language_verification` | `provider_languages` verification (claimed/verified/rejected), publish rule needs a verified language, admin-only verification |
 | `…17_language_professional_level` | Per-language `professional_level` flag (legal/health), admin-only |
 | `…18_entity_type` | `place`\|`pro` axis, `claim_status`, `booking_enabled`, place/pro fields, insurance + DBS credentials (admin-verified) |
+| `…19_nullable_description` | `description_en` optional for `claim_status='unclaimed'` (public-data places) |
 
 ## Local development (Docker required)
 

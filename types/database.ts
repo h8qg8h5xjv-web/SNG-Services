@@ -91,7 +91,7 @@ export interface Database {
           id: string
           slug: string
           name_en: string
-          description_en: string
+          description_en: string | null
           category_id: string
           borough: string
           address: string | null
@@ -132,7 +132,7 @@ export interface Database {
           id?: string
           slug: string
           name_en: string
-          description_en: string
+          description_en?: string | null
           category_id: string
           borough: string
           address?: string | null
@@ -173,7 +173,7 @@ export interface Database {
           id?: string
           slug?: string
           name_en?: string
-          description_en?: string
+          description_en?: string | null
           category_id?: string
           borough?: string
           address?: string | null
