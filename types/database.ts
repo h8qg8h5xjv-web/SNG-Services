@@ -9,6 +9,12 @@ export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
 export type LanguageVerificationStatus = 'claimed' | 'verified' | 'rejected'
 // 'seed' = demo data, never a real check. Real checks: call | voice_sample | video_call.
 export type LanguageVerificationMethod = 'seed' | 'call' | 'voice_sample' | 'video_call'
+// The second axis (DESIGN §2в): a place you go to vs a pro you call.
+export type EntityType = 'place' | 'pro'
+export type ClaimStatus = 'unclaimed' | 'claimed' | 'invited'
+// Insurance/DBS follow the claimed-vs-verified model; expired verified reads as self_declared.
+export type CredentialStatus = 'none' | 'self_declared' | 'verified'
+export type DbsType = 'basic' | 'standard' | 'enhanced'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -100,6 +106,25 @@ export interface Database {
           external_order_url: string | null
           status: ContentStatus
           broadcast_paused_until: string | null
+          entity_type: EntityType
+          claim_status: ClaimStatus
+          booking_enabled: boolean
+          opening_hours: Json | null
+          venue_photos: string[] | null
+          travel_radius_km: number | null
+          insurance_status: CredentialStatus
+          insurance_verified_by: string | null
+          insurance_verified_at: string | null
+          insurance_expires_at: string | null
+          insurance_document_ref: string | null
+          insurance_note: string | null
+          dbs_status: CredentialStatus
+          dbs_type: DbsType | null
+          dbs_verified_by: string | null
+          dbs_verified_at: string | null
+          dbs_expires_at: string | null
+          dbs_document_ref: string | null
+          dbs_note: string | null
           created_at: string
           updated_at: string
         }
@@ -122,6 +147,25 @@ export interface Database {
           external_order_url?: string | null
           status?: ContentStatus
           broadcast_paused_until?: string | null
+          entity_type?: EntityType
+          claim_status?: ClaimStatus
+          booking_enabled?: boolean
+          opening_hours?: Json | null
+          venue_photos?: string[] | null
+          travel_radius_km?: number | null
+          insurance_status?: CredentialStatus
+          insurance_verified_by?: string | null
+          insurance_verified_at?: string | null
+          insurance_expires_at?: string | null
+          insurance_document_ref?: string | null
+          insurance_note?: string | null
+          dbs_status?: CredentialStatus
+          dbs_type?: DbsType | null
+          dbs_verified_by?: string | null
+          dbs_verified_at?: string | null
+          dbs_expires_at?: string | null
+          dbs_document_ref?: string | null
+          dbs_note?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -144,6 +188,25 @@ export interface Database {
           external_order_url?: string | null
           status?: ContentStatus
           broadcast_paused_until?: string | null
+          entity_type?: EntityType
+          claim_status?: ClaimStatus
+          booking_enabled?: boolean
+          opening_hours?: Json | null
+          venue_photos?: string[] | null
+          travel_radius_km?: number | null
+          insurance_status?: CredentialStatus
+          insurance_verified_by?: string | null
+          insurance_verified_at?: string | null
+          insurance_expires_at?: string | null
+          insurance_document_ref?: string | null
+          insurance_note?: string | null
+          dbs_status?: CredentialStatus
+          dbs_type?: DbsType | null
+          dbs_verified_by?: string | null
+          dbs_verified_at?: string | null
+          dbs_expires_at?: string | null
+          dbs_document_ref?: string | null
+          dbs_note?: string | null
           created_at?: string
           updated_at?: string
         }

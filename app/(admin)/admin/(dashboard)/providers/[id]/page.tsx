@@ -7,6 +7,7 @@ import {
 import ProviderForm from '@/components/admin/ProviderForm'
 import InviteOwner from '@/components/admin/InviteOwner'
 import LanguageVerification from '@/components/admin/LanguageVerification'
+import ProviderCredentials from '@/components/admin/ProviderCredentials'
 
 export default async function EditProviderPage({
   params,
@@ -31,6 +32,7 @@ export default async function EditProviderPage({
         languages={provider.provider_languages}
         reference={languages}
       />
+      <ProviderCredentials provider={provider} />
       <InviteOwner providerId={provider.id} />
     </div>
   )

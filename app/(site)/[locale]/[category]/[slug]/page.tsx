@@ -17,7 +17,11 @@ import ProviderHours from '@/components/ProviderHours'
 import RecordRecentView from '@/components/RecordRecentView'
 import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
-import { getProviderDetail, serviceLanguageBadges } from '@/lib/queries/providers'
+import {
+  getProviderDetail,
+  serviceLanguageBadges,
+  providerCredentials,
+} from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
 import { recordEvents } from '@/lib/tracking/events'
 import { pickProviderContent } from '@/lib/i18n/content'
@@ -84,8 +88,10 @@ export default async function ProviderPage({
   )
   const image = resolveImageUrl(provider.cover_image)
   const languages = serviceLanguageBadges(provider.provider_languages)
+  const credentials = providerCredentials(provider)
   const isExternal = provider.fulfillment_type === 'external_order'
-  const isNative = provider.fulfillment_type === 'native_booking'
+  // A place that opts out of bookings (booking_enabled=false) is a listing only.
+  const isNative = provider.fulfillment_type === 'native_booking' && provider.booking_enabled
 
   const durationLabels = { hour: t('units.hour'), min: t('units.min') }
 
@@ -191,6 +197,22 @@ export default async function ProviderPage({
                     {l.name}
                   </span>
                 ),
+              )}
+            </div>
+          )}
+          {(credentials.insuranceVerified || credentials.dbsVerified) && (
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+              {credentials.insuranceVerified && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400">
+                  <span aria-hidden>✓</span>
+                  {t('provider.insuranceVerified')}
+                </span>
+              )}
+              {credentials.dbsVerified && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400">
+                  <span aria-hidden>✓</span>
+                  {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
+                </span>
               )}
             </div>
           )}

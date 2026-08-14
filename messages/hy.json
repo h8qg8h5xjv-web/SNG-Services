@@ -65,7 +65,9 @@
     "enquiryHint": "Contact the provider directly to arrange this service.",
     "closed": "Closed",
     "languageConfirmed": "{language} լեզվով սպասարկումը հաստատված է",
-    "languageProfessional": "մասն."
+    "languageProfessional": "մասն.",
+    "insuranceVerified": "Ապահովագրությունը հաստատված է",
+    "dbsVerified": "DBS ստուգված է ({type})"
   },
   "search": {
     "title": "Search",

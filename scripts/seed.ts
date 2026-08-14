@@ -150,6 +150,7 @@ type SeedProvider = {
   services: SeedService[]
   fulfillment_type: Tables['providers']['Row']['fulfillment_type']
   external_order_url: string | null
+  entity_type: Tables['providers']['Row']['entity_type']
 }
 type SeedEvent = {
   slug: string
@@ -226,6 +227,9 @@ function validate(data: SeedData): void {
       if (!languageCodes.has(code)) fail(`provider ${p.slug}: unknown language "${code}"`)
     }
     if (p.languages.length === 0) fail(`provider ${p.slug}: no service language`)
+    if (p.entity_type !== 'place' && p.entity_type !== 'pro') {
+      fail(`provider ${p.slug}: entity_type must be place|pro, got "${p.entity_type}"`)
+    }
     if (p.fulfillment_type === 'external_order' && !p.external_order_url) {
       fail(`provider ${p.slug}: external_order needs external_order_url`)
     }
@@ -272,6 +276,8 @@ async function seedProvider(supabase: Client, p: SeedProvider): Promise<void> {
         cover_image: providerImage(p.image_seed),
         fulfillment_type: p.fulfillment_type,
         external_order_url: p.external_order_url,
+        entity_type: p.entity_type,
+        claim_status: 'claimed', // demo cards are "ours", not public-data listings
         status: 'draft',
       },
       { onConflict: 'slug' },

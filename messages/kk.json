@@ -65,7 +65,9 @@
     "enquiryHint": "Contact the provider directly to arrange this service.",
     "closed": "Closed",
     "languageConfirmed": "{language} тілінде қызмет көрсету расталды",
-    "languageProfessional": "кәсіби"
+    "languageProfessional": "кәсіби",
+    "insuranceVerified": "Сақтандыру расталды",
+    "dbsVerified": "DBS тексерілді ({type})"
   },
   "search": {
     "title": "Search",

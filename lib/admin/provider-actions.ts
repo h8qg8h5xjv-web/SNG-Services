@@ -55,6 +55,11 @@ export async function saveProvider(
     fulfillment_type: d.fulfillment_type,
     external_order_url:
       d.fulfillment_type === 'external_order' ? d.external_order_url : null,
+    entity_type: d.entity_type,
+    claim_status: d.claim_status,
+    booking_enabled: d.booking_enabled,
+    // Pro-only; the DB CHECK rejects a radius on a place, so null it explicitly.
+    travel_radius_km: d.entity_type === 'pro' ? d.travel_radius_km : null,
   }
 
   // Upsert as draft first so rebuilding languages never trips the publish trigger.

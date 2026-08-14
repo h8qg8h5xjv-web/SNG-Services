@@ -23,6 +23,8 @@ name after it is the logical step.
 | `…14_cabinets_roles` | `provider_members`/`provider_invites`, 4-principal RLS, invite flow |
 | `…15_requests` | Request/broadcast model, contact-hiding RLS, atomic accept, stats view |
 | `…16_language_verification` | `provider_languages` verification (claimed/verified/rejected), publish rule needs a verified language, admin-only verification |
+| `…17_language_professional_level` | Per-language `professional_level` flag (legal/health), admin-only |
+| `…18_entity_type` | `place`\|`pro` axis, `claim_status`, `booking_enabled`, place/pro fields, insurance + DBS credentials (admin-verified) |
 
 ## Local development (Docker required)
 
@@ -76,6 +78,13 @@ and a non-null `verified_by`.
   `enforce_language_verification_authority()` (a trigger), which blocks any
   logged-in non-admin from writing the verification columns. Publication
   requires at least one `verified`, non-expired language.
+- **place vs pro.** `entity_type` is a second axis, independent of
+  `fulfillment_type`. Place-only fields (`opening_hours`, `venue_photos`) and
+  pro-only fields (`travel_radius_km`, insurance, DBS) are mutually exclusive by
+  CHECK constraint. Insurance and DBS follow the language model — a provider may
+  self-declare, only an admin may verify; a verified credential that has passed
+  its `expires_at` reads as `self_declared` (computed, no job). **Document scans
+  are never stored** — only the status, an expiry, and a document number.
 - **Roles.** `service_role` (used by the seed script and privileged server code)
   bypasses RLS. Anonymous users only ever read published content; all writes are
   admin-only. An admin is an authenticated user whose JWT carries

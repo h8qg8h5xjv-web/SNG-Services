@@ -65,7 +65,9 @@
     "enquiryHint": "Contact the provider directly to arrange this service.",
     "closed": "Closed",
     "languageConfirmed": "Service in {language} confirmed",
-    "languageProfessional": "professional"
+    "languageProfessional": "professional",
+    "insuranceVerified": "Insurance verified",
+    "dbsVerified": "DBS checked ({type})"
   },
   "search": {
     "title": "Search",

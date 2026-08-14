@@ -1,5 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
-import type { FulfillmentType, LanguageVerificationStatus } from '@/types/database'
+import type {
+  FulfillmentType,
+  LanguageVerificationStatus,
+  EntityType,
+  CredentialStatus,
+  DbsType,
+} from '@/types/database'
 import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
@@ -55,6 +61,14 @@ export type ProviderDetail = {
   cover_image: string | null
   fulfillment_type: FulfillmentType
   external_order_url: string | null
+  entity_type: EntityType
+  booking_enabled: boolean
+  travel_radius_km: number | null
+  insurance_status: CredentialStatus
+  insurance_expires_at: string | null
+  dbs_status: CredentialStatus
+  dbs_type: DbsType | null
+  dbs_expires_at: string | null
   categories: { slug: string; name_en: string; name_ru: string } | null
   provider_translations: Translation[]
   services: {
@@ -85,6 +99,8 @@ export type ProviderDetail = {
 const DETAIL_SELECT =
   'id, slug, name_en, description_en, borough, address, lat, lng, phone, telegram, instagram, website, ' +
   'cover_image, fulfillment_type, external_order_url, ' +
+  'entity_type, booking_enabled, travel_radius_km, ' +
+  'insurance_status, insurance_expires_at, dbs_status, dbs_type, dbs_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(id,name_en,name_ru,description_en,description_ru,price_pence,duration_min,capacity), ' +
@@ -118,6 +134,41 @@ export function serviceLanguageBadges(
         : [],
     )
     .sort((a, b) => Number(b.verified) - Number(a.verified) || a.name.localeCompare(b.name))
+}
+
+export type ProviderCredentials = {
+  insuranceVerified: boolean
+  dbsVerified: boolean
+  dbsType: DbsType | null
+}
+
+/**
+ * Effective credential state for a pro's public card. A verified credential
+ * whose expiry has passed is NOT shown as verified — it reads as self_declared
+ * (DESIGN), computed from expires_at with no background job.
+ */
+export function providerCredentials(
+  p: Pick<
+    ProviderDetail,
+    | 'entity_type'
+    | 'insurance_status'
+    | 'insurance_expires_at'
+    | 'dbs_status'
+    | 'dbs_type'
+    | 'dbs_expires_at'
+  >,
+  now: number = Date.now(),
+): ProviderCredentials {
+  const active = (status: CredentialStatus, expires: string | null) =>
+    status === 'verified' && (expires === null || Date.parse(expires) > now)
+  if (p.entity_type !== 'pro') {
+    return { insuranceVerified: false, dbsVerified: false, dbsType: null }
+  }
+  return {
+    insuranceVerified: active(p.insurance_status, p.insurance_expires_at),
+    dbsVerified: active(p.dbs_status, p.dbs_expires_at),
+    dbsType: p.dbs_type,
+  }
 }
 
 /**

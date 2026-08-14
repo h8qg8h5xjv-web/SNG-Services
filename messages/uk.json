@@ -65,7 +65,9 @@
     "enquiryHint": "Contact the provider directly to arrange this service.",
     "closed": "Closed",
     "languageConfirmed": "обслуговування {language} підтверджено",
-    "languageProfessional": "проф."
+    "languageProfessional": "проф.",
+    "insuranceVerified": "Страховку підтверджено",
+    "dbsVerified": "DBS перевірено ({type})"
   },
   "search": {
     "title": "Search",

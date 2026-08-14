@@ -3,6 +3,8 @@ import { EVENT_CATEGORIES } from '../events/constants'
 
 export const FULFILLMENT_TYPES = ['native_booking', 'external_order', 'enquiry'] as const
 export const CONTENT_STATUSES = ['draft', 'published'] as const
+export const ENTITY_TYPES = ['place', 'pro'] as const
+export const CLAIM_STATUSES = ['unclaimed', 'claimed', 'invited'] as const
 export const TRANSLATION_LOCALES = ['ru', 'uk', 'kk', 'ka', 'hy'] as const
 
 const slug = z
@@ -56,6 +58,10 @@ export const providerInputSchema = z
     fulfillment_type: z.enum(FULFILLMENT_TYPES),
     external_order_url: optionalUrl.default(null),
     status: z.enum(CONTENT_STATUSES),
+    entity_type: z.enum(ENTITY_TYPES),
+    claim_status: z.enum(CLAIM_STATUSES),
+    booking_enabled: z.boolean().default(true),
+    travel_radius_km: z.number().int().min(0).nullable().default(null),
     languages: z.array(z.string()).default([]),
     translations: z.array(translationSchema).default([]),
     services: z.array(serviceSchema).default([]),
@@ -74,6 +80,13 @@ export const providerInputSchema = z
         path: ['languages'],
         code: z.ZodIssueCode.custom,
         message: 'A published provider must serve at least one CIS language.',
+      })
+    }
+    if (val.entity_type === 'place' && val.travel_radius_km !== null) {
+      ctx.addIssue({
+        path: ['travel_radius_km'],
+        code: z.ZodIssueCode.custom,
+        message: 'Travel radius applies to a pro, not a place.',
       })
     }
     if (val.fulfillment_type !== 'native_booking' && val.schedule.length > 0) {

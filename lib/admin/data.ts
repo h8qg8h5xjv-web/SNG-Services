@@ -6,6 +6,10 @@ import type {
   EventCategory,
   LanguageVerificationStatus,
   LanguageVerificationMethod,
+  EntityType,
+  ClaimStatus,
+  CredentialStatus,
+  DbsType,
 } from '@/types/database'
 
 export type AdminProviderLanguage = {
@@ -65,6 +69,21 @@ export type AdminProviderDetail = {
   fulfillment_type: FulfillmentType
   external_order_url: string | null
   status: ContentStatus
+  entity_type: EntityType
+  claim_status: ClaimStatus
+  booking_enabled: boolean
+  travel_radius_km: number | null
+  insurance_status: CredentialStatus
+  insurance_verified_at: string | null
+  insurance_expires_at: string | null
+  insurance_document_ref: string | null
+  insurance_note: string | null
+  dbs_status: CredentialStatus
+  dbs_type: DbsType | null
+  dbs_verified_at: string | null
+  dbs_expires_at: string | null
+  dbs_document_ref: string | null
+  dbs_note: string | null
   provider_languages: AdminProviderLanguage[]
   provider_translations: { locale: string; name: string | null; description: string | null }[]
   services: {
@@ -86,6 +105,9 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
     .from('providers')
     .select(
       'id, slug, name_en, description_en, category_id, borough, address, lat, lng, phone, telegram, instagram, website, cover_image, fulfillment_type, external_order_url, status, ' +
+        'entity_type, claim_status, booking_enabled, travel_radius_km, ' +
+        'insurance_status, insurance_verified_at, insurance_expires_at, insurance_document_ref, insurance_note, ' +
+        'dbs_status, dbs_type, dbs_verified_at, dbs_expires_at, dbs_document_ref, dbs_note, ' +
         'provider_languages(language_code,status,method,verified_at,expires_at,note,professional_level), ' +
         'provider_translations(locale,name,description), ' +
         'services(id,name_en,name_ru,description_en,description_ru,duration_min,price_pence,capacity), ' +

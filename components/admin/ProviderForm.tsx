@@ -62,7 +62,11 @@ export default function ProviderForm({
     fulfillment_type: provider?.fulfillment_type ?? 'native_booking',
     external_order_url: provider?.external_order_url ?? '',
     status: provider?.status ?? 'draft',
+    entity_type: provider?.entity_type ?? 'place',
+    claim_status: provider?.claim_status ?? 'unclaimed',
+    travel_radius_km: provider?.travel_radius_km?.toString() ?? '',
   })
+  const [bookingEnabled, setBookingEnabled] = useState(provider?.booking_enabled ?? true)
   const set = (key: keyof typeof f, value: string) =>
     setF((prev) => ({ ...prev, [key]: value }))
 
@@ -123,6 +127,10 @@ export default function ProviderForm({
       fulfillment_type: f.fulfillment_type,
       external_order_url: orNull(f.external_order_url),
       status: f.status,
+      entity_type: f.entity_type,
+      claim_status: f.claim_status,
+      booking_enabled: bookingEnabled,
+      travel_radius_km: f.entity_type === 'pro' ? numOrNull(f.travel_radius_km) : null,
       languages: selectedLangs,
       translations: translations.map((t) => ({
         locale: t.locale,
@@ -259,6 +267,50 @@ export default function ProviderForm({
           value={f.external_order_url}
           onChange={(v) => set('external_order_url', v)}
           error={errors['external_order_url']}
+        />
+      )}
+
+      {/* Second axis (DESIGN §2в): place vs pro, plus claim + booking toggle. */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <label className="block text-sm">
+          <span className="text-foreground/70">Entity type</span>
+          <select
+            value={f.entity_type}
+            onChange={(e) => set('entity_type', e.target.value)}
+            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+          >
+            <option value="place">place — заведение</option>
+            <option value="pro">pro — специалист</option>
+          </select>
+        </label>
+        <label className="block text-sm">
+          <span className="text-foreground/70">Claim status</span>
+          <select
+            value={f.claim_status}
+            onChange={(e) => set('claim_status', e.target.value)}
+            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+          >
+            <option value="unclaimed">unclaimed</option>
+            <option value="claimed">claimed</option>
+            <option value="invited">invited</option>
+          </select>
+        </label>
+        <label className="flex items-center gap-2 self-end pb-2 text-sm">
+          <input
+            type="checkbox"
+            checked={bookingEnabled}
+            onChange={(e) => setBookingEnabled(e.target.checked)}
+          />
+          Booking enabled
+        </label>
+      </div>
+
+      {f.entity_type === 'pro' && (
+        <Field
+          label="Travel radius (km)"
+          value={f.travel_radius_km}
+          onChange={(v) => set('travel_radius_km', v)}
+          error={errors['travel_radius_km']}
         />
       )}
 

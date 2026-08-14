@@ -43,7 +43,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "anna-nails-w3",
@@ -74,7 +75,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "kavkaz-barbers",
@@ -107,7 +109,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "smile-dental-chiswick",
@@ -139,7 +142,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "marina-psychologist",
@@ -171,7 +175,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "raduga-russian-school",
@@ -202,7 +207,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "logoped-online-uk",
@@ -234,7 +240,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "english-with-dina",
@@ -266,7 +273,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "maths-tutor-nw",
@@ -299,7 +307,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "master-na-chas-london",
@@ -331,7 +340,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "chisto-cleaning",
@@ -364,7 +374,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "vango-movers",
@@ -396,7 +407,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "posylka-cis",
@@ -422,7 +434,8 @@
         }
       ],
       "fulfillment_type": "enquiry",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "vizu-immigration",
@@ -448,7 +461,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "buhgalter-london",
@@ -474,7 +488,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "chaikhana-samarkand",
@@ -500,7 +515,8 @@
         }
       ],
       "fulfillment_type": "external_order",
-      "external_order_url": "https://www.ubereats.com/gb"
+      "external_order_url": "https://www.ubereats.com/gb",
+      "entity_type": "place"
     },
     {
       "slug": "kafe-babushka",
@@ -517,7 +533,8 @@
       "image_seed": "babushka",
       "services": [],
       "fulfillment_type": "external_order",
-      "external_order_url": "https://deliveroo.co.uk"
+      "external_order_url": "https://deliveroo.co.uk",
+      "entity_type": "place"
     },
     {
       "slug": "torty-na-zakaz",
@@ -542,7 +559,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "strong-studio-fulham",
@@ -574,7 +592,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "yoga-with-alina",
@@ -606,7 +625,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "auto-service-kirill",
@@ -639,7 +659,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     },
     {
       "slug": "foto-svetlana",
@@ -664,7 +685,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "pro"
     },
     {
       "slug": "groom-lapki",
@@ -696,7 +718,8 @@
         }
       ],
       "fulfillment_type": "native_booking",
-      "external_order_url": null
+      "external_order_url": null,
+      "entity_type": "place"
     }
   ],
   "events": [
