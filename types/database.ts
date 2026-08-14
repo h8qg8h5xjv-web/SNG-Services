@@ -6,6 +6,9 @@
 export type FulfillmentType = 'native_booking' | 'external_order' | 'enquiry'
 export type ContentStatus = 'draft' | 'published'
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+export type LanguageVerificationStatus = 'claimed' | 'verified' | 'rejected'
+// 'seed' = demo data, never a real check. Real checks: call | voice_sample | video_call.
+export type LanguageVerificationMethod = 'seed' | 'call' | 'voice_sample' | 'video_call'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -154,9 +157,36 @@ export interface Database {
         ]
       }
       provider_languages: {
-        Row: { provider_id: string; language_code: string }
-        Insert: { provider_id: string; language_code: string }
-        Update: { provider_id?: string; language_code?: string }
+        Row: {
+          provider_id: string
+          language_code: string
+          status: LanguageVerificationStatus
+          verified_by: string | null
+          verified_at: string | null
+          method: LanguageVerificationMethod | null
+          expires_at: string | null
+          note: string | null
+        }
+        Insert: {
+          provider_id: string
+          language_code: string
+          status?: LanguageVerificationStatus
+          verified_by?: string | null
+          verified_at?: string | null
+          method?: LanguageVerificationMethod | null
+          expires_at?: string | null
+          note?: string | null
+        }
+        Update: {
+          provider_id?: string
+          language_code?: string
+          status?: LanguageVerificationStatus
+          verified_by?: string | null
+          verified_at?: string | null
+          method?: LanguageVerificationMethod | null
+          expires_at?: string | null
+          note?: string | null
+        }
         Relationships: [
           {
             foreignKeyName: 'provider_languages_provider_id_fkey'

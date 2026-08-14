@@ -22,6 +22,7 @@ name after it is the logical step.
 | `…13_service_role_grants` | Table grants for service_role + default privileges |
 | `…14_cabinets_roles` | `provider_members`/`provider_invites`, 4-principal RLS, invite flow |
 | `…15_requests` | Request/broadcast model, contact-hiding RLS, atomic accept, stats view |
+| `…16_language_verification` | `provider_languages` verification (claimed/verified/rejected), publish rule needs a verified language, admin-only verification |
 
 ## Local development (Docker required)
 
@@ -46,8 +47,35 @@ supabase db push          # applies pending migrations to the linked project
 The RLS grants target the Supabase roles `anon` and `authenticated`, which
 already exist on any Supabase project.
 
+## Before a real launch: delete the demo data
+
+The seed marks every provider's language as `status = 'verified'` with
+`method = 'seed'` and `note = 'demo data, not actually verified'`. This is what
+lets the 21 demo providers stay published under the "published needs a verified
+language" rule without pretending a real check happened. **These are not real
+verifications.** Before onboarding real providers, delete the demo rows (or at
+least reset their languages to `claimed`). Find everything still relying on a
+seed verification:
+
+```sql
+select p.slug, pl.language_code
+from public.provider_languages pl
+join public.providers p on p.id = pl.provider_id
+where pl.method = 'seed';
+```
+
+The admin panel exposes the same view under **Providers → «Подтверждения из
+сида»**. Real checks always have `method in ('call','voice_sample','video_call')`
+and a non-null `verified_by`.
+
 ## Notes
 
+- **Language verification.** A provider may *claim* a language (insert a
+  `provider_languages` row, which defaults to `status = 'claimed'`); only an
+  admin may set it to `verified`/`rejected`. This is enforced by
+  `enforce_language_verification_authority()` (a trigger), which blocks any
+  logged-in non-admin from writing the verification columns. Publication
+  requires at least one `verified`, non-expired language.
 - **Roles.** `service_role` (used by the seed script and privileged server code)
   bypasses RLS. Anonymous users only ever read published content; all writes are
   admin-only. An admin is an authenticated user whose JWT carries

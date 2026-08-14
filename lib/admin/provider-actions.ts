@@ -78,11 +78,31 @@ export async function saveProvider(
   }
   const pid = providerId as string
 
-  await supabase.from('provider_languages').delete().eq('provider_id', pid)
-  if (d.languages.length) {
+  // Reconcile languages instead of rebuilding: a language row carries its
+  // verification (status/method/verified_by…), so we must not delete-and-reinsert
+  // or every save would wipe it. Drop only unchecked ones; add newly checked ones
+  // as 'claimed' (the default); leave the rest — and their verification — intact.
+  const { data: currentLangs, error: langReadError } = await supabase
+    .from('provider_languages')
+    .select('language_code')
+    .eq('provider_id', pid)
+  if (langReadError) return { ok: false, formError: langReadError.message }
+  const current = new Set((currentLangs ?? []).map((r) => r.language_code))
+  const wanted = new Set(d.languages)
+  const toAdd = d.languages.filter((code) => !current.has(code))
+  const toRemove = [...current].filter((code) => !wanted.has(code))
+  if (toRemove.length) {
     const { error } = await supabase
       .from('provider_languages')
-      .insert(d.languages.map((code) => ({ provider_id: pid, language_code: code })))
+      .delete()
+      .eq('provider_id', pid)
+      .in('language_code', toRemove)
+    if (error) return { ok: false, formError: error.message }
+  }
+  if (toAdd.length) {
+    const { error } = await supabase
+      .from('provider_languages')
+      .insert(toAdd.map((code) => ({ provider_id: pid, language_code: code })))
     if (error) return { ok: false, formError: error.message }
   }
 

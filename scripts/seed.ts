@@ -286,11 +286,20 @@ async function seedProvider(supabase: Client, p: SeedProvider): Promise<void> {
     `clear languages ${p.slug}`,
     supabase.from('provider_languages').delete().eq('provider_id', providerId),
   )
+  // Seed languages are marked verified so the publish rule passes from day one,
+  // but method='seed' + an honest note keep them distinguishable from real
+  // checks (README: delete demo data before a real launch).
   await run(
     `insert languages ${p.slug}`,
-    supabase
-      .from('provider_languages')
-      .insert(p.languages.map((code) => ({ provider_id: providerId, language_code: code }))),
+    supabase.from('provider_languages').insert(
+      p.languages.map((code) => ({
+        provider_id: providerId,
+        language_code: code,
+        status: 'verified' as const,
+        method: 'seed' as const,
+        note: 'demo data, not actually verified',
+      })),
+    ),
   )
 
   // Russian translation.

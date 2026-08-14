@@ -1,6 +1,21 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Category, Language } from '@/types'
-import type { FulfillmentType, ContentStatus, EventCategory } from '@/types/database'
+import type {
+  FulfillmentType,
+  ContentStatus,
+  EventCategory,
+  LanguageVerificationStatus,
+  LanguageVerificationMethod,
+} from '@/types/database'
+
+export type AdminProviderLanguage = {
+  language_code: string
+  status: LanguageVerificationStatus
+  method: LanguageVerificationMethod | null
+  verified_at: string | null
+  expires_at: string | null
+  note: string | null
+}
 
 // Admin reads see drafts too (RLS grants admins full read).
 
@@ -12,7 +27,7 @@ export type AdminProviderRow = {
   fulfillment_type: FulfillmentType
   borough: string
   categories: { slug: string; name_en: string } | null
-  provider_languages: { language_code: string }[]
+  provider_languages: { language_code: string; status: LanguageVerificationStatus; method: LanguageVerificationMethod | null }[]
   provider_translations: { locale: string; description: string | null }[]
 }
 
@@ -22,7 +37,7 @@ export async function listAdminProviders(): Promise<AdminProviderRow[]> {
     .from('providers')
     .select(
       'id, slug, name_en, status, fulfillment_type, borough, ' +
-        'categories(slug,name_en), provider_languages(language_code), ' +
+        'categories(slug,name_en), provider_languages(language_code,status,method), ' +
         'provider_translations(locale,description)',
     )
     .order('name_en', { ascending: true })
@@ -49,7 +64,7 @@ export type AdminProviderDetail = {
   fulfillment_type: FulfillmentType
   external_order_url: string | null
   status: ContentStatus
-  provider_languages: { language_code: string }[]
+  provider_languages: AdminProviderLanguage[]
   provider_translations: { locale: string; name: string | null; description: string | null }[]
   services: {
     id: string
@@ -70,7 +85,7 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
     .from('providers')
     .select(
       'id, slug, name_en, description_en, category_id, borough, address, lat, lng, phone, telegram, instagram, website, cover_image, fulfillment_type, external_order_url, status, ' +
-        'provider_languages(language_code), ' +
+        'provider_languages(language_code,status,method,verified_at,expires_at,note), ' +
         'provider_translations(locale,name,description), ' +
         'services(id,name_en,name_ru,description_en,description_ru,duration_min,price_pence,capacity), ' +
         'schedules(day_of_week,start_time,end_time)',
