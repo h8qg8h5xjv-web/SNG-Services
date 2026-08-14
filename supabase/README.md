@@ -1,39 +1,47 @@
 # Migrations
 
-Numbered SQL migrations, applied in order. Never edit the schema through the
-Supabase UI — every change is a new numbered file here (see `CLAUDE.md`).
+Migrations live in `supabase/migrations/` and are applied in filename order by
+the Supabase CLI. Never edit the schema through the Supabase UI — every change is
+a new migration file (see `CLAUDE.md`). Timestamp prefixes set the order; the
+name after it is the logical step.
 
-| File | Contents |
+| Migration (`…_name.sql`) | Contents |
 |---|---|
-| `0001_init.sql` | Helper functions: `set_updated_at()`, `is_admin()` |
-| `0002_reference.sql` | `categories`, `languages` |
-| `0003_providers.sql` | `providers`, `provider_languages`, `provider_translations`, `services` + published-language triggers |
-| `0004_scheduling.sql` | `schedules`, `schedule_exceptions` + native-booking-only trigger |
-| `0005_bookings.sql` | `bookings` + capacity-overflow / native-only trigger |
-| `0006_events.sql` | `events` (afisha) |
-| `0007_indexes.sql` | Indexes for the catalog and afisha query patterns |
-| `0008_rls.sql` | RLS enabled on every table + read/write policies |
-| `0009_storage.sql` | Public `images` bucket + admin-only write policies |
-| `0010_booking_capacity_pending.sql` | Capacity guard counts pending + confirmed |
-| `0011_provider_events.sql` | Pseudonymous analytics log (no IP/UA) + indexes |
-| `0012_slot_participants.sql` | Security-definer function: opted-in group-slot names only |
+| `…01_init` | Helper functions: `set_updated_at()`, `is_admin()` |
+| `…02_reference` | `categories`, `languages` |
+| `…03_providers` | `providers`, `provider_languages`, `provider_translations`, `services` + published-language triggers |
+| `…04_scheduling` | `schedules`, `schedule_exceptions` + native-booking-only trigger |
+| `…05_bookings` | `bookings` + capacity-overflow / native-only trigger |
+| `…06_events` | `events` (afisha) |
+| `…07_indexes` | Indexes for the catalog and afisha query patterns |
+| `…08_rls` | RLS enabled on every table + read/write policies |
+| `…09_storage` | Public `images` bucket + admin-only write policies |
+| `…10_booking_capacity_pending` | Capacity guard counts pending + confirmed |
+| `…11_provider_events` | Pseudonymous analytics log (no IP/UA) + indexes |
+| `…12_slot_participants` | Security-definer function: opted-in group-slot names only |
 
-## Applying
-
-With the Supabase CLI (recommended):
+## Local development (Docker required)
 
 ```bash
+supabase start            # boots Postgres, Studio, Auth, Storage… (pulls images)
+supabase db reset         # drops the local DB and re-applies every migration
+npm run seed              # loads demo data (uses .env.local)
+```
+
+`supabase start` prints the local **API URL**, **anon key**, **service_role key**
+and **Studio URL** — put the first three in `.env.local` (service_role WITHOUT the
+`NEXT_PUBLIC_` prefix). Studio (default `http://127.0.0.1:54323`) lets you browse
+the tables.
+
+## Applying to a hosted project
+
+```bash
+supabase link --project-ref <ref>
 supabase db push          # applies pending migrations to the linked project
 ```
 
-Or against any Postgres 13+ connection, in order:
-
-```bash
-for f in supabase/0*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"; done
-```
-
-The RLS grants target the Supabase roles `anon` and `authenticated`; those roles
-already exist on a Supabase project.
+The RLS grants target the Supabase roles `anon` and `authenticated`, which
+already exist on any Supabase project.
 
 ## Notes
 

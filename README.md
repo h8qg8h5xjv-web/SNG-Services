@@ -79,8 +79,9 @@ next-intl, база `en`, префикс в URL всегда явный (`/en`, 
 2. Задай переменные окружения (см. таблицу выше) в Project Settings → Environment
    Variables. `NEXT_PUBLIC_SITE_URL` — продовый домен (влияет на canonical,
    hreflang, sitemap, OG).
-3. Примени миграции к проекту Supabase: `supabase db push` (или прогони
-   `supabase/00*.sql` по порядку). Детали — в `supabase/README.md`.
+3. Примени миграции к проекту Supabase: `supabase link --project-ref <ref>` и
+   `supabase db push`. Локально — `supabase start` + `supabase db reset`. Детали —
+   в `supabase/README.md`.
 4. Выдай себе права админа (`app_metadata.is_admin = true`), включи Email-провайдер
    (magic link) и добавь `<домен>/admin/auth/confirm` в Redirect URLs Supabase.
 5. Залей демо-данные при необходимости: `npm run seed` (нужен
