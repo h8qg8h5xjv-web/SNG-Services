@@ -67,7 +67,10 @@
     "languageConfirmed": "Service in {language} confirmed",
     "languageProfessional": "professional",
     "insuranceVerified": "Insurance verified",
-    "dbsVerified": "DBS checked ({type})"
+    "dbsVerified": "DBS checked ({type})",
+    "openNow": "Open now",
+    "closedNow": "Closed now",
+    "gallery": "Photos"
   },
   "search": {
     "title": "Search",

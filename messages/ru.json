@@ -67,7 +67,10 @@
     "languageConfirmed": "обслуживание на {language} подтверждено",
     "languageProfessional": "проф.",
     "insuranceVerified": "Страховка подтверждена",
-    "dbsVerified": "DBS проверен ({type})"
+    "dbsVerified": "DBS проверен ({type})",
+    "openNow": "Открыто сейчас",
+    "closedNow": "Закрыто сейчас",
+    "gallery": "Фото"
   },
   "search": {
     "title": "Поиск",

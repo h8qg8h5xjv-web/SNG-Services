@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { saveProvider, deleteProvider } from '@/lib/admin/provider-actions'
 import { TRANSLATION_LOCALES } from '@/lib/admin/schemas'
 import ImageUpload from './ImageUpload'
+import OpeningHoursEditor from './OpeningHoursEditor'
+import VenuePhotos from './VenuePhotos'
+import { parseOpeningHours, type OpeningHours } from '@/lib/hours'
 import type { AdminProviderDetail } from '@/lib/admin/data'
 import type { Category, Language } from '@/types'
 
@@ -67,6 +70,13 @@ export default function ProviderForm({
     travel_radius_km: provider?.travel_radius_km?.toString() ?? '',
   })
   const [bookingEnabled, setBookingEnabled] = useState(provider?.booking_enabled ?? true)
+  const [openingHours, setOpeningHours] = useState<OpeningHours>(
+    parseOpeningHours(provider?.opening_hours) ?? {},
+  )
+  const [venuePhotos, setVenuePhotos] = useState<string[]>(provider?.venue_photos ?? [])
+  // Fast entry for a place captured from public data (name/category/address/hours/
+  // contacts only). Creation only; existing cards use the full form.
+  const [quickCreate, setQuickCreate] = useState(false)
   const set = (key: keyof typeof f, value: string) =>
     setF((prev) => ({ ...prev, [key]: value }))
 
@@ -113,7 +123,10 @@ export default function ProviderForm({
     const payload = {
       slug: f.slug.trim(),
       name_en: f.name_en.trim(),
-      description_en: f.description_en.trim(),
+      // Quick-create places may have no description yet — fall back to the name
+      // so the NOT NULL base field is satisfied.
+      description_en:
+        quickCreate && !f.description_en.trim() ? f.name_en.trim() : f.description_en.trim(),
       category_id: f.category_id,
       borough: f.borough.trim(),
       address: orNull(f.address),
@@ -131,24 +144,30 @@ export default function ProviderForm({
       claim_status: f.claim_status,
       booking_enabled: bookingEnabled,
       travel_radius_km: f.entity_type === 'pro' ? numOrNull(f.travel_radius_km) : null,
-      languages: selectedLangs,
-      translations: translations.map((t) => ({
-        locale: t.locale,
-        name: orNull(t.name),
-        description: orNull(t.description),
-      })),
-      services: services.map((s) => ({
-        id: s.id,
-        name_en: s.name_en.trim(),
-        name_ru: orNull(s.name_ru),
-        description_en: null,
-        description_ru: null,
-        duration_min: Number(s.duration_min),
-        price_pence: Number(s.price_pence),
-        capacity: Number(s.capacity),
-      })),
+      opening_hours: f.entity_type === 'place' ? openingHours : null,
+      venue_photos: f.entity_type === 'place' ? venuePhotos : null,
+      languages: quickCreate ? [] : selectedLangs,
+      translations: quickCreate
+        ? []
+        : translations.map((t) => ({
+            locale: t.locale,
+            name: orNull(t.name),
+            description: orNull(t.description),
+          })),
+      services: quickCreate
+        ? []
+        : services.map((s) => ({
+            id: s.id,
+            name_en: s.name_en.trim(),
+            name_ru: orNull(s.name_ru),
+            description_en: null,
+            description_ru: null,
+            duration_min: Number(s.duration_min),
+            price_pence: Number(s.price_pence),
+            capacity: Number(s.capacity),
+          })),
       schedule:
-        f.fulfillment_type === 'native_booking'
+        !quickCreate && f.fulfillment_type === 'native_booking'
           ? schedule.map((r) => ({
               day_of_week: Number(r.day_of_week),
               start_time: r.start_time,
@@ -197,6 +216,30 @@ export default function ProviderForm({
             ))}
           </ul>
         </div>
+      )}
+
+      {!provider && (
+        <label className="flex items-center gap-2 rounded-lg border border-black/10 p-3 text-sm dark:border-white/10">
+          <input
+            type="checkbox"
+            checked={quickCreate}
+            onChange={(e) => {
+              const on = e.target.checked
+              setQuickCreate(on)
+              if (on) {
+                setF((prev) => ({
+                  ...prev,
+                  entity_type: 'place',
+                  claim_status: 'unclaimed',
+                  fulfillment_type: 'enquiry',
+                  status: 'draft',
+                }))
+                setBookingEnabled(false)
+              }
+            }}
+          />
+          Быстрый режим: место по публичным данным (без услуг и расписания)
+        </label>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -314,24 +357,39 @@ export default function ProviderForm({
         />
       )}
 
-      <fieldset>
-        <legend className="text-sm text-foreground/70">Service languages (CIS)</legend>
-        <div className="mt-2 flex flex-wrap gap-3">
-          {languages.map((l) => (
-            <label key={l.code} className="inline-flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={selectedLangs.includes(l.code)}
-                onChange={() => toggleLang(l.code)}
-              />
-              {l.name_native} <span className="text-foreground/40">({l.code})</span>
-            </label>
-          ))}
-        </div>
-        {errors['languages'] && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors['languages']}</p>
-        )}
-      </fieldset>
+      {f.entity_type === 'place' && (
+        <>
+          <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
+            <h3 className="mb-3 text-sm font-medium">Часы работы</h3>
+            <OpeningHoursEditor value={openingHours} onChange={setOpeningHours} />
+          </section>
+          <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
+            <h3 className="mb-3 text-sm font-medium">Фото зала</h3>
+            <VenuePhotos value={venuePhotos} onChange={setVenuePhotos} />
+          </section>
+        </>
+      )}
+
+      {!quickCreate && (
+        <fieldset>
+          <legend className="text-sm text-foreground/70">Service languages (CIS)</legend>
+          <div className="mt-2 flex flex-wrap gap-3">
+            {languages.map((l) => (
+              <label key={l.code} className="inline-flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={selectedLangs.includes(l.code)}
+                  onChange={() => toggleLang(l.code)}
+                />
+                {l.name_native} <span className="text-foreground/40">({l.code})</span>
+              </label>
+            ))}
+          </div>
+          {errors['languages'] && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors['languages']}</p>
+          )}
+        </fieldset>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Latitude" value={f.lat} onChange={(v) => set('lat', v)} />
@@ -348,6 +406,8 @@ export default function ProviderForm({
         <ImageUpload value={coverImage} onChange={setCoverImage} />
       </div>
 
+      {!quickCreate && (
+      <>
       {/* Translations — the editor shows every locale so gaps are visible. */}
       <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
         <h3 className="mb-3 text-sm font-medium">Translations</h3>
@@ -454,6 +514,8 @@ export default function ProviderForm({
           ))}
         </div>
       </section>
+      </>
+      )}
 
       {/* Schedule — native_booking only */}
       {f.fulfillment_type === 'native_booking' && (

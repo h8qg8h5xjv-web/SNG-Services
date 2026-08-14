@@ -5,6 +5,7 @@ import type {
   EntityType,
   CredentialStatus,
   DbsType,
+  Json,
 } from '@/types/database'
 import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
@@ -64,6 +65,8 @@ export type ProviderDetail = {
   entity_type: EntityType
   booking_enabled: boolean
   travel_radius_km: number | null
+  opening_hours: Json | null
+  venue_photos: string[] | null
   insurance_status: CredentialStatus
   insurance_expires_at: string | null
   dbs_status: CredentialStatus
@@ -99,7 +102,7 @@ export type ProviderDetail = {
 const DETAIL_SELECT =
   'id, slug, name_en, description_en, borough, address, lat, lng, phone, telegram, instagram, website, ' +
   'cover_image, fulfillment_type, external_order_url, ' +
-  'entity_type, booking_enabled, travel_radius_km, ' +
+  'entity_type, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
   'insurance_status, insurance_expires_at, dbs_status, dbs_type, dbs_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +

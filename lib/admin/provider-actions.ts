@@ -60,6 +60,15 @@ export async function saveProvider(
     booking_enabled: d.booking_enabled,
     // Pro-only; the DB CHECK rejects a radius on a place, so null it explicitly.
     travel_radius_km: d.entity_type === 'pro' ? d.travel_radius_km : null,
+    // Place-only; null them for a pro so the CHECK holds.
+    opening_hours:
+      d.entity_type === 'place' && d.opening_hours && Object.keys(d.opening_hours).length > 0
+        ? d.opening_hours
+        : null,
+    venue_photos:
+      d.entity_type === 'place' && d.venue_photos && d.venue_photos.length > 0
+        ? d.venue_photos
+        : null,
   }
 
   // Upsert as draft first so rebuilding languages never trips the publish trigger.

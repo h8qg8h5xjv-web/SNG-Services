@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { EVENT_CATEGORIES } from '../events/constants'
+import { openingHoursSchema } from '../hours'
 
 export const FULFILLMENT_TYPES = ['native_booking', 'external_order', 'enquiry'] as const
 export const CONTENT_STATUSES = ['draft', 'published'] as const
@@ -62,6 +63,8 @@ export const providerInputSchema = z
     claim_status: z.enum(CLAIM_STATUSES),
     booking_enabled: z.boolean().default(true),
     travel_radius_km: z.number().int().min(0).nullable().default(null),
+    opening_hours: openingHoursSchema.default(null),
+    venue_photos: z.array(z.string()).max(6).nullable().default(null),
     languages: z.array(z.string()).default([]),
     translations: z.array(translationSchema).default([]),
     services: z.array(serviceSchema).default([]),
@@ -87,6 +90,17 @@ export const providerInputSchema = z
         path: ['travel_radius_km'],
         code: z.ZodIssueCode.custom,
         message: 'Travel radius applies to a pro, not a place.',
+      })
+    }
+    if (
+      val.entity_type === 'pro' &&
+      ((val.opening_hours && Object.keys(val.opening_hours).length > 0) ||
+        (val.venue_photos && val.venue_photos.length > 0))
+    ) {
+      ctx.addIssue({
+        path: ['opening_hours'],
+        code: z.ZodIssueCode.custom,
+        message: 'Opening hours and venue photos apply to a place, not a pro.',
       })
     }
     if (val.fulfillment_type !== 'native_booking' && val.schedule.length > 0) {

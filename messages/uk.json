@@ -67,7 +67,10 @@
     "languageConfirmed": "обслуговування {language} підтверджено",
     "languageProfessional": "проф.",
     "insuranceVerified": "Страховку підтверджено",
-    "dbsVerified": "DBS перевірено ({type})"
+    "dbsVerified": "DBS перевірено ({type})",
+    "openNow": "Зараз відчинено",
+    "closedNow": "Зараз зачинено",
+    "gallery": "Фото"
   },
   "search": {
     "title": "Search",

@@ -10,6 +10,7 @@ import type {
   ClaimStatus,
   CredentialStatus,
   DbsType,
+  Json,
 } from '@/types/database'
 
 export type AdminProviderLanguage = {
@@ -73,6 +74,8 @@ export type AdminProviderDetail = {
   claim_status: ClaimStatus
   booking_enabled: boolean
   travel_radius_km: number | null
+  opening_hours: Json | null
+  venue_photos: string[] | null
   insurance_status: CredentialStatus
   insurance_verified_at: string | null
   insurance_expires_at: string | null
@@ -105,7 +108,7 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
     .from('providers')
     .select(
       'id, slug, name_en, description_en, category_id, borough, address, lat, lng, phone, telegram, instagram, website, cover_image, fulfillment_type, external_order_url, status, ' +
-        'entity_type, claim_status, booking_enabled, travel_radius_km, ' +
+        'entity_type, claim_status, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
         'insurance_status, insurance_verified_at, insurance_expires_at, insurance_document_ref, insurance_note, ' +
         'dbs_status, dbs_type, dbs_verified_at, dbs_expires_at, dbs_document_ref, dbs_note, ' +
         'provider_languages(language_code,status,method,verified_at,expires_at,note,professional_level), ' +

@@ -67,7 +67,10 @@
     "languageConfirmed": "მომსახურება {language} ენაზე დადასტურებულია",
     "languageProfessional": "პროფ.",
     "insuranceVerified": "დაზღვევა დადასტურებულია",
-    "dbsVerified": "DBS შემოწმებულია ({type})"
+    "dbsVerified": "DBS შემოწმებულია ({type})",
+    "openNow": "ახლა ღიაა",
+    "closedNow": "ახლა დახურულია",
+    "gallery": "ფოტოები"
   },
   "search": {
     "title": "Search",

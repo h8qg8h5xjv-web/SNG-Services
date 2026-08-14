@@ -14,6 +14,8 @@ import {
 import { Link } from '@/i18n/navigation'
 import Header from '@/components/Header'
 import ProviderHours from '@/components/ProviderHours'
+import OpeningHours from '@/components/site/OpeningHours'
+import VenueGallery from '@/components/site/VenueGallery'
 import RecordRecentView from '@/components/RecordRecentView'
 import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
@@ -86,7 +88,8 @@ export default async function ProviderPage({
     provider.provider_translations,
     locale,
   )
-  const image = resolveImageUrl(provider.cover_image)
+  // A place's first venue photo is its cover (DESIGN); fall back to cover_image.
+  const image = resolveImageUrl(provider.venue_photos?.[0] ?? provider.cover_image)
   const languages = serviceLanguageBadges(provider.provider_languages)
   const credentials = providerCredentials(provider)
   const isExternal = provider.fulfillment_type === 'external_order'
@@ -252,6 +255,14 @@ export default async function ProviderPage({
             <h2 className="mb-3 text-lg font-medium">{t('provider.hours')}</h2>
             <ProviderHours schedules={provider.schedules} />
           </section>
+        )}
+
+        {/* Place-only: informational opening hours + venue gallery (DESIGN §2в). */}
+        {provider.entity_type === 'place' && (
+          <div className="border-t border-black/10 dark:border-white/10">
+            <OpeningHours hours={provider.opening_hours} locale={locale} />
+            <VenueGallery photos={provider.venue_photos} />
+          </div>
         )}
 
         {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}

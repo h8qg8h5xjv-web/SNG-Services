@@ -67,7 +67,10 @@
     "languageConfirmed": "{language} լեզվով սպասարկումը հաստատված է",
     "languageProfessional": "մասն.",
     "insuranceVerified": "Ապահովագրությունը հաստատված է",
-    "dbsVerified": "DBS ստուգված է ({type})"
+    "dbsVerified": "DBS ստուգված է ({type})",
+    "openNow": "Բաց է հիմա",
+    "closedNow": "Փակ է հիմա",
+    "gallery": "Լուսանկարներ"
   },
   "search": {
     "title": "Search",

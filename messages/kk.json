@@ -67,7 +67,10 @@
     "languageConfirmed": "{language} тілінде қызмет көрсету расталды",
     "languageProfessional": "кәсіби",
     "insuranceVerified": "Сақтандыру расталды",
-    "dbsVerified": "DBS тексерілді ({type})"
+    "dbsVerified": "DBS тексерілді ({type})",
+    "openNow": "Қазір ашық",
+    "closedNow": "Қазір жабық",
+    "gallery": "Фото"
   },
   "search": {
     "title": "Search",
