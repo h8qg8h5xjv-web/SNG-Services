@@ -626,7 +626,7 @@
       ],
       "fulfillment_type": "native_booking",
       "external_order_url": null,
-      "entity_type": "pro"
+      "entity_type": "place"
     },
     {
       "slug": "auto-service-kirill",
