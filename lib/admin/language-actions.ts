@@ -9,6 +9,11 @@ import { isAdmin } from '@/lib/admin/auth'
 // the seed script and can never be chosen here.
 export const VERIFICATION_METHODS = ['call', 'voice_sample', 'video_call'] as const
 
+// A real verification defaults to a 12-month validity (DESIGN «Проверка языка»:
+// «Ставим срок 12 месяцев, дальше язык возвращается в claimed»). Expiry is
+// treated as claimed everywhere (publish rule, badges) without a background job.
+const VERIFICATION_MONTHS = 12
+
 const verifySchema = z.object({
   providerId: z.string().uuid(),
   languageCode: z.string().min(2),
@@ -16,7 +21,14 @@ const verifySchema = z.object({
   method: z.enum(VERIFICATION_METHODS).nullable().default(null),
   note: z.string().trim().max(500).nullable().default(null),
   expiresAt: z.string().datetime().nullable().default(null),
+  professionalLevel: z.boolean().default(false),
 })
+
+function defaultExpiry(): string {
+  const d = new Date()
+  d.setMonth(d.getMonth() + VERIFICATION_MONTHS)
+  return d.toISOString()
+}
 
 export type LanguageActionResult = { ok: true } | { ok: false; error: string }
 
@@ -44,8 +56,9 @@ export async function setLanguageVerification(input: unknown): Promise<LanguageA
           method: d.method,
           verified_by: user.id,
           verified_at: new Date().toISOString(),
-          expires_at: d.expiresAt,
+          expires_at: d.expiresAt ?? defaultExpiry(),
           note: d.note,
+          professional_level: d.professionalLevel,
         }
       : d.status === 'rejected'
         ? {
@@ -55,6 +68,7 @@ export async function setLanguageVerification(input: unknown): Promise<LanguageA
             verified_at: new Date().toISOString(),
             expires_at: null,
             note: d.note,
+            professional_level: false,
           }
         : {
             status: 'claimed' as const,
@@ -63,6 +77,7 @@ export async function setLanguageVerification(input: unknown): Promise<LanguageA
             verified_at: null,
             expires_at: null,
             note: d.note,
+            professional_level: false,
           }
 
   const { error } = await supabase

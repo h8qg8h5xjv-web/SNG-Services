@@ -63,7 +63,9 @@
     "book": "Book",
     "orderOn": "Order on {platform}",
     "enquiryHint": "Contact the provider directly to arrange this service.",
-    "closed": "Closed"
+    "closed": "Closed",
+    "languageConfirmed": "მომსახურება {language} ენაზე დადასტურებულია",
+    "languageProfessional": "პროფ."
   },
   "search": {
     "title": "Search",
@@ -131,13 +133,13 @@
     "min": "min"
   },
   "days": {
+    "0": "Sun",
     "1": "Mon",
     "2": "Tue",
     "3": "Wed",
     "4": "Thu",
     "5": "Fri",
-    "6": "Sat",
-    "0": "Sun"
+    "6": "Sat"
   },
   "empty": {
     "noResults": "Nothing here yet."

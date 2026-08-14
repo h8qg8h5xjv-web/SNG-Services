@@ -166,6 +166,7 @@ export interface Database {
           method: LanguageVerificationMethod | null
           expires_at: string | null
           note: string | null
+          professional_level: boolean
         }
         Insert: {
           provider_id: string
@@ -176,6 +177,7 @@ export interface Database {
           method?: LanguageVerificationMethod | null
           expires_at?: string | null
           note?: string | null
+          professional_level?: boolean
         }
         Update: {
           provider_id?: string
@@ -186,6 +188,7 @@ export interface Database {
           method?: LanguageVerificationMethod | null
           expires_at?: string | null
           note?: string | null
+          professional_level?: boolean
         }
         Relationships: [
           {

@@ -15,6 +15,7 @@ export type AdminProviderLanguage = {
   verified_at: string | null
   expires_at: string | null
   note: string | null
+  professional_level: boolean
 }
 
 // Admin reads see drafts too (RLS grants admins full read).
@@ -85,7 +86,7 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
     .from('providers')
     .select(
       'id, slug, name_en, description_en, category_id, borough, address, lat, lng, phone, telegram, instagram, website, cover_image, fulfillment_type, external_order_url, status, ' +
-        'provider_languages(language_code,status,method,verified_at,expires_at,note), ' +
+        'provider_languages(language_code,status,method,verified_at,expires_at,note,professional_level), ' +
         'provider_translations(locale,name,description), ' +
         'services(id,name_en,name_ru,description_en,description_ru,duration_min,price_pence,capacity), ' +
         'schedules(day_of_week,start_time,end_time)',

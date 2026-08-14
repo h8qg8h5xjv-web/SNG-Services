@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { FulfillmentType } from '@/types/database'
+import type { FulfillmentType, LanguageVerificationStatus } from '@/types/database'
 import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
@@ -67,7 +67,12 @@ export type ProviderDetail = {
     duration_min: number
     capacity: number
   }[]
-  provider_languages: { languages: { code: string; name_native: string } | null }[]
+  provider_languages: {
+    status: LanguageVerificationStatus
+    expires_at: string | null
+    professional_level: boolean
+    languages: { code: string; name_native: string } | null
+  }[]
   schedules: { day_of_week: number; start_time: string; end_time: string }[]
   schedule_exceptions: {
     exception_date: string
@@ -83,9 +88,37 @@ const DETAIL_SELECT =
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(id,name_en,name_ru,description_en,description_ru,price_pence,duration_min,capacity), ' +
-  'provider_languages(languages(code,name_native)), ' +
+  'provider_languages(status,expires_at,professional_level,languages(code,name_native)), ' +
   'schedules(day_of_week,start_time,end_time), ' +
   'schedule_exceptions(exception_date,is_closed,start_time,end_time)'
+
+export type ServiceLanguageBadge = { name: string; verified: boolean; professional: boolean }
+
+/**
+ * Display list of service languages with their verification state. An expired
+ * verification falls back to "claimed" (no badge) — treated as claimed, not
+ * deleted (DESIGN «Проверка языка»). Verified languages sort first.
+ */
+export function serviceLanguageBadges(
+  rows: ProviderDetail['provider_languages'],
+  now: number = Date.now(),
+): ServiceLanguageBadge[] {
+  return rows
+    .flatMap((l) =>
+      l.languages
+        ? [
+            {
+              name: l.languages.name_native,
+              verified:
+                l.status === 'verified' &&
+                (l.expires_at === null || Date.parse(l.expires_at) > now),
+              professional: l.professional_level,
+            },
+          ]
+        : [],
+    )
+    .sort((a, b) => Number(b.verified) - Number(a.verified) || a.name.localeCompare(b.name))
+}
 
 /**
  * Full provider by slug, only if published. Returns null when not found or when

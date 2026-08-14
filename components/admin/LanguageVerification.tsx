@@ -62,16 +62,19 @@ function LanguageRow({
   providerId,
   lang,
   name,
+  showProfessional,
 }: {
   providerId: string
   lang: AdminProviderLanguage
   name: string
+  showProfessional: boolean
 }) {
   const router = useRouter()
   const [method, setMethod] = useState<LanguageVerificationMethod>(
     lang.method && lang.method !== 'seed' ? lang.method : 'call',
   )
   const [note, setNote] = useState(lang.note ?? '')
+  const [professional, setProfessional] = useState(lang.professional_level)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
 
@@ -85,6 +88,7 @@ function LanguageRow({
       method: status === 'verified' ? method : null,
       note: note.trim() === '' ? null : note.trim(),
       expiresAt: null,
+      professionalLevel: status === 'verified' ? professional : false,
     })
     setPending(false)
     if (result.ok) router.refresh()
@@ -128,6 +132,25 @@ function LanguageRow({
         />
       </div>
 
+      {showProfessional && (
+        <label className="mt-2 inline-flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={professional}
+            onChange={(e) => setProfessional(e.target.checked)}
+            disabled={pending}
+          />
+          Профессиональный уровень (для документов и диагнозов)
+        </label>
+      )}
+
+      {lang.status === 'verified' && lang.expires_at && (
+        <p className="mt-1 text-xs text-foreground/50">
+          Действует до {new Date(lang.expires_at).toLocaleDateString('ru-RU')}
+          {lang.professional_level ? ' · проф.' : ''}
+        </p>
+      )}
+
       <div className="mt-2 flex flex-wrap gap-3 text-sm">
         <button
           type="button"
@@ -162,17 +185,24 @@ function LanguageRow({
   )
 }
 
+// professional_level only matters where the conversation is about documents or
+// diagnoses (DESIGN «Уровень»).
+const PROFESSIONAL_CATEGORIES = new Set(['legal', 'health'])
+
 export default function LanguageVerification({
   providerId,
+  categorySlug,
   languages,
   reference,
 }: {
   providerId: string
+  categorySlug: string | null
   languages: AdminProviderLanguage[]
   reference: Language[]
 }) {
   const nameOf = (code: string) =>
     reference.find((l) => l.code === code)?.name_native ?? code
+  const showProfessional = categorySlug !== null && PROFESSIONAL_CATEGORIES.has(categorySlug)
 
   return (
     <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
@@ -193,6 +223,7 @@ export default function LanguageVerification({
                 providerId={providerId}
                 lang={lang}
                 name={nameOf(lang.language_code)}
+                showProfessional={showProfessional}
               />
             ))}
         </div>

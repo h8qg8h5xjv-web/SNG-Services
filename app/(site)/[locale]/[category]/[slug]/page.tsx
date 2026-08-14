@@ -17,7 +17,7 @@ import ProviderHours from '@/components/ProviderHours'
 import RecordRecentView from '@/components/RecordRecentView'
 import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
-import { getProviderDetail } from '@/lib/queries/providers'
+import { getProviderDetail, serviceLanguageBadges } from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
 import { recordEvents } from '@/lib/tracking/events'
 import { pickProviderContent } from '@/lib/i18n/content'
@@ -83,9 +83,7 @@ export default async function ProviderPage({
     locale,
   )
   const image = resolveImageUrl(provider.cover_image)
-  const languages = provider.provider_languages
-    .map((l) => l.languages?.name_native)
-    .filter((n): n is string => Boolean(n))
+  const languages = serviceLanguageBadges(provider.provider_languages)
   const isExternal = provider.fulfillment_type === 'external_order'
   const isNative = provider.fulfillment_type === 'native_booking'
 
@@ -171,9 +169,30 @@ export default async function ProviderPage({
           <p className="mt-1 text-foreground/60">{provider.borough}</p>
           {languages.length > 0 && (
             // Reference line only — service languages are not a filter (DESIGN §1).
-            <p className="mt-2 text-sm text-foreground/60">
-              {t('provider.languagesServed')}: {languages.join(', ')}
-            </p>
+            // The badge is about the SERVICE ("service in X confirmed"), never
+            // about the person — see DESIGN «Формулировки».
+            <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-foreground/60">
+              <span>{t('provider.languagesServed')}:</span>
+              {languages.map((l) =>
+                l.verified ? (
+                  <span
+                    key={l.name}
+                    title={t('provider.languageConfirmed', { language: l.name })}
+                    className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400"
+                  >
+                    {l.name}
+                    <span aria-hidden>✓</span>
+                    {l.professional && (
+                      <span className="text-xs opacity-80">· {t('provider.languageProfessional')}</span>
+                    )}
+                  </span>
+                ) : (
+                  <span key={l.name} className="text-xs text-foreground/40">
+                    {l.name}
+                  </span>
+                ),
+              )}
+            </div>
           )}
           <p className="mt-4 whitespace-pre-line text-foreground/80">{description}</p>
 

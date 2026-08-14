@@ -27,6 +27,7 @@ export default async function EditProviderPage({
       <ProviderForm provider={provider} categories={categories} languages={languages} />
       <LanguageVerification
         providerId={provider.id}
+        categorySlug={categories.find((c) => c.id === provider.category_id)?.slug ?? null}
         languages={provider.provider_languages}
         reference={languages}
       />
