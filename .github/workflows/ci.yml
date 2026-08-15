@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Locale files must stay in sync — a missing key would otherwise only
+      # surface at runtime (DESIGN §1).
+      - run: npm run check:messages
+      - run: npm run lint
+      - run: npx tsc --noEmit
