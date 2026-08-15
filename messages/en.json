@@ -29,7 +29,9 @@
     "recentlyViewed": "Recently viewed",
     "categoriesTitle": "Categories",
     "more": "More",
-    "less": "Less"
+    "less": "Less",
+    "tabPlaces": "Places",
+    "tabServices": "Services"
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -77,7 +79,9 @@
     "placeholder": "Search masters, services and boroughs",
     "resultsFor": "Results for “{query}”",
     "prompt": "Type to search the catalogue.",
-    "empty": "Nothing found for “{query}”."
+    "empty": "Nothing found for “{query}”.",
+    "servicesGroup": "Services",
+    "placesGroup": "Places"
   },
   "events": {
     "title": "Events",
@@ -148,5 +152,13 @@
   },
   "empty": {
     "noResults": "Nothing here yet."
+  },
+  "places": {
+    "allBoroughs": "All boroughs",
+    "allCategories": "All categories",
+    "visitSite": "Website",
+    "call": "Call",
+    "empty": "No places match these filters.",
+    "mapSoon": "Map view is coming soon."
   }
 }

@@ -17,7 +17,15 @@ export default function SearchBar({
   function onSubmit(event: React.FormEvent) {
     event.preventDefault()
     const q = query.trim()
-    router.push(q ? `/search?q=${encodeURIComponent(q)}` : '/search')
+    if (!q) {
+      router.push('/search')
+      return
+    }
+    // Results are grouped by section; the active home tab decides which group
+    // shows first (DESIGN §4).
+    const section = typeof window !== 'undefined' ? localStorage.getItem('sng_home_tab') : null
+    const suffix = section === 'places' ? '&section=places' : ''
+    router.push(`/search?q=${encodeURIComponent(q)}${suffix}`)
   }
 
   return (

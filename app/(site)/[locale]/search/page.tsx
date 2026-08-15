@@ -3,9 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import ProviderGrid from '@/components/ProviderGrid'
+import PlaceCard from '@/components/PlaceCard'
 import TrackImpressions from '@/components/TrackImpressions'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
-import { matchesQuery, toCard } from '@/lib/catalog/transform'
+import { matchesQuery, toCard, isServiceCard, isPlaceCard } from '@/lib/catalog/transform'
 import { rankProviders } from '@/lib/ranking'
 
 export async function generateMetadata({
@@ -23,12 +24,13 @@ export default async function SearchPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ q?: string | string[] }>
+  searchParams: Promise<{ q?: string | string[]; section?: string }>
 }) {
   const { locale } = await params
   setRequestLocale(locale)
   const sp = await searchParams
   const q = (typeof sp.q === 'string' ? sp.q : '').trim()
+  const placesFirst = sp.section === 'places'
   const t = await getTranslations('search')
 
   const cards = q
@@ -37,6 +39,15 @@ export default async function SearchPage({
         { locale, sort: 'relevance' },
       ).map((p) => toCard(p, p.categories?.slug ?? '', locale))
     : []
+
+  // One search over both, results grouped: the current section first (DESIGN §4).
+  const serviceCards = cards.filter(isServiceCard)
+  const placeCards = cards.filter(isPlaceCard)
+  const servicesGroup = { key: 'services' as const, title: t('servicesGroup'), cards: serviceCards }
+  const placesGroup = { key: 'places' as const, title: t('placesGroup'), cards: placeCards }
+  const groups = (placesFirst ? [placesGroup, servicesGroup] : [servicesGroup, placesGroup]).filter(
+    (g) => g.cards.length > 0,
+  )
 
   return (
     <>
@@ -55,10 +66,23 @@ export default async function SearchPage({
           </p>
         ) : (
           <>
-            <p className="mb-4 text-sm text-foreground/60">
-              {t('resultsFor', { query: q })}
-            </p>
-            <ProviderGrid cards={cards} surface="search" />
+            <p className="mb-4 text-sm text-foreground/60">{t('resultsFor', { query: q })}</p>
+            <div className="space-y-8">
+              {groups.map((group) => (
+                <section key={group.key}>
+                  <h2 className="mb-3 text-lg font-medium">{group.title}</h2>
+                  {group.key === 'places' ? (
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                      {group.cards.map((card) => (
+                        <PlaceCard key={card.id} card={card} />
+                      ))}
+                    </div>
+                  ) : (
+                    <ProviderGrid cards={group.cards} surface="search" />
+                  )}
+                </section>
+              ))}
+            </div>
             <TrackImpressions
               surface="search"
               locale={locale}

@@ -14,14 +14,22 @@ export async function getHomeCategories(): Promise<CategoryWithCount[]> {
   const [{ data: categories, error: catError }, { data: providers, error: provError }] =
     await Promise.all([
       supabase.from('categories').select('*'),
-      supabase.from('providers').select('category_id').eq('status', 'published'),
+      supabase
+        .from('providers')
+        .select('category_id, entity_type, booking_enabled')
+        .eq('status', 'published'),
     ])
   if (catError) throw catError
   if (provError) throw provError
 
+  // The category tiles are the Services lens (DESIGN §2в/§3): count only
+  // service-eligible providers (a pro, or a place that takes bookings).
+  // Listing-only places live in the Places tab, not the category grid.
   const counts = new Map<string, number>()
   for (const p of providers ?? []) {
-    counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1)
+    if (p.entity_type === 'pro' || p.booking_enabled) {
+      counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1)
+    }
   }
 
   return (categories ?? [])

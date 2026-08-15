@@ -1,5 +1,6 @@
-import type { FulfillmentType } from '@/types/database'
-import { pickProviderContent, type Translation } from '../i18n/content'
+import type { FulfillmentType, EntityType } from '@/types/database'
+import { pickProviderContent, pickCategoryName, type Translation } from '../i18n/content'
+import { parseOpeningHours, type OpeningHours } from '../hours'
 
 // Shape fetched from Supabase for a provider used in listings and cards.
 export type ProviderWithRelations = {
@@ -12,8 +13,13 @@ export type ProviderWithRelations = {
   venue_photos: string[] | null
   fulfillment_type: FulfillmentType
   external_order_url: string | null
+  entity_type: EntityType
+  booking_enabled: boolean
+  opening_hours: unknown
+  phone: string | null
+  website: string | null
   created_at: string
-  categories?: { slug: string } | null
+  categories?: { slug: string; name_en: string; name_ru: string } | null
   provider_translations: Translation[]
   services: {
     name_en: string
@@ -31,14 +37,32 @@ export type ProviderCardVM = {
   id: string
   slug: string
   categorySlug: string
+  categoryName: string
   name: string
   borough: string
   coverImage: string | null
   fulfillment: FulfillmentType
   externalUrl: string | null
+  entityType: EntityType
+  bookingEnabled: boolean
+  openingHours: OpeningHours | null
+  phone: string | null
+  website: string | null
   // Prices are never surfaced for external_order providers (DESIGN §4 / PROMPTS §4).
   priceRange: PriceRange | null
 }
+
+// The two homepage lenses (DESIGN §2в). A bookable place is both a place (on the
+// map/Места) and a service (Услуги) — the overlap is intentional.
+export const isServiceCard = (c: ProviderCardVM): boolean =>
+  c.entityType === 'pro' || c.bookingEnabled
+export const isPlaceCard = (c: ProviderCardVM): boolean => c.entityType === 'place'
+
+// Raw-row variant of the Services test, for query-layer filtering.
+export const isServiceEligible = (p: {
+  entity_type: EntityType
+  booking_enabled: boolean
+}): boolean => p.entity_type === 'pro' || p.booking_enabled
 
 export function priceRangeOf(
   provider: ProviderWithRelations,
@@ -59,11 +83,17 @@ export function toCard(
     id: provider.id,
     slug: provider.slug,
     categorySlug,
+    categoryName: provider.categories ? pickCategoryName(provider.categories, locale) : '',
     name,
     borough: provider.borough,
     coverImage: provider.venue_photos?.[0] ?? provider.cover_image,
     fulfillment: provider.fulfillment_type,
     externalUrl: provider.external_order_url,
+    entityType: provider.entity_type,
+    bookingEnabled: provider.booking_enabled,
+    openingHours: parseOpeningHours(provider.opening_hours),
+    phone: provider.phone,
+    website: provider.website,
     priceRange: priceRangeOf(provider),
   }
 }

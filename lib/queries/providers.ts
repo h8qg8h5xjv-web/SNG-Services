@@ -11,8 +11,9 @@ import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
 const LIST_SELECT =
-  'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, created_at, ' +
-  'categories(slug), ' +
+  'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, ' +
+  'entity_type, booking_enabled, opening_hours, phone, website, created_at, ' +
+  'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
   'provider_languages(language_code)'

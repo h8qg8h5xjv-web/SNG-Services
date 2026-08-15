@@ -13,6 +13,7 @@ import {
   toCard,
   filterByBorough,
   boroughsOf,
+  isServiceEligible,
   type SortKey,
 } from '@/lib/catalog/transform'
 
@@ -47,7 +48,9 @@ export default async function CategoryPage({
   const cat = await getCategoryBySlug(category)
   if (!cat) notFound()
 
-  const all = await listProvidersByCategory(cat.id)
+  // The category page is the Services lens — exclude listing-only places
+  // (they appear under the Places tab, browsed by borough).
+  const all = (await listProvidersByCategory(cat.id)).filter(isServiceEligible)
   const boroughs = boroughsOf(all)
   const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
   const sort = parseSort(sp.sort)

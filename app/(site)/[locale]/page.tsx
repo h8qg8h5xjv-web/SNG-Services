@@ -4,9 +4,13 @@ import SearchBar from '@/components/SearchBar'
 import RecentlyViewed from '@/components/RecentlyViewed'
 import CategoryGrid from '@/components/CategoryGrid'
 import AvailableToday from '@/components/AvailableToday'
+import HomeTabs from '@/components/HomeTabs'
+import PlacesExplorer from '@/components/PlacesExplorer'
 import { getHomeCategories } from '@/lib/queries/categories'
+import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { getAvailableTodayProviders } from '@/lib/slots/service'
 import { pickCategoryName } from '@/lib/i18n/content'
+import { toCard, isPlaceCard } from '@/lib/catalog/transform'
 
 // Live "available today" data is request-time; never statically prerendered.
 export const dynamic = 'force-dynamic'
@@ -19,9 +23,10 @@ export default async function HomePage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations()
-  const [categories, availableToday] = await Promise.all([
+  const [categories, availableToday, allProviders] = await Promise.all([
     getHomeCategories(),
     getAvailableTodayProviders(),
+    listAllPublishedProviders(),
   ])
   const tiles = categories.map(({ category, count }) => ({
     slug: category.slug,
@@ -29,6 +34,24 @@ export default async function HomePage({
     icon: category.icon,
     count,
   }))
+  const placeCards = allProviders
+    .map((p) => toCard(p, p.categories?.slug ?? '', locale))
+    .filter(isPlaceCard)
+
+  const services = (
+    <>
+      <RecentlyViewed />
+      <AvailableToday providers={availableToday} locale={locale} />
+      <section className="py-6">
+        <h2 className="mb-3 text-lg font-medium">{t('home.categoriesTitle')}</h2>
+        {tiles.length > 0 ? (
+          <CategoryGrid items={tiles} />
+        ) : (
+          <p className="text-sm text-foreground/50">{t('empty.noResults')}</p>
+        )}
+      </section>
+    </>
+  )
 
   return (
     <>
@@ -42,18 +65,9 @@ export default async function HomePage({
           </div>
         </section>
 
-        <RecentlyViewed />
-
-        <AvailableToday providers={availableToday} locale={locale} />
-
-        <section className="py-6">
-          <h2 className="mb-3 text-lg font-medium">{t('home.categoriesTitle')}</h2>
-          {tiles.length > 0 ? (
-            <CategoryGrid items={tiles} />
-          ) : (
-            <p className="text-sm text-foreground/50">{t('empty.noResults')}</p>
-          )}
-        </section>
+        <div className="mb-2">
+          <HomeTabs services={services} places={<PlacesExplorer places={placeCards} />} />
+        </div>
       </main>
     </>
   )
