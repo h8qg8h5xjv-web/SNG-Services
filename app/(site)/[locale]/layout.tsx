@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Inter, Noto_Sans_Georgian, Noto_Sans_Armenian } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -12,19 +12,12 @@ import BottomNav from '@/components/BottomNav'
 import '../../globals.css'
 
 // Only weights 400 and 600 (DESIGN-SYSTEM §2) — extra weights are extra bytes.
+// Inter covers the only enabled locales (Latin + Cyrillic). Georgian/Armenian
+// (ka/hy) are disabled for now; when enabled they'll be self-hosted via
+// next/font/local. Until then they fall back to system fonts via the CSS stack.
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin', 'cyrillic'],
-  weight: ['400', '600'],
-})
-const notoGeorgian = Noto_Sans_Georgian({
-  variable: '--font-noto-georgian',
-  subsets: ['georgian'],
-  weight: ['400', '600'],
-})
-const notoArmenian = Noto_Sans_Armenian({
-  variable: '--font-noto-armenian',
-  subsets: ['armenian'],
   weight: ['400', '600'],
 })
 
@@ -76,7 +69,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${notoGeorgian.variable} ${notoArmenian.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       {/* pb-16: off-scale on purpose — clears the fixed bottom nav (its height). */}
       <body className="flex min-h-full flex-col pb-16 sm:pb-0">

@@ -3,9 +3,11 @@
 /* Design system (DESIGN-SYSTEM.md). Colours come straight from the Tailwind
    slate/teal/green/red palettes — no custom hex. No dark theme by decision. */
 @theme {
+  /* Inter is loaded via next/font; Georgian/Armenian fall back to system fonts
+     of the same name until ka/hy are enabled and self-hosted (next/font/local). */
   --font-sans:
-    var(--font-inter), "Noto Sans Georgian", var(--font-noto-georgian),
-    "Noto Sans Armenian", var(--font-noto-armenian), system-ui, sans-serif;
+    var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
+    sans-serif;
 
   /* Five sizes, nothing between (DESIGN-SYSTEM §2). */
   --text-title: 1.5rem; /* 24 — page title, one per screen */
