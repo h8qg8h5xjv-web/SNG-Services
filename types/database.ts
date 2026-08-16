@@ -6,6 +6,7 @@
 export type FulfillmentType = 'native_booking' | 'external_order' | 'enquiry'
 export type ContentStatus = 'draft' | 'published'
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+export type RequestType = 'fixed' | 'quote'
 export type LanguageVerificationStatus = 'claimed' | 'verified' | 'rejected'
 // 'seed' = demo data, never a real check. Real checks: call | voice_sample | video_call.
 export type LanguageVerificationMethod = 'seed' | 'call' | 'voice_sample' | 'video_call'
