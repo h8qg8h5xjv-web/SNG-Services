@@ -26,6 +26,7 @@ name after it is the logical step.
 | `…17_language_professional_level` | Per-language `professional_level` flag (legal/health), admin-only |
 | `…18_entity_type` | `place`\|`pro` axis, `claim_status`, `booking_enabled`, place/pro fields, insurance + DBS credentials (admin-verified) |
 | `…19_nullable_description` | `description_en` optional for `claim_status='unclaimed'` (public-data places) |
+| `…20_booking_price_snapshot` | `bookings.price_pence`/`duration_min` snapshotted at creation, immutable after |
 
 ## Local development (Docker required)
 

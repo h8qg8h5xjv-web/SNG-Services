@@ -1,5 +1,6 @@
 import { listAdminBookings, listProviderOptions } from '@/lib/admin/data'
 import BookingStatus from '@/components/admin/BookingStatus'
+import { formatPrice } from '@/lib/format'
 
 export default async function AdminBookingsPage({
   searchParams,
@@ -53,6 +54,7 @@ export default async function AdminBookingsPage({
               <th className="p-3">When</th>
               <th className="p-3">Provider</th>
               <th className="p-3">Service</th>
+              <th className="p-3">Price</th>
               <th className="p-3">Customer</th>
               <th className="p-3">Ppl</th>
               <th className="p-3">Status</th>
@@ -66,6 +68,11 @@ export default async function AdminBookingsPage({
                 </td>
                 <td className="p-3">{b.providers?.name_en}</td>
                 <td className="p-3 text-foreground/70">{b.services?.name_en}</td>
+                {/* Locked at booking time (bookings.price_pence), not the live service price. */}
+                <td className="p-3 text-foreground/70">
+                  {formatPrice(b.price_pence)}
+                  <span className="text-xs text-foreground/40"> · {b.duration_min}′</span>
+                </td>
                 <td className="p-3">
                   <div>{b.customer_name}</div>
                   <div className="text-xs text-foreground/50">{b.customer_phone}</div>

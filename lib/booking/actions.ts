@@ -48,7 +48,7 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
   // Recompute the end time from the service duration server-side (don't trust the client).
   const { data: service, error: serviceError } = await supabase
     .from('services')
-    .select('duration_min, provider_id')
+    .select('duration_min, price_pence, provider_id')
     .eq('id', d.service_id)
     .maybeSingle()
   if (serviceError || !service) {
@@ -71,6 +71,10 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
     customer_email: d.customer_email,
     is_visible_to_group: d.is_visible_to_group,
     status: 'pending',
+    // Snapshot the price/duration onto the booking so a later price change
+    // never rewrites this booking's history (the trigger also enforces this).
+    price_pence: service.price_pence,
+    duration_min: service.duration_min,
   })
 
   if (error) {

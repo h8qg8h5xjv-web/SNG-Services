@@ -424,6 +424,8 @@ export interface Database {
           status: BookingStatus
           is_visible_to_group: boolean
           customer_id: string | null
+          price_pence: number
+          duration_min: number
           created_at: string
           updated_at: string
         }
@@ -441,6 +443,9 @@ export interface Database {
           status?: BookingStatus
           is_visible_to_group?: boolean
           customer_id?: string | null
+          // Snapshotted from the service by the trigger when omitted; immutable after.
+          price_pence?: number
+          duration_min?: number
           created_at?: string
           updated_at?: string
         }
@@ -457,6 +462,9 @@ export interface Database {
           status?: BookingStatus
           is_visible_to_group?: boolean
           customer_id?: string | null
+          // Immutable — the trigger freezes these to their original values.
+          price_pence?: number
+          duration_min?: number
           created_at?: string
           updated_at?: string
         }

@@ -229,6 +229,10 @@ export type AdminBookingRow = {
   customer_phone: string
   customer_email: string | null
   status: 'pending' | 'confirmed' | 'cancelled'
+  // Locked at creation on the booking itself — NOT read from services, so a later
+  // price change never rewrites a past booking.
+  price_pence: number
+  duration_min: number
   services: { name_en: string } | null
   providers: { name_en: string } | null
 }
@@ -242,7 +246,7 @@ export async function listAdminBookings(filters: {
     .from('bookings')
     .select(
       'id, starts_at, ends_at, party_size, customer_name, customer_phone, customer_email, status, ' +
-        'services(name_en), providers(name_en)',
+        'price_pence, duration_min, services(name_en), providers(name_en)',
     )
     .order('starts_at', { ascending: false })
 
