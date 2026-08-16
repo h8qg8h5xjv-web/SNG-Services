@@ -77,7 +77,7 @@ export default async function AdminProvidersPage({
                   <td className="p-3 text-slate-500">
                     {verified}✓ / {p.provider_languages.length}
                     {seeded && (
-                      <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-meta text-slate-500">
+                      <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-meta text-slate-500">
                         seed
                       </span>
                     )}

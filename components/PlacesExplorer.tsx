@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { IconMapPin } from '@tabler/icons-react'
 import PlaceCard from './PlaceCard'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { Select } from '@/components/ui/Input'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
 // Places lens (DESIGN §2в): browse by borough and category. The interactive map
@@ -45,35 +46,27 @@ export default function PlacesExplorer({ places }: { places: ProviderCardVM[] })
   return (
     <div className="py-4">
       <div className="mb-4 flex flex-wrap gap-2">
-        <select
-          value={borough}
-          onChange={(e) => setBorough(e.target.value)}
-          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
-        >
+        <Select value={borough} onChange={(e) => setBorough(e.target.value)}>
           <option value="">{t('places.allBoroughs')}</option>
           {boroughs.map((b) => (
             <option key={b} value={b}>
               {b}
             </option>
           ))}
-        </select>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
-        >
+        </Select>
+        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">{t('places.allCategories')}</option>
           {categories.map((c) => (
             <option key={c.slug} value={c.slug}>
               {c.name}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {/* Honest placeholder for the deferred map (chosen: no map dependency yet). */}
       <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-slate-200 p-3 text-body text-slate-500">
-        <IconMapPin className="h-4 w-4" stroke={1.5} /> {t('places.mapSoon')}
+        <IconMapPin className="h-5 w-5" stroke={1.5} /> {t('places.mapSoon')}
       </div>
 
       {groups.length === 0 ? (

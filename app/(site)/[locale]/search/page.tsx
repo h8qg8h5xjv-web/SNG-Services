@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionHeading } from '@/components/ui/Section'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
@@ -54,7 +55,7 @@ export default async function SearchPage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="py-6">
           <h1 className="mb-4 text-title font-semibold">{t('title')}</h1>
           <SearchBar initialQuery={q} />
@@ -70,7 +71,7 @@ export default async function SearchPage({
             <div className="space-y-8">
               {groups.map((group) => (
                 <section key={group.key}>
-                  <h2 className="mb-3 text-h2 font-semibold">{group.title}</h2>
+                  <SectionHeading>{group.title}</SectionHeading>
                   {group.key === 'places' ? (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {group.cards.map((card) => (

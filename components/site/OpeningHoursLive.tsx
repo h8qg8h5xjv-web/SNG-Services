@@ -29,15 +29,15 @@ export default function OpeningHoursLive({
   }, [hours])
 
   return (
-    <section className="py-5">
+    <section className="py-6">
       <div className="mb-2 flex items-center gap-2">
         <h2 className="text-h2 font-semibold">{labels.title}</h2>
         {live && (
           <span
-            className={`rounded-full px-2 py-0.5 text-meta ${
+            className={`rounded-full px-2 py-1 text-meta ${
               live.open
                 ? 'bg-green-100 text-green-700'
-                : 'bg-black/5 text-slate-500 '
+                : 'bg-slate-100 text-slate-500 '
             }`}
           >
             {live.open ? labels.openNow : labels.closedNow}
@@ -51,8 +51,8 @@ export default function OpeningHoursLive({
             const isToday = live?.today === day
             return (
               <tr key={day} className={isToday ? 'font-semibold' : 'text-slate-500'}>
-                <td className="py-0.5 pr-4 capitalize">{dayLabels[day]}</td>
-                <td className="py-0.5">
+                <td className="py-1 pr-4 capitalize">{dayLabels[day]}</td>
+                <td className="py-1">
                   {intervals.length === 0
                     ? labels.closed
                     : intervals.map((iv) => `${iv.open}–${iv.close}`).join(', ')}

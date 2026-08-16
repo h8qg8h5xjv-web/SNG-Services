@@ -25,7 +25,7 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
 
   if (expired) {
     return (
-      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-meta text-slate-500">
+      <span className="rounded-full bg-slate-100 px-2 py-1 text-meta text-slate-500">
         verified · expired
       </span>
     )
@@ -34,7 +34,7 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
     const seed = lang.method === 'seed'
     return (
       <span
-        className={`rounded-full px-2 py-0.5 text-meta ${
+        className={`rounded-full px-2 py-1 text-meta ${
           seed
             ? 'bg-slate-100 text-slate-500'
             : 'bg-green-100 text-green-700'
@@ -46,13 +46,13 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
   }
   if (lang.status === 'rejected') {
     return (
-      <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-meta text-red-700">
+      <span className="rounded-full bg-red-100 px-2 py-1 text-meta text-red-700">
         rejected
       </span>
     )
   }
   return (
-    <span className="rounded-full bg-black/5 px-2 py-0.5 text-meta text-slate-500">
+    <span className="rounded-full bg-slate-100 px-2 py-1 text-meta text-slate-500">
       claimed
     </span>
   )

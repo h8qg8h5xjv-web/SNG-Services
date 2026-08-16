@@ -69,7 +69,7 @@ export default async function CategoryPage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="py-6">
           <h1 className="text-title font-semibold">{pickCategoryName(cat, locale)}</h1>
           <p className="mt-1 text-body text-slate-500">

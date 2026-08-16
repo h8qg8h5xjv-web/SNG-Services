@@ -78,6 +78,7 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${inter.variable} ${notoGeorgian.variable} ${notoArmenian.variable} h-full antialiased`}
     >
+      {/* pb-16: off-scale on purpose — clears the fixed bottom nav (its height). */}
       <body className="flex min-h-full flex-col pb-16 sm:pb-0">
         <NextIntlClientProvider>
           {children}

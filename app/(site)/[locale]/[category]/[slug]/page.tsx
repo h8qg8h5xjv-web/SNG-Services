@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionHeading } from '@/components/ui/Section'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
@@ -12,7 +13,7 @@ import {
   IconExternalLink,
   IconPhoto,
 } from '@tabler/icons-react'
-import { Link } from '@/i18n/navigation'
+import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
 import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
@@ -128,29 +129,22 @@ export default async function ProviderPage({
 
   // Primary CTA reused inline and in the mobile sticky bar.
   const cta = isNative ? (
-    <Link
-      href={`/${category}/${slug}/book`}
-      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-teal-700 px-6 font-semibold text-white sm:w-auto"
-    >
+    <ButtonLink href={`/${category}/${slug}/book`} className="w-full sm:w-auto">
       {t('provider.book')}
-    </Link>
+    </ButtonLink>
   ) : isExternal && provider.external_order_url ? (
-    <a
-      href={provider.external_order_url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-teal-700 px-6 font-semibold text-white sm:w-auto"
-    >
+    <ButtonLink href={provider.external_order_url} external className="w-full sm:w-auto">
       {t('provider.orderOn', { platform: platformName(provider.external_order_url) })}
-      <IconExternalLink className="h-4 w-4" stroke={2} />
-    </a>
+      <IconExternalLink className="h-5 w-5" stroke={2} />
+    </ButtonLink>
   ) : null
 
   return (
     <>
       <Header />
       <JsonLd data={businessLd} />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-12">
+      {/* pb-28: off-scale on purpose — clears the mobile sticky booking bar. */}
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-8">
         <RecordRecentView
           item={{
             slug: provider.slug,
@@ -181,7 +175,7 @@ export default async function ProviderPage({
           )}
         </div>
 
-        <div className="py-5">
+        <div className="py-6">
           <h1 className="text-title font-semibold">{name}</h1>
           <p className="mt-1 text-slate-500">{provider.borough}</p>
           {languages.length > 0 && (
@@ -195,7 +189,7 @@ export default async function ProviderPage({
                   <span
                     key={l.name}
                     title={t('provider.languageConfirmed', { language: l.name })}
-                    className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700"
+                    className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700"
                   >
                     {l.name}
                     <span aria-hidden>✓</span>
@@ -214,13 +208,13 @@ export default async function ProviderPage({
           {(credentials.insuranceVerified || credentials.dbsVerified) && (
             <div className="mt-2 flex flex-wrap items-center gap-2 text-body">
               {credentials.insuranceVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
                   <span aria-hidden>✓</span>
                   {t('provider.insuranceVerified')}
                 </span>
               )}
               {credentials.dbsVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
                   <span aria-hidden>✓</span>
                   {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
                 </span>
@@ -236,8 +230,8 @@ export default async function ProviderPage({
 
         {/* Services — hidden entirely for external_order (no prices shown at all). */}
         {!isExternal && provider.services.length > 0 && (
-          <section className="border-t border-slate-200 py-5">
-            <h2 className="mb-3 text-h2 font-semibold">{t('provider.services')}</h2>
+          <section className="border-t border-slate-200 py-6">
+            <SectionHeading>{t('provider.services')}</SectionHeading>
             <ul className="divide-y divide-slate-100">
               {provider.services.map((s) => {
                 const serviceName =
@@ -261,8 +255,8 @@ export default async function ProviderPage({
         )}
 
         {provider.schedules.length > 0 && (
-          <section className="border-t border-slate-200 py-5">
-            <h2 className="mb-3 text-h2 font-semibold">{t('provider.hours')}</h2>
+          <section className="border-t border-slate-200 py-6">
+            <SectionHeading>{t('provider.hours')}</SectionHeading>
             <ProviderHours schedules={provider.schedules} />
           </section>
         )}
@@ -277,8 +271,8 @@ export default async function ProviderPage({
 
         {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}
         {organizerEvents.length > 0 && (
-          <section className="border-t border-slate-200 py-5">
-            <h2 className="mb-3 text-h2 font-semibold">{t('events.upcoming')}</h2>
+          <section className="border-t border-slate-200 py-6">
+            <SectionHeading>{t('events.upcoming')}</SectionHeading>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {organizerEvents.map((event) => (
                 <EventCard key={event.id} event={event} locale={locale} />
@@ -287,13 +281,13 @@ export default async function ProviderPage({
           </section>
         )}
 
-        <section className="border-t border-slate-200 py-5">
-          <h2 className="mb-3 text-h2 font-semibold">{t('provider.contacts')}</h2>
+        <section className="border-t border-slate-200 py-6">
+          <SectionHeading>{t('provider.contacts')}</SectionHeading>
           <ul className="space-y-2 text-body">
             {provider.phone && (
               <li>
                 <a href={`tel:${provider.phone}`} className="inline-flex items-center gap-2 hover:underline">
-                  <IconPhone className="h-4 w-4" stroke={1.5} /> {provider.phone}
+                  <IconPhone className="h-5 w-5" stroke={1.5} /> {provider.phone}
                 </a>
               </li>
             )}
@@ -305,7 +299,7 @@ export default async function ProviderPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 hover:underline"
                 >
-                  <IconBrandTelegram className="h-4 w-4" stroke={1.5} /> {provider.telegram}
+                  <IconBrandTelegram className="h-5 w-5" stroke={1.5} /> {provider.telegram}
                 </a>
               </li>
             )}
@@ -317,7 +311,7 @@ export default async function ProviderPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 hover:underline"
                 >
-                  <IconBrandInstagram className="h-4 w-4" stroke={1.5} /> {provider.instagram}
+                  <IconBrandInstagram className="h-5 w-5" stroke={1.5} /> {provider.instagram}
                 </a>
               </li>
             )}
@@ -329,7 +323,7 @@ export default async function ProviderPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 hover:underline"
                 >
-                  <IconWorld className="h-4 w-4" stroke={1.5} /> {t('provider.website')}
+                  <IconWorld className="h-5 w-5" stroke={1.5} /> {t('provider.website')}
                 </a>
               </li>
             )}
@@ -342,12 +336,12 @@ export default async function ProviderPage({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 hover:underline"
                   >
-                    <IconMapPin className="h-4 w-4" stroke={1.5} />
+                    <IconMapPin className="h-5 w-5" stroke={1.5} />
                     {provider.address ?? provider.borough}
                   </a>
                 ) : (
                   <span className="inline-flex items-center gap-2">
-                    <IconMapPin className="h-4 w-4" stroke={1.5} /> {provider.address}
+                    <IconMapPin className="h-5 w-5" stroke={1.5} /> {provider.address}
                   </span>
                 )}
               </li>
@@ -359,9 +353,10 @@ export default async function ProviderPage({
         </section>
       </main>
 
-      {/* Mobile: booking/order CTA pinned to the bottom of the screen. */}
+      {/* Mobile: CTA pinned to the bottom. bottom-14 is off-scale on purpose —
+          it sits just above the fixed bottom nav. */}
       {cta && (
-        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur sm:hidden">
+        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white p-3 sm:hidden">
           {cta}
         </div>
       )}

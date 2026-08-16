@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { SectionHeading } from '@/components/ui/Section'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import RecentlyViewed from '@/components/RecentlyViewed'
@@ -43,7 +44,7 @@ export default async function HomePage({
       <RecentlyViewed />
       <AvailableToday providers={availableToday} locale={locale} />
       <section className="py-6">
-        <h2 className="mb-3 text-h2 font-semibold">{t('home.categoriesTitle')}</h2>
+        <SectionHeading>{t('home.categoriesTitle')}</SectionHeading>
         {tiles.length > 0 ? (
           <CategoryGrid items={tiles} />
         ) : (
@@ -56,7 +57,7 @@ export default async function HomePage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <section className="py-8">
           <h1 className="text-title font-semibold sm:text-title">{t('home.heroTitle')}</h1>
           <p className="mt-3 max-w-2xl text-slate-500">{t('home.heroSubtitle')}</p>

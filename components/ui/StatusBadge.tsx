@@ -12,7 +12,7 @@ const TONE: Record<Tone, string> = {
 
 export function StatusBadge({ tone = 'neutral', children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-meta ${TONE[tone]}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-meta ${TONE[tone]}`}>
       {children}
     </span>
   )

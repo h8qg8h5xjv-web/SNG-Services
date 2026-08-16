@@ -85,14 +85,14 @@ export default function VenuePhotos({
               unoptimized
             />
             {i === 0 && (
-              <span className="absolute left-1 top-1 rounded bg-teal-700/80 px-1.5 py-0.5 text-meta text-white">
+              <span className="absolute left-1 top-1 rounded bg-teal-700 px-2 py-1 text-meta text-white">
                 Обложка
               </span>
             )}
             <button
               type="button"
               onClick={() => remove(i)}
-              className="absolute right-1 top-1 rounded bg-slate-900 px-1.5 text-meta text-white"
+              className="absolute right-1 top-1 rounded bg-slate-900 px-2 text-meta text-white"
               aria-label="Удалить фото"
             >
               ×

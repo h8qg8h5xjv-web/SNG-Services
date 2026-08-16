@@ -16,11 +16,11 @@ function effectiveStatus(status: CredentialStatus, expiresAt: string | null): Cr
 
 function Badge({ status }: { status: CredentialStatus }) {
   const map: Record<CredentialStatus, string> = {
-    none: 'bg-black/5 text-slate-500 ',
+    none: 'bg-slate-100 text-slate-500 ',
     self_declared: 'bg-slate-100 text-slate-500',
     verified: 'bg-green-100 text-green-700',
   }
-  return <span className={`rounded-full px-2 py-0.5 text-meta ${map[status]}`}>{status}</span>
+  return <span className={`rounded-full px-2 py-1 text-meta ${map[status]}`}>{status}</span>
 }
 
 function CredentialCard({

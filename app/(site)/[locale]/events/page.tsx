@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionHeading } from '@/components/ui/Section'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
 import EventFilters from '@/components/EventFilters'
@@ -58,7 +59,7 @@ export default async function EventsPage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <h1 className="py-6 text-title font-semibold">{t('events.title')}</h1>
 
         <div className="mb-6">
@@ -78,9 +79,7 @@ export default async function EventsPage({
           <div className="space-y-8">
             {groups.map((group) => (
               <section key={group.key}>
-                <h2 className="mb-3 text-h2 font-semibold">
-                  {t(`events.${group.key}`)}
-                </h2>
+                <SectionHeading>{t(`events.${group.key}`)}</SectionHeading>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {group.events.map((event) => (
                     <EventCard key={event.id} event={event} locale={locale} />

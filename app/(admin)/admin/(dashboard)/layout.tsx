@@ -21,7 +21,7 @@ export default async function DashboardLayout({
 
   if (!isAdmin(user)) {
     return (
-      <main className="mx-auto max-w-md px-6 py-16 text-center">
+      <main className="mx-auto max-w-md px-6 py-8 text-center">
         <h1 className="text-h2 font-semibold">Not authorized</h1>
         <p className="mt-2 text-body text-slate-500">
           {user.email} is signed in but is not an admin. Ask an existing admin to

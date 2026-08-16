@@ -9,14 +9,16 @@ const state = (active: boolean) =>
 export function FilterChip({
   active = false,
   onClick,
+  className = '',
   children,
 }: {
   active?: boolean
   onClick?: () => void
+  className?: string
   children: ReactNode
 }) {
   return (
-    <button type="button" onClick={onClick} className={`${base} ${state(active)}`}>
+    <button type="button" onClick={onClick} className={`${base} ${state(active)} ${className}`}>
       {children}
     </button>
   )

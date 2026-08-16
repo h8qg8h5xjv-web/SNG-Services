@@ -4,6 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { getSlots, createBooking, getSlotParticipants } from '@/lib/booking/actions'
 import { formatPrice } from '@/lib/format'
+import { Button } from '@/components/ui/Button'
+import { Input, Select } from '@/components/ui/Input'
+import { FilterChip } from '@/components/ui/FilterChip'
 import type { Slot } from '@/lib/slots/compute'
 
 const TZ = 'Europe/London'
@@ -169,8 +172,8 @@ export default function BookingWidget({
           </div>
         )}
 
-        <button
-          type="button"
+        <Button
+          variant="secondary"
           onClick={() => {
             setDone(null)
             setSelected(null)
@@ -179,10 +182,10 @@ export default function BookingWidget({
             setEmail('')
             setVisibleToGroup(false)
           }}
-          className="mt-4 min-h-11 rounded-lg border border-slate-200 px-4 text-body"
+          className="mt-4"
         >
           {t('bookAnother')}
-        </button>
+        </Button>
       </div>
     )
   }
@@ -194,17 +197,13 @@ export default function BookingWidget({
       {/* Service */}
       <div>
         <label className="mb-1 block text-body text-slate-500">{t('service')}</label>
-        <select
-          value={serviceId}
-          onChange={(e) => setServiceId(e.target.value)}
-          className="min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-        >
+        <Select value={serviceId} onChange={(e) => setServiceId(e.target.value)} className="w-full">
           {services.map((s) => (
             <option key={s.id} value={s.id}>
               {(locale === 'ru' ? s.name_ru ?? s.name_en : s.name_en)} · {formatPrice(s.price_pence)}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {/* Date */}
@@ -214,18 +213,14 @@ export default function BookingWidget({
           {dates.map((d) => {
             const active = d === date
             return (
-              <button
-                type="button"
+              <FilterChip
                 key={d}
+                active={active}
                 onClick={() => setDate(d)}
-                className={`min-h-11 shrink-0 snap-start rounded-lg border px-3 text-body ${
-                  active
-                    ? 'border-teal-700 bg-teal-700 text-white'
-                    : 'border-slate-200'
-                }`}
+                className="shrink-0 snap-start"
               >
                 {dateFmt.format(new Date(`${d}T12:00:00Z`))}
-              </button>
+              </FilterChip>
             )
           })}
         </div>
@@ -243,18 +238,13 @@ export default function BookingWidget({
             {slots.map((slot) => {
               const active = selected?.start === slot.start
               return (
-                <button
-                  type="button"
+                <FilterChip
                   key={slot.start}
+                  active={active}
                   onClick={() => {
                     setSelected(slot)
                     setPartySize((p) => Math.min(Math.max(1, p), slot.capacityRemaining))
                   }}
-                  className={`min-h-11 rounded-lg border px-3 text-body ${
-                    active
-                      ? 'border-teal-700 bg-teal-700 text-white'
-                      : 'border-slate-200'
-                  }`}
                 >
                   {timeFmt.format(new Date(slot.start))}
                   {isGroup && (
@@ -262,7 +252,7 @@ export default function BookingWidget({
                       {t('remaining', { n: slot.capacityRemaining })}
                     </span>
                   )}
-                </button>
+                </FilterChip>
               )
             })}
           </div>
@@ -274,7 +264,7 @@ export default function BookingWidget({
           {isGroup && (
             <div>
               <label className="mb-1 block text-body text-slate-500">{t('partySize')}</label>
-              <input
+              <Input
                 type="number"
                 min={1}
                 max={maxParty}
@@ -282,33 +272,33 @@ export default function BookingWidget({
                 onChange={(e) =>
                   setPartySize(Math.min(maxParty, Math.max(1, Number(e.target.value))))
                 }
-                className="min-h-11 w-24 rounded-lg border border-slate-200 bg-transparent px-3"
+                className="w-24"
               />
             </div>
           )}
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <input
+            <Input
               required
               placeholder={t('name')}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
+              className="w-full"
             />
-            <input
+            <Input
               required
               type="tel"
               placeholder={t('phone')}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
+              className="w-full"
             />
-            <input
+            <Input
               type="email"
               placeholder={t('email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 sm:col-span-2"
+              className="w-full sm:col-span-2"
             />
           </div>
 
@@ -326,13 +316,9 @@ export default function BookingWidget({
 
           {error && <p className="text-body text-red-700">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="min-h-11 w-full rounded-lg bg-teal-700 px-6 font-semibold text-white disabled:opacity-60 sm:w-auto"
-          >
+          <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
             {submitting ? t('submitting') : t('submit')}
-          </button>
+          </Button>
         </>
       )}
     </form>

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { EVENT_CATEGORIES, eventCategorySlug } from '@/lib/events/constants'
+import { Select } from '@/components/ui/Input'
 
 type PriceFilter = '' | 'free' | 'paid'
 
@@ -37,10 +38,9 @@ export default function EventFilters({
     <div className="flex flex-wrap gap-3">
       <label className="flex flex-col gap-1 text-body">
         <span className="text-slate-500">{t('events.filterCategory')}</span>
-        <select
+        <Select
           value={currentCategory}
           onChange={(e) => apply({ category: e.target.value })}
-          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('events.allCategories')}</option>
           {EVENT_CATEGORIES.map((c) => (
@@ -48,15 +48,14 @@ export default function EventFilters({
               {t(`eventCategory.${eventCategorySlug(c)}`)}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
 
       <label className="flex flex-col gap-1 text-body">
         <span className="text-slate-500">{t('catalog.filtersBorough')}</span>
-        <select
+        <Select
           value={currentBorough}
           onChange={(e) => apply({ borough: e.target.value })}
-          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('catalog.filtersAllBoroughs')}</option>
           {boroughs.map((b) => (
@@ -64,20 +63,19 @@ export default function EventFilters({
               {b}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
 
       <label className="flex flex-col gap-1 text-body">
         <span className="text-slate-500">{t('events.filterPrice')}</span>
-        <select
+        <Select
           value={currentPrice}
           onChange={(e) => apply({ price: e.target.value })}
-          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('events.priceAll')}</option>
           <option value="free">{t('events.priceFree')}</option>
           <option value="paid">{t('events.pricePaid')}</option>
-        </select>
+        </Select>
       </label>
     </div>
   )

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { SectionHeading } from '@/components/ui/Section'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { resolveImageUrl } from '@/lib/images'
@@ -22,7 +23,7 @@ export default function AvailableToday({
 
   return (
     <section className="py-6">
-      <h2 className="mb-3 text-h2 font-semibold">{t('availableToday')}</h2>
+      <SectionHeading>{t('availableToday')}</SectionHeading>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {providers.map((p) => {
           const image = resolveImageUrl(p.cover_image)
@@ -36,7 +37,7 @@ export default function AvailableToday({
                   {image && (
                     <Image src={image} alt="" fill sizes="176px" className="object-cover" />
                   )}
-                  <span className="absolute right-2 top-2 rounded-full bg-green-700 px-2 py-0.5 text-meta font-semibold text-white">
+                  <span className="absolute right-2 top-2 rounded-full bg-green-700 px-2 py-1 text-meta font-semibold text-white">
                     {timeFmt.format(new Date(p.nextSlot))}
                   </span>
                 </div>

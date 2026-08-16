@@ -1,6 +1,7 @@
 'use client'
 
 import { useSyncExternalStore } from 'react'
+import { SectionHeading } from '@/components/ui/Section'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
@@ -19,7 +20,7 @@ export default function RecentlyViewed() {
 
   return (
     <section className="py-6">
-      <h2 className="mb-3 text-h2 font-semibold">{t('recentlyViewed')}</h2>
+      <SectionHeading>{t('recentlyViewed')}</SectionHeading>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {items.map((item) => {
           const image = resolveImageUrl(item.coverImage)

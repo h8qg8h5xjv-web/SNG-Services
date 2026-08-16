@@ -44,7 +44,7 @@ export default function PlaceCard({ card }: { card: ProviderCardVM }) {
         <Link href={`/${card.categorySlug}/${card.slug}`} className="font-semibold hover:underline">
           {card.name}
         </Link>
-        <p className="mt-0.5 text-meta text-slate-500">
+        <p className="mt-1 text-meta text-slate-500">
           {[card.categoryName, card.borough].filter(Boolean).join(' · ')}
         </p>
 

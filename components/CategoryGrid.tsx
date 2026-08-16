@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import { Button } from '@/components/ui/Button'
 import CategoryIcon from './CategoryIcon'
 
 export type CategoryTile = {
@@ -28,7 +29,7 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
               href={`/${c.slug}`}
               className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-slate-200 p-4 text-center transition-colors hover:border-teal-700"
             >
-              <CategoryIcon name={c.icon} className="h-7 w-7" />
+              <CategoryIcon name={c.icon} className="h-6 w-6" />
               <span className="text-body font-semibold leading-tight">{c.name}</span>
             </Link>
           </li>
@@ -36,13 +37,9 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
       </ul>
 
       {items.length > INITIAL_VISIBLE && (
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="mt-3 min-h-11 rounded-lg px-4 text-body font-semibold text-slate-500 underline-offset-4 hover:underline"
-        >
+        <Button variant="link" onClick={() => setExpanded((v) => !v)} className="mt-3">
           {expanded ? t('less') : t('more')}
-        </button>
+        </Button>
       )}
     </div>
   )
