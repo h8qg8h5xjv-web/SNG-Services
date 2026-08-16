@@ -35,18 +35,20 @@ export default function HomeTabs({
 
   return (
     <>
+      {/* Full-width row of 44px targets — each tab is a real touch target (§6). */}
       <div
         role="tablist"
         aria-label="Home sections"
-        className="inline-flex rounded-lg border border-slate-200 p-1"
+        className="flex gap-1 rounded-lg border border-slate-200 p-1"
       >
         {(['services', 'places'] as const).map((key) => (
           <button
             key={key}
+            type="button"
             role="tab"
             aria-selected={tab === key}
             onClick={() => choose(key)}
-            className={`min-h-9 rounded-lg px-4 text-body font-semibold ${
+            className={`min-h-11 flex-1 rounded-lg px-4 text-body font-semibold transition-colors ${
               tab === key ? 'bg-teal-700 text-white' : 'text-slate-500'
             }`}
           >

@@ -2,7 +2,9 @@ import type { ReactNode } from 'react'
 import { Link } from '@/i18n/navigation'
 
 // DESIGN-SYSTEM §5: filter chip — rounded-full, 13px, teal when active.
-const base = 'inline-flex min-h-9 items-center rounded-full px-3 text-meta transition-colors'
+// min-h-11 (44px) so it's a real touch target on mobile (DESIGN-SYSTEM §6).
+const base =
+  'inline-flex min-h-11 items-center rounded-full px-3 text-meta transition-colors'
 const state = (active: boolean) =>
   active ? 'bg-teal-700 text-white' : 'border border-slate-200 text-slate-900'
 

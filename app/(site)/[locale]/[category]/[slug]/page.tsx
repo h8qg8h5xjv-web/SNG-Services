@@ -15,6 +15,7 @@ import {
 } from '@tabler/icons-react'
 import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
 import VenueGallery from '@/components/site/VenueGallery'
@@ -144,7 +145,8 @@ export default async function ProviderPage({
       <Header />
       <JsonLd data={businessLd} />
       {/* pb-28: off-scale on purpose — clears the mobile sticky booking bar. */}
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-8">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
+        <BackButton />
         <RecordRecentView
           item={{
             slug: provider.slug,

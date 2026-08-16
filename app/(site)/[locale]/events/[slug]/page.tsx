@@ -6,6 +6,7 @@ import { IconExternalLink, IconMapPin, IconCalendarEvent } from '@tabler/icons-r
 import { Link } from '@/i18n/navigation'
 import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 import JsonLd from '@/components/JsonLd'
 import { getEventBySlug } from '@/lib/queries/events'
 import {
@@ -105,7 +106,8 @@ export default async function EventPage({
     <>
       <Header />
       <JsonLd data={eventLd} />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-8">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
+        <BackButton />
         <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
           {image && (
             <Image

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 import { Link } from '@/i18n/navigation'
 import BookingWidget from '@/components/booking/BookingWidget'
 import { getProviderDetail } from '@/lib/queries/providers'
@@ -35,10 +36,20 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
     <>
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
+        <BackButton />
         <h1 className="mb-6 text-title font-semibold">{t('booking.title', { name })}</h1>
 
         {provider.fulfillment_type === 'native_booking' && provider.services.length > 0 ? (
-          <BookingWidget services={provider.services} providerId={provider.id} />
+          // "Today" is resolved on the server (London date) and passed in so the
+          // 30-day picker is identical on server and client — no hydration
+          // mismatch that would leave the widget non-interactive.
+          <BookingWidget
+            services={provider.services}
+            providerId={provider.id}
+            todayIso={new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(
+              new Date(),
+            )}
+          />
         ) : (
           <div className="rounded-lg border border-slate-200 p-6">
             <h2 className="text-h2 font-semibold">{t('booking.notBookableTitle')}</h2>

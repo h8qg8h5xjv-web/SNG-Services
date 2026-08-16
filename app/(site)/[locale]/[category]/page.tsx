@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconMoodSad } from '@tabler/icons-react'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 import CategoryFilters from '@/components/CategoryFilters'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
@@ -69,7 +70,8 @@ export default async function CategoryPage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-4">
+        <BackButton />
         <div className="py-6">
           <h1 className="text-title font-semibold">{pickCategoryName(cat, locale)}</h1>
           <p className="mt-1 text-body text-slate-500">

@@ -6,8 +6,8 @@ import { usePathname, useRouter } from '@/i18n/navigation'
 import { localeConfigs } from '@/i18n/locales'
 import { Select } from '@/components/ui/Input'
 
-// Only enabled locales are offered. Switching keeps the current path and lets
-// next-intl store the choice in the NEXT_LOCALE cookie (overrides Accept-Language).
+// Only enabled locales are offered. Switching keeps the current path and changes
+// the locale prefix; next-intl stores the choice in the NEXT_LOCALE cookie.
 const options = localeConfigs.filter((l) => l.enabled)
 
 export default function LanguageSwitcher() {
@@ -15,11 +15,13 @@ export default function LanguageSwitcher() {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const next = event.target.value
     if (next === locale) return
+    // Change only the locale of the current path. Not disabled while pending —
+    // a stuck-pending transition must never freeze the control.
     startTransition(() => {
       router.replace(pathname, { locale: next })
     })
@@ -28,7 +30,7 @@ export default function LanguageSwitcher() {
   return (
     <label className="inline-flex items-center gap-2 text-body">
       <span className="sr-only">{t('change')}</span>
-      <Select aria-label={t('change')} value={locale} onChange={onChange} disabled={isPending}>
+      <Select aria-label={t('change')} value={locale} onChange={onChange}>
         {options.map((l) => (
           <option key={l.code} value={l.code}>
             {l.name}
