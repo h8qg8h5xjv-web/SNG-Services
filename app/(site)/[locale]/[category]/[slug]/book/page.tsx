@@ -35,17 +35,17 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
     <>
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
-        <h1 className="mb-6 text-2xl font-semibold">{t('booking.title', { name })}</h1>
+        <h1 className="mb-6 text-title font-semibold">{t('booking.title', { name })}</h1>
 
         {provider.fulfillment_type === 'native_booking' && provider.services.length > 0 ? (
           <BookingWidget services={provider.services} providerId={provider.id} />
         ) : (
-          <div className="rounded-2xl border border-black/10 p-6 dark:border-white/10">
-            <h2 className="text-lg font-medium">{t('booking.notBookableTitle')}</h2>
-            <p className="mt-2 text-sm text-foreground/60">{t('booking.notBookableBody')}</p>
+          <div className="rounded-lg border border-slate-200 p-6">
+            <h2 className="text-h2 font-semibold">{t('booking.notBookableTitle')}</h2>
+            <p className="mt-2 text-body text-slate-500">{t('booking.notBookableBody')}</p>
             <Link
               href={`/${category}/${slug}`}
-              className="mt-4 inline-block text-sm font-medium hover:underline"
+              className="mt-4 inline-block text-body font-semibold hover:underline"
             >
               ← {t('booking.backToProvider')}
             </Link>

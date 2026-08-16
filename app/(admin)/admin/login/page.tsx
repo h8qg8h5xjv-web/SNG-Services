@@ -31,13 +31,13 @@ export default function AdminLoginPage() {
 
   return (
     <main className="mx-auto flex min-h-full max-w-sm flex-col justify-center px-6 py-16">
-      <h1 className="text-2xl font-semibold">SNG Services — Admin</h1>
-      <p className="mt-2 text-sm text-foreground/60">
+      <h1 className="text-title font-semibold">SNG Services — Admin</h1>
+      <p className="mt-2 text-body text-slate-500">
         Sign in with a magic link sent to your email.
       </p>
 
       {status === 'sent' ? (
-        <p className="mt-6 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm">
+        <p className="mt-6 rounded-lg border border-green-200 bg-green-100 p-4 text-body">
           Check your inbox — we sent a sign-in link to <strong>{email}</strong>.
         </p>
       ) : (
@@ -48,17 +48,17 @@ export default function AdminLoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-4 dark:border-white/20"
+            className="min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-4"
           />
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="min-h-11 w-full rounded-lg bg-foreground px-4 font-medium text-background disabled:opacity-60"
+            className="min-h-11 w-full rounded-lg bg-teal-700 px-4 font-semibold text-white disabled:opacity-60"
           >
             {status === 'sending' ? 'Sending…' : 'Send magic link'}
           </button>
           {status === 'error' && (
-            <p className="text-sm text-red-600 dark:text-red-400">{message}</p>
+            <p className="text-body text-red-700">{message}</p>
           )}
         </form>
       )}

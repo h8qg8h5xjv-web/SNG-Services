@@ -52,16 +52,16 @@ export default function ImageUpload({
           unoptimized
         />
       )}
-      <input type="file" accept="image/*" onChange={onFile} disabled={busy} className="block text-sm" />
+      <input type="file" accept="image/*" onChange={onFile} disabled={busy} className="block text-body" />
       <input
         type="text"
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value || null)}
         placeholder="or paste an image URL / storage path"
-        className="min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+        className="min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3 text-body"
       />
-      {busy && <p className="text-sm text-foreground/60">Uploading…</p>}
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {busy && <p className="text-body text-slate-500">Uploading…</p>}
+      {error && <p className="text-body text-red-700">{error}</p>}
     </div>
   )
 }

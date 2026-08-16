@@ -26,10 +26,10 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
           <li key={c.slug}>
             <Link
               href={`/${c.slug}`}
-              className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border border-black/10 p-4 text-center transition-colors hover:border-black/20 dark:border-white/10 dark:hover:border-white/20"
+              className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-slate-200 p-4 text-center transition-colors hover:border-teal-700"
             >
               <CategoryIcon name={c.icon} className="h-7 w-7" />
-              <span className="text-sm font-medium leading-tight">{c.name}</span>
+              <span className="text-body font-semibold leading-tight">{c.name}</span>
             </Link>
           </li>
         ))}
@@ -39,7 +39,7 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-3 min-h-11 rounded-lg px-4 text-sm font-medium text-foreground/70 underline-offset-4 hover:underline"
+          className="mt-3 min-h-11 rounded-lg px-4 text-body font-semibold text-slate-500 underline-offset-4 hover:underline"
         >
           {expanded ? t('less') : t('more')}
         </button>

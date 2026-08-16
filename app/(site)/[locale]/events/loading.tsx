@@ -11,9 +11,9 @@ export default function EventsLoading() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="overflow-hidden rounded-xl border border-black/10 dark:border-white/10"
+              className="overflow-hidden rounded-lg border border-slate-200"
             >
-              <Skeleton className="aspect-[16/9] w-full rounded-none" />
+              <Skeleton className="aspect-video w-full rounded-none" />
               <div className="space-y-2 p-4">
                 <Skeleton className="h-3 w-1/3" />
                 <Skeleton className="h-4 w-2/3" />

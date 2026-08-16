@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Design system (DESIGN-SYSTEM.md). Colours come straight from the Tailwind
+   slate/teal/green/red palettes — no custom hex. No dark theme by decision. */
+@theme {
+  --font-sans:
+    var(--font-inter), "Noto Sans Georgian", var(--font-noto-georgian),
+    "Noto Sans Armenian", var(--font-noto-armenian), system-ui, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Five sizes, nothing between (DESIGN-SYSTEM §2). */
+  --text-title: 1.5rem; /* 24 — page title, one per screen */
+  --text-title--line-height: 2rem;
+  --text-h2: 1.125rem; /* 18 — block heading */
+  --text-h2--line-height: 1.5rem;
+  --text-body: 0.9375rem; /* 15 — body, fields, buttons */
+  --text-body--line-height: 1.4rem;
+  --text-meta: 0.8125rem; /* 13 — borough, price, duration */
+  --text-meta--line-height: 1.15rem;
+  --text-label: 0.6875rem; /* 11 — labels, rarely */
+  --text-label--line-height: 1rem;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* The one non-16:9 image ratio we use, as a token so no arbitrary value is needed. */
+  --aspect-photo: 4 / 3;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-white);
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
 }

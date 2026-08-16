@@ -205,7 +205,7 @@ export default function ProviderForm({
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {(formError || errorEntries.length > 0) && (
-        <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm">
+        <div className="rounded-lg bg-red-100 p-3 text-body">
           {formError && <p>{formError}</p>}
           <ul className="list-inside list-disc">
             {errorEntries.map(([key, msg]) => (
@@ -218,7 +218,7 @@ export default function ProviderForm({
       )}
 
       {!provider && (
-        <label className="flex items-center gap-2 rounded-lg border border-black/10 p-3 text-sm dark:border-white/10">
+        <label className="flex items-center gap-2 rounded-lg border border-slate-200 p-3 text-body">
           <input
             type="checkbox"
             checked={quickCreate}
@@ -246,32 +246,32 @@ export default function ProviderForm({
         <Field label="Name (EN)" value={f.name_en} onChange={(v) => set('name_en', v)} required />
       </div>
 
-      <label className="block text-sm">
-        <span className="text-foreground/70">
+      <label className="block text-body">
+        <span className="text-slate-500">
           Description (EN)
           {f.claim_status === 'unclaimed' && (
-            <span className="ml-2 text-foreground/40">(необязательно для unclaimed)</span>
+            <span className="ml-2 text-slate-400">(необязательно для unclaimed)</span>
           )}
         </span>
         <textarea
           value={f.description_en}
           onChange={(e) => set('description_en', e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-black/15 bg-transparent p-3 dark:border-white/20"
+          className="mt-1 w-full rounded-lg border border-slate-200 bg-transparent p-3"
         />
         {errors['description_en'] && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors['description_en']}</p>
+          <p className="mt-1 text-body text-red-700">{errors['description_en']}</p>
         )}
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="text-foreground/70">Category</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Category</span>
           <select
             value={f.category_id}
             onChange={(e) => set('category_id', e.target.value)}
             required
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="">—</option>
             {categories.map((c) => (
@@ -285,24 +285,24 @@ export default function ProviderForm({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="text-foreground/70">Fulfillment</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Fulfillment</span>
           <select
             value={f.fulfillment_type}
             onChange={(e) => set('fulfillment_type', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="native_booking">native_booking</option>
             <option value="external_order">external_order</option>
             <option value="enquiry">enquiry</option>
           </select>
         </label>
-        <label className="block text-sm">
-          <span className="text-foreground/70">Status</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Status</span>
           <select
             value={f.status}
             onChange={(e) => set('status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="draft">draft</option>
             <option value="published">published</option>
@@ -321,30 +321,30 @@ export default function ProviderForm({
 
       {/* Second axis (DESIGN §2в): place vs pro, plus claim + booking toggle. */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="block text-sm">
-          <span className="text-foreground/70">Entity type</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Entity type</span>
           <select
             value={f.entity_type}
             onChange={(e) => set('entity_type', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="place">place — заведение</option>
             <option value="pro">pro — специалист</option>
           </select>
         </label>
-        <label className="block text-sm">
-          <span className="text-foreground/70">Claim status</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Claim status</span>
           <select
             value={f.claim_status}
             onChange={(e) => set('claim_status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="unclaimed">unclaimed</option>
             <option value="claimed">claimed</option>
             <option value="invited">invited</option>
           </select>
         </label>
-        <label className="flex items-center gap-2 self-end pb-2 text-sm">
+        <label className="flex items-center gap-2 self-end pb-2 text-body">
           <input
             type="checkbox"
             checked={bookingEnabled}
@@ -365,12 +365,12 @@ export default function ProviderForm({
 
       {f.entity_type === 'place' && (
         <>
-          <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-medium">Часы работы</h3>
+          <section className="rounded-lg border border-slate-200 p-4">
+            <h3 className="mb-3 text-body font-semibold">Часы работы</h3>
             <OpeningHoursEditor value={openingHours} onChange={setOpeningHours} />
           </section>
-          <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-medium">Фото зала</h3>
+          <section className="rounded-lg border border-slate-200 p-4">
+            <h3 className="mb-3 text-body font-semibold">Фото зала</h3>
             <VenuePhotos value={venuePhotos} onChange={setVenuePhotos} />
           </section>
         </>
@@ -378,21 +378,21 @@ export default function ProviderForm({
 
       {!quickCreate && (
         <fieldset>
-          <legend className="text-sm text-foreground/70">Service languages (CIS)</legend>
+          <legend className="text-body text-slate-500">Service languages (CIS)</legend>
           <div className="mt-2 flex flex-wrap gap-3">
             {languages.map((l) => (
-              <label key={l.code} className="inline-flex items-center gap-2 text-sm">
+              <label key={l.code} className="inline-flex items-center gap-2 text-body">
                 <input
                   type="checkbox"
                   checked={selectedLangs.includes(l.code)}
                   onChange={() => toggleLang(l.code)}
                 />
-                {l.name_native} <span className="text-foreground/40">({l.code})</span>
+                {l.name_native} <span className="text-slate-400">({l.code})</span>
               </label>
             ))}
           </div>
           {errors['languages'] && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors['languages']}</p>
+            <p className="mt-1 text-body text-red-700">{errors['languages']}</p>
           )}
         </fieldset>
       )}
@@ -408,20 +408,20 @@ export default function ProviderForm({
       </div>
 
       <div>
-        <p className="mb-1 text-sm text-foreground/70">Cover image</p>
+        <p className="mb-1 text-body text-slate-500">Cover image</p>
         <ImageUpload value={coverImage} onChange={setCoverImage} />
       </div>
 
       {!quickCreate && (
       <>
       {/* Translations — the editor shows every locale so gaps are visible. */}
-      <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-        <h3 className="mb-3 text-sm font-medium">Translations</h3>
+      <section className="rounded-lg border border-slate-200 p-4">
+        <h3 className="mb-3 text-body font-semibold">Translations</h3>
         <div className="space-y-4">
           {translations.map((t, i) => (
             <div key={t.locale} className="grid gap-2 sm:grid-cols-2">
-              <label className="block text-sm">
-                <span className="text-foreground/60">{t.locale} — name</span>
+              <label className="block text-body">
+                <span className="text-slate-500">{t.locale} — name</span>
                 <input
                   value={t.name}
                   onChange={(e) =>
@@ -429,14 +429,14 @@ export default function ProviderForm({
                       prev.map((row, j) => (j === i ? { ...row, name: e.target.value } : row)),
                     )
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+                  className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
                 />
               </label>
-              <label className="block text-sm">
-                <span className="text-foreground/60">
+              <label className="block text-body">
+                <span className="text-slate-500">
                   {t.locale} — description
                   {t.locale === 'ru' && !t.description.trim() && (
-                    <span className="ml-2 text-amber-600 dark:text-amber-400">missing</span>
+                    <span className="ml-2 text-slate-500">missing</span>
                   )}
                 </span>
                 <input
@@ -448,7 +448,7 @@ export default function ProviderForm({
                       ),
                     )
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+                  className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
                 />
               </label>
             </div>
@@ -457,9 +457,9 @@ export default function ProviderForm({
       </section>
 
       {/* Services */}
-      <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
+      <section className="rounded-lg border border-slate-200 p-4">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-medium">Services</h3>
+          <h3 className="text-body font-semibold">Services</h3>
           <button
             type="button"
             onClick={() =>
@@ -468,7 +468,7 @@ export default function ProviderForm({
                 { name_en: '', name_ru: '', duration_min: '60', price_pence: '0', capacity: '1' },
               ])
             }
-            className="text-sm text-foreground/70 hover:underline"
+            className="text-body text-slate-500 hover:underline"
           >
             + Add
           </button>
@@ -480,39 +480,39 @@ export default function ProviderForm({
                 placeholder="Name EN"
                 value={s.name_en}
                 onChange={(e) => updateRow(setServices, i, 'name_en', e.target.value)}
-                className="col-span-2 min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                className="col-span-2 min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
               />
               <input
                 placeholder="Name RU"
                 value={s.name_ru}
                 onChange={(e) => updateRow(setServices, i, 'name_ru', e.target.value)}
-                className="col-span-2 min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                className="col-span-2 min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
               />
               <input
                 placeholder="Min"
                 inputMode="numeric"
                 value={s.duration_min}
                 onChange={(e) => updateRow(setServices, i, 'duration_min', e.target.value)}
-                className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
               />
               <input
                 placeholder="Pence"
                 inputMode="numeric"
                 value={s.price_pence}
                 onChange={(e) => updateRow(setServices, i, 'price_pence', e.target.value)}
-                className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
               />
               <input
                 placeholder="Cap"
                 inputMode="numeric"
                 value={s.capacity}
                 onChange={(e) => updateRow(setServices, i, 'capacity', e.target.value)}
-                className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
               />
               <button
                 type="button"
                 onClick={() => setServices((prev) => prev.filter((_, j) => j !== i))}
-                className="col-span-2 text-sm text-red-600 hover:underline sm:col-span-6 sm:text-left"
+                className="col-span-2 text-body text-red-700 hover:underline sm:col-span-6 sm:text-left"
               >
                 Remove
               </button>
@@ -525,9 +525,9 @@ export default function ProviderForm({
 
       {/* Schedule — native_booking only */}
       {f.fulfillment_type === 'native_booking' && (
-        <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
+        <section className="rounded-lg border border-slate-200 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-medium">Weekly schedule</h3>
+            <h3 className="text-body font-semibold">Weekly schedule</h3>
             <button
               type="button"
               onClick={() =>
@@ -536,13 +536,13 @@ export default function ProviderForm({
                   { day_of_week: 1, start_time: '10:00', end_time: '19:00' },
                 ])
               }
-              className="text-sm text-foreground/70 hover:underline"
+              className="text-body text-slate-500 hover:underline"
             >
               + Add
             </button>
           </div>
           {errors['schedule'] && (
-            <p className="mb-2 text-sm text-red-600 dark:text-red-400">{errors['schedule']}</p>
+            <p className="mb-2 text-body text-red-700">{errors['schedule']}</p>
           )}
           <div className="space-y-2">
             {schedule.map((r, i) => (
@@ -550,7 +550,7 @@ export default function ProviderForm({
                 <select
                   value={r.day_of_week}
                   onChange={(e) => updateRow(setSchedule, i, 'day_of_week', Number(e.target.value))}
-                  className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                  className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
                 >
                   {DAYS.map((d) => (
                     <option key={d.value} value={d.value}>
@@ -562,18 +562,18 @@ export default function ProviderForm({
                   type="time"
                   value={r.start_time}
                   onChange={(e) => updateRow(setSchedule, i, 'start_time', e.target.value)}
-                  className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                  className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
                 />
                 <input
                   type="time"
                   value={r.end_time}
                   onChange={(e) => updateRow(setSchedule, i, 'end_time', e.target.value)}
-                  className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+                  className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
                 />
                 <button
                   type="button"
                   onClick={() => setSchedule((prev) => prev.filter((_, j) => j !== i))}
-                  className="text-sm text-red-600 hover:underline"
+                  className="text-body text-red-700 hover:underline"
                 >
                   Remove
                 </button>
@@ -587,7 +587,7 @@ export default function ProviderForm({
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-lg bg-foreground px-6 font-medium text-background disabled:opacity-60"
+          className="min-h-11 rounded-lg bg-teal-700 px-6 font-semibold text-white disabled:opacity-60"
         >
           {pending ? 'Saving…' : 'Save'}
         </button>
@@ -596,7 +596,7 @@ export default function ProviderForm({
             type="button"
             onClick={onDelete}
             disabled={pending}
-            className="min-h-11 rounded-lg border border-red-500/40 px-4 text-sm text-red-600 dark:text-red-400"
+            className="min-h-11 rounded-lg border border-red-200 px-4 text-body text-red-700"
           >
             Delete
           </button>
@@ -629,15 +629,15 @@ function Field({
   error?: string
 }) {
   return (
-    <label className="block text-sm">
-      <span className="text-foreground/70">{label}</span>
+    <label className="block text-body">
+      <span className="text-slate-500">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+        className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
       />
-      {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-body text-red-700">{error}</p>}
     </label>
   )
 }

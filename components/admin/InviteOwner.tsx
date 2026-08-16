@@ -25,9 +25,9 @@ export default function InviteOwner({ providerId }: { providerId: string }) {
   }
 
   return (
-    <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-      <h3 className="mb-2 text-sm font-medium">Invite the business owner</h3>
-      <p className="mb-3 text-sm text-foreground/60">
+    <section className="rounded-lg border border-slate-200 p-4">
+      <h3 className="mb-2 text-body font-semibold">Invite the business owner</h3>
+      <p className="mb-3 text-body text-slate-500">
         Generates a one-time link (valid 7 days). Send it to the business — they
         sign in and claim this card.
       </p>
@@ -35,14 +35,14 @@ export default function InviteOwner({ providerId }: { providerId: string }) {
         type="button"
         onClick={onClick}
         disabled={pending}
-        className="min-h-11 rounded-lg border border-black/15 px-4 text-sm dark:border-white/20"
+        className="min-h-11 rounded-lg border border-slate-200 px-4 text-body"
       >
         {pending ? 'Generating…' : 'Generate invite link'}
       </button>
       {link && (
-        <p className="mt-3 break-all rounded-lg bg-foreground/5 p-3 text-xs">{link}</p>
+        <p className="mt-3 break-all rounded-lg bg-slate-100 p-3 text-meta">{link}</p>
       )}
-      {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-body text-red-700">{error}</p>}
     </section>
   )
 }

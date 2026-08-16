@@ -25,7 +25,7 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
 
   if (expired) {
     return (
-      <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-700 dark:text-amber-400">
+      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-meta text-slate-500">
         verified · expired
       </span>
     )
@@ -34,10 +34,10 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
     const seed = lang.method === 'seed'
     return (
       <span
-        className={`rounded-full px-2 py-0.5 text-xs ${
+        className={`rounded-full px-2 py-0.5 text-meta ${
           seed
-            ? 'bg-slate-500/15 text-slate-600 dark:text-slate-300'
-            : 'bg-green-500/15 text-green-700 dark:text-green-400'
+            ? 'bg-slate-100 text-slate-500'
+            : 'bg-green-100 text-green-700'
         }`}
       >
         ✓ verified{seed ? ' · seed' : ''}
@@ -46,13 +46,13 @@ function StatusBadge({ lang }: { lang: AdminProviderLanguage }) {
   }
   if (lang.status === 'rejected') {
     return (
-      <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-700 dark:text-red-400">
+      <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-meta text-red-700">
         rejected
       </span>
     )
   }
   return (
-    <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs text-foreground/60 dark:bg-white/10">
+    <span className="rounded-full bg-black/5 px-2 py-0.5 text-meta text-slate-500">
       claimed
     </span>
   )
@@ -96,16 +96,16 @@ function LanguageRow({
   }
 
   return (
-    <div className="rounded-lg border border-black/10 p-3 dark:border-white/10">
+    <div className="rounded-lg border border-slate-200 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-sm font-medium">
-          {name} <span className="text-foreground/40">({lang.language_code})</span>
+        <span className="text-body font-semibold">
+          {name} <span className="text-slate-400">({lang.language_code})</span>
         </span>
         <StatusBadge lang={lang} />
       </div>
 
       {lang.method === 'seed' && (
-        <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+        <p className="mt-1 text-meta text-slate-500">
           Подтверждение из сида — не настоящая проверка.
         </p>
       )}
@@ -115,7 +115,7 @@ function LanguageRow({
           value={method}
           onChange={(e) => setMethod(e.target.value as LanguageVerificationMethod)}
           disabled={pending}
-          className="min-h-9 rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+          className="min-h-9 rounded-lg border border-slate-200 bg-transparent px-2 text-body"
         >
           {VERIFICATION_METHODS.map((m) => (
             <option key={m} value={m}>
@@ -128,12 +128,12 @@ function LanguageRow({
           onChange={(e) => setNote(e.target.value)}
           placeholder="Заметка"
           disabled={pending}
-          className="min-h-9 flex-1 rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+          className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-transparent px-2 text-body"
         />
       </div>
 
       {showProfessional && (
-        <label className="mt-2 inline-flex items-center gap-2 text-sm">
+        <label className="mt-2 inline-flex items-center gap-2 text-body">
           <input
             type="checkbox"
             checked={professional}
@@ -145,18 +145,18 @@ function LanguageRow({
       )}
 
       {lang.status === 'verified' && lang.expires_at && (
-        <p className="mt-1 text-xs text-foreground/50">
+        <p className="mt-1 text-meta text-slate-500">
           Действует до {new Date(lang.expires_at).toLocaleDateString('ru-RU')}
           {lang.professional_level ? ' · проф.' : ''}
         </p>
       )}
 
-      <div className="mt-2 flex flex-wrap gap-3 text-sm">
+      <div className="mt-2 flex flex-wrap gap-3 text-body">
         <button
           type="button"
           onClick={() => act('verified')}
           disabled={pending}
-          className="rounded-lg bg-foreground px-3 py-1 font-medium text-background disabled:opacity-60"
+          className="rounded-lg bg-teal-700 px-3 py-1 font-semibold text-white disabled:opacity-60"
         >
           Подтвердить
         </button>
@@ -164,7 +164,7 @@ function LanguageRow({
           type="button"
           onClick={() => act('rejected')}
           disabled={pending}
-          className="text-red-600 hover:underline disabled:opacity-60 dark:text-red-400"
+          className="text-red-700 hover:underline disabled:opacity-60"
         >
           Отклонить
         </button>
@@ -173,14 +173,14 @@ function LanguageRow({
             type="button"
             onClick={() => act('claimed')}
             disabled={pending}
-            className="text-foreground/60 hover:underline disabled:opacity-60"
+            className="text-slate-500 hover:underline disabled:opacity-60"
           >
             Сбросить
           </button>
         )}
       </div>
 
-      {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-body text-red-700">{error}</p>}
     </div>
   )
 }
@@ -205,14 +205,14 @@ export default function LanguageVerification({
   const showProfessional = categorySlug !== null && PROFESSIONAL_CATEGORIES.has(categorySlug)
 
   return (
-    <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-      <h3 className="mb-1 text-sm font-medium">Проверка языков</h3>
-      <p className="mb-3 text-xs text-foreground/60">
+    <section className="rounded-lg border border-slate-200 p-4">
+      <h3 className="mb-1 text-body font-semibold">Проверка языков</h3>
+      <p className="mb-3 text-meta text-slate-500">
         Публикация требует хотя бы один язык со статусом verified. Провайдер может
         заявить язык, подтвердить — только админ.
       </p>
       {languages.length === 0 ? (
-        <p className="text-sm text-foreground/60">Языки ещё не заявлены.</p>
+        <p className="text-body text-slate-500">Языки ещё не заявлены.</p>
       ) : (
         <div className="space-y-3">
           {[...languages]

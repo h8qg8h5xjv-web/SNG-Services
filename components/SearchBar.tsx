@@ -36,11 +36,11 @@ export default function SearchBar({
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t('searchPlaceholder')}
         aria-label={t('searchPlaceholder')}
-        className="min-h-11 flex-1 rounded-lg border border-black/10 bg-transparent px-4 py-2 dark:border-white/20"
+        className="min-h-11 flex-1 rounded-lg border border-slate-200 bg-transparent px-4 py-2"
       />
       <button
         type="submit"
-        className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg bg-foreground px-4 text-background"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 text-white"
       >
         <IconSearch className="h-5 w-5" stroke={2} />
         <span className="sr-only sm:not-sr-only">{t('search')}</span>

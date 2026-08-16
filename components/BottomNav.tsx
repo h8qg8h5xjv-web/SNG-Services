@@ -28,7 +28,7 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-black/10 bg-background/95 backdrop-blur sm:hidden dark:border-white/10">
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur sm:hidden">
       <ul className="mx-auto flex max-w-5xl">
         {ITEMS.map(({ href, labelKey, Icon }) => {
           const active = isActive(href)
@@ -37,8 +37,8 @@ export default function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs ${
-                  active ? 'text-foreground' : 'text-foreground/55'
+                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-meta ${
+                  active ? 'text-slate-900' : 'text-slate-900/55'
                 }`}
               >
                 <Icon className="h-6 w-6" stroke={1.5} />

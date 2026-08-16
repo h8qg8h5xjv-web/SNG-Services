@@ -16,7 +16,7 @@ export default async function EditEventPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold">{event.title_en}</h1>
+      <h1 className="text-h2 font-semibold">{event.title_en}</h1>
       <EventForm event={event} providerOptions={providerOptions} />
     </div>
   )

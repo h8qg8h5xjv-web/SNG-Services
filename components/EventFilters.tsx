@@ -35,12 +35,12 @@ export default function EventFilters({
 
   return (
     <div className="flex flex-wrap gap-3">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground/60">{t('events.filterCategory')}</span>
+      <label className="flex flex-col gap-1 text-body">
+        <span className="text-slate-500">{t('events.filterCategory')}</span>
         <select
           value={currentCategory}
           onChange={(e) => apply({ category: e.target.value })}
-          className="min-h-11 rounded-lg border border-black/10 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('events.allCategories')}</option>
           {EVENT_CATEGORIES.map((c) => (
@@ -51,12 +51,12 @@ export default function EventFilters({
         </select>
       </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground/60">{t('catalog.filtersBorough')}</span>
+      <label className="flex flex-col gap-1 text-body">
+        <span className="text-slate-500">{t('catalog.filtersBorough')}</span>
         <select
           value={currentBorough}
           onChange={(e) => apply({ borough: e.target.value })}
-          className="min-h-11 rounded-lg border border-black/10 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('catalog.filtersAllBoroughs')}</option>
           {boroughs.map((b) => (
@@ -67,12 +67,12 @@ export default function EventFilters({
         </select>
       </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground/60">{t('events.filterPrice')}</span>
+      <label className="flex flex-col gap-1 text-body">
+        <span className="text-slate-500">{t('events.filterPrice')}</span>
         <select
           value={currentPrice}
           onChange={(e) => apply({ price: e.target.value })}
-          className="min-h-11 rounded-lg border border-black/10 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('events.priceAll')}</option>
           <option value="free">{t('events.priceFree')}</option>

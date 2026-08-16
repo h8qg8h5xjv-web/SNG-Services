@@ -35,12 +35,12 @@ export default function CategoryFilters({
 
   return (
     <div className="flex flex-wrap gap-3">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground/60">{t('filtersBorough')}</span>
+      <label className="flex flex-col gap-1 text-body">
+        <span className="text-slate-500">{t('filtersBorough')}</span>
         <select
           value={currentBorough}
           onChange={(e) => apply(e.target.value, currentSort)}
-          className="min-h-11 rounded-lg border border-black/10 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           <option value="">{t('filtersAllBoroughs')}</option>
           {boroughs.map((b) => (
@@ -51,12 +51,12 @@ export default function CategoryFilters({
         </select>
       </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground/60">{t('sortLabel')}</span>
+      <label className="flex flex-col gap-1 text-body">
+        <span className="text-slate-500">{t('sortLabel')}</span>
         <select
           value={currentSort}
           onChange={(e) => apply(currentBorough, e.target.value as SortKey)}
-          className="min-h-11 rounded-lg border border-black/10 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
         >
           {SORTS.map((s) => (
             <option key={s} value={s}>

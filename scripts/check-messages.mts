@@ -2,18 +2,15 @@
 // truth: every en key must exist in every other locale, and no locale may carry
 // a key that en doesn't. Run: npm run check:messages
 //
-// This is the guard for DESIGN §1 — a locale must never be missing a key at
-// runtime. The runtime also falls back to English (see i18n/request.ts), but
-// this makes a gap a build failure instead of a silent English fallback.
+// Guards DESIGN §1 — a locale must never miss a key at runtime. The runtime also
+// falls back to English (i18n/request.ts); this makes a gap a build failure.
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const fs = require('fs') as typeof import('fs')
-const path = require('path') as typeof import('path')
-/* eslint-enable @typescript-eslint/no-require-imports */
+import fs from 'node:fs'
+import path from 'node:path'
 
 const LOCALES = ['en', 'ru', 'uk', 'kk', 'ka', 'hy'] as const
 const REFERENCE = 'en'
-const DIR = path.join(__dirname, '..', 'messages')
+const DIR = path.join(import.meta.dirname, '..', 'messages')
 
 type Json = { [key: string]: unknown }
 
@@ -26,9 +23,8 @@ function keyPaths(obj: Json, prefix = ''): string[] {
   })
 }
 
-function load(locale: string): Json {
-  return JSON.parse(fs.readFileSync(path.join(DIR, `${locale}.json`), 'utf8')) as Json
-}
+const load = (locale: string): Json =>
+  JSON.parse(fs.readFileSync(path.join(DIR, `${locale}.json`), 'utf8')) as Json
 
 const reference = new Set(keyPaths(load(REFERENCE)))
 let failed = false

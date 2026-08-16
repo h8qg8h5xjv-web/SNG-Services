@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { IconMoodSad } from '@tabler/icons-react'
 import Header from '@/components/Header'
 import CategoryFilters from '@/components/CategoryFilters'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { getCategoryBySlug } from '@/lib/queries/categories'
 import { listProvidersByCategory } from '@/lib/queries/providers'
 import { pickCategoryName } from '@/lib/i18n/content'
@@ -69,8 +71,8 @@ export default async function CategoryPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
         <div className="py-6">
-          <h1 className="text-2xl font-semibold">{pickCategoryName(cat, locale)}</h1>
-          <p className="mt-1 text-sm text-foreground/60">
+          <h1 className="text-title font-semibold">{pickCategoryName(cat, locale)}</h1>
+          <p className="mt-1 text-body text-slate-500">
             {t('providersCount', { count: all.length })}
           </p>
         </div>
@@ -86,13 +88,9 @@ export default async function CategoryPage({
         )}
 
         {all.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-black/15 p-8 text-center text-foreground/60 dark:border-white/15">
-            {t('emptyCategory')}
-          </p>
+          <EmptyState icon={IconMoodSad} text={t('emptyCategory')} />
         ) : cards.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-black/15 p-8 text-center text-foreground/60 dark:border-white/15">
-            {t('emptyFiltered')}
-          </p>
+          <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
         ) : (
           <>
             <ProviderGrid cards={cards} surface="category" />

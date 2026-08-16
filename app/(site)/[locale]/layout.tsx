@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Noto_Sans_Georgian, Noto_Sans_Armenian } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -11,14 +11,21 @@ import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import '../../globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+// Only weights 400 and 600 (DESIGN-SYSTEM §2) — extra weights are extra bytes.
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin', 'cyrillic'],
+  weight: ['400', '600'],
 })
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const notoGeorgian = Noto_Sans_Georgian({
+  variable: '--font-noto-georgian',
+  subsets: ['georgian'],
+  weight: ['400', '600'],
+})
+const notoArmenian = Noto_Sans_Armenian({
+  variable: '--font-noto-armenian',
+  subsets: ['armenian'],
+  weight: ['400', '600'],
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
@@ -69,9 +76,9 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${notoGeorgian.variable} ${notoArmenian.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col pb-14 sm:pb-0">
+      <body className="flex min-h-full flex-col pb-16 sm:pb-0">
         <NextIntlClientProvider>
           {children}
           <BottomNav />

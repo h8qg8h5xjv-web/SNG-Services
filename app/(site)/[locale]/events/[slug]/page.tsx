@@ -98,7 +98,7 @@ export default async function EventPage({
       href={event.ticket_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground px-6 font-medium text-background sm:w-auto"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-teal-700 px-6 font-semibold text-white sm:w-auto"
     >
       {t('events.tickets')}
       <IconExternalLink className="h-4 w-4" stroke={2} />
@@ -110,7 +110,7 @@ export default async function EventPage({
       <Header />
       <JsonLd data={eventLd} />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-12">
-        <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
+        <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
           {image && (
             <Image
               src={image}
@@ -124,20 +124,20 @@ export default async function EventPage({
         </div>
 
         <div className="py-5">
-          <p className="text-sm font-medium text-foreground/70">
+          <p className="text-body font-semibold text-slate-500">
             {t(`eventCategory.${eventCategorySlug(event.category)}`)} ·{' '}
             {formatEventDateTime(event.starts_at, locale)}
           </p>
-          <h1 className="mt-1 text-2xl font-semibold">{title}</h1>
-          {place && <p className="mt-1 text-foreground/60">{place}</p>}
-          <p className="mt-3 font-medium">
+          <h1 className="mt-1 text-title font-semibold">{title}</h1>
+          {place && <p className="mt-1 text-slate-500">{place}</p>}
+          <p className="mt-3 font-semibold">
             {event.price_from_pence == null
               ? t('events.free')
               : `${t('catalog.from')} ${formatPrice(event.price_from_pence)}`}
           </p>
 
           {description && (
-            <p className="mt-4 whitespace-pre-line text-foreground/80">
+            <p className="mt-4 whitespace-pre-line text-slate-900">
               {description}
             </p>
           )}
@@ -146,13 +146,13 @@ export default async function EventPage({
         </div>
 
         {event.organizer && event.organizer.categories && (
-          <section className="border-t border-black/10 py-5 dark:border-white/10">
-            <h2 className="mb-2 text-sm font-medium text-foreground/60">
+          <section className="border-t border-slate-200 py-5">
+            <h2 className="mb-2 text-body font-semibold text-slate-500">
               {t('events.organizer')}
             </h2>
             <Link
               href={`/${event.organizer.categories.slug}/${event.organizer.slug}`}
-              className="inline-flex items-center gap-2 font-medium hover:underline"
+              className="inline-flex items-center gap-2 font-semibold hover:underline"
             >
               <IconCalendarEvent className="h-4 w-4" stroke={1.5} />
               {event.organizer.name_en}
@@ -161,7 +161,7 @@ export default async function EventPage({
         )}
 
         {event.lat != null && event.lng != null && (
-          <section className="border-t border-black/10 py-5 dark:border-white/10">
+          <section className="border-t border-slate-200 py-5">
             <a
               href={`https://www.openstreetmap.org/?mlat=${event.lat}&mlon=${event.lng}#map=15/${event.lat}/${event.lng}`}
               target="_blank"
@@ -176,7 +176,7 @@ export default async function EventPage({
       </main>
 
       {tickets && (
-        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-black/10 bg-background/95 p-3 backdrop-blur sm:hidden dark:border-white/10">
+        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur sm:hidden">
           {tickets}
         </div>
       )}

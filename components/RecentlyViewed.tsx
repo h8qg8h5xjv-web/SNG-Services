@@ -19,7 +19,7 @@ export default function RecentlyViewed() {
 
   return (
     <section className="py-6">
-      <h2 className="mb-3 text-lg font-medium">{t('recentlyViewed')}</h2>
+      <h2 className="mb-3 text-h2 font-semibold">{t('recentlyViewed')}</h2>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {items.map((item) => {
           const image = resolveImageUrl(item.coverImage)
@@ -27,16 +27,16 @@ export default function RecentlyViewed() {
             <li key={item.slug} className="w-40 shrink-0 snap-start">
               <Link
                 href={`/${item.categorySlug}/${item.slug}`}
-                className="block overflow-hidden rounded-xl border border-black/10 dark:border-white/10"
+                className="block overflow-hidden rounded-lg border border-slate-200"
               >
-                <div className="relative aspect-[4/3] w-full bg-foreground/5">
+                <div className="relative aspect-photo w-full bg-slate-100">
                   {image && (
                     <Image src={image} alt="" fill sizes="160px" className="object-cover" />
                   )}
                 </div>
                 <div className="p-2">
-                  <p className="truncate text-sm font-medium">{item.name}</p>
-                  <p className="truncate text-xs text-foreground/60">{item.borough}</p>
+                  <p className="truncate text-body font-semibold">{item.name}</p>
+                  <p className="truncate text-meta text-slate-500">{item.borough}</p>
                 </div>
               </Link>
             </li>

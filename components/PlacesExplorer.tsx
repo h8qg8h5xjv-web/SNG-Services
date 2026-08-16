@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { IconMapPin } from '@tabler/icons-react'
 import PlaceCard from './PlaceCard'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
 // Places lens (DESIGN §2в): browse by borough and category. The interactive map
@@ -47,7 +48,7 @@ export default function PlacesExplorer({ places }: { places: ProviderCardVM[] })
         <select
           value={borough}
           onChange={(e) => setBorough(e.target.value)}
-          className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
         >
           <option value="">{t('places.allBoroughs')}</option>
           {boroughs.map((b) => (
@@ -59,7 +60,7 @@ export default function PlacesExplorer({ places }: { places: ProviderCardVM[] })
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 text-sm dark:border-white/20"
+          className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
         >
           <option value="">{t('places.allCategories')}</option>
           {categories.map((c) => (
@@ -71,19 +72,17 @@ export default function PlacesExplorer({ places }: { places: ProviderCardVM[] })
       </div>
 
       {/* Honest placeholder for the deferred map (chosen: no map dependency yet). */}
-      <div className="mb-4 flex items-center gap-2 rounded-xl border border-dashed border-black/15 p-3 text-sm text-foreground/50 dark:border-white/15">
+      <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-slate-200 p-3 text-body text-slate-500">
         <IconMapPin className="h-4 w-4" stroke={1.5} /> {t('places.mapSoon')}
       </div>
 
       {groups.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-black/15 p-8 text-center text-foreground/60 dark:border-white/15">
-          {t('places.empty')}
-        </p>
+        <EmptyState icon={IconMapPin} text={t('places.empty')} />
       ) : (
         <div className="space-y-6">
           {groups.map(([boroughName, cards]) => (
             <section key={boroughName}>
-              <h3 className="mb-2 text-sm font-medium text-foreground/70">{boroughName}</h3>
+              <h3 className="mb-2 text-body font-semibold text-slate-500">{boroughName}</h3>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {cards.map((card) => (
                   <PlaceCard key={card.id} card={card} />

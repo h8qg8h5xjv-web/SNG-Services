@@ -85,14 +85,14 @@ export default function VenuePhotos({
               unoptimized
             />
             {i === 0 && (
-              <span className="absolute left-1 top-1 rounded bg-foreground/80 px-1.5 py-0.5 text-xs text-background">
+              <span className="absolute left-1 top-1 rounded bg-teal-700/80 px-1.5 py-0.5 text-meta text-white">
                 Обложка
               </span>
             )}
             <button
               type="button"
               onClick={() => remove(i)}
-              className="absolute right-1 top-1 rounded bg-black/60 px-1.5 text-xs text-white"
+              className="absolute right-1 top-1 rounded bg-slate-900 px-1.5 text-meta text-white"
               aria-label="Удалить фото"
             >
               ×
@@ -107,14 +107,14 @@ export default function VenuePhotos({
           multiple
           onChange={onFiles}
           disabled={busy}
-          className="block text-sm"
+          className="block text-body"
         />
       )}
-      <p className="text-xs text-foreground/50">
+      <p className="text-meta text-slate-500">
         До {MAX_PHOTOS} фото. Первое — обложка. Перетащи, чтобы поменять порядок.
       </p>
-      {busy && <p className="text-sm text-foreground/60">Загрузка…</p>}
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {busy && <p className="text-body text-slate-500">Загрузка…</p>}
+      {error && <p className="text-body text-red-700">{error}</p>}
     </div>
   )
 }

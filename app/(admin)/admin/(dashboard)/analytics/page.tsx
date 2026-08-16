@@ -16,35 +16,35 @@ export default async function AnalyticsPage({
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Analytics</h1>
+      <h1 className="text-h2 font-semibold">Analytics</h1>
 
       <form method="get" className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
-          <span className="text-foreground/60">From</span>
+        <label className="text-body">
+          <span className="text-slate-500">From</span>
           <input
             type="date"
             name="from"
             defaultValue={from}
-            className="mt-1 block min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 block min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
           />
         </label>
-        <label className="text-sm">
-          <span className="text-foreground/60">To</span>
+        <label className="text-body">
+          <span className="text-slate-500">To</span>
           <input
             type="date"
             name="to"
             defaultValue={to}
-            className="mt-1 block min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 block min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
           />
         </label>
-        <button className="min-h-11 rounded-lg border border-black/15 px-4 text-sm dark:border-white/20">
+        <button className="min-h-11 rounded-lg border border-slate-200 px-4 text-body">
           Apply
         </button>
       </form>
 
-      <div className="overflow-x-auto rounded-xl border border-black/10 dark:border-white/10">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-foreground/60 dark:border-white/10">
+      <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <table className="w-full text-left text-body">
+          <thead className="border-b border-slate-200 text-slate-500">
             <tr>
               <th className="p-3">Provider</th>
               <th className="p-3">Impressions</th>
@@ -56,14 +56,14 @@ export default async function AnalyticsPage({
           <tbody>
             {stats.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-6 text-center text-foreground/50">
+                <td colSpan={5} className="p-6 text-center text-slate-500">
                   No events in this period.
                 </td>
               </tr>
             ) : (
               stats.map((s) => (
-                <tr key={s.providerId} className="border-b border-black/5 last:border-0 dark:border-white/5">
-                  <td className="p-3 font-medium">{s.name}</td>
+                <tr key={s.providerId} className="border-b border-slate-100 last:border-0">
+                  <td className="p-3 font-semibold">{s.name}</td>
                   <td className="p-3">{s.impressions}</td>
                   <td className="p-3">{s.clicks}</td>
                   <td className="p-3">{(s.ctr * 100).toFixed(1)}%</td>

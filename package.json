@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run check:messages",
+    "prebuild": "npm run check:messages && npm run check:styles",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:messages": "node --experimental-strip-types scripts/check-messages.ts",
+    "check:messages": "node --experimental-strip-types scripts/check-messages.mts",
+    "check:styles": "node --experimental-strip-types scripts/check-styles.mts",
     "seed": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/seed.ts",
     "seed:dry": "node --experimental-strip-types scripts/seed.ts --dry-run"
   },

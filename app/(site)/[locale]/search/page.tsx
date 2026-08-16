@@ -5,6 +5,8 @@ import SearchBar from '@/components/SearchBar'
 import ProviderGrid from '@/components/ProviderGrid'
 import PlaceCard from '@/components/PlaceCard'
 import TrackImpressions from '@/components/TrackImpressions'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { IconSearch } from '@tabler/icons-react'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { matchesQuery, toCard, isServiceCard, isPlaceCard } from '@/lib/catalog/transform'
 import { rankProviders } from '@/lib/ranking'
@@ -54,23 +56,21 @@ export default async function SearchPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
         <div className="py-6">
-          <h1 className="mb-4 text-2xl font-semibold">{t('title')}</h1>
+          <h1 className="mb-4 text-title font-semibold">{t('title')}</h1>
           <SearchBar initialQuery={q} />
         </div>
 
         {!q ? (
-          <p className="text-foreground/60">{t('prompt')}</p>
+          <p className="text-slate-500">{t('prompt')}</p>
         ) : cards.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-black/15 p-8 text-center text-foreground/60 dark:border-white/15">
-            {t('empty', { query: q })}
-          </p>
+          <EmptyState icon={IconSearch} text={t('empty', { query: q })} />
         ) : (
           <>
-            <p className="mb-4 text-sm text-foreground/60">{t('resultsFor', { query: q })}</p>
+            <p className="mb-4 text-body text-slate-500">{t('resultsFor', { query: q })}</p>
             <div className="space-y-8">
               {groups.map((group) => (
                 <section key={group.key}>
-                  <h2 className="mb-3 text-lg font-medium">{group.title}</h2>
+                  <h2 className="mb-3 text-h2 font-semibold">{group.title}</h2>
                   {group.key === 'places' ? (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {group.cards.map((card) => (

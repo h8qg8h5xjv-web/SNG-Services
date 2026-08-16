@@ -59,7 +59,7 @@ export default async function EventsPage({
     <>
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
-        <h1 className="py-6 text-2xl font-semibold">{t('events.title')}</h1>
+        <h1 className="py-6 text-title font-semibold">{t('events.title')}</h1>
 
         <div className="mb-6">
           <EventFilters
@@ -71,14 +71,14 @@ export default async function EventsPage({
         </div>
 
         {groups.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-black/15 p-8 text-center text-foreground/60 dark:border-white/15">
+          <p className="rounded-lg border border-dashed border-slate-200 p-8 text-center text-slate-500">
             {t('events.empty')}
           </p>
         ) : (
           <div className="space-y-8">
             {groups.map((group) => (
               <section key={group.key}>
-                <h2 className="mb-3 text-lg font-medium">
+                <h2 className="mb-3 text-h2 font-semibold">
                   {t(`events.${group.key}`)}
                 </h2>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

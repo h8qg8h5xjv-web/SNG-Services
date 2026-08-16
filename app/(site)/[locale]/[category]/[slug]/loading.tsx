@@ -6,7 +6,7 @@ export default function ProviderLoading() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-12">
-        <Skeleton className="mt-4 aspect-[16/9] w-full rounded-2xl" />
+        <Skeleton className="mt-4 aspect-video w-full rounded-lg" />
         <div className="space-y-3 py-5">
           <Skeleton className="h-8 w-2/3" />
           <Skeleton className="h-4 w-1/3" />

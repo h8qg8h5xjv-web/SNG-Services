@@ -16,11 +16,11 @@ function effectiveStatus(status: CredentialStatus, expiresAt: string | null): Cr
 
 function Badge({ status }: { status: CredentialStatus }) {
   const map: Record<CredentialStatus, string> = {
-    none: 'bg-black/5 text-foreground/60 dark:bg-white/10',
-    self_declared: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
-    verified: 'bg-green-500/15 text-green-700 dark:text-green-400',
+    none: 'bg-black/5 text-slate-500 ',
+    self_declared: 'bg-slate-100 text-slate-500',
+    verified: 'bg-green-100 text-green-700',
   }
-  return <span className={`rounded-full px-2 py-0.5 text-xs ${map[status]}`}>{status}</span>
+  return <span className={`rounded-full px-2 py-0.5 text-meta ${map[status]}`}>{status}</span>
 }
 
 function CredentialCard({
@@ -70,43 +70,43 @@ function CredentialCard({
   }
 
   return (
-    <div className="rounded-lg border border-black/10 p-3 dark:border-white/10">
+    <div className="rounded-lg border border-slate-200 p-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium">{title}</span>
+        <span className="text-body font-semibold">{title}</span>
         <div className="flex items-center gap-2">
-          {effective !== status && <span className="text-xs text-foreground/40">(истёк →)</span>}
+          {effective !== status && <span className="text-meta text-slate-400">(истёк →)</span>}
           <Badge status={effective} />
         </div>
       </div>
 
       <div className="mt-2 grid gap-2 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="text-foreground/60">Номер документа (без скана)</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Номер документа (без скана)</span>
           <input
             value={ref}
             onChange={(e) => setRef(e.target.value)}
             disabled={pending}
-            className="mt-1 min-h-9 w-full rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+            className="mt-1 min-h-9 w-full rounded-lg border border-slate-200 bg-transparent px-2 text-body"
           />
         </label>
-        <label className="block text-sm">
-          <span className="text-foreground/60">Действует до</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Действует до</span>
           <input
             type="date"
             value={expiry}
             onChange={(e) => setExpiry(e.target.value)}
             disabled={pending}
-            className="mt-1 min-h-9 w-full rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+            className="mt-1 min-h-9 w-full rounded-lg border border-slate-200 bg-transparent px-2 text-body"
           />
         </label>
         {kind === 'dbs' && (
-          <label className="block text-sm">
-            <span className="text-foreground/60">Тип DBS (для детей нужен enhanced)</span>
+          <label className="block text-body">
+            <span className="text-slate-500">Тип DBS (для детей нужен enhanced)</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as DbsType)}
               disabled={pending}
-              className="mt-1 min-h-9 w-full rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+              className="mt-1 min-h-9 w-full rounded-lg border border-slate-200 bg-transparent px-2 text-body"
             >
               {DBS_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -116,23 +116,23 @@ function CredentialCard({
             </select>
           </label>
         )}
-        <label className="block text-sm sm:col-span-2">
-          <span className="text-foreground/60">Заметка</span>
+        <label className="block text-body sm:col-span-2">
+          <span className="text-slate-500">Заметка</span>
           <input
             value={noteText}
             onChange={(e) => setNoteText(e.target.value)}
             disabled={pending}
-            className="mt-1 min-h-9 w-full rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+            className="mt-1 min-h-9 w-full rounded-lg border border-slate-200 bg-transparent px-2 text-body"
           />
         </label>
       </div>
 
-      <div className="mt-2 flex flex-wrap gap-3 text-sm">
+      <div className="mt-2 flex flex-wrap gap-3 text-body">
         <button
           type="button"
           onClick={() => act('verified')}
           disabled={pending}
-          className="rounded-lg bg-foreground px-3 py-1 font-medium text-background disabled:opacity-60"
+          className="rounded-lg bg-teal-700 px-3 py-1 font-semibold text-white disabled:opacity-60"
         >
           Подтвердить (видела документ)
         </button>
@@ -149,14 +149,14 @@ function CredentialCard({
             type="button"
             onClick={() => act('none')}
             disabled={pending}
-            className="text-red-600 hover:underline disabled:opacity-60 dark:text-red-400"
+            className="text-red-700 hover:underline disabled:opacity-60"
           >
             Убрать
           </button>
         )}
       </div>
 
-      {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-body text-red-700">{error}</p>}
     </div>
   )
 }
@@ -165,9 +165,9 @@ export default function ProviderCredentials({ provider }: { provider: AdminProvi
   if (provider.entity_type !== 'pro') return null
 
   return (
-    <section className="rounded-xl border border-black/10 p-4 dark:border-white/10">
-      <h3 className="mb-1 text-sm font-medium">Страхование и DBS (только специалисты)</h3>
-      <p className="mb-3 text-xs text-foreground/60">
+    <section className="rounded-lg border border-slate-200 p-4">
+      <h3 className="mb-1 text-body font-semibold">Страхование и DBS (только специалисты)</h3>
+      <p className="mb-3 text-meta text-slate-500">
         Отметка проверки, не хранилище документов. Скан не загружаем — только номер и факт, что
         видела. Провайдер может заявить «со слов», подтвердить — только админ.
       </p>

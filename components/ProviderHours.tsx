@@ -18,14 +18,14 @@ export default function ProviderHours({ schedules }: { schedules: Schedule[] }) 
   }
 
   return (
-    <dl className="divide-y divide-black/5 dark:divide-white/5">
+    <dl className="divide-y divide-slate-100">
       {DISPLAY_ORDER.map((day) => {
         const rows = (byDay[day] ?? []).sort((a, b) =>
           a.start_time.localeCompare(b.start_time),
         )
         return (
-          <div key={day} className="flex justify-between py-2 text-sm">
-            <dt className="text-foreground/60">{t(`days.${day}`)}</dt>
+          <div key={day} className="flex justify-between py-2 text-body">
+            <dt className="text-slate-500">{t(`days.${day}`)}</dt>
             <dd>
               {rows.length > 0
                 ? rows.map((r) => `${hhmm(r.start_time)}–${hhmm(r.end_time)}`).join(', ')

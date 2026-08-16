@@ -130,7 +130,7 @@ export default async function ProviderPage({
   const cta = isNative ? (
     <Link
       href={`/${category}/${slug}/book`}
-      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-foreground px-6 font-medium text-background sm:w-auto"
+      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-teal-700 px-6 font-semibold text-white sm:w-auto"
     >
       {t('provider.book')}
     </Link>
@@ -139,7 +139,7 @@ export default async function ProviderPage({
       href={provider.external_order_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground px-6 font-medium text-background sm:w-auto"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-teal-700 px-6 font-semibold text-white sm:w-auto"
     >
       {t('provider.orderOn', { platform: platformName(provider.external_order_url) })}
       <IconExternalLink className="h-4 w-4" stroke={2} />
@@ -161,7 +161,7 @@ export default async function ProviderPage({
           }}
         />
 
-        <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
+        <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
           {image ? (
             <Image
               src={image}
@@ -174,37 +174,37 @@ export default async function ProviderPage({
           ) : (
             // No photo (e.g. an unclaimed place — we don't take others' images).
             // A calm placeholder, not a broken/loading-looking empty box.
-            <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-foreground/30">
+            <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-slate-400">
               <IconPhoto className="h-10 w-10" stroke={1.5} />
-              <span className="text-sm">{name}</span>
+              <span className="text-body">{name}</span>
             </div>
           )}
         </div>
 
         <div className="py-5">
-          <h1 className="text-2xl font-semibold">{name}</h1>
-          <p className="mt-1 text-foreground/60">{provider.borough}</p>
+          <h1 className="text-title font-semibold">{name}</h1>
+          <p className="mt-1 text-slate-500">{provider.borough}</p>
           {languages.length > 0 && (
             // Reference line only — service languages are not a filter (DESIGN §1).
             // The badge is about the SERVICE ("service in X confirmed"), never
             // about the person — see DESIGN «Формулировки».
-            <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-foreground/60">
+            <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-body text-slate-500">
               <span>{t('provider.languagesServed')}:</span>
               {languages.map((l) =>
                 l.verified ? (
                   <span
                     key={l.name}
                     title={t('provider.languageConfirmed', { language: l.name })}
-                    className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400"
+                    className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700"
                   >
                     {l.name}
                     <span aria-hidden>✓</span>
                     {l.professional && (
-                      <span className="text-xs opacity-80">· {t('provider.languageProfessional')}</span>
+                      <span className="text-meta opacity-80">· {t('provider.languageProfessional')}</span>
                     )}
                   </span>
                 ) : (
-                  <span key={l.name} className="text-xs text-foreground/40">
+                  <span key={l.name} className="text-meta text-slate-400">
                     {l.name}
                   </span>
                 ),
@@ -212,15 +212,15 @@ export default async function ProviderPage({
             </div>
           )}
           {(credentials.insuranceVerified || credentials.dbsVerified) && (
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-body">
               {credentials.insuranceVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400">
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
                   <span aria-hidden>✓</span>
                   {t('provider.insuranceVerified')}
                 </span>
               )}
               {credentials.dbsVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-green-700 dark:text-green-400">
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
                   <span aria-hidden>✓</span>
                   {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
                 </span>
@@ -228,7 +228,7 @@ export default async function ProviderPage({
             </div>
           )}
           {description && description.trim() && (
-            <p className="mt-4 whitespace-pre-line text-foreground/80">{description}</p>
+            <p className="mt-4 whitespace-pre-line text-slate-900">{description}</p>
           )}
 
           {cta && <div className="mt-6 hidden sm:block">{cta}</div>}
@@ -236,21 +236,21 @@ export default async function ProviderPage({
 
         {/* Services — hidden entirely for external_order (no prices shown at all). */}
         {!isExternal && provider.services.length > 0 && (
-          <section className="border-t border-black/10 py-5 dark:border-white/10">
-            <h2 className="mb-3 text-lg font-medium">{t('provider.services')}</h2>
-            <ul className="divide-y divide-black/5 dark:divide-white/5">
+          <section className="border-t border-slate-200 py-5">
+            <h2 className="mb-3 text-h2 font-semibold">{t('provider.services')}</h2>
+            <ul className="divide-y divide-slate-100">
               {provider.services.map((s) => {
                 const serviceName =
                   locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en
                 return (
                   <li key={s.id} className="flex items-center justify-between gap-4 py-3">
                     <div>
-                      <p className="font-medium">{serviceName}</p>
-                      <p className="text-sm text-foreground/60">
+                      <p className="font-semibold">{serviceName}</p>
+                      <p className="text-body text-slate-500">
                         {formatDuration(s.duration_min, durationLabels)}
                       </p>
                     </div>
-                    <p className="whitespace-nowrap font-medium">
+                    <p className="whitespace-nowrap font-semibold">
                       {formatPrice(s.price_pence)}
                     </p>
                   </li>
@@ -261,15 +261,15 @@ export default async function ProviderPage({
         )}
 
         {provider.schedules.length > 0 && (
-          <section className="border-t border-black/10 py-5 dark:border-white/10">
-            <h2 className="mb-3 text-lg font-medium">{t('provider.hours')}</h2>
+          <section className="border-t border-slate-200 py-5">
+            <h2 className="mb-3 text-h2 font-semibold">{t('provider.hours')}</h2>
             <ProviderHours schedules={provider.schedules} />
           </section>
         )}
 
         {/* Place-only: informational opening hours + venue gallery (DESIGN §2в). */}
         {provider.entity_type === 'place' && (
-          <div className="border-t border-black/10 dark:border-white/10">
+          <div className="border-t border-slate-200">
             <OpeningHours hours={provider.opening_hours} locale={locale} />
             <VenueGallery photos={provider.venue_photos} />
           </div>
@@ -277,8 +277,8 @@ export default async function ProviderPage({
 
         {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}
         {organizerEvents.length > 0 && (
-          <section className="border-t border-black/10 py-5 dark:border-white/10">
-            <h2 className="mb-3 text-lg font-medium">{t('events.upcoming')}</h2>
+          <section className="border-t border-slate-200 py-5">
+            <h2 className="mb-3 text-h2 font-semibold">{t('events.upcoming')}</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {organizerEvents.map((event) => (
                 <EventCard key={event.id} event={event} locale={locale} />
@@ -287,9 +287,9 @@ export default async function ProviderPage({
           </section>
         )}
 
-        <section className="border-t border-black/10 py-5 dark:border-white/10">
-          <h2 className="mb-3 text-lg font-medium">{t('provider.contacts')}</h2>
-          <ul className="space-y-2 text-sm">
+        <section className="border-t border-slate-200 py-5">
+          <h2 className="mb-3 text-h2 font-semibold">{t('provider.contacts')}</h2>
+          <ul className="space-y-2 text-body">
             {provider.phone && (
               <li>
                 <a href={`tel:${provider.phone}`} className="inline-flex items-center gap-2 hover:underline">
@@ -354,14 +354,14 @@ export default async function ProviderPage({
             )}
           </ul>
           {provider.fulfillment_type === 'enquiry' && (
-            <p className="mt-3 text-sm text-foreground/60">{t('provider.enquiryHint')}</p>
+            <p className="mt-3 text-body text-slate-500">{t('provider.enquiryHint')}</p>
           )}
         </section>
       </main>
 
       {/* Mobile: booking/order CTA pinned to the bottom of the screen. */}
       {cta && (
-        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-black/10 bg-background/95 p-3 backdrop-blur sm:hidden dark:border-white/10">
+        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur sm:hidden">
           {cta}
         </div>
       )}

@@ -141,9 +141,9 @@ export default function BookingWidget({
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6">
-        <h2 className="text-lg font-semibold">{t('confirmedTitle')}</h2>
-        <p className="mt-2 text-sm">
+      <div className="rounded-lg border border-green-200 bg-green-100 p-6">
+        <h2 className="text-h2 font-semibold">{t('confirmedTitle')}</h2>
+        <p className="mt-2 text-body">
           {t('confirmedBody', { when: done.when, people: done.people })}
         </p>
 
@@ -151,11 +151,11 @@ export default function BookingWidget({
           <div className="mt-4">
             {done.participants.length > 0 ? (
               <>
-                <p className="mb-2 text-sm text-foreground/70">{t('othersComing')}</p>
+                <p className="mb-2 text-body text-slate-500">{t('othersComing')}</p>
                 <ul className="flex flex-wrap gap-3">
                   {done.participants.map((n, i) => (
-                    <li key={`${n}-${i}`} className="flex items-center gap-2 text-sm">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground/10 text-xs font-medium">
+                    <li key={`${n}-${i}`} className="flex items-center gap-2 text-body">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-meta font-semibold">
                         {n.trim().charAt(0).toUpperCase()}
                       </span>
                       {n}
@@ -164,7 +164,7 @@ export default function BookingWidget({
                 </ul>
               </>
             ) : (
-              <p className="text-sm text-foreground/60">{t('aloneSoFar')}</p>
+              <p className="text-body text-slate-500">{t('aloneSoFar')}</p>
             )}
           </div>
         )}
@@ -179,7 +179,7 @@ export default function BookingWidget({
             setEmail('')
             setVisibleToGroup(false)
           }}
-          className="mt-4 min-h-11 rounded-lg border border-black/15 px-4 text-sm dark:border-white/20"
+          className="mt-4 min-h-11 rounded-lg border border-slate-200 px-4 text-body"
         >
           {t('bookAnother')}
         </button>
@@ -193,11 +193,11 @@ export default function BookingWidget({
     <form onSubmit={onSubmit} className="space-y-6">
       {/* Service */}
       <div>
-        <label className="mb-1 block text-sm text-foreground/70">{t('service')}</label>
+        <label className="mb-1 block text-body text-slate-500">{t('service')}</label>
         <select
           value={serviceId}
           onChange={(e) => setServiceId(e.target.value)}
-          className="min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+          className="min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
         >
           {services.map((s) => (
             <option key={s.id} value={s.id}>
@@ -209,7 +209,7 @@ export default function BookingWidget({
 
       {/* Date */}
       <div>
-        <label className="mb-1 block text-sm text-foreground/70">{t('date')}</label>
+        <label className="mb-1 block text-body text-slate-500">{t('date')}</label>
         <div className="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1">
           {dates.map((d) => {
             const active = d === date
@@ -218,10 +218,10 @@ export default function BookingWidget({
                 type="button"
                 key={d}
                 onClick={() => setDate(d)}
-                className={`min-h-11 shrink-0 snap-start rounded-lg border px-3 text-sm ${
+                className={`min-h-11 shrink-0 snap-start rounded-lg border px-3 text-body ${
                   active
-                    ? 'border-foreground bg-foreground text-background'
-                    : 'border-black/15 dark:border-white/20'
+                    ? 'border-teal-700 bg-teal-700 text-white'
+                    : 'border-slate-200'
                 }`}
               >
                 {dateFmt.format(new Date(`${d}T12:00:00Z`))}
@@ -233,11 +233,11 @@ export default function BookingWidget({
 
       {/* Time */}
       <div>
-        <label className="mb-1 block text-sm text-foreground/70">{t('time')}</label>
+        <label className="mb-1 block text-body text-slate-500">{t('time')}</label>
         {loading ? (
-          <p className="text-sm text-foreground/50">{t('loading')}</p>
+          <p className="text-body text-slate-500">{t('loading')}</p>
         ) : slots.length === 0 ? (
-          <p className="text-sm text-foreground/50">{t('noSlots')}</p>
+          <p className="text-body text-slate-500">{t('noSlots')}</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {slots.map((slot) => {
@@ -250,15 +250,15 @@ export default function BookingWidget({
                     setSelected(slot)
                     setPartySize((p) => Math.min(Math.max(1, p), slot.capacityRemaining))
                   }}
-                  className={`min-h-11 rounded-lg border px-3 text-sm ${
+                  className={`min-h-11 rounded-lg border px-3 text-body ${
                     active
-                      ? 'border-foreground bg-foreground text-background'
-                      : 'border-black/15 dark:border-white/20'
+                      ? 'border-teal-700 bg-teal-700 text-white'
+                      : 'border-slate-200'
                   }`}
                 >
                   {timeFmt.format(new Date(slot.start))}
                   {isGroup && (
-                    <span className="ml-1 text-xs opacity-70">
+                    <span className="ml-1 text-meta opacity-70">
                       {t('remaining', { n: slot.capacityRemaining })}
                     </span>
                   )}
@@ -273,7 +273,7 @@ export default function BookingWidget({
         <>
           {isGroup && (
             <div>
-              <label className="mb-1 block text-sm text-foreground/70">{t('partySize')}</label>
+              <label className="mb-1 block text-body text-slate-500">{t('partySize')}</label>
               <input
                 type="number"
                 min={1}
@@ -282,7 +282,7 @@ export default function BookingWidget({
                 onChange={(e) =>
                   setPartySize(Math.min(maxParty, Math.max(1, Number(e.target.value))))
                 }
-                className="min-h-11 w-24 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+                className="min-h-11 w-24 rounded-lg border border-slate-200 bg-transparent px-3"
               />
             </div>
           )}
@@ -293,7 +293,7 @@ export default function BookingWidget({
               placeholder={t('name')}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
             />
             <input
               required
@@ -301,19 +301,19 @@ export default function BookingWidget({
               placeholder={t('phone')}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3"
             />
             <input
               type="email"
               placeholder={t('email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="min-h-11 rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20 sm:col-span-2"
+              className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 sm:col-span-2"
             />
           </div>
 
           {isGroup && (
-            <label className="flex items-center gap-2 text-sm text-foreground/80">
+            <label className="flex items-center gap-2 text-body text-slate-900">
               <input
                 type="checkbox"
                 checked={visibleToGroup}
@@ -324,12 +324,12 @@ export default function BookingWidget({
             </label>
           )}
 
-          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+          {error && <p className="text-body text-red-700">{error}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="min-h-11 w-full rounded-lg bg-foreground px-6 font-medium text-background disabled:opacity-60 sm:w-auto"
+            className="min-h-11 w-full rounded-lg bg-teal-700 px-6 font-semibold text-white disabled:opacity-60 sm:w-auto"
           >
             {submitting ? t('submitting') : t('submit')}
           </button>

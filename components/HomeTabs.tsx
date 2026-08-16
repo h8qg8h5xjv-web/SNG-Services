@@ -38,7 +38,7 @@ export default function HomeTabs({
       <div
         role="tablist"
         aria-label="Home sections"
-        className="inline-flex rounded-xl border border-black/10 p-1 dark:border-white/10"
+        className="inline-flex rounded-lg border border-slate-200 p-1"
       >
         {(['services', 'places'] as const).map((key) => (
           <button
@@ -46,8 +46,8 @@ export default function HomeTabs({
             role="tab"
             aria-selected={tab === key}
             onClick={() => choose(key)}
-            className={`min-h-9 rounded-lg px-4 text-sm font-medium ${
-              tab === key ? 'bg-foreground text-background' : 'text-foreground/70'
+            className={`min-h-9 rounded-lg px-4 text-body font-semibold ${
+              tab === key ? 'bg-teal-700 text-white' : 'text-slate-500'
             }`}
           >
             {key === 'services' ? t('tabServices') : t('tabPlaces')}

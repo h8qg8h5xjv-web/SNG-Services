@@ -43,11 +43,11 @@ export default async function HomePage({
       <RecentlyViewed />
       <AvailableToday providers={availableToday} locale={locale} />
       <section className="py-6">
-        <h2 className="mb-3 text-lg font-medium">{t('home.categoriesTitle')}</h2>
+        <h2 className="mb-3 text-h2 font-semibold">{t('home.categoriesTitle')}</h2>
         {tiles.length > 0 ? (
           <CategoryGrid items={tiles} />
         ) : (
-          <p className="text-sm text-foreground/50">{t('empty.noResults')}</p>
+          <p className="text-body text-slate-500">{t('empty.noResults')}</p>
         )}
       </section>
     </>
@@ -58,8 +58,8 @@ export default async function HomePage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12">
         <section className="py-8">
-          <h1 className="text-2xl font-semibold sm:text-3xl">{t('home.heroTitle')}</h1>
-          <p className="mt-3 max-w-2xl text-foreground/70">{t('home.heroSubtitle')}</p>
+          <h1 className="text-title font-semibold sm:text-title">{t('home.heroTitle')}</h1>
+          <p className="mt-3 max-w-2xl text-slate-500">{t('home.heroSubtitle')}</p>
           <div className="mt-6">
             <SearchBar />
           </div>

@@ -16,16 +16,16 @@ export default function Header() {
   const t = useTranslations()
 
   return (
-    <header className="sticky top-0 z-10 border-b border-black/10 bg-background/80 backdrop-blur dark:border-white/10">
+    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-baseline gap-2">
-          <span className="text-lg font-semibold">{t('common.appName')}</span>
-          <span className="text-sm text-foreground/60">{t('common.city')}</span>
+          <span className="text-h2 font-semibold">{t('common.appName')}</span>
+          <span className="text-body text-slate-500">{t('common.city')}</span>
         </Link>
 
-        <nav className="hidden items-center gap-5 text-sm sm:flex">
+        <nav className="hidden items-center gap-5 text-body sm:flex">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="text-foreground/70 hover:text-foreground">
+            <Link key={item.href} href={item.href} className="text-slate-500 hover:text-slate-900">
               {t(item.key)}
             </Link>
           ))}

@@ -48,9 +48,9 @@ export default function OpeningHoursEditor({
         const intervals = value[day] ?? []
         const open = intervals.length > 0
         return (
-          <div key={day} className="flex flex-wrap items-center gap-2 rounded-lg border border-black/10 p-2 dark:border-white/10">
-            <span className="w-8 text-sm font-medium">{DAY_LABEL[day]}</span>
-            <label className="inline-flex items-center gap-1 text-sm">
+          <div key={day} className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 p-2">
+            <span className="w-8 text-body font-semibold">{DAY_LABEL[day]}</span>
+            <label className="inline-flex items-center gap-1 text-body">
               <input
                 type="checkbox"
                 checked={open}
@@ -66,20 +66,20 @@ export default function OpeningHoursEditor({
                     type="time"
                     value={iv.open}
                     onChange={(e) => setInterval(day, i, { open: e.target.value })}
-                    className="min-h-9 rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+                    className="min-h-9 rounded-lg border border-slate-200 bg-transparent px-2 text-body"
                   />
-                  <span className="text-foreground/40">–</span>
+                  <span className="text-slate-400">–</span>
                   <input
                     type="time"
                     value={iv.close}
                     onChange={(e) => setInterval(day, i, { close: e.target.value })}
-                    className="min-h-9 rounded-lg border border-black/15 bg-transparent px-2 text-sm dark:border-white/20"
+                    className="min-h-9 rounded-lg border border-slate-200 bg-transparent px-2 text-body"
                   />
                   {intervals.length > 1 && (
                     <button
                       type="button"
                       onClick={() => setDay(day, intervals.filter((_, j) => j !== i))}
-                      className="text-sm text-red-600 hover:underline dark:text-red-400"
+                      className="text-body text-red-700 hover:underline"
                     >
                       ×
                     </button>
@@ -91,7 +91,7 @@ export default function OpeningHoursEditor({
               <button
                 type="button"
                 onClick={() => setDay(day, [...intervals, { ...DEFAULT_INTERVAL }])}
-                className="text-sm text-foreground/60 hover:underline"
+                className="text-body text-slate-500 hover:underline"
               >
                 + обед
               </button>
@@ -100,7 +100,7 @@ export default function OpeningHoursEditor({
               <button
                 type="button"
                 onClick={() => copyToWeekdays(day)}
-                className="ml-auto text-sm text-foreground/60 hover:underline"
+                className="ml-auto text-body text-slate-500 hover:underline"
               >
                 Скопировать на все будни
               </button>

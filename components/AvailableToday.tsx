@@ -22,7 +22,7 @@ export default function AvailableToday({
 
   return (
     <section className="py-6">
-      <h2 className="mb-3 text-lg font-medium">{t('availableToday')}</h2>
+      <h2 className="mb-3 text-h2 font-semibold">{t('availableToday')}</h2>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {providers.map((p) => {
           const image = resolveImageUrl(p.cover_image)
@@ -30,19 +30,19 @@ export default function AvailableToday({
             <li key={p.slug} className="w-44 shrink-0 snap-start">
               <Link
                 href={`/${p.categorySlug}/${p.slug}/book`}
-                className="block overflow-hidden rounded-xl border border-black/10 dark:border-white/10"
+                className="block overflow-hidden rounded-lg border border-slate-200"
               >
-                <div className="relative aspect-[4/3] w-full bg-foreground/5">
+                <div className="relative aspect-photo w-full bg-slate-100">
                   {image && (
                     <Image src={image} alt="" fill sizes="176px" className="object-cover" />
                   )}
-                  <span className="absolute right-2 top-2 rounded-full bg-emerald-500/90 px-2 py-0.5 text-xs font-medium text-white">
+                  <span className="absolute right-2 top-2 rounded-full bg-green-700 px-2 py-0.5 text-meta font-semibold text-white">
                     {timeFmt.format(new Date(p.nextSlot))}
                   </span>
                 </div>
                 <div className="p-2">
-                  <p className="truncate text-sm font-medium">{p.name_en}</p>
-                  <p className="truncate text-xs text-foreground/60">{p.borough}</p>
+                  <p className="truncate text-body font-semibold">{p.name_en}</p>
+                  <p className="truncate text-meta text-slate-500">{p.borough}</p>
                 </div>
               </Link>
             </li>

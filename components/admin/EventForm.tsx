@@ -113,7 +113,7 @@ export default function EventForm({
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {(formError || errorEntries.length > 0) && (
-        <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm">
+        <div className="rounded-lg bg-red-100 p-3 text-body">
           {formError && <p>{formError}</p>}
           <ul className="list-inside list-disc">
             {errorEntries.map(([key, msg]) => (
@@ -127,12 +127,12 @@ export default function EventForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Slug" value={f.slug} onChange={(v) => set('slug', v)} required />
-        <label className="block text-sm">
-          <span className="text-foreground/70">Category</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Category</span>
           <select
             value={f.category}
             onChange={(e) => set('category', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             {EVENT_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -145,43 +145,43 @@ export default function EventForm({
         <Field label="Title (RU)" value={f.title_ru} onChange={(v) => set('title_ru', v)} />
       </div>
 
-      <label className="block text-sm">
-        <span className="text-foreground/70">Description (EN)</span>
+      <label className="block text-body">
+        <span className="text-slate-500">Description (EN)</span>
         <textarea
           value={f.description_en}
           onChange={(e) => set('description_en', e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-black/15 bg-transparent p-3 dark:border-white/20"
+          className="mt-1 w-full rounded-lg border border-slate-200 bg-transparent p-3"
         />
       </label>
-      <label className="block text-sm">
-        <span className="text-foreground/70">Description (RU)</span>
+      <label className="block text-body">
+        <span className="text-slate-500">Description (RU)</span>
         <textarea
           value={f.description_ru}
           onChange={(e) => set('description_ru', e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-black/15 bg-transparent p-3 dark:border-white/20"
+          className="mt-1 w-full rounded-lg border border-slate-200 bg-transparent p-3"
         />
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="text-foreground/70">Starts at</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Starts at</span>
           <input
             type="datetime-local"
             value={f.starts_at}
             onChange={(e) => set('starts_at', e.target.value)}
             required
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           />
         </label>
-        <label className="block text-sm">
-          <span className="text-foreground/70">Ends at (optional)</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Ends at (optional)</span>
           <input
             type="datetime-local"
             value={f.ends_at}
             onChange={(e) => set('ends_at', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           />
         </label>
       </div>
@@ -211,12 +211,12 @@ export default function EventForm({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="text-foreground/70">Organizer (provider)</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Organizer (provider)</span>
           <select
             value={f.organizer_provider_id}
             onChange={(e) => set('organizer_provider_id', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="">— none —</option>
             {providerOptions.map((p) => (
@@ -226,12 +226,12 @@ export default function EventForm({
             ))}
           </select>
         </label>
-        <label className="block text-sm">
-          <span className="text-foreground/70">Status</span>
+        <label className="block text-body">
+          <span className="text-slate-500">Status</span>
           <select
             value={f.status}
             onChange={(e) => set('status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
           >
             <option value="draft">draft</option>
             <option value="published">published</option>
@@ -240,7 +240,7 @@ export default function EventForm({
       </div>
 
       <div>
-        <p className="mb-1 text-sm text-foreground/70">Cover image</p>
+        <p className="mb-1 text-body text-slate-500">Cover image</p>
         <ImageUpload value={coverImage} onChange={setCoverImage} folder="events" />
       </div>
 
@@ -248,7 +248,7 @@ export default function EventForm({
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-lg bg-foreground px-6 font-medium text-background disabled:opacity-60"
+          className="min-h-11 rounded-lg bg-teal-700 px-6 font-semibold text-white disabled:opacity-60"
         >
           {pending ? 'Saving…' : 'Save'}
         </button>
@@ -257,7 +257,7 @@ export default function EventForm({
             type="button"
             onClick={onDelete}
             disabled={pending}
-            className="min-h-11 rounded-lg border border-red-500/40 px-4 text-sm text-red-600 dark:text-red-400"
+            className="min-h-11 rounded-lg border border-red-200 px-4 text-body text-red-700"
           >
             Delete
           </button>
@@ -281,15 +281,15 @@ function Field({
   error?: string
 }) {
   return (
-    <label className="block text-sm">
-      <span className="text-foreground/70">{label}</span>
+    <label className="block text-body">
+      <span className="text-slate-500">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-transparent px-3 dark:border-white/20"
+        className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
       />
-      {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-body text-red-700">{error}</p>}
     </label>
   )
 }

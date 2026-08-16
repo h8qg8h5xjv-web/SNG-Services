@@ -24,7 +24,7 @@ export default async function EditProviderPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold">{provider.name_en}</h1>
+      <h1 className="text-h2 font-semibold">{provider.name_en}</h1>
       <ProviderForm provider={provider} categories={categories} languages={languages} />
       <LanguageVerification
         providerId={provider.id}
