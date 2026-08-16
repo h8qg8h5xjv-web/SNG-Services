@@ -201,6 +201,26 @@
     "backHome": "На главную",
     "cancelRequest": "Отменить заявку",
     "leaveRequest": "Не знаете, к кому? Оставьте заявку",
-    "askThisMaster": "Оставить заявку мастеру"
+    "askThisMaster": "Оставить заявку мастеру",
+    "needTitle": "Что нужно сделать?",
+    "needPlaceholder": "например: мастер по волосам, убрать квартиру",
+    "needGo": "Найти",
+    "notRecognised": "Не распознали «{query}». Выберите категорию вручную.",
+    "chooseCategory": "Выберите категорию",
+    "foundFor": "По запросу «{category}» — вот кто подходит",
+    "noMastersYet": "Здесь пока нет мастеров — оставьте заявку, и мы поспрашиваем.",
+    "offersTitle": "Отклики",
+    "chooseOffer": "Выбрать",
+    "myRequestsEmpty": "Заявок пока нет.",
+    "requestRef": "Заявка {ref}",
+    "status": {
+      "draft": "Черновик",
+      "broadcasting": "Спрашиваем мастеров",
+      "matched": "Мастер найден",
+      "confirmed": "Подтверждено",
+      "completed": "Завершено",
+      "expired": "Истекла",
+      "cancelled": "Отменена"
+    }
   }
 }

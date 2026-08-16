@@ -201,6 +201,26 @@
     "backHome": "Back home",
     "cancelRequest": "Cancel request",
     "leaveRequest": "Not sure who? Leave a request",
-    "askThisMaster": "Ask this master"
+    "askThisMaster": "Ask this master",
+    "needTitle": "What do you need done?",
+    "needPlaceholder": "e.g. hair stylist, clean the flat",
+    "needGo": "Find",
+    "notRecognised": "We couldn’t match “{query}” to a category.",
+    "chooseCategory": "Choose a category",
+    "foundFor": "For “{category}” — here’s who fits",
+    "noMastersYet": "No masters here yet — leave a request and we’ll ask around.",
+    "offersTitle": "Offers",
+    "chooseOffer": "Choose",
+    "myRequestsEmpty": "No requests yet.",
+    "requestRef": "Request {ref}",
+    "status": {
+      "draft": "Draft",
+      "broadcasting": "Asking masters",
+      "matched": "Master found",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   }
 }

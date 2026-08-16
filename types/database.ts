@@ -696,24 +696,26 @@ export interface Database {
       provider_events: {
         Row: {
           id: string
-          provider_id: string
+          provider_id: string | null
           event_type: string
           position: number | null
           surface: string | null
           session_id: string | null
           category_id: string | null
           locale: string | null
+          search_query: string | null
           occurred_at: string
         }
         Insert: {
           id?: string
-          provider_id: string
+          provider_id?: string | null
           event_type: string
           position?: number | null
           surface?: string | null
           session_id?: string | null
           category_id?: string | null
           locale?: string | null
+          search_query?: string | null
           occurred_at?: string
         }
         Update: {

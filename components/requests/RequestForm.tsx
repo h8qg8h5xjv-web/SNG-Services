@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { createRequest } from '@/lib/requests/create'
+import { saveRequest } from '@/lib/requests/local-store'
 import { formatPrice } from '@/lib/format'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea, Select } from '@/components/ui/Input'
@@ -105,6 +106,7 @@ export default function RequestForm({
       contactEmail: email.trim() === '' ? null : email.trim(),
     })
     if (result.ok) {
+      saveRequest(result.ref, result.token) // so it shows under "Bookings"
       router.push(`/requests/${result.ref}?token=${result.token}`)
     } else {
       setPending(false)

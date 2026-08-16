@@ -10,6 +10,7 @@ import {
   getGuestRequestState,
   confirmGuestMatch,
   cancelGuestRequest,
+  chooseGuestOffer,
   type GuestRequestState,
 } from '@/lib/requests/guest'
 
@@ -54,6 +55,13 @@ export default function RequestStatus({
   async function onCancel() {
     setBusy(true)
     await cancelGuestRequest(ref_, token)
+    const next = await getGuestRequestState(ref_, token)
+    if (next) setState(next)
+    setBusy(false)
+  }
+  async function onChoose(offerId: string) {
+    setBusy(true)
+    await chooseGuestOffer(ref_, token, offerId)
     const next = await getGuestRequestState(ref_, token)
     if (next) setState(next)
     setBusy(false)
@@ -132,6 +140,30 @@ export default function RequestStatus({
       {state.maxWave >= 2 && (
         <p className="mt-2 text-meta text-slate-500">{t('expandedNeighbours')}</p>
       )}
+
+      {/* Quote: offers the client chooses from (REQUESTS §2 / 12.2). */}
+      {state.offers.length > 0 && (
+        <div className="mt-4 space-y-2">
+          <h2 className="text-body font-semibold">{t('offersTitle')}</h2>
+          {state.offers.map((o) => (
+            <div
+              key={o.id}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 p-3"
+            >
+              <div>
+                <p className="text-body font-semibold">
+                  {o.providerName} · {formatPrice(o.pricePence)}
+                </p>
+                {o.message && <p className="text-meta text-slate-500">{o.message}</p>}
+              </div>
+              <Button onClick={() => onChoose(o.id)} disabled={busy}>
+                {t('chooseOffer')}
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="mt-4">
         <Button variant="secondary" onClick={onCancel} disabled={busy}>
           {t('cancelRequest')}
