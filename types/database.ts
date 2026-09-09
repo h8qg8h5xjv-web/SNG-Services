@@ -16,6 +16,9 @@ export type ClaimStatus = 'unclaimed' | 'claimed' | 'invited'
 // Insurance/DBS follow the claimed-vs-verified model; expired verified reads as self_declared.
 export type CredentialStatus = 'none' | 'self_declared' | 'verified'
 export type DbsType = 'basic' | 'standard' | 'enhanced'
+export type Urgency = 'today' | 'this_week' | 'flexible'
+// LEGAL D3a: which regulated activity a request touches (null = none).
+export type RegulatedKind = 'gas' | 'electrical' | 'other'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -126,6 +129,18 @@ export interface Database {
           dbs_expires_at: string | null
           dbs_document_ref: string | null
           dbs_note: string | null
+          gas_safe_number: string | null
+          gas_safe_status: CredentialStatus
+          gas_safe_verified_by: string | null
+          gas_safe_verified_at: string | null
+          gas_safe_expires_at: string | null
+          gas_safe_note: string | null
+          electrical_scheme: string | null
+          electrical_status: CredentialStatus
+          electrical_verified_by: string | null
+          electrical_verified_at: string | null
+          electrical_expires_at: string | null
+          electrical_note: string | null
           created_at: string
           updated_at: string
         }
@@ -167,6 +182,18 @@ export interface Database {
           dbs_expires_at?: string | null
           dbs_document_ref?: string | null
           dbs_note?: string | null
+          gas_safe_number?: string | null
+          gas_safe_status?: CredentialStatus
+          gas_safe_verified_by?: string | null
+          gas_safe_verified_at?: string | null
+          gas_safe_expires_at?: string | null
+          gas_safe_note?: string | null
+          electrical_scheme?: string | null
+          electrical_status?: CredentialStatus
+          electrical_verified_by?: string | null
+          electrical_verified_at?: string | null
+          electrical_expires_at?: string | null
+          electrical_note?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -208,6 +235,18 @@ export interface Database {
           dbs_expires_at?: string | null
           dbs_document_ref?: string | null
           dbs_note?: string | null
+          gas_safe_number?: string | null
+          gas_safe_status?: CredentialStatus
+          gas_safe_verified_by?: string | null
+          gas_safe_verified_at?: string | null
+          gas_safe_expires_at?: string | null
+          gas_safe_note?: string | null
+          electrical_scheme?: string | null
+          electrical_status?: CredentialStatus
+          electrical_verified_by?: string | null
+          electrical_verified_at?: string | null
+          electrical_expires_at?: string | null
+          electrical_note?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -557,6 +596,11 @@ export interface Database {
           service_id: string | null
           target_provider_id: string | null
           borough: string
+          postcode_outward: string | null
+          urgency: Urgency
+          photos: string[] | null
+          regulated: boolean
+          regulated_kind: RegulatedKind | null
           description: string | null
           budget_max_pence: number | null
           status: string
@@ -573,6 +617,11 @@ export interface Database {
           service_id?: string | null
           target_provider_id?: string | null
           borough: string
+          postcode_outward?: string | null
+          urgency?: Urgency
+          photos?: string[] | null
+          regulated?: boolean
+          regulated_kind?: RegulatedKind | null
           description?: string | null
           budget_max_pence?: number | null
           status?: string
@@ -594,6 +643,7 @@ export interface Database {
           contact_phone: string
           contact_email: string | null
           address: string | null
+          postcode: string | null
         }
         Insert: {
           request_id: string
@@ -601,12 +651,14 @@ export interface Database {
           contact_phone: string
           contact_email?: string | null
           address?: string | null
+          postcode?: string | null
         }
         Update: {
           contact_name?: string
           contact_phone?: string
           contact_email?: string | null
           address?: string | null
+          postcode?: string | null
         }
         Relationships: []
       }

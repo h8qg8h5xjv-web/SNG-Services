@@ -221,6 +221,29 @@
       "completed": "Completed",
       "expired": "Expired",
       "cancelled": "Cancelled"
-    }
+    },
+    "urgency": "Наскільки терміново?",
+    "urgencyOption": {
+      "today": "Сьогодні",
+      "this_week": "Цього тижня",
+      "flexible": "Не терміново"
+    },
+    "photos": "Фото",
+    "photosHint": "До {max} — фото допомагає майстру оцінити. Камера або галерея.",
+    "removePhoto": "Видалити фото",
+    "postcode": "Postcode",
+    "postcodeHint": "Майстру важлива відстань. До вибору майстра видно лише першу частину.",
+    "regulatedQuestion": "Робота стосується газу, електрики чи іншої регульованої діяльності?",
+    "regulatedWhy": "За законом такі роботи виконують лише зареєстровані майстри.",
+    "regulatedNo": "Ні",
+    "regulatedYes": "Так",
+    "regulatedKind": "Що саме?",
+    "regulatedKindOption": {
+      "gas": "Газ",
+      "electrical": "Електрика",
+      "other": "Інше регульоване"
+    },
+    "regulatedNote": "Заявка піде лише майстрам із підтвердженою реєстрацією.",
+    "noRegulatedProviders": "У каталозі поки немає майстрів із підтвердженою реєстрацією для цієї роботи. Передати її безпечно ми не можемо."
   }
 }

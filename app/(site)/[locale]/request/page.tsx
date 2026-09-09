@@ -34,6 +34,8 @@ export default async function RequestPage({
     .maybeSingle()
   if (!category) notFound()
   const requestType = category.default_request_type as RequestType
+  // LEGAL D3a: ask the regulated-work question only in home / auto.
+  const regulatedApplies = category.slug === 'home' || category.slug === 'auto'
 
   // Specific-master mode when a provider slug is given, else "any master".
   const provider = sp.provider ? await getProviderDetail(sp.category, sp.provider) : null
@@ -79,6 +81,7 @@ export default async function RequestPage({
               : undefined
           }
           priceGuide={guide}
+          regulatedApplies={regulatedApplies}
         />
       </main>
     </>

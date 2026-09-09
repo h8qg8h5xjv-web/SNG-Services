@@ -12,8 +12,9 @@ export const DBS_TYPES = ['basic', 'standard', 'enhanced'] as const
 
 const credentialSchema = z.object({
   providerId: z.string().uuid(),
-  kind: z.enum(['insurance', 'dbs']),
+  kind: z.enum(['insurance', 'dbs', 'gas_safe', 'electrical']),
   status: z.enum(['none', 'self_declared', 'verified']),
+  // For gas_safe / electrical this carries the number / scheme name.
   documentRef: z.string().trim().max(120).nullable().default(null),
   note: z.string().trim().max(500).nullable().default(null),
   expiresAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD').nullable().default(null),
@@ -49,25 +50,42 @@ export async function setProviderCredential(input: unknown): Promise<CredentialA
   const verifiedAt = d.status === 'verified' ? new Date().toISOString() : null
   const cleared = d.status === 'none'
 
-  const patch: ProviderUpdate =
-    d.kind === 'insurance'
-      ? {
-          insurance_status: d.status,
-          insurance_verified_by: verifiedBy,
-          insurance_verified_at: verifiedAt,
-          insurance_expires_at: cleared ? null : d.expiresAt,
-          insurance_document_ref: cleared ? null : d.documentRef,
-          insurance_note: cleared ? null : d.note,
-        }
-      : {
-          dbs_status: d.status,
-          dbs_type: cleared ? null : d.dbsType,
-          dbs_verified_by: verifiedBy,
-          dbs_verified_at: verifiedAt,
-          dbs_expires_at: cleared ? null : d.expiresAt,
-          dbs_document_ref: cleared ? null : d.documentRef,
-          dbs_note: cleared ? null : d.note,
-        }
+  const patchByKind: Record<typeof d.kind, ProviderUpdate> = {
+    insurance: {
+      insurance_status: d.status,
+      insurance_verified_by: verifiedBy,
+      insurance_verified_at: verifiedAt,
+      insurance_expires_at: cleared ? null : d.expiresAt,
+      insurance_document_ref: cleared ? null : d.documentRef,
+      insurance_note: cleared ? null : d.note,
+    },
+    dbs: {
+      dbs_status: d.status,
+      dbs_type: cleared ? null : d.dbsType,
+      dbs_verified_by: verifiedBy,
+      dbs_verified_at: verifiedAt,
+      dbs_expires_at: cleared ? null : d.expiresAt,
+      dbs_document_ref: cleared ? null : d.documentRef,
+      dbs_note: cleared ? null : d.note,
+    },
+    gas_safe: {
+      gas_safe_status: d.status,
+      gas_safe_number: cleared ? null : d.documentRef,
+      gas_safe_verified_by: verifiedBy,
+      gas_safe_verified_at: verifiedAt,
+      gas_safe_expires_at: cleared ? null : d.expiresAt,
+      gas_safe_note: cleared ? null : d.note,
+    },
+    electrical: {
+      electrical_status: d.status,
+      electrical_scheme: cleared ? null : d.documentRef,
+      electrical_verified_by: verifiedBy,
+      electrical_verified_at: verifiedAt,
+      electrical_expires_at: cleared ? null : d.expiresAt,
+      electrical_note: cleared ? null : d.note,
+    },
+  }
+  const patch = patchByKind[d.kind]
 
   const { error } = await supabase.from('providers').update(patch).eq('id', d.providerId)
   if (error) return { ok: false, error: error.message }

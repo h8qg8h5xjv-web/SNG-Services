@@ -221,6 +221,29 @@
       "completed": "Completed",
       "expired": "Expired",
       "cancelled": "Cancelled"
-    }
+    },
+    "urgency": "How urgent?",
+    "urgencyOption": {
+      "today": "Today",
+      "this_week": "This week",
+      "flexible": "Flexible"
+    },
+    "photos": "Photos",
+    "photosHint": "Up to {max} — a photo helps masters quote. Camera or gallery.",
+    "removePhoto": "Remove photo",
+    "postcode": "Postcode",
+    "postcodeHint": "Masters need the distance. Only the first part is shared until you pick one.",
+    "regulatedQuestion": "Does the job involve gas, electrics or other regulated work?",
+    "regulatedWhy": "By law only registered masters may do this work.",
+    "regulatedNo": "No",
+    "regulatedYes": "Yes",
+    "regulatedKind": "Which one?",
+    "regulatedKindOption": {
+      "gas": "Gas",
+      "electrical": "Electrics",
+      "other": "Other regulated"
+    },
+    "regulatedNote": "Only masters with a verified registration will be asked.",
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
   }
 }
