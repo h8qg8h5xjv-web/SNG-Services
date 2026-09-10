@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { matchProviders, type MatchProvider } from './match'
+import { notifyNewTargets } from '@/lib/notifications/notify'
 
 // Idempotent wave job (REQUESTS §5). Advances broadcasting requests through
 // waves 1→2→3 by time, inserting new request_targets, and expires the rest.
@@ -68,6 +69,7 @@ export async function advanceRequests(
 
   let targeted = 0
   let expired = 0
+  const gotNewTargets = new Set<string>()
 
   for (const r of requests) {
     const ageMs = now.getTime() - Date.parse(r.created_at)
@@ -115,8 +117,15 @@ export async function advanceRequests(
           .insert(ids.map((id) => ({ request_id: r.id, provider_id: id, wave })))
         ids.forEach((id) => targetedIds.add(id))
         targeted += ids.length
+        gotNewTargets.add(r.id)
       }
     }
+  }
+
+  // Notify masters of the requests that gained targets this run (waves 1/2/3).
+  // Idempotent: notifyNewTargets only sends to targets with no notified_at.
+  for (const id of gotNewTargets) {
+    await notifyNewTargets(id)
   }
 
   return { targeted, expired }

@@ -1,6 +1,7 @@
 'use server'
 
 import { createAdminClient } from '@/lib/supabase/admin'
+import { notifyMatch, notifyCancel } from '@/lib/notifications/notify'
 
 export type GuestOffer = {
   id: string
@@ -154,6 +155,7 @@ export async function chooseGuestOffer(
     .update({ status: 'rejected' })
     .eq('request_id', req.id)
     .eq('status', 'open')
+  await notifyMatch(req.id, offer.provider_id) // match event (REQUESTS §8)
   return { ok: true }
 }
 
@@ -175,10 +177,13 @@ export async function cancelGuestRequest(ref: string, token: string): Promise<Gu
   const supabase = createAdminClient()
   const req = await findRequest(ref, token)
   if (!req) return { ok: false, error: 'Not found' }
-  const { error } = await supabase
+  const { data: cancelled, error } = await supabase
     .from('requests')
     .update({ status: 'cancelled' })
     .eq('id', req.id)
     .in('status', ['broadcasting', 'matched'])
-  return error ? { ok: false, error: error.message } : { ok: true }
+    .select('id')
+  if (error) return { ok: false, error: error.message }
+  if (cancelled && cancelled.length > 0) await notifyCancel(req.id) // cancel event (§8)
+  return { ok: true }
 }
