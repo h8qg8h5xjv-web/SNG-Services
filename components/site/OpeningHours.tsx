@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { DAY_KEYS, parseOpeningHours, type DayKey } from '@/lib/hours'
+import { dateTimeFormat } from '@/lib/intl'
 import OpeningHoursLive from './OpeningHoursLive'
 
 // Server wrapper: parse the jsonb, resolve translated strings and locale-aware
@@ -16,7 +17,7 @@ export default async function OpeningHours({
   if (!parsed || Object.keys(parsed).length === 0) return null
 
   const t = await getTranslations({ locale, namespace: 'provider' })
-  const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short' })
+  const weekday = dateTimeFormat(locale, { weekday: 'short' })
   // 2024-01-01 is a Monday — index days off it for locale-aware short names.
   const dayLabels = Object.fromEntries(
     DAY_KEYS.map((day, i) => [day, weekday.format(new Date(Date.UTC(2024, 0, 1 + i)))]),

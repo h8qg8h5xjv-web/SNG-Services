@@ -3,6 +3,7 @@ import { SectionHeading } from '@/components/ui/Section'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { resolveImageUrl } from '@/lib/images'
+import { dateTimeFormat } from '@/lib/intl'
 import type { AvailableTodayProvider } from '@/lib/slots/service'
 
 export default function AvailableToday({
@@ -15,7 +16,7 @@ export default function AvailableToday({
   const t = useTranslations('home')
   if (providers.length === 0) return null
 
-  const timeFmt = new Intl.DateTimeFormat(locale, {
+  const timeFmt = dateTimeFormat(locale, {
     timeZone: 'Europe/London',
     hour: '2-digit',
     minute: '2-digit',

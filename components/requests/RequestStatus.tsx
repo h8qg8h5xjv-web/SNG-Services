@@ -6,6 +6,7 @@ import { IconClock, IconCircleCheck, IconMoodSad } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
 import { formatPrice } from '@/lib/format'
+import { dateTimeFormat } from '@/lib/intl'
 import {
   getGuestRequestState,
   confirmGuestMatch,
@@ -67,7 +68,7 @@ export default function RequestStatus({
     setBusy(false)
   }
 
-  const dtf = new Intl.DateTimeFormat(locale, {
+  const dtf = dateTimeFormat(locale, {
     timeZone: 'Europe/London',
     weekday: 'short',
     day: 'numeric',

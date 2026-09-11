@@ -10,6 +10,7 @@ import { Input, Textarea } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatPrice } from '@/lib/format'
+import { dateTimeFormat } from '@/lib/intl'
 import { resolveImageUrl } from '@/lib/images'
 import { acceptRequest, declineRequest, submitOffer } from '@/lib/business/actions'
 import type { BusinessRequest } from '@/lib/business/data'
@@ -20,7 +21,7 @@ function slotsFor(
   windows: { startsAt: string; endsAt: string }[],
   locale: string,
 ): { iso: string; label: string }[] {
-  const fmt = new Intl.DateTimeFormat(locale, {
+  const fmt = dateTimeFormat(locale, {
     timeZone: 'Europe/London',
     weekday: 'short',
     day: 'numeric',
