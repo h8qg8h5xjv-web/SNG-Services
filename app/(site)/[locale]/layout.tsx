@@ -27,6 +27,13 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
+// Only the enabled locales are valid values for [locale]. Anything else — a
+// service-worker request (/sw.js), a stray static file (/favicon.ico), a typo —
+// 404s at the routing layer instead of rendering this subtree with a bogus
+// "locale" (which then crashed Intl and did wasted data work). generateStaticParams
+// above is the allow-list; dynamicParams=false rejects the rest.
+export const dynamicParams = false
+
 export async function generateMetadata({
   params,
 }: {
