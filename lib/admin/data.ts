@@ -87,6 +87,16 @@ export type AdminProviderDetail = {
   dbs_expires_at: string | null
   dbs_document_ref: string | null
   dbs_note: string | null
+  gas_safe_status: CredentialStatus
+  gas_safe_number: string | null
+  gas_safe_verified_at: string | null
+  gas_safe_expires_at: string | null
+  gas_safe_note: string | null
+  electrical_status: CredentialStatus
+  electrical_scheme: string | null
+  electrical_verified_at: string | null
+  electrical_expires_at: string | null
+  electrical_note: string | null
   provider_languages: AdminProviderLanguage[]
   provider_translations: { locale: string; name: string | null; description: string | null }[]
   services: {
@@ -111,6 +121,8 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
         'entity_type, claim_status, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
         'insurance_status, insurance_verified_at, insurance_expires_at, insurance_document_ref, insurance_note, ' +
         'dbs_status, dbs_type, dbs_verified_at, dbs_expires_at, dbs_document_ref, dbs_note, ' +
+        'gas_safe_status, gas_safe_number, gas_safe_verified_at, gas_safe_expires_at, gas_safe_note, ' +
+        'electrical_status, electrical_scheme, electrical_verified_at, electrical_expires_at, electrical_note, ' +
         'provider_languages(language_code,status,method,verified_at,expires_at,note,professional_level), ' +
         'provider_translations(locale,name,description), ' +
         'services(id,name_en,name_ru,description_en,description_ru,duration_min,price_pence,capacity), ' +

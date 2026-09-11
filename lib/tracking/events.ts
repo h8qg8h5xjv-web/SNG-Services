@@ -53,6 +53,31 @@ export async function recordEvents(
   }
 }
 
+/**
+ * Logs an unrecognised free-text service search (REQUESTS 12.2) so gaps in the
+ * text→category mapping are visible. No provider (provider_id null), the raw
+ * query in search_query. Best-effort.
+ */
+export async function recordSearchEmpty(
+  query: string,
+  sessionId: string | null,
+  locale: string | null,
+): Promise<void> {
+  try {
+    const supabase = createAdminClient()
+    await supabase.from('provider_events').insert({
+      provider_id: null,
+      event_type: 'search_empty',
+      surface: 'home',
+      search_query: query.slice(0, 200),
+      locale,
+      session_id: sessionId,
+    })
+  } catch {
+    // Never surface analytics errors.
+  }
+}
+
 /** Default analytics window: the last 30 days, as YYYY-MM-DD. */
 export function defaultDateRange(): { from: string; to: string } {
   const now = new Date()
@@ -88,6 +113,7 @@ export async function getProviderStats(
   const names = new Map((providers ?? []).map((p) => [p.id, p.name_en]))
   const agg = new Map<string, { impressions: number; clicks: number; bookings: number }>()
   for (const e of events ?? []) {
+    if (!e.provider_id) continue // search_empty rows have no provider
     const row = agg.get(e.provider_id) ?? { impressions: 0, clicks: 0, bookings: 0 }
     if (e.event_type === 'impression') row.impressions++
     else if (e.event_type === 'click') row.clicks++

@@ -32,15 +32,17 @@ function CredentialCard({
   documentRef,
   note,
   dbsType,
+  refLabel = 'Номер документа (без скана)',
 }: {
   providerId: string
-  kind: 'insurance' | 'dbs'
+  kind: 'insurance' | 'dbs' | 'gas_safe' | 'electrical'
   title: string
   status: CredentialStatus
   expiresAt: string | null
   documentRef: string | null
   note: string | null
   dbsType: DbsType | null
+  refLabel?: string
 }) {
   const router = useRouter()
   const [ref, setRef] = useState(documentRef ?? '')
@@ -81,7 +83,7 @@ function CredentialCard({
 
       <div className="mt-2 grid gap-2 sm:grid-cols-2">
         <label className="block text-body">
-          <span className="text-slate-500">Номер документа (без скана)</span>
+          <span className="text-slate-500">{refLabel}</span>
           <input
             value={ref}
             onChange={(e) => setRef(e.target.value)}
@@ -166,7 +168,9 @@ export default function ProviderCredentials({ provider }: { provider: AdminProvi
 
   return (
     <section className="rounded-lg border border-slate-200 p-4">
-      <h3 className="mb-1 text-body font-semibold">Страхование и DBS (только специалисты)</h3>
+      <h3 className="mb-1 text-body font-semibold">
+        Страхование, DBS и регулируемые работы (только специалисты)
+      </h3>
       <p className="mb-3 text-meta text-slate-500">
         Отметка проверки, не хранилище документов. Скан не загружаем — только номер и факт, что
         видела. Провайдер может заявить «со слов», подтвердить — только админ.
@@ -192,7 +196,33 @@ export default function ProviderCredentials({ provider }: { provider: AdminProvi
           note={provider.dbs_note}
           dbsType={provider.dbs_type}
         />
+        <CredentialCard
+          providerId={provider.id}
+          kind="gas_safe"
+          title="Gas Safe (газовые работы)"
+          status={provider.gas_safe_status}
+          expiresAt={provider.gas_safe_expires_at}
+          documentRef={provider.gas_safe_number}
+          note={provider.gas_safe_note}
+          dbsType={null}
+          refLabel="Номер Gas Safe (проверяется по публичному реестру)"
+        />
+        <CredentialCard
+          providerId={provider.id}
+          kind="electrical"
+          title="Электрика (competent person scheme, Part P)"
+          status={provider.electrical_status}
+          expiresAt={provider.electrical_expires_at}
+          documentRef={provider.electrical_scheme}
+          note={provider.electrical_note}
+          dbsType={null}
+          refLabel="Схема и номер (NICEIC, NAPIT и т. п.)"
+        />
       </div>
+      <p className="mt-3 text-meta text-slate-500">
+        Без подтверждения регулируемая категория (газ, электрика) для мастера закрыта:
+        заявки с такой работой ему не приходят вообще, а не «показываются с предупреждением».
+      </p>
     </section>
   )
 }

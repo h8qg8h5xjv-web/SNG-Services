@@ -11,6 +11,9 @@ export type MatchProvider = {
   // Cheapest service price; null when unknown (don't exclude on price).
   min_price_pence: number | null
   broadcast_paused_until: string | null
+  // Effective (verified AND non-expired) regulated registrations (LEGAL D3a).
+  gas_safe_verified: boolean
+  electrical_verified: boolean
 }
 
 export type MatchRequest = {
@@ -19,6 +22,9 @@ export type MatchRequest = {
   borough: string
   budget_max_pence: number | null
   target_provider_id: string | null
+  // LEGAL D3a: when set, this is a HARD gate — only providers with the matching
+  // verified registration are eligible, in EVERY wave. null = not regulated.
+  regulated_kind: 'gas' | 'electrical' | 'other' | null
 }
 
 function notPaused(p: MatchProvider, now: Date): boolean {
@@ -36,12 +42,34 @@ function overBudget(p: MatchProvider, budget: number | null): boolean {
   return p.min_price_pence > budget
 }
 
+// LEGAL D3a hard gate. Applied to the pool BEFORE any wave logic, so no wave —
+// not the specific-master path, not wave 2, not wave 3 — can ever re-introduce a
+// provider without the matching verified registration. gas needs Gas Safe;
+// electrical needs the competent-person scheme; "other" regulated work has no
+// specific credential, so we require at least one verified regulated registration.
+function eligibleForRegulation(p: MatchProvider, kind: MatchRequest['regulated_kind']): boolean {
+  switch (kind) {
+    case null:
+      return true
+    case 'gas':
+      return p.gas_safe_verified
+    case 'electrical':
+      return p.electrical_verified
+    case 'other':
+      return p.gas_safe_verified || p.electrical_verified
+  }
+}
+
 export function matchProviders(
   request: MatchRequest,
   wave: number,
-  providers: MatchProvider[],
+  providersAll: MatchProvider[],
   now: Date,
 ): string[] {
+  // The regulated gate is applied once, to the whole pool. Everything below draws
+  // only from `providers`, so an unqualified provider is unreachable in any wave.
+  const providers = providersAll.filter((p) => eligibleForRegulation(p, request.regulated_kind))
+
   // Specific-master mode: only that provider, only in wave 1.
   if (request.target_provider_id) {
     if (wave !== 1) return []

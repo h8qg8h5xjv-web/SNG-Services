@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconMoodSad } from '@tabler/icons-react'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
+import { ButtonLink } from '@/components/ui/Button'
 import CategoryFilters from '@/components/CategoryFilters'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
@@ -65,11 +67,13 @@ export default async function CategoryPage({
   const cards = filtered.map((p) => toCard(p, category, locale))
 
   const t = await getTranslations('catalog')
+  const tr = await getTranslations('request')
 
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-4">
+        <BackButton />
         <div className="py-6">
           <h1 className="text-title font-semibold">{pickCategoryName(cat, locale)}</h1>
           <p className="mt-1 text-body text-slate-500">
@@ -86,6 +90,12 @@ export default async function CategoryPage({
             />
           </div>
         )}
+
+        {/* Request is the main path (REQUESTS 12.2): "any master" for this category. */}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4">
+          <p className="text-body text-slate-500">{tr('leaveRequest')}</p>
+          <ButtonLink href={`/request?category=${category}`}>{tr('submit')}</ButtonLink>
+        </div>
 
         {all.length === 0 ? (
           <EmptyState icon={IconMoodSad} text={t('emptyCategory')} />

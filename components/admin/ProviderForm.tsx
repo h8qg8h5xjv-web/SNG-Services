@@ -316,6 +316,7 @@ export default function ProviderForm({
           value={f.external_order_url}
           onChange={(v) => set('external_order_url', v)}
           error={errors['external_order_url']}
+          hint="Ссылка на Fresha, Treatwell, OpenTable, Booksy или сайт бизнеса. Название кнопки («Забронировать на …») определяется по домену."
         />
       )}
 
@@ -621,12 +622,14 @@ function Field({
   onChange,
   required,
   error,
+  hint,
 }: {
   label: string
   value: string
   onChange: (v: string) => void
   required?: boolean
   error?: string
+  hint?: string
 }) {
   return (
     <label className="block text-body">
@@ -637,6 +640,7 @@ function Field({
         required={required}
         className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
       />
+      {hint && <p className="mt-1 text-meta text-slate-500">{hint}</p>}
       {error && <p className="mt-1 text-body text-red-700">{error}</p>}
     </label>
   )

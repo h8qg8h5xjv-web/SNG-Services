@@ -7,6 +7,7 @@ import CategoryGrid from '@/components/CategoryGrid'
 import AvailableToday from '@/components/AvailableToday'
 import HomeTabs from '@/components/HomeTabs'
 import PlacesExplorer from '@/components/PlacesExplorer'
+import ServiceNeedBar from '@/components/requests/ServiceNeedBar'
 import { getHomeCategories } from '@/lib/queries/categories'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { getAvailableTodayProviders } from '@/lib/slots/service'
@@ -41,6 +42,7 @@ export default async function HomePage({
 
   const services = (
     <>
+      <ServiceNeedBar />
       <RecentlyViewed />
       <AvailableToday providers={availableToday} locale={locale} />
       <section className="py-6">

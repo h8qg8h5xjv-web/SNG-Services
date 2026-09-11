@@ -20,19 +20,23 @@ export type BookingService = {
   capacity: number
 }
 
-function localDate(offsetDays: number): string {
-  const d = new Date()
-  d.setDate(d.getDate() + offsetDays)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+// Add whole days to a YYYY-MM-DD string via UTC — deterministic, no local-time
+// or timezone drift, so server and client produce the identical list.
+function addDays(iso: string, offsetDays: number): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  const dt = new Date(Date.UTC(y, m - 1, d))
+  dt.setUTCDate(dt.getUTCDate() + offsetDays)
+  return dt.toISOString().slice(0, 10)
 }
 
 export default function BookingWidget({
   services,
   providerId,
+  todayIso,
 }: {
   services: BookingService[]
   providerId: string
+  todayIso: string
 }) {
   const t = useTranslations('booking')
   const locale = useLocale()
@@ -52,7 +56,10 @@ export default function BookingWidget({
     }
   }, [providerId, locale])
 
-  const dates = useMemo(() => Array.from({ length: 30 }, (_, i) => localDate(i)), [])
+  const dates = useMemo(
+    () => Array.from({ length: 30 }, (_, i) => addDays(todayIso, i)),
+    [todayIso],
+  )
   const [serviceId, setServiceId] = useState(services[0]?.id ?? '')
   const [date, setDate] = useState(dates[0])
   const [slots, setSlots] = useState<Slot[]>([])

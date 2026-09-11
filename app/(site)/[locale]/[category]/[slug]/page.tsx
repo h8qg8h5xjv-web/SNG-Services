@@ -15,6 +15,7 @@ import {
 } from '@tabler/icons-react'
 import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
 import VenueGallery from '@/components/site/VenueGallery'
@@ -137,6 +138,15 @@ export default async function ProviderPage({
       {t('provider.orderOn', { platform: platformName(provider.external_order_url) })}
       <IconExternalLink className="h-5 w-5" stroke={2} />
     </ButtonLink>
+  ) : provider.entity_type === 'pro' ? (
+    // A pro without an instant schedule → the path is a request to this specific
+    // master (REQUESTS 12.2), so the card always shows the available path.
+    <ButtonLink
+      href={`/request?category=${category}&provider=${slug}`}
+      className="w-full sm:w-auto"
+    >
+      {t('request.askThisMaster')}
+    </ButtonLink>
   ) : null
 
   return (
@@ -144,7 +154,8 @@ export default async function ProviderPage({
       <Header />
       <JsonLd data={businessLd} />
       {/* pb-28: off-scale on purpose — clears the mobile sticky booking bar. */}
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 sm:pb-8">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
+        <BackButton />
         <RecordRecentView
           item={{
             slug: provider.slug,
