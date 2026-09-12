@@ -9,6 +9,7 @@ import { routing } from '@/i18n/routing'
 import { ogLocale } from '@/i18n/locales'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
+import Footer from '@/components/Footer'
 import '../../globals.css'
 
 // Only weights 400 and 600 (DESIGN-SYSTEM §2) — extra weights are extra bytes.
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
       <body className="flex min-h-full flex-col pb-16 sm:pb-0">
         <NextIntlClientProvider>
           {children}
+          <Footer />
           <BottomNav />
         </NextIntlClientProvider>
       </body>

@@ -10,6 +10,7 @@ import type {
   ClaimStatus,
   CredentialStatus,
   DbsType,
+  CatalogRequestStatus,
   Json,
 } from '@/types/database'
 
@@ -270,6 +271,31 @@ export async function listAdminBookings(filters: {
   }
 
   const { data, error } = await query.returns<AdminBookingRow[]>()
+  if (error) throw error
+  return data ?? []
+}
+
+export type AdminCatalogRequest = {
+  id: string
+  business_name: string
+  contact_name: string
+  contact_email: string | null
+  contact_phone: string | null
+  category: string | null
+  borough: string | null
+  message: string | null
+  status: CatalogRequestStatus
+  created_at: string
+}
+
+// Catalog leads from /for-business, newest first. RLS limits these to admins.
+export async function listCatalogRequests(): Promise<AdminCatalogRequest[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('catalog_requests')
+    .select('id, business_name, contact_name, contact_email, contact_phone, category, borough, message, status, created_at')
+    .order('created_at', { ascending: false })
+    .returns<AdminCatalogRequest[]>()
   if (error) throw error
   return data ?? []
 }

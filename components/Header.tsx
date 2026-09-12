@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import LanguageSwitcher from './LanguageSwitcher'
+import BusinessNavLink from './BusinessNavLink'
 
 const NAV = [
   { href: '/', key: 'nav.home' },
@@ -31,7 +32,10 @@ export default function Header() {
           ))}
         </nav>
 
-        <LanguageSwitcher />
+        <div className="flex items-center gap-4">
+          <BusinessNavLink />
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   )

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useParams, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
@@ -68,6 +69,13 @@ export default function BusinessLoginPage() {
           {status === 'error' && <p className="text-body text-red-700">{message}</p>}
         </form>
       )}
+
+      <p className="mt-6 text-body text-slate-500">
+        {t('noAccess')}{' '}
+        <Link href="/for-business" className="font-semibold text-teal-700 hover:underline">
+          {t('noAccessLink')}
+        </Link>
+      </p>
     </main>
   )
 }
