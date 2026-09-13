@@ -19,6 +19,7 @@ export type DbsType = 'basic' | 'standard' | 'enhanced'
 export type Urgency = 'today' | 'this_week' | 'flexible'
 // LEGAL D3a: which regulated activity a request touches (null = none).
 export type RegulatedKind = 'gas' | 'electrical' | 'other'
+export type CatalogRequestStatus = 'new' | 'handled' | 'dismissed'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -871,6 +872,36 @@ export interface Database {
             referencedColumns: ['id']
           },
         ]
+      }
+      catalog_requests: {
+        Row: {
+          id: string
+          business_name: string
+          contact_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          category: string | null
+          borough: string | null
+          message: string | null
+          status: CatalogRequestStatus
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          business_name: string
+          contact_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          category?: string | null
+          borough?: string | null
+          message?: string | null
+          status?: CatalogRequestStatus
+          created_at?: string
+        }
+        Update: {
+          status?: CatalogRequestStatus
+        }
+        Relationships: []
       }
     }
     Views: Record<never, never>

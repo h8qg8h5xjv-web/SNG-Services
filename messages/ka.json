@@ -287,6 +287,36 @@
       "accepted": "You took it",
       "declined": "You passed",
       "no_response": "No response"
-    }
+    },
+    "myCabinet": "My cabinet",
+    "noAccess": "No access yet?",
+    "noAccessLink": "Write to us"
+  },
+  "footer": {
+    "forBusiness": "For business",
+    "terms": "Terms",
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+  },
+  "forBusiness": {
+    "title": "For business",
+    "intro": "Clients send requests; you reply only if you can take the job.",
+    "point1": "Requests come to you by category and area — no second schedule to keep.",
+    "point2": "You choose: take it, propose a price, or pass.",
+    "point3": "Client contacts open only after you take the job.",
+    "enter": "Enter the cabinet",
+    "joinTitle": "Want to get into the catalog?",
+    "joinIntro": "Listing is invite-only — leave your details and we’ll get in touch.",
+    "businessName": "Business name",
+    "contactName": "Your name",
+    "email": "Email",
+    "phone": "Phone",
+    "category": "Category (optional)",
+    "borough": "Area (optional)",
+    "message": "A few words about you (optional)",
+    "send": "Send request",
+    "sending": "Sending…",
+    "sent": "Thanks — we’ve got your request and will be in touch.",
+    "needContact": "Leave an email or a phone so we can reply.",
+    "formError": "Could not send. Try again."
   }
 }

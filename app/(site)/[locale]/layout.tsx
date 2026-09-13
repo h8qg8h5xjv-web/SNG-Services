@@ -9,6 +9,7 @@ import { routing } from '@/i18n/routing'
 import { ogLocale } from '@/i18n/locales'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
+import Footer from '@/components/Footer'
 import '../../globals.css'
 
 // Only weights 400 and 600 (DESIGN-SYSTEM §2) — extra weights are extra bytes.
@@ -26,6 +27,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
+
+// Only the enabled locales are valid values for [locale]. Anything else — a
+// service-worker request (/sw.js), a stray static file (/favicon.ico), a typo —
+// 404s at the routing layer instead of rendering this subtree with a bogus
+// "locale" (which then crashed Intl and did wasted data work). generateStaticParams
+// above is the allow-list; dynamicParams=false rejects the rest.
+export const dynamicParams = false
 
 export async function generateMetadata({
   params,
@@ -75,6 +83,7 @@ export default async function LocaleLayout({
       <body className="flex min-h-full flex-col pb-16 sm:pb-0">
         <NextIntlClientProvider>
           {children}
+          <Footer />
           <BottomNav />
         </NextIntlClientProvider>
       </body>

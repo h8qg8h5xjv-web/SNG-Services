@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { getSlots, createBooking, getSlotParticipants } from '@/lib/booking/actions'
 import { formatPrice } from '@/lib/format'
+import { dateTimeFormat } from '@/lib/intl'
 import { Button } from '@/components/ui/Button'
 import { Input, Select } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
@@ -97,17 +98,17 @@ export default function BookingWidget({
     }
   }, [serviceId, date])
 
-  const dateFmt = new Intl.DateTimeFormat(locale, {
+  const dateFmt = dateTimeFormat(locale, {
     timeZone: TZ,
     weekday: 'short',
     day: 'numeric',
   })
-  const timeFmt = new Intl.DateTimeFormat(locale, {
+  const timeFmt = dateTimeFormat(locale, {
     timeZone: TZ,
     hour: '2-digit',
     minute: '2-digit',
   })
-  const dateTimeFmt = new Intl.DateTimeFormat(locale, {
+  const dateTimeFmt = dateTimeFormat(locale, {
     timeZone: TZ,
     weekday: 'short',
     day: 'numeric',
