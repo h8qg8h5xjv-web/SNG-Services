@@ -220,7 +220,7 @@ export default function RequestForm({
                   <button
                     type="button"
                     onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
-                    className="absolute right-1 top-1 rounded bg-slate-900 px-2 text-meta text-white"
+                    className="absolute right-1 top-1 rounded-lg bg-slate-900 px-2 text-meta text-white"
                     aria-label={t('removePhoto')}
                   >
                     ×

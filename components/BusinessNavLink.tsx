@@ -16,11 +16,11 @@ export default async function BusinessNavLink() {
   return (
     <Link
       href="/business/requests"
-      className="flex items-center gap-1.5 text-body font-semibold text-teal-700"
+      className="flex items-center gap-1.5 text-body font-semibold text-accent"
     >
       {t('myCabinet')}
       {count > 0 && (
-        <span className="rounded-full bg-teal-700 px-2 py-0.5 text-meta font-semibold text-white">
+        <span className="rounded-full bg-accent px-2 py-0.5 text-meta font-semibold text-white">
           {count}
         </span>
       )}

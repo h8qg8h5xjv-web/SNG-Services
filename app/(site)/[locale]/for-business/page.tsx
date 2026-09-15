@@ -40,7 +40,7 @@ export default async function ForBusinessPage({
         <ul className="mt-4 space-y-2">
           {points.map((p) => (
             <li key={p} className="flex items-start gap-2 text-body">
-              <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" stroke={1.5} />
+              <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" stroke={1.5} />
               {p}
             </li>
           ))}

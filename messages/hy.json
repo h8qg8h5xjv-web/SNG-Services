@@ -99,7 +99,10 @@
     "pricePaid": "Paid",
     "tickets": "Tickets",
     "organizer": "Organiser",
-    "upcoming": "Upcoming events"
+    "upcoming": "Upcoming events",
+    "subtitle": "What’s on for the community",
+    "emptyDay": "Nothing on this day yet",
+    "seeAll": "See all"
   },
   "eventCategory": {
     "concert": "Concert",

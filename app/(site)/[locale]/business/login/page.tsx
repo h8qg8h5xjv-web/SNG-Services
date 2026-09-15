@@ -72,7 +72,7 @@ export default function BusinessLoginPage() {
 
       <p className="mt-6 text-body text-slate-500">
         {t('noAccess')}{' '}
-        <Link href="/for-business" className="font-semibold text-teal-700 hover:underline">
+        <Link href="/for-business" className="font-semibold text-accent hover:underline">
           {t('noAccessLink')}
         </Link>
       </p>

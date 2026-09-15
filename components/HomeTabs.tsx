@@ -49,7 +49,7 @@ export default function HomeTabs({
             aria-selected={tab === key}
             onClick={() => choose(key)}
             className={`min-h-11 flex-1 rounded-lg px-4 text-body font-semibold transition-colors ${
-              tab === key ? 'bg-teal-700 text-white' : 'text-slate-500'
+              tab === key ? 'bg-accent text-white' : 'text-slate-500'
             }`}
           >
             {key === 'services' ? t('tabServices') : t('tabPlaces')}

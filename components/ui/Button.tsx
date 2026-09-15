@@ -8,9 +8,9 @@ type Variant = 'primary' | 'secondary' | 'link'
 const BASE =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-body font-semibold transition-colors'
 const VARIANT: Record<Variant, string> = {
-  primary: 'bg-teal-700 text-white',
+  primary: 'bg-accent text-white',
   secondary: 'border border-slate-200 text-slate-900',
-  link: 'min-h-0 px-0 text-teal-700',
+  link: 'min-h-0 px-0 text-accent',
 }
 
 type CommonProps = { variant?: Variant; className?: string; children: ReactNode }

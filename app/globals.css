@@ -9,6 +9,11 @@
     var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
     sans-serif;
 
+  /* Accent — ONE place (DESIGN-SYSTEM §1). Components use accent / accent-soft,
+     never a raw palette shade, so the accent changes here alone. */
+  --color-accent: var(--color-blue-800);
+  --color-accent-soft: var(--color-blue-50);
+
   /* Five sizes, nothing between (DESIGN-SYSTEM §2). */
   --text-title: 1.5rem; /* 24 — page title, one per screen */
   --text-title--line-height: 2rem;
@@ -31,4 +36,54 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
+}
+
+/* ---------------------------------------------------------------------------
+   Motion (DESIGN-SYSTEM §Motion). Every effect below is opt-in via a class and
+   fully removed under prefers-reduced-motion. The 3D tilt runs ONLY on real
+   hover/pointer devices — never on touch. Depth comes from transforms, never
+   shadows. No libraries: pure CSS + a tiny rAF handler for the tilt angle.
+   --------------------------------------------------------------------------- */
+
+/* Staggered card entrance: fade + 8px rise. Steps of 30ms over a 180ms fade, so
+   the last card finishes by 300ms (task §3). Desktop + motion only. */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Scroll reveal (events, task §5): 12px rise + fade, once. Hidden state applies
+   only where motion runs, so a no-JS / reduced-motion / mobile view stays
+   visible. */
+.reveal { transition: opacity 300ms ease, transform 300ms ease; }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .stagger > * { opacity: 0; animation: card-in 180ms ease-out forwards; }
+  .stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger > *:nth-child(2) { animation-delay: 30ms; }
+  .stagger > *:nth-child(3) { animation-delay: 60ms; }
+  .stagger > *:nth-child(4) { animation-delay: 90ms; }
+  .stagger > *:nth-child(n+5) { animation-delay: 120ms; }
+
+  .reveal:not(.is-visible) { opacity: 0; transform: translateY(12px); }
+
+  /* Hover lift for interactive cards that don't get the 3D tilt (task §3). */
+  .lift { transition: transform 200ms ease, border-color 200ms ease; }
+  .lift:hover { transform: translateY(-2px); }
+
+  /* 3D tilt scene + item. The angle is written to el.style.transform by the Tilt
+     component (rAF-throttled); the transition smooths the return on leave. */
+  .tilt-scene { perspective: 800px; }
+  .tilt-scene-far { perspective: 900px; }
+  .tilt { transition: transform 200ms ease; transform-style: preserve-3d; will-change: transform; }
+
+  /* Layered children float toward the viewer on hover — the depth illusion. */
+  .preserve-3d { transform-style: preserve-3d; }
+  .tilt-layer-1, .tilt-layer-2 { transition: transform 200ms ease; }
+  .tilt-scene:hover .tilt-layer-1 { transform: translateZ(10px); }
+  .tilt-scene:hover .tilt-layer-2 { transform: translateZ(20px); }
+
+  /* Event cover eases in behind its overlay on hover (task §5). */
+  .tilt-cover { transition: transform 200ms ease; }
+  .tilt-scene:hover .tilt-cover { transform: scale(1.04); }
 }

@@ -30,7 +30,7 @@ export default async function AdminDashboard() {
       <div className="flex gap-3">
         <Link
           href="/admin/providers/new"
-          className="min-h-11 rounded-lg bg-teal-700 px-4 py-2 text-body font-semibold text-white"
+          className="min-h-11 rounded-lg bg-accent px-4 py-2 text-body font-semibold text-white"
         >
           New provider
         </Link>

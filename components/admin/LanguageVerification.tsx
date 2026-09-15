@@ -156,7 +156,7 @@ function LanguageRow({
           type="button"
           onClick={() => act('verified')}
           disabled={pending}
-          className="rounded-lg bg-teal-700 px-3 py-1 font-semibold text-white disabled:opacity-60"
+          className="rounded-lg bg-accent px-3 py-1 font-semibold text-white disabled:opacity-60"
         >
           Подтвердить
         </button>

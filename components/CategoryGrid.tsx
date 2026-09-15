@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
+import Tilt from '@/components/Tilt'
 import CategoryIcon from './CategoryIcon'
 
 export type CategoryTile = {
@@ -22,16 +23,21 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
 
   return (
     <div>
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <ul className="stagger grid grid-cols-2 gap-3 sm:grid-cols-4">
         {visible.map((c) => (
           <li key={c.slug}>
-            <Link
-              href={`/${c.slug}`}
-              className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-slate-200 p-4 text-center transition-colors hover:border-teal-700"
-            >
-              <CategoryIcon name={c.icon} className="h-6 w-6" />
-              <span className="text-body font-semibold leading-tight">{c.name}</span>
-            </Link>
+            {/* Category tile: full 3D tilt with layered icon/label (task §4). */}
+            <Tilt maxDeg={6} translateZ={12}>
+              <Link
+                href={`/${c.slug}`}
+                className="preserve-3d flex h-full min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-slate-200 p-4 text-center transition-colors hover:border-accent"
+              >
+                <span className="tilt-layer-2">
+                  <CategoryIcon name={c.icon} className="h-6 w-6" />
+                </span>
+                <span className="tilt-layer-1 text-body font-semibold leading-tight">{c.name}</span>
+              </Link>
+            </Tilt>
           </li>
         ))}
       </ul>
