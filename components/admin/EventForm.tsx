@@ -248,7 +248,7 @@ export default function EventForm({
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-lg bg-teal-700 px-6 font-semibold text-white disabled:opacity-60"
+          className="min-h-11 rounded-lg bg-accent px-6 font-semibold text-white disabled:opacity-60"
         >
           {pending ? 'Saving…' : 'Save'}
         </button>

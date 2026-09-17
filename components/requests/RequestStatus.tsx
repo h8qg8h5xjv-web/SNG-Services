@@ -109,7 +109,7 @@ export default function RequestStatus({
       <div className="flex flex-col items-center gap-3 rounded-lg border border-slate-200 p-8 text-center">
         <IconCircleCheck className="h-6 w-6 text-green-700" stroke={1.5} />
         <p className="text-body">{t('confirmedBody')}</p>
-        <Link href="/bookings" className="text-body font-semibold text-teal-700 hover:underline">
+        <Link href="/bookings" className="text-body font-semibold text-accent hover:underline">
           {t('goToBookings')}
         </Link>
       </div>
@@ -123,7 +123,7 @@ export default function RequestStatus({
         <p className="text-body text-slate-500">
           {state.status === 'expired' ? t('expiredHelp') : t('cancelledBody')}
         </p>
-        <Link href="/" className="text-body font-semibold text-teal-700 hover:underline">
+        <Link href="/" className="text-body font-semibold text-accent hover:underline">
           {t('backHome')}
         </Link>
       </div>
@@ -134,7 +134,7 @@ export default function RequestStatus({
   return (
     <div className="rounded-lg border border-slate-200 p-6">
       <div className="flex items-center gap-2">
-        <IconClock className="h-6 w-6 text-teal-700" stroke={1.5} />
+        <IconClock className="h-6 w-6 text-accent" stroke={1.5} />
         <h1 className="text-h2 font-semibold">{t('asking', { n: state.askedCount })}</h1>
       </div>
       <p className="mt-2 text-body text-slate-500">{t('usuallyMinutes')}</p>

@@ -21,7 +21,7 @@ export default async function AdminProvidersPage({
         <h1 className="text-h2 font-semibold">Providers</h1>
         <Link
           href="/admin/providers/new"
-          className="min-h-11 rounded-lg bg-teal-700 px-4 py-2 text-body font-semibold text-white"
+          className="min-h-11 rounded-lg bg-accent px-4 py-2 text-body font-semibold text-white"
         >
           New provider
         </Link>
@@ -33,7 +33,7 @@ export default async function AdminProvidersPage({
         <Link
           href="/admin/providers"
           className={`rounded-lg px-3 py-1 ${
-            seedOnly ? 'text-slate-500 hover:underline' : 'bg-teal-700 font-semibold text-white'
+            seedOnly ? 'text-slate-500 hover:underline' : 'bg-accent font-semibold text-white'
           }`}
         >
           Все
@@ -41,7 +41,7 @@ export default async function AdminProvidersPage({
         <Link
           href="/admin/providers?filter=seed"
           className={`rounded-lg px-3 py-1 ${
-            seedOnly ? 'bg-teal-700 font-semibold text-white' : 'text-slate-500 hover:underline'
+            seedOnly ? 'bg-accent font-semibold text-white' : 'text-slate-500 hover:underline'
           }`}
         >
           Подтверждения из сида ({seedCount})

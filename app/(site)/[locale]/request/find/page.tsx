@@ -52,13 +52,13 @@ export default async function RequestFindPage({
             <IconMoodSad className="h-6 w-6 text-slate-400" stroke={1.5} />
             <p className="text-body text-slate-500">{t('notRecognised', { query: q })}</p>
           </div>
-          <h2 className="mb-3 mt-6 text-h2 font-semibold">{t('chooseCategory')}</h2>
+          <h2 className="mb-4 mt-8 text-h2 font-semibold">{t('chooseCategory')}</h2>
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {categories.map((c) => (
               <li key={c.slug}>
                 <Link
                   href={`/request?category=${c.slug}`}
-                  className="flex min-h-11 items-center justify-center rounded-lg border border-slate-200 px-4 text-center text-body font-semibold transition-colors hover:border-teal-700"
+                  className="flex min-h-11 items-center justify-center rounded-lg border border-slate-200 px-4 text-center text-body font-semibold transition-colors hover:border-accent"
                 >
                   {pickCategoryName(c, locale)}
                 </Link>

@@ -18,7 +18,7 @@ export function Card({
   children: ReactNode
 }) {
   const cls = `block overflow-hidden rounded-lg border border-slate-200 ${
-    href ? 'transition-colors hover:border-teal-700' : ''
+    href ? 'transition-colors hover:border-accent' : ''
   } ${className}`
   if (href && external) {
     return (

@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="min-h-11 w-full rounded-lg bg-teal-700 px-4 font-semibold text-white disabled:opacity-60"
+            className="min-h-11 w-full rounded-lg bg-accent px-4 font-semibold text-white disabled:opacity-60"
           >
             {status === 'sending' ? 'Sending…' : 'Send magic link'}
           </button>

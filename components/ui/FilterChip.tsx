@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation'
 const base =
   'inline-flex min-h-11 items-center rounded-full px-3 text-meta transition-colors'
 const state = (active: boolean) =>
-  active ? 'bg-teal-700 text-white' : 'border border-slate-200 text-slate-900'
+  active ? 'bg-accent text-white' : 'border border-slate-200 text-slate-900'
 
 export function FilterChip({
   active = false,

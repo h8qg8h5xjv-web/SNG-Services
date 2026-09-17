@@ -38,12 +38,12 @@ export default async function BusinessLayout({
         <nav className="flex items-center gap-4">
           <Link
             href="/business/requests"
-            className="flex min-h-11 items-center gap-2 text-body font-semibold text-teal-700"
+            className="flex min-h-11 items-center gap-2 text-body font-semibold text-accent"
           >
             <IconInbox className="h-5 w-5" stroke={1.5} />
             {t('nav.requests')}
             {newCount > 0 && (
-              <span className="rounded-full bg-teal-700 px-2 py-0.5 text-meta font-semibold text-white">
+              <span className="rounded-full bg-accent px-2 py-0.5 text-meta font-semibold text-white">
                 {newCount}
               </span>
             )}

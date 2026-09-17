@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
-import { SectionHeading } from '@/components/ui/Section'
+import { IconCalendarEvent } from '@tabler/icons-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import Header from '@/components/Header'
-import EventFilters from '@/components/EventFilters'
 import EventCard from '@/components/EventCard'
-import {
-  listUpcomingEvents,
-  listEventBoroughs,
-  type EventFilters as Filters,
-} from '@/lib/queries/events'
-import { groupEvents } from '@/lib/events/group'
-import { EVENT_CATEGORIES } from '@/lib/events/constants'
+import { FilterChipLink } from '@/components/ui/FilterChip'
+import { ButtonLink } from '@/components/ui/Button'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { listUpcomingEvents } from '@/lib/queries/events'
+import { groupEvents, type GroupKey } from '@/lib/events/group'
+
+export const dynamic = 'force-dynamic'
+
+const DATE_CHIPS: GroupKey[] = ['today', 'tomorrow', 'weekend', 'later']
 
 export async function generateMetadata({
   params,
@@ -22,65 +23,63 @@ export async function generateMetadata({
   return { title: t('title') }
 }
 
-function parsePrice(value: string | undefined): '' | 'free' | 'paid' {
-  return value === 'free' || value === 'paid' ? value : ''
-}
-
 export default async function EventsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ category?: string; borough?: string; price?: string }>
+  searchParams: Promise<{ when?: string }>
 }) {
   const { locale } = await params
   setRequestLocale(locale)
   const sp = await searchParams
   const t = await getTranslations()
 
-  const category =
-    sp.category && (EVENT_CATEGORIES as string[]).includes(sp.category)
-      ? sp.category
-      : ''
-  const borough = sp.borough ?? ''
-  const price = parsePrice(sp.price)
+  const when: GroupKey | '' = (DATE_CHIPS as string[]).includes(sp.when ?? '')
+    ? (sp.when as GroupKey)
+    : ''
 
-  const filters: Filters = {}
-  if (category) filters.category = category
-  if (borough) filters.borough = borough
-  if (price) filters.price = price
-
-  const [events, boroughs] = await Promise.all([
-    listUpcomingEvents(filters),
-    listEventBoroughs(),
-  ])
-  const groups = groupEvents(events, new Date())
+  const events = await listUpcomingEvents()
+  const allGroups = groupEvents(events, new Date())
+  const groups = when ? allGroups.filter((g) => g.key === when) : allGroups
 
   return (
     <>
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <h1 className="py-6 text-title font-semibold">{t('events.title')}</h1>
+        <div className="pt-6">
+          <h1 className="text-title font-semibold">{t('events.title')}</h1>
+          <p className="mt-2 text-slate-500">{t('events.subtitle')}</p>
+        </div>
 
-        <div className="mb-6">
-          <EventFilters
-            boroughs={boroughs}
-            currentCategory={category}
-            currentBorough={borough}
-            currentPrice={price}
-          />
+        {/* Sticky date filters. top-16 is off-scale on purpose — it clears the
+            sticky site header (~64px; interface physics, DESIGN-SYSTEM §4). */}
+        <div className="sticky top-16 z-10 -mx-4 mt-4 mb-6 border-b border-slate-200 bg-white px-4 py-3">
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1">
+            {DATE_CHIPS.map((key) => (
+              <FilterChipLink
+                key={key}
+                active={when === key}
+                href={when === key ? '/events' : `/events?when=${key}`}
+              >
+                {t(`events.${key}`)}
+              </FilterChipLink>
+            ))}
+          </div>
         </div>
 
         {groups.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-slate-200 p-8 text-center text-slate-500">
-            {t('events.empty')}
-          </p>
+          <EmptyState
+            icon={IconCalendarEvent}
+            text={t('events.emptyDay')}
+            action={<ButtonLink href="/events">{t('events.seeAll')}</ButtonLink>}
+          />
         ) : (
           <div className="space-y-8">
             {groups.map((group) => (
               <section key={group.key}>
-                <SectionHeading>{t(`events.${group.key}`)}</SectionHeading>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <h2 className="mb-4 text-h2 font-semibold">{t(`events.${group.key}`)}</h2>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {group.events.map((event) => (
                     <EventCard key={event.id} event={event} locale={locale} />
                   ))}

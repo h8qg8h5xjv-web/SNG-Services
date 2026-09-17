@@ -99,7 +99,10 @@
     "pricePaid": "Paid",
     "tickets": "Tickets",
     "organizer": "Organiser",
-    "upcoming": "Upcoming events"
+    "upcoming": "Upcoming events",
+    "subtitle": "Що відбувається у своїх",
+    "emptyDay": "Цього дня подій поки немає",
+    "seeAll": "Переглянути всі"
   },
   "eventCategory": {
     "concert": "Concert",

@@ -59,14 +59,19 @@ export default async function HomePage({
   return (
     <>
       <Header />
+      {/* Hero: soft accent-to-white wash behind the title/subtitle; the search
+          itself sits on plain white below (task §2). */}
+      <section className="bg-linear-to-b from-accent-soft to-white">
+        <div className="mx-auto w-full max-w-5xl px-4 py-10">
+          <h1 className="max-w-md text-title font-semibold">{t('home.heroTitle')}</h1>
+          <p className="mt-4 text-slate-500">{t('home.heroSubtitle')}</p>
+        </div>
+      </section>
+
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <section className="py-8">
-          <h1 className="text-title font-semibold sm:text-title">{t('home.heroTitle')}</h1>
-          <p className="mt-3 max-w-2xl text-slate-500">{t('home.heroSubtitle')}</p>
-          <div className="mt-6">
-            <SearchBar />
-          </div>
-        </section>
+        <div className="py-6">
+          <SearchBar />
+        </div>
 
         <div className="mb-2">
           <HomeTabs services={services} places={<PlacesExplorer places={placeCards} />} />

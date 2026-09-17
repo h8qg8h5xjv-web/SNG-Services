@@ -10,7 +10,7 @@ export default async function AdminEventsPage() {
         <h1 className="text-h2 font-semibold">Events</h1>
         <Link
           href="/admin/events/new"
-          className="min-h-11 rounded-lg bg-teal-700 px-4 py-2 text-body font-semibold text-white"
+          className="min-h-11 rounded-lg bg-accent px-4 py-2 text-body font-semibold text-white"
         >
           New event
         </Link>
