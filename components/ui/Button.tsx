@@ -1,16 +1,17 @@
 import type { ReactNode } from 'react'
 import { Link } from '@/i18n/navigation'
 
-// DESIGN-SYSTEM §5: three button kinds, height 44px, rounded-lg. Text comes from
-// the caller (translations), never hardcoded here.
+// DESIGN-SYSTEM §5: pill buttons. Primary = blue-950 fill; secondary = white with
+// a 1.5px slate-900 border; link = accent, no pill. Height 48px. Text from the
+// caller (translations). The accent is no longer used on buttons (§2).
 type Variant = 'primary' | 'secondary' | 'link'
 
 const BASE =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-body font-semibold transition-colors'
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-body font-semibold transition-colors'
 const VARIANT: Record<Variant, string> = {
-  primary: 'bg-accent text-white',
-  secondary: 'border border-slate-200 text-slate-900',
-  link: 'min-h-0 px-0 text-accent',
+  primary: 'bg-blue-950 text-white',
+  secondary: 'border-medium border-slate-900 bg-white text-slate-900',
+  link: 'min-h-0 rounded-none px-0 text-accent',
 }
 
 type CommonProps = { variant?: Variant; className?: string; children: ReactNode }

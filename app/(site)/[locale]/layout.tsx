@@ -12,14 +12,14 @@ import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
 import '../../globals.css'
 
-// Only weights 400 and 600 (DESIGN-SYSTEM §2) — extra weights are extra bytes.
-// Inter covers the only enabled locales (Latin + Cyrillic). Georgian/Armenian
-// (ka/hy) are disabled for now; when enabled they'll be self-hosted via
-// next/font/local. Until then they fall back to system fonts via the CSS stack.
+// Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
+// headings (DESIGN-SYSTEM §2). Inter covers the enabled locales (Latin + Cyrillic).
+// Georgian/Armenian (ka/hy) are disabled for now; when enabled they'll be
+// self-hosted via next/font/local. Until then they fall back to system fonts.
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin', 'cyrillic'],
-  weight: ['400', '600'],
+  weight: ['400', '600', '700', '800'],
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
@@ -79,8 +79,8 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${inter.variable} h-full antialiased`}
     >
-      {/* pb-16: off-scale on purpose — clears the fixed bottom nav (its height). */}
-      <body className="flex min-h-full flex-col pb-16 sm:pb-0">
+      {/* has-floating-nav: bottom clearance for the floating mobile nav (§3). */}
+      <body className="has-floating-nav flex min-h-full flex-col">
         <NextIntlClientProvider>
           {children}
           <Footer />

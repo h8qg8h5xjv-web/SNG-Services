@@ -28,7 +28,12 @@ export type ProviderWithRelations = {
     duration_min: number
     capacity: number
   }[]
-  provider_languages: { language_code: string }[]
+  provider_languages: {
+    language_code: string
+    status?: string
+    expires_at?: string | null
+    languages?: { name_native: string } | null
+  }[]
 }
 
 export type PriceRange = { min: number; max: number }
@@ -48,6 +53,9 @@ export type ProviderCardVM = {
   openingHours: OpeningHours | null
   phone: string | null
   website: string | null
+  // Native names of languages with a live 'verified' badge — trust signal on the
+  // card in place of a rating (DESIGN §5). Empty when none.
+  verifiedLanguages: string[]
   // Prices are never surfaced for external_order providers (DESIGN §4 / PROMPTS §4).
   priceRange: PriceRange | null
 }
@@ -79,6 +87,16 @@ export function toCard(
   locale: string,
 ): ProviderCardVM {
   const { name } = pickProviderContent(provider, provider.provider_translations, locale)
+  const now = Date.now()
+  // Only 'verified' and not expired counts as a trust badge (DESIGN §5).
+  const verifiedLanguages = provider.provider_languages
+    .filter(
+      (l) =>
+        l.status === 'verified' &&
+        l.languages != null &&
+        (l.expires_at == null || Date.parse(l.expires_at) > now),
+    )
+    .map((l) => l.languages!.name_native)
   return {
     id: provider.id,
     slug: provider.slug,
@@ -94,6 +112,7 @@ export function toCard(
     openingHours: parseOpeningHours(provider.opening_hours),
     phone: provider.phone,
     website: provider.website,
+    verifiedLanguages,
     priceRange: priceRangeOf(provider),
   }
 }

@@ -1,5 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { IconLanguage } from '@tabler/icons-react'
 import { SectionHeading } from '@/components/ui/Section'
+import { InfoBlock } from '@/components/ui/InfoBlock'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import RecentlyViewed from '@/components/RecentlyViewed'
@@ -43,6 +45,10 @@ export default async function HomePage({
   const services = (
     <>
       <ServiceNeedBar />
+      {/* Trust, not rating (DESIGN §5): we verify service language for everyone. */}
+      <div className="py-2">
+        <InfoBlock icon={IconLanguage} title={t('trust.homeTitle')} subtitle={t('trust.homeSubtitle')} />
+      </div>
       <RecentlyViewed />
       <AvailableToday providers={availableToday} locale={locale} />
       <section className="py-6">
@@ -63,7 +69,7 @@ export default async function HomePage({
           itself sits on plain white below (task §2). */}
       <section className="bg-linear-to-b from-accent-soft to-white">
         <div className="mx-auto w-full max-w-5xl px-4 py-10">
-          <h1 className="max-w-md text-title font-semibold">{t('home.heroTitle')}</h1>
+          <h1 className="max-w-md text-display font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
           <p className="mt-4 text-slate-500">{t('home.heroSubtitle')}</p>
         </div>
       </section>

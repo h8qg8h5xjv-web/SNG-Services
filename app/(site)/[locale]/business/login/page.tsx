@@ -43,7 +43,7 @@ export default function BusinessLoginPage() {
 
   return (
     <main className="mx-auto flex min-h-full max-w-sm flex-col justify-center px-6 py-8">
-      <h1 className="text-title font-semibold">{t('loginTitle')}</h1>
+      <h1 className="text-title font-extrabold tracking-tight">{t('loginTitle')}</h1>
       <p className="mt-2 text-body text-slate-500">{t('loginIntro')}</p>
       {notMember && (
         <p className="mt-4 rounded-lg border border-red-200 bg-red-100 p-3 text-body">{t('notMember')}</p>

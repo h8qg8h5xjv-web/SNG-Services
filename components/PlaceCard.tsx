@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { Card, CardMedia, CardBody } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import Tilt from '@/components/Tilt'
+import SaveHeart from '@/components/SaveHeart'
 import { isOpenNow } from '@/lib/hours'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
@@ -33,17 +34,20 @@ export default function PlaceCard({ card }: { card: ProviderCardVM }) {
           ratio="photo"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           overlay={
-            open !== null && (
-              <span className="absolute left-2 top-2">
-                <StatusBadge tone={open ? 'success' : 'neutral'}>
-                  {open ? t('provider.openNow') : t('provider.closedNow')}
-                </StatusBadge>
-              </span>
-            )
+            <>
+              <SaveHeart />
+              {open !== null && (
+                <span className="absolute left-2 top-2">
+                  <StatusBadge tone={open ? 'success' : 'neutral'}>
+                    {open ? t('provider.openNow') : t('provider.closedNow')}
+                  </StatusBadge>
+                </span>
+              )}
+            </>
           }
         />
         <CardBody>
-          <Link href={`/${card.categorySlug}/${card.slug}`} className="font-semibold hover:underline">
+          <Link href={`/${card.categorySlug}/${card.slug}`} className="font-bold hover:underline">
             {card.name}
           </Link>
           <p className="mt-1 text-meta text-slate-500">

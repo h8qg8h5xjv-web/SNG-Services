@@ -48,7 +48,7 @@ export default async function EventsPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="pt-6">
-          <h1 className="text-title font-semibold">{t('events.title')}</h1>
+          <h1 className="text-title font-extrabold tracking-tight">{t('events.title')}</h1>
           <p className="mt-2 text-slate-500">{t('events.subtitle')}</p>
         </div>
 

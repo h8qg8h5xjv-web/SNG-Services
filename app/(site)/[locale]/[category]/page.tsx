@@ -75,7 +75,7 @@ export default async function CategoryPage({
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-4">
         <BackButton />
         <div className="py-6">
-          <h1 className="text-title font-semibold">{pickCategoryName(cat, locale)}</h1>
+          <h1 className="text-title font-extrabold tracking-tight">{pickCategoryName(cat, locale)}</h1>
           <p className="mt-1 text-body text-slate-500">
             {t('providersCount', { count: all.length })}
           </p>

@@ -78,7 +78,7 @@ export default async function RequestFindPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
         <BackButton />
-        <h1 className="text-title font-semibold">
+        <h1 className="text-title font-extrabold tracking-tight">
           {t('foundFor', { category: pickCategoryName(category, locale) })}
         </h1>
 

@@ -14,7 +14,7 @@ export default async function ProfilePage({
     <>
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-        <h1 className="text-title font-semibold">{t('nav.profile')}</h1>
+        <h1 className="text-title font-extrabold tracking-tight">{t('nav.profile')}</h1>
         <p className="mt-3 text-slate-500">{t('misc.comingSoon')}</p>
       </main>
     </>

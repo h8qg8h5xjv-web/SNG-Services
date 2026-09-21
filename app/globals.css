@@ -26,8 +26,21 @@
   --text-label: 0.6875rem; /* 11 — labels, rarely */
   --text-label--line-height: 1rem;
 
+  /* Showcase sizes (DESIGN-SYSTEM §2, TripAdvisor character) — used only with the
+     800 weight + tight tracking: home hero, name on a master/place card, and
+     home section headings. */
+  --text-display: 1.875rem; /* 30 — home hero title */
+  --text-display--line-height: 2.25rem;
+  --text-name: 1.6875rem; /* 27 — master/place name on its own card */
+  --text-name--line-height: 2rem;
+  --text-section: 1.0625rem; /* 17 — section heading */
+  --text-section--line-height: 1.5rem;
+
   /* The one non-16:9 image ratio we use, as a token so no arbitrary value is needed. */
   --aspect-photo: 4 / 3;
+
+  /* Card photos are a touch rounder than cards (10px vs rounded-lg 8px). */
+  --radius-photo: 0.625rem;
 }
 
 body {
@@ -36,6 +49,28 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
+}
+
+/* 1.5px border for the outline pills — buttons, search, chips (DESIGN-SYSTEM §2).
+   Between Tailwind's 1px and 2px; a named utility, not an arbitrary value. */
+.border-medium { border-width: 1.5px; }
+
+/* Floating bottom nav (DESIGN-SYSTEM §3): hovers 12px off every edge, clearing the
+   iOS home indicator. Off-scale bottom is interface physics (§4). */
+.floating-bottom { bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+
+/* Body clearance so content never hides behind the floating nav. Mobile only. */
+.has-floating-nav { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+@media (min-width: 640px) {
+  .has-floating-nav { padding-bottom: 0; }
+}
+
+/* Master page mobile CTA: pinned just above the floating nav; the page reserves
+   room for CTA + nav below its content. Interface physics (§4). */
+.cta-above-nav { bottom: calc(5rem + env(safe-area-inset-bottom)); }
+.pb-cta { padding-bottom: calc(11rem + env(safe-area-inset-bottom)); }
+@media (min-width: 640px) {
+  .pb-cta { padding-bottom: 2rem; }
 }
 
 /* ---------------------------------------------------------------------------

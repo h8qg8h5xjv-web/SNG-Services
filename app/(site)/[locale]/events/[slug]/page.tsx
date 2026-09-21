@@ -126,7 +126,7 @@ export default async function EventPage({
             {t(`eventCategory.${eventCategorySlug(event.category)}`)} ·{' '}
             {formatEventDateTime(event.starts_at, locale)}
           </p>
-          <h1 className="mt-1 text-title font-semibold">{title}</h1>
+          <h1 className="mt-1 text-title font-extrabold tracking-tight">{title}</h1>
           {place && <p className="mt-1 text-slate-500">{place}</p>}
           <p className="mt-3 font-semibold">
             {event.price_from_pence == null

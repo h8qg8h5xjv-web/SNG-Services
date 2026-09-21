@@ -15,7 +15,7 @@ export default async function BookingsPage({
     <>
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
-        <h1 className="mb-6 text-title font-semibold">{t('nav.bookings')}</h1>
+        <h1 className="mb-6 text-title font-extrabold tracking-tight">{t('nav.bookings')}</h1>
         <MyRequests />
       </main>
     </>

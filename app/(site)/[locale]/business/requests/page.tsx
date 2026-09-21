@@ -21,7 +21,7 @@ export default async function BusinessRequestsPage({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="mb-1 text-title font-semibold">{t('nav.requests')}</h1>
+        <h1 className="mb-1 text-title font-extrabold tracking-tight">{t('nav.requests')}</h1>
         <p className="text-meta text-slate-500">{t('requestsIntro')}</p>
       </div>
 

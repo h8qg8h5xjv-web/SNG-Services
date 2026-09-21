@@ -63,7 +63,7 @@ export default async function RequestPage({
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
-        <h1 className="mb-6 text-title font-semibold">
+        <h1 className="mb-6 text-title font-extrabold tracking-tight">
           {provider
             ? t('titleSpecific')
             : t('titleAny')}

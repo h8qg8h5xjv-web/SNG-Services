@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
+import { IconClock } from '@tabler/icons-react'
 import { getSlots, createBooking, getSlotParticipants } from '@/lib/booking/actions'
 import { formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
-import { Button } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui/Button'
 import { Input, Select } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
+import { SuccessScreen } from '@/components/ui/SuccessScreen'
 import type { Slot } from '@/lib/slots/compute'
 
 const TZ = 'Europe/London'
@@ -40,6 +42,7 @@ export default function BookingWidget({
   todayIso: string
 }) {
   const t = useTranslations('booking')
+  const tNav = useTranslations()
   const locale = useLocale()
 
   // booking_started: fires once when the booking flow opens.
@@ -152,49 +155,54 @@ export default function BookingWidget({
 
   if (done) {
     return (
-      <div className="rounded-lg border border-green-200 bg-green-100 p-6">
-        <h2 className="text-h2 font-semibold">{t('confirmedTitle')}</h2>
-        <p className="mt-2 text-body">
-          {t('confirmedBody', { when: done.when, people: done.people })}
-        </p>
+      <SuccessScreen
+        title={t('confirmedTitle')}
+        message={t('confirmedBody', { when: done.when, people: done.people })}
+        details={[{ icon: IconClock, text: done.when }]}
+        action={
+          <div className="flex w-full flex-col items-center gap-3">
+            <ButtonLink href="/bookings" className="w-full sm:w-auto">
+              {tNav('nav.bookings')}
+            </ButtonLink>
 
-        {isGroup && (
-          <div className="mt-4">
-            {done.participants.length > 0 ? (
-              <>
-                <p className="mb-2 text-body text-slate-500">{t('othersComing')}</p>
-                <ul className="flex flex-wrap gap-3">
-                  {done.participants.map((n, i) => (
-                    <li key={`${n}-${i}`} className="flex items-center gap-2 text-body">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-meta font-semibold">
-                        {n.trim().charAt(0).toUpperCase()}
-                      </span>
-                      {n}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <p className="text-body text-slate-500">{t('aloneSoFar')}</p>
+            {isGroup && (
+              <div className="w-full">
+                {done.participants.length > 0 ? (
+                  <>
+                    <p className="mb-2 text-body text-slate-500">{t('othersComing')}</p>
+                    <ul className="flex flex-wrap justify-center gap-3">
+                      {done.participants.map((n, i) => (
+                        <li key={`${n}-${i}`} className="flex items-center gap-2 text-body">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-meta font-semibold">
+                            {n.trim().charAt(0).toUpperCase()}
+                          </span>
+                          {n}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p className="text-body text-slate-500">{t('aloneSoFar')}</p>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
-        <Button
-          variant="secondary"
-          onClick={() => {
-            setDone(null)
-            setSelected(null)
-            setName('')
-            setPhone('')
-            setEmail('')
-            setVisibleToGroup(false)
-          }}
-          className="mt-4"
-        >
-          {t('bookAnother')}
-        </Button>
-      </div>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setDone(null)
+                setSelected(null)
+                setName('')
+                setPhone('')
+                setEmail('')
+                setVisibleToGroup(false)
+              }}
+            >
+              {t('bookAnother')}
+            </Button>
+          </div>
+        }
+      />
     )
   }
 

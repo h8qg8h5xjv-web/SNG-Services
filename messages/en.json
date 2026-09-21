@@ -31,7 +31,8 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "Places",
-    "tabServices": "Services"
+    "tabServices": "Services",
+    "freeAt": "Free at {time}"
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -72,7 +73,8 @@
     "dbsVerified": "DBS checked ({type})",
     "openNow": "Open now",
     "closedNow": "Closed now",
-    "gallery": "Photos"
+    "gallery": "Photos",
+    "photoCount": "{current}/{total}"
   },
   "search": {
     "title": "Search",
@@ -247,7 +249,8 @@
       "other": "Other regulated"
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
-    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
+    "confirmedTitle": "Done"
   },
   "business": {
     "cabinet": "Business",
@@ -321,5 +324,13 @@
     "sent": "Thanks — we’ve got your request and will be in touch.",
     "needContact": "Leave an email or a phone so we can reply.",
     "formError": "Could not send. Try again."
+  },
+  "trust": {
+    "homeTitle": "Language verified for everyone",
+    "homeSubtitle": "we call the master ourselves",
+    "oneVerified": "{lang} verified",
+    "manyVerified": "{langs} verified",
+    "checkedOn": "Verified {date}",
+    "checkedByUs": "We called the master ourselves"
   }
 }

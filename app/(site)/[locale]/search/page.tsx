@@ -57,7 +57,7 @@ export default async function SearchPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="py-6">
-          <h1 className="mb-4 text-title font-semibold">{t('title')}</h1>
+          <h1 className="mb-4 text-title font-extrabold tracking-tight">{t('title')}</h1>
           <SearchBar initialQuery={q} />
         </div>
 

@@ -19,7 +19,7 @@ export default async function TermsPage({
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
-        <h1 className="text-title font-semibold">{t('terms')}</h1>
+        <h1 className="text-title font-extrabold tracking-tight">{t('terms')}</h1>
         <p className="mt-3 text-body text-slate-500">{t('termsPlaceholder')}</p>
       </main>
     </>

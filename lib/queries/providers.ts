@@ -16,7 +16,7 @@ const LIST_SELECT =
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
-  'provider_languages(language_code)'
+  'provider_languages(language_code,status,expires_at,languages(name_native))'
 
 export async function listProvidersByCategory(
   categoryId: string,
@@ -88,6 +88,7 @@ export type ProviderDetail = {
   provider_languages: {
     status: LanguageVerificationStatus
     expires_at: string | null
+    verified_at: string | null
     professional_level: boolean
     languages: { code: string; name_native: string } | null
   }[]
@@ -108,7 +109,7 @@ const DETAIL_SELECT =
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(id,name_en,name_ru,description_en,description_ru,price_pence,duration_min,capacity), ' +
-  'provider_languages(status,expires_at,professional_level,languages(code,name_native)), ' +
+  'provider_languages(status,expires_at,verified_at,professional_level,languages(code,name_native)), ' +
   'schedules(day_of_week,start_time,end_time), ' +
   'schedule_exceptions(exception_date,is_closed,start_time,end_time)'
 
@@ -138,6 +139,31 @@ export function serviceLanguageBadges(
         : [],
     )
     .sort((a, b) => Number(b.verified) - Number(a.verified) || a.name.localeCompare(b.name))
+}
+
+export type VerifiedLanguageSummary = { names: string[]; verifiedAt: string | null }
+
+/**
+ * Verified (non-expired) service languages for the trust block (DESIGN §5):
+ * their native names and the latest verification date. `now` defaults here so the
+ * caller (a server component) stays pure.
+ */
+export function verifiedLanguageSummary(
+  rows: ProviderDetail['provider_languages'],
+  now: number = Date.now(),
+): VerifiedLanguageSummary {
+  const live = rows.filter(
+    (l) =>
+      l.status === 'verified' &&
+      l.languages != null &&
+      (l.expires_at === null || Date.parse(l.expires_at) > now),
+  )
+  const verifiedAt = live
+    .map((l) => l.verified_at)
+    .filter((v): v is string => v != null)
+    .sort()
+    .at(-1) ?? null
+  return { names: live.map((l) => l.languages!.name_native), verifiedAt }
 }
 
 export type ProviderCredentials = {

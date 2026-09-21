@@ -12,10 +12,15 @@ import {
   IconMapPin,
   IconExternalLink,
   IconPhoto,
+  IconLanguage,
+  IconCircleCheck,
 } from '@tabler/icons-react'
 import { ButtonLink } from '@/components/ui/Button'
+import { InfoBlock } from '@/components/ui/InfoBlock'
 import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
+import SaveHeart from '@/components/SaveHeart'
+import OpenNowInline from '@/components/OpenNowInline'
 import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
 import VenueGallery from '@/components/site/VenueGallery'
@@ -24,13 +29,15 @@ import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
 import {
   getProviderDetail,
-  serviceLanguageBadges,
   providerCredentials,
+  verifiedLanguageSummary,
 } from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
 import { recordEvents } from '@/lib/tracking/events'
-import { pickProviderContent } from '@/lib/i18n/content'
+import { pickProviderContent, pickCategoryName } from '@/lib/i18n/content'
 import { formatPrice, formatDuration } from '@/lib/format'
+import { dateTimeFormat } from '@/lib/intl'
+import { parseOpeningHours } from '@/lib/hours'
 import { resolveImageUrl } from '@/lib/images'
 import { platformName } from '@/lib/url'
 
@@ -93,8 +100,20 @@ export default async function ProviderPage({
   )
   // A place's first venue photo is its cover (DESIGN); fall back to cover_image.
   const image = resolveImageUrl(provider.venue_photos?.[0] ?? provider.cover_image)
-  const languages = serviceLanguageBadges(provider.provider_languages)
   const credentials = providerCredentials(provider)
+  // Verified, non-expired service languages → the trust InfoBlock (DESIGN §5).
+  const verified = verifiedLanguageSummary(provider.provider_languages)
+  const verifiedOn = verified.verifiedAt
+    ? dateTimeFormat(locale, { timeZone: 'Europe/London', day: 'numeric', month: 'short', year: 'numeric' }).format(
+        new Date(verified.verifiedAt),
+      )
+    : null
+  const langLabel =
+    verified.names.length === 1
+      ? t('trust.oneVerified', { lang: verified.names[0] })
+      : verified.names.length > 1
+        ? t('trust.manyVerified', { langs: verified.names.join(', ') })
+        : null
   const isExternal = provider.fulfillment_type === 'external_order'
   // A place that opts out of bookings (booking_enabled=false) is a listing only.
   const isNative = provider.fulfillment_type === 'native_booking' && provider.booking_enabled
@@ -153,9 +172,8 @@ export default async function ProviderPage({
     <>
       <Header />
       <JsonLd data={businessLd} />
-      {/* pb-28: off-scale on purpose — clears the mobile sticky booking bar. */}
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
-        <BackButton />
+      {/* pb-cta: reserves room below content for the mobile CTA + floating nav. */}
+      <main className={`mx-auto w-full max-w-3xl flex-1 px-4 ${cta ? 'pb-cta' : 'pb-8'} sm:pb-8`}>
         <RecordRecentView
           item={{
             slug: provider.slug,
@@ -166,7 +184,9 @@ export default async function ProviderPage({
           }}
         />
 
-        <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
+        {/* Full-width photo (~210px) with overlay controls (DESIGN §7). Full-bleed
+            on mobile (-mx-4), inset + rounded on desktop. */}
+        <div className="relative -mx-4 h-52 overflow-hidden bg-slate-100 sm:mx-0 sm:mt-4 sm:rounded-lg">
           {image ? (
             <Image
               src={image}
@@ -178,55 +198,56 @@ export default async function ProviderPage({
             />
           ) : (
             // No photo (e.g. an unclaimed place — we don't take others' images).
-            // A calm placeholder, not a broken/loading-looking empty box.
             <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-slate-400">
               <IconPhoto className="h-10 w-10" stroke={1.5} />
               <span className="text-body">{name}</span>
             </div>
           )}
+          <div className="absolute left-3 top-3">
+            <BackButton floating />
+          </div>
+          <SaveHeart big />
+          {(provider.venue_photos?.length ?? 0) > 1 && (
+            <span className="absolute bottom-3 right-3 rounded-full bg-slate-900/70 px-2 py-1 text-meta font-semibold text-white">
+              {t('provider.photoCount', { current: 1, total: provider.venue_photos!.length })}
+            </span>
+          )}
         </div>
 
         <div className="py-6">
-          <h1 className="text-title font-semibold">{name}</h1>
-          <p className="mt-1 text-slate-500">{provider.borough}</p>
-          {languages.length > 0 && (
-            // Reference line only — service languages are not a filter (DESIGN §1).
-            // The badge is about the SERVICE ("service in X confirmed"), never
-            // about the person — see DESIGN «Формулировки».
-            <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-body text-slate-500">
-              <span>{t('provider.languagesServed')}:</span>
-              {languages.map((l) =>
-                l.verified ? (
-                  <span
-                    key={l.name}
-                    title={t('provider.languageConfirmed', { language: l.name })}
-                    className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700"
-                  >
-                    {l.name}
-                    <span aria-hidden>✓</span>
-                    {l.professional && (
-                      <span className="text-meta opacity-80">· {t('provider.languageProfessional')}</span>
-                    )}
-                  </span>
-                ) : (
-                  <span key={l.name} className="text-meta text-slate-400">
-                    {l.name}
-                  </span>
-                ),
-              )}
+          <h1 className="text-name font-extrabold tracking-tight">{name}</h1>
+          <p className="mt-1 flex flex-wrap items-center gap-x-2 text-slate-500">
+            <span>{[provider.categories ? pickCategoryName(provider.categories, locale) : '', provider.borough].filter(Boolean).join(' · ')}</span>
+            {provider.entity_type === 'place' && provider.opening_hours != null && (
+              <>
+                <span aria-hidden>·</span>
+                <OpenNowInline hours={parseOpeningHours(provider.opening_hours)} />
+              </>
+            )}
+          </p>
+
+          {/* Trust, not rating (DESIGN §5): verified service language + when. */}
+          {langLabel && (
+            <div className="mt-4">
+              <InfoBlock
+                icon={IconLanguage}
+                title={langLabel}
+                subtitle={verifiedOn ? t('trust.checkedOn', { date: verifiedOn }) : t('trust.checkedByUs')}
+              />
             </div>
           )}
+
           {(credentials.insuranceVerified || credentials.dbsVerified) && (
             <div className="mt-2 flex flex-wrap items-center gap-2 text-body">
               {credentials.insuranceVerified && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
-                  <span aria-hidden>✓</span>
+                  <IconCircleCheck className="h-5 w-5" stroke={2} />
                   {t('provider.insuranceVerified')}
                 </span>
               )}
               {credentials.dbsVerified && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
-                  <span aria-hidden>✓</span>
+                  <IconCircleCheck className="h-5 w-5" stroke={2} />
                   {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
                 </span>
               )}
@@ -364,10 +385,9 @@ export default async function ProviderPage({
         </section>
       </main>
 
-      {/* Mobile: CTA pinned to the bottom. bottom-14 is off-scale on purpose —
-          it sits just above the fixed bottom nav. */}
+      {/* Mobile: CTA pinned above the floating bottom nav (DESIGN §3/§7). */}
       {cta && (
-        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white p-3 sm:hidden">
+        <div className="cta-above-nav fixed inset-x-3 z-20 rounded-full sm:hidden">
           {cta}
         </div>
       )}

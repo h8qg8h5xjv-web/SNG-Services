@@ -31,7 +31,8 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "Місця",
-    "tabServices": "Послуги"
+    "tabServices": "Послуги",
+    "freeAt": "Вільно о {time}"
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -72,7 +73,8 @@
     "dbsVerified": "DBS перевірено ({type})",
     "openNow": "Зараз відчинено",
     "closedNow": "Зараз зачинено",
-    "gallery": "Фото"
+    "gallery": "Фото",
+    "photoCount": "{current}/{total}"
   },
   "search": {
     "title": "Search",
@@ -247,7 +249,8 @@
       "other": "Інше регульоване"
     },
     "regulatedNote": "Заявка піде лише майстрам із підтвердженою реєстрацією.",
-    "noRegulatedProviders": "У каталозі поки немає майстрів із підтвердженою реєстрацією для цієї роботи. Передати її безпечно ми не можемо."
+    "noRegulatedProviders": "У каталозі поки немає майстрів із підтвердженою реєстрацією для цієї роботи. Передати її безпечно ми не можемо.",
+    "confirmedTitle": "Готово"
   },
   "business": {
     "cabinet": "Кабінет",
@@ -321,5 +324,13 @@
     "sent": "Дякуємо — заявку отримано, ми зв’яжемося з вами.",
     "needContact": "Залиште email або телефон, щоб ми могли відповісти.",
     "formError": "Не вдалося надіслати. Спробуйте ще раз."
+  },
+  "trust": {
+    "homeTitle": "Мову перевірено в кожного",
+    "homeSubtitle": "ми телефонуємо майстру самі",
+    "oneVerified": "{lang} перевірено",
+    "manyVerified": "{langs} перевірено",
+    "checkedOn": "Перевірено {date}",
+    "checkedByUs": "Ми телефонували майстру самі"
   }
 }

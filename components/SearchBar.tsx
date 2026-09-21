@@ -4,8 +4,6 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { IconSearch } from '@tabler/icons-react'
 import { useRouter } from '@/i18n/navigation'
-import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui/Button'
 
 export default function SearchBar({
   initialQuery = '',
@@ -31,19 +29,26 @@ export default function SearchBar({
   }
 
   return (
-    <form role="search" onSubmit={onSubmit} className="flex w-full max-w-xl gap-2">
-      <Input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={t('searchPlaceholder')}
-        aria-label={t('searchPlaceholder')}
-        className="flex-1"
-      />
-      <Button type="submit">
-        <IconSearch className="h-5 w-5" stroke={2} />
-        <span className="sr-only sm:not-sr-only">{t('search')}</span>
-      </Button>
+    <form role="search" onSubmit={onSubmit} className="w-full max-w-xl">
+      {/* Pill search field with a leading magnifier (DESIGN-SYSTEM §2). Submits on
+          Enter; the icon doubles as the visible affordance. */}
+      <div className="relative">
+        <IconSearch
+          className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"
+          stroke={2}
+        />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchPlaceholder')}
+          className="min-h-12 w-full rounded-full border-medium border-slate-900 bg-white pl-11 pr-4 text-body"
+        />
+        <button type="submit" className="sr-only">
+          {t('search')}
+        </button>
+      </div>
     </form>
   )
 }
