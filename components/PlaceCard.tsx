@@ -35,7 +35,7 @@ export default function PlaceCard({ card }: { card: ProviderCardVM }) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           overlay={
             <>
-              <SaveHeart />
+              <SaveHeart slug={card.slug} />
               {open !== null && (
                 <span className="absolute left-2 top-2">
                   <StatusBadge tone={open ? 'success' : 'neutral'}>

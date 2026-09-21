@@ -53,7 +53,7 @@ export default function ProviderCard({
               <IconPhoto className="h-8 w-8" stroke={1.5} />
             </span>
           )}
-          <SaveHeart />
+          <SaveHeart slug={card.slug} />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col">

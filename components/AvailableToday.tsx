@@ -42,7 +42,7 @@ export default function AvailableToday({
                     {image && (
                       <Image src={image} alt="" fill sizes="176px" className="object-cover" />
                     )}
-                    <SaveHeart />
+                    <SaveHeart slug={p.slug} />
                     <span className="absolute bottom-2 left-2 rounded-full bg-green-700 px-2 py-1 text-meta font-semibold text-white">
                       {t('freeAt', { time: timeFmt.format(new Date(p.nextSlot)) })}
                     </span>

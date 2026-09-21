@@ -206,7 +206,7 @@ export default async function ProviderPage({
           <div className="absolute left-3 top-3">
             <BackButton floating />
           </div>
-          <SaveHeart big />
+          <SaveHeart big slug={provider.slug} />
           {(provider.venue_photos?.length ?? 0) > 1 && (
             <span className="absolute bottom-3 right-3 rounded-full bg-slate-900/70 px-2 py-1 text-meta font-semibold text-white">
               {t('provider.photoCount', { current: 1, total: provider.venue_photos!.length })}

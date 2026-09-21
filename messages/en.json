@@ -332,5 +332,11 @@
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
     "checkedByUs": "We called the master ourselves"
+  },
+  "saved": {
+    "title": "Saved",
+    "empty": "Nothing saved yet",
+    "add": "Save",
+    "remove": "Remove from saved"
   }
 }
