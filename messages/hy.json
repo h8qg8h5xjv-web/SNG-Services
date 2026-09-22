@@ -59,14 +59,15 @@
     "priceOnRequest": "Price on request",
     "sortNewest": "Սկզբում նորերը",
     "filterTravels": "Տնային այց",
-    "filterVerified": "Միայն ստուգվածները",
+    "filterVerified": "Փաստաթղթերը ստուգված են",
     "emptyCallTitle": "Այստեղ դեռ ոչ ոք չկա — մենք լրացնում ենք կատալոգը։",
     "emptyCallBody": "Աշխատո՞ւմ եք այս ոլորտում։ Տեղադրեք ձեր քարտը և կտեսնեն առաջինը։",
     "emptyCallCta": "Տեղադրել քարտը",
     "seoTitle": "{category} — ռուսախոս վարպետներ, Լոնդոն",
     "seoTitleBorough": "{category} {borough}-ում — ռուսերենով",
     "seoDescription": "Գտեք «{category}» կատեգորիայի ռուսախոս վարպետներ Լոնդոնում՝ ստուգված լեզու, արագ հայտեր, առցանց ամրագրում։",
-    "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։"
+    "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։",
+    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -372,5 +373,13 @@
     "empty": "Nothing saved yet",
     "add": "Save",
     "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Տեղադրել հավելվածը",
+    "installBody": "Ավելացրեք SNG Services գլխավոր էկրանին՝ արագ մուտքի համար.",
+    "installButton": "Տեղադրել",
+    "close": "Փակել",
+    "iosBefore": "Տեղադրելու համար՝ սեղմեք",
+    "iosAfter": "→ «Գլխավոր էկրանին»."
   }
 }

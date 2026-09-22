@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import { Inter } from 'next/font/google'
 import { notFound } from 'next/navigation'
@@ -10,6 +10,7 @@ import { ogLocale } from '@/i18n/locales'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
+import InstallPrompt from '@/components/InstallPrompt'
 import '../../globals.css'
 
 // Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
@@ -23,6 +24,9 @@ const inter = Inter({
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
+// Accent theme colour for the browser UI / installed app (PWA, idea #8).
+export const viewport: Viewport = { themeColor: '#1e40af' }
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -49,6 +53,12 @@ export async function generateMetadata({
     title: { default: t('title'), template: `%s · ${t('title')}` },
     description: t('description'),
     alternates: { languages },
+    manifest: '/manifest.webmanifest',
+    icons: {
+      icon: '/icons/icon-192.png',
+      apple: '/icons/apple-touch-icon.png',
+    },
+    appleWebApp: { capable: true, title: t('title'), statusBarStyle: 'default' },
     openGraph: {
       type: 'website',
       siteName: t('title'),
@@ -85,6 +95,7 @@ export default async function LocaleLayout({
           {children}
           <Footer />
           <BottomNav />
+          <InstallPrompt />
         </NextIntlClientProvider>
       </body>
     </html>

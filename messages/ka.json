@@ -59,14 +59,15 @@
     "priceOnRequest": "Price on request",
     "sortNewest": "ჯერ ახლები",
     "filterTravels": "ბინაზე გამოძახება",
-    "filterVerified": "მხოლოდ დადასტურებული",
+    "filterVerified": "დოკუმენტები დადასტურებულია",
     "emptyCallTitle": "აქ ჯერ არავინაა — კატალოგს ვავსებთ.",
     "emptyCallBody": "ამ სფეროში მუშაობთ? განათავსეთ თქვენი ბარათი და პირველი დაგინახავენ.",
     "emptyCallCta": "ბარათის განთავსება",
     "seoTitle": "{category} — რუსულენოვანი ოსტატები, ლონდონი",
     "seoTitleBorough": "{category} {borough}-ში — რუსულად",
     "seoDescription": "იპოვეთ «{category}» კატეგორიის რუსულენოვანი ოსტატები ლონდონში: დადასტურებული ენა, სწრაფი განაცხადები, ონლაინ ჯავშანი.",
-    "seoDescriptionBorough": "რუსულენოვანი «{category}» ოსტატები {borough}-ში, ლონდონი — დადასტურებული ენა და ონლაინ ჯავშანი."
+    "seoDescriptionBorough": "რუსულენოვანი «{category}» ოსტატები {borough}-ში, ლონდონი — დადასტურებული ენა და ონლაინ ჯავშანი.",
+    "orderNote": "რიგი: ნაგულისხმევად ანბანურად; შეგიძლიათ დაალაგოთ ფასით ან სიახლით."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -372,5 +373,13 @@
     "empty": "Nothing saved yet",
     "add": "Save",
     "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "აპლიკაციის დაყენება",
+    "installBody": "დაამატეთ SNG Services მთავარ ეკრანზე სწრაფი წვდომისთვის.",
+    "installButton": "დაყენება",
+    "close": "დახურვა",
+    "iosBefore": "დასაყენებლად: შეეხეთ",
+    "iosAfter": "→ «მთავარ ეკრანზე დამატება»."
   }
 }

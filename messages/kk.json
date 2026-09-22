@@ -59,14 +59,15 @@
     "priceOnRequest": "Price on request",
     "sortNewest": "Алдымен жаңалары",
     "filterTravels": "Үйге шығу",
-    "filterVerified": "Тек тексерілгендер",
+    "filterVerified": "Құжаттар тексерілген",
     "emptyCallTitle": "Мұнда әзірге ешкім жоқ — біз каталогты толтырып жатырмыз.",
     "emptyCallBody": "Осы салада жұмыс істейсіз бе? Картаңызды орналастырыңыз, сізді бірінші көреді.",
     "emptyCallCta": "Карта орналастыру",
     "seoTitle": "{category} — орыс тілді мамандар, Лондон",
     "seoTitleBorough": "{borough} ауданындағы {category} — орысша",
     "seoDescription": "Лондондағы «{category}» санатының орыс тілді мамандарын табыңыз: тексерілген тіл, жылдам өтінімдер, онлайн жазылу.",
-    "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу."
+    "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу.",
+    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -372,5 +373,13 @@
     "empty": "Nothing saved yet",
     "add": "Save",
     "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Қолданбаны орнату",
+    "installBody": "Жылдам қол жеткізу үшін SNG Services-ті негізгі экранға қосыңыз.",
+    "installButton": "Орнату",
+    "close": "Жабу",
+    "iosBefore": "Орнату: басыңыз",
+    "iosAfter": "→ «Негізгі экранға»."
   }
 }

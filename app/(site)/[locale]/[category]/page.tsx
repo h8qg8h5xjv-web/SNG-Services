@@ -115,6 +115,9 @@ export default async function CategoryPage({
           <p className="mt-1 text-body text-slate-500">
             {t('providersCount', { count: all.length })}
           </p>
+          {all.length > 0 && (
+            <p className="mt-2 text-meta text-slate-400">{t('orderNote')}</p>
+          )}
         </div>
 
         {all.length > 0 && (

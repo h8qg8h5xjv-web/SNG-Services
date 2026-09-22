@@ -59,14 +59,15 @@
     "priceOnRequest": "Price on request",
     "sortNewest": "Newest",
     "filterTravels": "Home visits",
-    "filterVerified": "Verified only",
+    "filterVerified": "Documents verified",
     "emptyCallTitle": "No one here yet — we're building the catalogue.",
     "emptyCallBody": "Work in this field? List your card and be seen first.",
     "emptyCallCta": "List your card",
     "seoTitle": "{category} — Russian-speaking masters, London",
     "seoTitleBorough": "{category} in {borough} — in Russian",
     "seoDescription": "Find Russian-speaking {category} masters in London: verified language, quick requests, online booking.",
-    "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking."
+    "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking.",
+    "orderNote": "Order: alphabetical by default; you can sort by price or newest."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -372,5 +373,13 @@
     "empty": "Nothing saved yet",
     "add": "Save",
     "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Install the app",
+    "installBody": "Add SNG Services to your home screen for quick access.",
+    "installButton": "Install",
+    "close": "Close",
+    "iosBefore": "To install: tap",
+    "iosAfter": "→ Add to Home Screen."
   }
 }

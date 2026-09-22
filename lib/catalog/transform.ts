@@ -71,8 +71,6 @@ export type ProviderCardVM = {
   travelsToClient: boolean
   // Card entered from public data with no owner yet — shows an honest source note.
   unclaimed: boolean
-  // Trust signal (DESIGN §5): at least one verified, non-expired language or credential.
-  isVerified: boolean
   // Native names of languages with a live 'verified' badge — trust signal on the
   // card in place of a rating (DESIGN §5). Empty when none.
   verifiedLanguages: string[]
@@ -90,20 +88,16 @@ function credentialActive(
 }
 
 /**
- * "Verified" for the category filter (idea #5): a live verified service language,
- * or any live verified credential. Expiry is computed from expires_at — no job.
+ * "Documents verified" for the category filter (idea #5): at least one verified,
+ * non-expired credential — insurance, DBS, Gas Safe or electrical. Deliberately
+ * NOT language: every published provider already has a verified language, so a
+ * language-based filter would exclude almost no one. Expiry from expires_at, no job.
  */
-export function isVerifiedProvider(
+export function hasVerifiedDocument(
   p: ProviderWithRelations,
   now: number = Date.now(),
 ): boolean {
-  const langVerified = p.provider_languages.some(
-    (l) =>
-      l.status === 'verified' &&
-      (l.expires_at == null || Date.parse(l.expires_at) > now),
-  )
   return (
-    langVerified ||
     credentialActive(p.insurance_status, p.insurance_expires_at, now) ||
     credentialActive(p.dbs_status, p.dbs_expires_at, now) ||
     credentialActive(p.gas_safe_status, p.gas_safe_expires_at, now) ||
@@ -165,7 +159,6 @@ export function toCard(
     website: provider.website,
     travelsToClient: provider.travels_to_client,
     unclaimed: provider.claim_status === 'unclaimed',
-    isVerified: isVerifiedProvider(provider, now),
     verifiedLanguages,
     priceRange: priceRangeOf(provider),
   }
@@ -227,7 +220,7 @@ export function filterByFacets(
   return providers.filter(
     (p) =>
       (!facets.travels || p.travels_to_client) &&
-      (!facets.verifiedOnly || isVerifiedProvider(p, now)),
+      (!facets.verifiedOnly || hasVerifiedDocument(p, now)),
   )
 }
 
