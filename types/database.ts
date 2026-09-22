@@ -20,6 +20,8 @@ export type Urgency = 'today' | 'this_week' | 'flexible'
 // LEGAL D3a: which regulated activity a request touches (null = none).
 export type RegulatedKind = 'gas' | 'electrical' | 'other'
 export type CatalogRequestStatus = 'new' | 'handled' | 'dismissed'
+// Which contact channel a visitor opened on a provider card (analytics idea #4).
+export type ContactChannel = 'call' | 'message' | 'website'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -114,6 +116,7 @@ export interface Database {
           entity_type: EntityType
           claim_status: ClaimStatus
           booking_enabled: boolean
+          travels_to_client: boolean
           opening_hours: Json | null
           venue_photos: string[] | null
           travel_radius_km: number | null
@@ -167,6 +170,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null
           travel_radius_km?: number | null
@@ -220,6 +224,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null
           travel_radius_km?: number | null
@@ -605,6 +610,8 @@ export interface Database {
           description: string | null
           budget_max_pence: number | null
           status: string
+          manual_handled_at: string | null
+          manual_handled_to: string | null
           created_at: string
           expires_at: string | null
         }
@@ -626,6 +633,8 @@ export interface Database {
           description?: string | null
           budget_max_pence?: number | null
           status?: string
+          manual_handled_at?: string | null
+          manual_handled_to?: string | null
           created_at?: string
           expires_at?: string | null
         }
@@ -634,6 +643,9 @@ export interface Database {
           expires_at?: string | null
           description?: string | null
           budget_max_pence?: number | null
+          manual_handled_at?: string | null
+          manual_handled_to?: string | null
+          customer_id?: string | null
         }
         Relationships: []
       }
@@ -757,6 +769,8 @@ export interface Database {
           category_id: string | null
           locale: string | null
           search_query: string | null
+          contact_channel: ContactChannel | null
+          user_id: string | null
           occurred_at: string
         }
         Insert: {
@@ -769,6 +783,8 @@ export interface Database {
           category_id?: string | null
           locale?: string | null
           search_query?: string | null
+          contact_channel?: ContactChannel | null
+          user_id?: string | null
           occurred_at?: string
         }
         Update: {
@@ -780,6 +796,7 @@ export interface Database {
           session_id?: string | null
           category_id?: string | null
           locale?: string | null
+          contact_channel?: ContactChannel | null
           occurred_at?: string
         }
         Relationships: [
@@ -900,6 +917,89 @@ export interface Database {
         }
         Update: {
           status?: CatalogRequestStatus
+        }
+        Relationships: []
+      }
+      event_attendees: {
+        Row: {
+          id: string
+          event_id: string
+          session_id: string | null
+          display_name: string | null
+          is_visible_to_group: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          session_id?: string | null
+          display_name?: string | null
+          is_visible_to_group?: boolean
+          created_at?: string
+        }
+        Update: {
+          display_name?: string | null
+          is_visible_to_group?: boolean
+        }
+        Relationships: []
+      }
+      user_sync: {
+        Row: {
+          user_id: string
+          saved: string[]
+          requests: Json
+          display_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          saved?: string[]
+          requests?: Json
+          display_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          saved?: string[]
+          requests?: Json
+          display_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notification_queue: {
+        Row: {
+          id: string
+          provider_id: string | null
+          provider_name: string | null
+          recipient_phone: string | null
+          recipient_emails: string[] | null
+          kind: string | null
+          request_ref: string | null
+          subject: string
+          body: string
+          cta_path: string | null
+          status: 'unsent' | 'sent'
+          created_at: string
+          sent_at: string | null
+        }
+        Insert: {
+          id?: string
+          provider_id?: string | null
+          provider_name?: string | null
+          recipient_phone?: string | null
+          recipient_emails?: string[] | null
+          kind?: string | null
+          request_ref?: string | null
+          subject: string
+          body: string
+          cta_path?: string | null
+          status?: 'unsent' | 'sent'
+          created_at?: string
+          sent_at?: string | null
+        }
+        Update: {
+          status?: 'unsent' | 'sent'
+          sent_at?: string | null
         }
         Relationships: []
       }

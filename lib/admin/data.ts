@@ -74,6 +74,7 @@ export type AdminProviderDetail = {
   entity_type: EntityType
   claim_status: ClaimStatus
   booking_enabled: boolean
+  travels_to_client: boolean
   travel_radius_km: number | null
   opening_hours: Json | null
   venue_photos: string[] | null
@@ -119,7 +120,7 @@ export async function getAdminProvider(id: string): Promise<AdminProviderDetail 
     .from('providers')
     .select(
       'id, slug, name_en, description_en, category_id, borough, address, lat, lng, phone, telegram, instagram, website, cover_image, fulfillment_type, external_order_url, status, ' +
-        'entity_type, claim_status, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
+        'entity_type, claim_status, booking_enabled, travels_to_client, travel_radius_km, opening_hours, venue_photos, ' +
         'insurance_status, insurance_verified_at, insurance_expires_at, insurance_document_ref, insurance_note, ' +
         'dbs_status, dbs_type, dbs_verified_at, dbs_expires_at, dbs_document_ref, dbs_note, ' +
         'gas_safe_status, gas_safe_number, gas_safe_verified_at, gas_safe_expires_at, gas_safe_note, ' +

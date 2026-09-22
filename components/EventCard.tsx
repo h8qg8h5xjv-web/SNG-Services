@@ -7,7 +7,9 @@ import { resolveImageUrl } from '@/lib/images'
 import { Card } from '@/components/ui/Card'
 import Tilt from '@/components/Tilt'
 import Reveal from '@/components/Reveal'
+import Attendance from '@/components/events/Attendance'
 import type { EventListItem } from '@/lib/queries/events'
+import type { EventAttendance } from '@/lib/events/attendance'
 
 const TZ = 'Europe/London'
 
@@ -18,9 +20,11 @@ const TZ = 'Europe/London'
 export default function EventCard({
   event,
   locale,
+  attendance,
 }: {
   event: EventListItem
   locale: string
+  attendance?: EventAttendance
 }) {
   const t = useTranslations()
   const title = pickEventTitle(event, locale)
@@ -73,6 +77,11 @@ export default function EventCard({
             <div className="absolute inset-x-3 bottom-3">
               <h3 className="text-body font-semibold text-white">{title}</h3>
               {meta && <p className="text-meta text-white">{meta}</p>}
+              {attendance && attendance.total > 0 && (
+                <div className="mt-1.5">
+                  <Attendance data={attendance} dark />
+                </div>
+              )}
             </div>
           </div>
         </Card>

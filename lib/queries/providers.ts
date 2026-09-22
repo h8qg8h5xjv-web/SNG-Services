@@ -3,6 +3,7 @@ import type {
   FulfillmentType,
   LanguageVerificationStatus,
   EntityType,
+  ClaimStatus,
   CredentialStatus,
   DbsType,
   Json,
@@ -12,11 +13,13 @@ import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
 const LIST_SELECT =
   'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, ' +
-  'entity_type, booking_enabled, opening_hours, phone, website, created_at, ' +
+  'entity_type, booking_enabled, travels_to_client, claim_status, opening_hours, phone, website, created_at, ' +
+  'insurance_status, insurance_expires_at, dbs_status, dbs_expires_at, ' +
+  'gas_safe_status, gas_safe_expires_at, electrical_status, electrical_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
-  'provider_languages(language_code)'
+  'provider_languages(language_code,status,expires_at,languages(name_native))'
 
 export async function listProvidersByCategory(
   categoryId: string,
@@ -64,7 +67,9 @@ export type ProviderDetail = {
   fulfillment_type: FulfillmentType
   external_order_url: string | null
   entity_type: EntityType
+  claim_status: ClaimStatus
   booking_enabled: boolean
+  travels_to_client: boolean
   travel_radius_km: number | null
   opening_hours: Json | null
   venue_photos: string[] | null
@@ -88,6 +93,7 @@ export type ProviderDetail = {
   provider_languages: {
     status: LanguageVerificationStatus
     expires_at: string | null
+    verified_at: string | null
     professional_level: boolean
     languages: { code: string; name_native: string } | null
   }[]
@@ -103,12 +109,12 @@ export type ProviderDetail = {
 const DETAIL_SELECT =
   'id, slug, name_en, description_en, borough, address, lat, lng, phone, telegram, instagram, website, ' +
   'cover_image, fulfillment_type, external_order_url, ' +
-  'entity_type, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
+  'entity_type, claim_status, booking_enabled, travels_to_client, travel_radius_km, opening_hours, venue_photos, ' +
   'insurance_status, insurance_expires_at, dbs_status, dbs_type, dbs_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(id,name_en,name_ru,description_en,description_ru,price_pence,duration_min,capacity), ' +
-  'provider_languages(status,expires_at,professional_level,languages(code,name_native)), ' +
+  'provider_languages(status,expires_at,verified_at,professional_level,languages(code,name_native)), ' +
   'schedules(day_of_week,start_time,end_time), ' +
   'schedule_exceptions(exception_date,is_closed,start_time,end_time)'
 
@@ -138,6 +144,31 @@ export function serviceLanguageBadges(
         : [],
     )
     .sort((a, b) => Number(b.verified) - Number(a.verified) || a.name.localeCompare(b.name))
+}
+
+export type VerifiedLanguageSummary = { names: string[]; verifiedAt: string | null }
+
+/**
+ * Verified (non-expired) service languages for the trust block (DESIGN §5):
+ * their native names and the latest verification date. `now` defaults here so the
+ * caller (a server component) stays pure.
+ */
+export function verifiedLanguageSummary(
+  rows: ProviderDetail['provider_languages'],
+  now: number = Date.now(),
+): VerifiedLanguageSummary {
+  const live = rows.filter(
+    (l) =>
+      l.status === 'verified' &&
+      l.languages != null &&
+      (l.expires_at === null || Date.parse(l.expires_at) > now),
+  )
+  const verifiedAt = live
+    .map((l) => l.verified_at)
+    .filter((v): v is string => v != null)
+    .sort()
+    .at(-1) ?? null
+  return { names: live.map((l) => l.languages!.name_native), verifiedAt }
 }
 
 export type ProviderCredentials = {

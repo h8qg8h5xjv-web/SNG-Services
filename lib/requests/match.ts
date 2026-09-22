@@ -60,6 +60,33 @@ function eligibleForRegulation(p: MatchProvider, kind: MatchRequest['regulated_k
   }
 }
 
+// §1: everyone who COULD be asked across all waves (the broadcast reach). Used
+// before creating a request to decide broadcast vs manual. A specific-master
+// request is a direct ask, not a broadcast, so it always counts as reachable.
+const MAX_WAVE = 3
+export function eligibleProviderIds(
+  request: MatchRequest,
+  pool: MatchProvider[],
+  now: Date,
+): string[] {
+  if (request.target_provider_id) {
+    return matchProviders(request, 1, pool, now)
+  }
+  const ids = new Set<string>()
+  for (let wave = 1; wave <= MAX_WAVE; wave++) {
+    for (const id of matchProviders(request, wave, pool, now)) ids.add(id)
+  }
+  return [...ids]
+}
+
+export function eligibleProviderCount(
+  request: MatchRequest,
+  pool: MatchProvider[],
+  now: Date,
+): number {
+  return eligibleProviderIds(request, pool, now).length
+}
+
 export function matchProviders(
   request: MatchRequest,
   wave: number,

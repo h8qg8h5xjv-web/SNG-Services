@@ -18,7 +18,7 @@ export default function InviteOwner({ providerId }: { providerId: string }) {
         typeof window !== 'undefined'
           ? window.location.origin
           : process.env.NEXT_PUBLIC_SITE_URL ?? ''
-      setLink(`${base}/business/claim?token=${result.token}`)
+      setLink(`${base}/ru/cabinet/claim?token=${result.token}`)
     } else {
       setError(result.error)
     }

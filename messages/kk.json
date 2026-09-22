@@ -13,7 +13,8 @@
     "home": "Home",
     "events": "Events",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cabinet": "Кабинет"
   },
   "language": {
     "label": "Language",
@@ -31,7 +32,18 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "Орындар",
-    "tabServices": "Қызметтер"
+    "tabServices": "Қызметтер",
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "Бұл қалай жұмыс істейді",
+      "step1": "Тапсырманы сипаттаңыз",
+      "step2": "Мамандар минут ішінде жауап береді",
+      "step3": "Жазылу дайын"
+    },
+    "masters": {
+      "title": "Сіз маман немесе бизнес жүргізесіз бе? Орыс тілді клиенттерден өтінімдер алыңыз.",
+      "cta": "Толығырақ"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -45,7 +57,18 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "Алдымен жаңалары",
+    "filterTravels": "Үйге шығу",
+    "filterVerified": "Құжаттар тексерілген",
+    "emptyCallTitle": "Мұнда әзірге ешкім жоқ — біз каталогты толтырып жатырмыз.",
+    "emptyCallBody": "Осы салада жұмыс істейсіз бе? Картаңызды орналастырыңыз, сізді бірінші көреді.",
+    "emptyCallCta": "Карта орналастыру",
+    "seoTitle": "{category} — орыс тілді мамандар, Лондон",
+    "seoTitleBorough": "{borough} ауданындағы {category} — орысша",
+    "seoDescription": "Лондондағы «{category}» санатының орыс тілді мамандарын табыңыз: тексерілген тіл, жылдам өтінімдер, онлайн жазылу.",
+    "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу.",
+    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -72,7 +95,13 @@
     "dbsVerified": "DBS тексерілді ({type})",
     "openNow": "Қазір ашық",
     "closedNow": "Қазір жабық",
-    "gallery": "Фото"
+    "gallery": "Фото",
+    "photoCount": "{current}/{total}",
+    "call": "Қоңырау шалу",
+    "message": "Жазу",
+    "unclaimed": "Ашық дереккөздер бойынша жасалған",
+    "claimCta": "Бұл сіз бе? Картаны алыңыз",
+    "servicesUnknown": "Маманнан сұраңыз."
   },
   "search": {
     "title": "Search",
@@ -102,7 +131,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# адам барады} other {# адам барады}}",
+    "imGoing": "Барамын",
+    "notGoing": "Бармаймын",
+    "youAreGoing": "Сіз барасыз",
+    "goingNamePlaceholder": "Атыңыз (міндетті емес)"
   },
   "eventCategory": {
     "concert": "Concert",
@@ -223,7 +257,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Қолмен беріледі",
+      "handled": "Маманға берілді"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -247,7 +283,10 @@
       "other": "Other regulated"
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
-    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
+    "confirmedTitle": "Done",
+    "manualTitle": "Өтінімді қолмен береміз",
+    "manualBody": "Бұл ауданда мамандар әзірге аз. Біз өтінімді қолмен береміз және бір күн ішінде жауап береміз. Өтінім нөмірі: {ref}."
   },
   "business": {
     "cabinet": "Business",
@@ -293,12 +332,78 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "Соңғы 30 күн",
+      "views": "Карта қаралымдары",
+      "contacts": "Байланыс ашылымдары",
+      "requests": "Өтінімдер"
+    },
+    "settings": {
+      "title": "Параметрлер",
+      "travels": "Үйге шығамын",
+      "travelsHint": "«Үйге шығу» сүзгісінде көріну."
+    },
+    "tabs": {
+      "requests": "Өтінімдер",
+      "profile": "Профиль",
+      "languages": "Тілдер",
+      "services": "Қызметтер",
+      "bookings": "Жазбалар",
+      "schedule": "Кесте"
+    },
+    "profile": {
+      "descriptionRu": "Сипаттама (орысша)",
+      "descriptionEn": "Сипаттама (English)",
+      "borough": "Аудан",
+      "address": "Мекенжай",
+      "phone": "Телефон",
+      "website": "Сайт",
+      "travels": "Үйге шығамын",
+      "photos": "Фото ({max} дейін)",
+      "cover": "Мұқаба",
+      "makeCover": "Мұқаба ету",
+      "removePhoto": "Фотоны жою",
+      "save": "Сақтау",
+      "saving": "Сақталуда…",
+      "saved": "Сақталды"
+    },
+    "languages": {
+      "hint": "Жұмыс істейтін тілдерді белгілеңіз. Әрқайсысын әкімші растайды.",
+      "verified": "Расталған",
+      "pending": "Тексерілуде",
+      "claim": "Мәлімдеу",
+      "remove": "Алып тастау"
+    },
+    "services": {
+      "priceHint": "Бағасы £, ұзақтығы минутпен.",
+      "name": "Атауы",
+      "price": "Баға £",
+      "duration": "Минут",
+      "save": "Сақтау",
+      "add": "Қосу",
+      "delete": "Жою"
+    },
+    "bookings": {
+      "empty": "Әзірге жазбалар жоқ.",
+      "status": {
+        "confirmed": "Расталған",
+        "pending": "Күтуде",
+        "cancelled": "Бас тартылған"
+      }
+    },
+    "schedule": {
+      "hint": "Міндетті емес. Тек онлайн жазылу үшін.",
+      "save": "Сақтау",
+      "saving": "Сақталуда…",
+      "saved": "Сақталды"
+    }
   },
   "footer": {
     "forBusiness": "For business",
     "terms": "Terms",
-    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch.",
+    "privacy": "Құпиялылық"
   },
   "forBusiness": {
     "title": "For business",
@@ -321,5 +426,143 @@
     "sent": "Thanks — we’ve got your request and will be in touch.",
     "needContact": "Leave an email or a phone so we can reply.",
     "formError": "Could not send. Try again."
+  },
+  "trust": {
+    "homeTitle": "Language verified for everyone",
+    "homeSubtitle": "we call the master ourselves",
+    "oneVerified": "{lang} verified",
+    "manyVerified": "{langs} verified",
+    "checkedOn": "Verified {date}",
+    "checkedByUs": "We called the master ourselves"
+  },
+  "saved": {
+    "title": "Saved",
+    "empty": "Nothing saved yet",
+    "add": "Save",
+    "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Қолданбаны орнату",
+    "installBody": "Жылдам қол жеткізу үшін SNG Services-ті негізгі экранға қосыңыз.",
+    "installButton": "Орнату",
+    "close": "Жабу",
+    "iosBefore": "Орнату: басыңыз",
+    "iosAfter": "→ «Негізгі экранға»."
+  },
+  "profile": {
+    "loading": "Жүктелуде…",
+    "bookingsEmpty": "Әзірге жазбалар жоқ.",
+    "upcoming": "Алдағы",
+    "past": "Өткен",
+    "myRequests": "Менің өтінімдерім",
+    "myBookings": "Менің жазбаларым",
+    "account": "Аккаунт",
+    "dataTitle": "Менің деректерім",
+    "download": "Деректерімді жүктеу",
+    "deleteTitle": "Деректерімді жою",
+    "deleteHint": "Өтінімдерді, жазбаларды және сақталғанды жояды. Растау үшін {word} деп теріңіз.",
+    "deleteWord": "ЖОЮ",
+    "deleteMismatch": "Растау үшін {word} дәл теріңіз.",
+    "deleteButton": "Жою",
+    "deleteDone": "Деректеріңіз жойылды.",
+    "loginHint": "Міндетті емес. Өтінімдер мен сақталғанды құрылғылар арасында тасымалдау үшін кіріңіз.",
+    "login": "Кіру",
+    "linkSent": "Поштаңызды тексеріңіз — кіру сілтемесі {email} мекенжайына жіберілді.",
+    "signedInAs": "{email} ретінде кірдіңіз",
+    "syncNow": "Аккаунтқа сақтау",
+    "restore": "Осы құрылғыға қалпына келтіру",
+    "signOut": "Шығу",
+    "syncDone": "Аккаунтқа сақталды.",
+    "restoreDone": "Осы құрылғыға қалпына келтірілді."
+  },
+  "legal": {
+    "consent": "Жіберу арқылы сіз <terms>Шарттармен</terms> және <privacy>Құпиялылық саясатымен</privacy> келісесіз."
+  },
+  "privacy": {
+    "title": "Құпиялылық саясаты",
+    "draftNote": "Жоба. [Жақшадағы] деректер іске қосуға дейін толтырылады.",
+    "operator": "Оператор: [АТАУЫ], [МЕКЕНЖАЙ]. ICO тіркеуі: [ICO НӨМІРІ]. Байланыс: [EMAIL].",
+    "collectTitle": "Нені жинаймыз",
+    "collectBody": "Өтінім немесе брон жібергенде: атыңыз, телефон, пошта және мекенжай. IP-мекенжайсыз және құрылғы деректерінсіз пайдалану аналитикасы. Сақталған карталар браузеріңізде сақталады.",
+    "retentionTitle": "Қанша сақтаймыз",
+    "retentionBody": "Өтінім мен брон деректерін қызмет ұйымдастырылып жатқанда және одан кейін ақылға қонымды мерзім сақтаймыз; аналитика жалпыланған. Деректерді кез келген уақытта жоя аласыз.",
+    "shareTitle": "Кімге береміз",
+    "shareBody": "Байланысыңызды тек өтінім немесе брон бойынша таңдалған маманға береміз. Деректерді сатпаймыз.",
+    "rightsTitle": "Сіздің құқықтарыңыз",
+    "rightsBody": "UK GDPR бойынша деректерге қол жеткізе, түзете, жүктей немесе жоя аласыз және өңдеуге қарсылық білдіре аласыз. [EMAIL] жазыңыз.",
+    "deleteTitle": "Деректерді жою",
+    "deleteBody": "Профильдегі «Деректерімді жою» түймесі өтінімдерді, брондарды және сақталғанды жояды. Сондай-ақ бәрін файлмен жүктеуге болады."
+  },
+  "terms": {
+    "title": "Пайдалану шарттары",
+    "platformTitle": "Алаң, мәміле тарапы емес",
+    "platformBody": "SNG Services клиенттерді тәуелсіз мамандармен байланыстырады. Біз сіз бен маман арасындағы мәміленің тарапы емеспіз.",
+    "responsibilityTitle": "Маманның жауапкершілігі",
+    "responsibilityBody": "Маман қызметке, оның сапасы мен бағасына, сондай-ақ қажетті тіркеу немесе сақтандыруға жауапты.",
+    "cancellationsTitle": "Бас тарту",
+    "cancellationsBody": "Өтінім немесе бронды растауға дейін бас тартуға болады. Растағаннан кейін өзгерістерді маманмен тікелей келісіңіз.",
+    "complaintsTitle": "Шағымдар",
+    "complaintsBody": "Бірдеңе дұрыс болмаса, [EMAIL] жазыңыз — қолдан келгенше көмектесеміз."
+  },
+  "cabinet": {
+    "title": "Кабинет",
+    "signOut": "Шығу",
+    "loginTitle": "Пошта арқылы кіріңіз",
+    "loginBody": "мұны жоғалтпау және өз картаңызға өтінімдер алу үшін.",
+    "login": "Кіру",
+    "loginSending": "Жіберілуде…",
+    "loginSent": "Поштаңызды тексеріңіз — сілтеме {email} мекенжайына жіберілді.",
+    "incoming": "Кіріс",
+    "myRequests": "Менің өтінімдерім",
+    "myBookings": "Менің жазбаларым",
+    "bookingsOnMyCards": "Менің карталарыма жазбалар",
+    "contacted": "Кімге жаздым",
+    "tabs": {
+      "cards": "Карталар",
+      "requests": "Өтінімдер",
+      "bookings": "Жазбалар",
+      "account": "Аккаунт"
+    },
+    "cards": {
+      "create": "Карта жасау",
+      "createSubmit": "Жасау",
+      "creating": "Жасалуда…",
+      "cancel": "Болдырмау",
+      "name": "Аты",
+      "borough": "Аудан",
+      "phone": "Телефон",
+      "languages": "Тілдер",
+      "servicesPlaceholder": "Қызметтер: Шаш қию 25 60; Маникюр 30 90",
+      "servicesHint": "Әрқайсысы: атауы, бағасы £, минут. ; арқылы бөліңіз",
+      "emptyTitle": "Сізде әзірге карта жоқ.",
+      "emptyBody": "Қызмет көрсетесіз бе? Карта жасаңыз — сізді орыс тілді клиенттер табады.",
+      "published": "Жарияланған",
+      "draft": "Тексерілуде",
+      "draftNote": "Карта тексерілуде. Тілді растау үшін қоңырау шаламыз және жариялаймыз.",
+      "backToCards": "Карталарға"
+    },
+    "account": {
+      "name": "Ашық аты",
+      "namePlaceholder": "Атыңыз",
+      "nameHint": "Міндетті емес. Жұртқа көрінуі мүмкін.",
+      "save": "Сақтау",
+      "saved": "Сақталды",
+      "email": "Пошта",
+      "download": "Деректерімді жүктеу",
+      "deleteTitle": "Аккаунтты жою",
+      "deleteWhat": "Өтінімдеріңіз, жазбаларыңыз, сақталған және карта-черновиктер жойылады.",
+      "deleteHint": "Растау үшін {word} деп теріңіз.",
+      "deleteWord": "ЖОЮ",
+      "deleteMismatch": "Дәл {word} деп теріңіз.",
+      "deleteButton": "Аккаунтты жою"
+    },
+    "claim": {
+      "title": "Картаны алу",
+      "working": "Алынуда…",
+      "success": "Карта енді сіздікі.",
+      "toCards": "Менің карталарыма",
+      "invalid": "Шақыру жарамсыз немесе мерзімі өткен.",
+      "needLogin": "Жоғарыда кіріп, сілтемені қайта ашыңыз."
+    }
   }
 }

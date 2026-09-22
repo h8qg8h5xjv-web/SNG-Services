@@ -10,6 +10,7 @@ import { formatPrice } from '@/lib/format'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea, Select } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
+import Consent from '@/components/Consent'
 import type { PriceGuide } from '@/lib/requests/price-guide'
 import type { Urgency, RegulatedKind } from '@/types/database'
 
@@ -335,6 +336,7 @@ export default function RequestForm({
       <Button type="submit" disabled={pending} className="w-full sm:w-auto">
         {pending ? t('submitting') : t('submit')}
       </Button>
+      <Consent />
     </form>
   )
 }

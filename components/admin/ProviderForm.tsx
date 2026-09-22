@@ -70,6 +70,7 @@ export default function ProviderForm({
     travel_radius_km: provider?.travel_radius_km?.toString() ?? '',
   })
   const [bookingEnabled, setBookingEnabled] = useState(provider?.booking_enabled ?? true)
+  const [travelsToClient, setTravelsToClient] = useState(provider?.travels_to_client ?? false)
   const [openingHours, setOpeningHours] = useState<OpeningHours>(
     parseOpeningHours(provider?.opening_hours) ?? {},
   )
@@ -142,6 +143,7 @@ export default function ProviderForm({
       entity_type: f.entity_type,
       claim_status: f.claim_status,
       booking_enabled: bookingEnabled,
+      travels_to_client: travelsToClient,
       travel_radius_km: f.entity_type === 'pro' ? numOrNull(f.travel_radius_km) : null,
       opening_hours: f.entity_type === 'place' ? openingHours : null,
       venue_photos: f.entity_type === 'place' ? venuePhotos : null,
@@ -352,6 +354,14 @@ export default function ProviderForm({
             onChange={(e) => setBookingEnabled(e.target.checked)}
           />
           Booking enabled
+        </label>
+        <label className="flex items-center gap-2 self-end pb-2 text-body">
+          <input
+            type="checkbox"
+            checked={travelsToClient}
+            onChange={(e) => setTravelsToClient(e.target.checked)}
+          />
+          Выезд на дом
         </label>
       </div>
 

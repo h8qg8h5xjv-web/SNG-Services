@@ -13,7 +13,8 @@
     "home": "Home",
     "events": "Events",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cabinet": "კაბინეტი"
   },
   "language": {
     "label": "Language",
@@ -31,7 +32,18 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "ადგილები",
-    "tabServices": "სერვისები"
+    "tabServices": "სერვისები",
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "როგორ მუშაობს",
+      "step1": "აღწერეთ დავალება",
+      "step2": "ოსტატები წუთებში პასუხობენ",
+      "step3": "ჯავშანი მზადაა"
+    },
+    "masters": {
+      "title": "ოსტატი ხართ თუ ბიზნესს უძღვებით? მიიღეთ განაცხადები რუსულენოვანი კლიენტებისგან.",
+      "cta": "გაიგეთ მეტი"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -45,7 +57,18 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "ჯერ ახლები",
+    "filterTravels": "ბინაზე გამოძახება",
+    "filterVerified": "დოკუმენტები დადასტურებულია",
+    "emptyCallTitle": "აქ ჯერ არავინაა — კატალოგს ვავსებთ.",
+    "emptyCallBody": "ამ სფეროში მუშაობთ? განათავსეთ თქვენი ბარათი და პირველი დაგინახავენ.",
+    "emptyCallCta": "ბარათის განთავსება",
+    "seoTitle": "{category} — რუსულენოვანი ოსტატები, ლონდონი",
+    "seoTitleBorough": "{category} {borough}-ში — რუსულად",
+    "seoDescription": "იპოვეთ «{category}» კატეგორიის რუსულენოვანი ოსტატები ლონდონში: დადასტურებული ენა, სწრაფი განაცხადები, ონლაინ ჯავშანი.",
+    "seoDescriptionBorough": "რუსულენოვანი «{category}» ოსტატები {borough}-ში, ლონდონი — დადასტურებული ენა და ონლაინ ჯავშანი.",
+    "orderNote": "რიგი: ნაგულისხმევად ანბანურად; შეგიძლიათ დაალაგოთ ფასით ან სიახლით."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -72,7 +95,13 @@
     "dbsVerified": "DBS შემოწმებულია ({type})",
     "openNow": "ახლა ღიაა",
     "closedNow": "ახლა დახურულია",
-    "gallery": "ფოტოები"
+    "gallery": "ფოტოები",
+    "photoCount": "{current}/{total}",
+    "call": "დარეკვა",
+    "message": "მისწერა",
+    "unclaimed": "შედგენილია ღია წყაროებიდან",
+    "claimCta": "ეს თქვენ ხართ? წაიღეთ ბარათი",
+    "servicesUnknown": "დააზუსტეთ ოსტატთან."
   },
   "search": {
     "title": "Search",
@@ -102,7 +131,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# ადამიანი მიდის} other {# ადამიანი მიდის}}",
+    "imGoing": "მივდივარ",
+    "notGoing": "აღარ მივდივარ",
+    "youAreGoing": "თქვენ მიდიხართ",
+    "goingNamePlaceholder": "თქვენი სახელი (არასავალდებულო)"
   },
   "eventCategory": {
     "concert": "Concert",
@@ -223,7 +257,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "გადაეცემა ხელით",
+      "handled": "გადაეცა ოსტატს"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -247,7 +283,10 @@
       "other": "Other regulated"
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
-    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
+    "confirmedTitle": "Done",
+    "manualTitle": "განაცხადს ხელით გადავცემთ",
+    "manualBody": "ამ რაიონში ოსტატები ჯერ ცოტაა. განაცხადს ხელით გადავცემთ და დღის განმავლობაში გიპასუხებთ. განაცხადის ნომერი: {ref}."
   },
   "business": {
     "cabinet": "Business",
@@ -293,12 +332,78 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "ბოლო 30 დღე",
+      "views": "ბარათის ნახვები",
+      "contacts": "კონტაქტების გახსნა",
+      "requests": "განაცხადები"
+    },
+    "settings": {
+      "title": "პარამეტრები",
+      "travels": "ბინაზე გავდივარ",
+      "travelsHint": "გამოჩნდით ფილტრში «ბინაზე გამოძახება»."
+    },
+    "tabs": {
+      "requests": "განაცხადები",
+      "profile": "პროფილი",
+      "languages": "ენები",
+      "services": "სერვისები",
+      "bookings": "ჯავშნები",
+      "schedule": "განრიგი"
+    },
+    "profile": {
+      "descriptionRu": "აღწერა (რუსულად)",
+      "descriptionEn": "აღწერა (English)",
+      "borough": "რაიონი",
+      "address": "მისამართი",
+      "phone": "ტელეფონი",
+      "website": "ვებგვერდი",
+      "travels": "ბინაზე გავდივარ",
+      "photos": "ფოტოები ({max}-მდე)",
+      "cover": "გარეკანი",
+      "makeCover": "გახადე გარეკანი",
+      "removePhoto": "ფოტოს წაშლა",
+      "save": "შენახვა",
+      "saving": "ინახება…",
+      "saved": "შენახულია"
+    },
+    "languages": {
+      "hint": "მონიშნეთ ენები, რომლებზეც მუშაობთ. თითოეულს ადმინი ადასტურებს.",
+      "verified": "დადასტურებული",
+      "pending": "შემოწმებაში",
+      "claim": "განაცხადება",
+      "remove": "წაშლა"
+    },
+    "services": {
+      "priceHint": "ფასი £-ში, ხანგრძლივობა წუთებში.",
+      "name": "დასახელება",
+      "price": "ფასი £",
+      "duration": "წუთი",
+      "save": "შენახვა",
+      "add": "დამატება",
+      "delete": "წაშლა"
+    },
+    "bookings": {
+      "empty": "ჯავშნები ჯერ არ არის.",
+      "status": {
+        "confirmed": "დადასტურებული",
+        "pending": "მოლოდინში",
+        "cancelled": "გაუქმებული"
+      }
+    },
+    "schedule": {
+      "hint": "არასავალდებულო. მხოლოდ ონლაინ ჯავშნისთვის.",
+      "save": "შენახვა",
+      "saving": "ინახება…",
+      "saved": "შენახულია"
+    }
   },
   "footer": {
     "forBusiness": "For business",
     "terms": "Terms",
-    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch.",
+    "privacy": "კონფიდენციალურობა"
   },
   "forBusiness": {
     "title": "For business",
@@ -321,5 +426,143 @@
     "sent": "Thanks — we’ve got your request and will be in touch.",
     "needContact": "Leave an email or a phone so we can reply.",
     "formError": "Could not send. Try again."
+  },
+  "trust": {
+    "homeTitle": "Language verified for everyone",
+    "homeSubtitle": "we call the master ourselves",
+    "oneVerified": "{lang} verified",
+    "manyVerified": "{langs} verified",
+    "checkedOn": "Verified {date}",
+    "checkedByUs": "We called the master ourselves"
+  },
+  "saved": {
+    "title": "Saved",
+    "empty": "Nothing saved yet",
+    "add": "Save",
+    "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "აპლიკაციის დაყენება",
+    "installBody": "დაამატეთ SNG Services მთავარ ეკრანზე სწრაფი წვდომისთვის.",
+    "installButton": "დაყენება",
+    "close": "დახურვა",
+    "iosBefore": "დასაყენებლად: შეეხეთ",
+    "iosAfter": "→ «მთავარ ეკრანზე დამატება»."
+  },
+  "profile": {
+    "loading": "იტვირთება…",
+    "bookingsEmpty": "ჯავშნები ჯერ არ არის.",
+    "upcoming": "მომავალი",
+    "past": "წარსული",
+    "myRequests": "ჩემი განაცხადები",
+    "myBookings": "ჩემი ჯავშნები",
+    "account": "ანგარიში",
+    "dataTitle": "ჩემი მონაცემები",
+    "download": "ჩამოტვირთე ჩემი მონაცემები",
+    "deleteTitle": "ჩემი მონაცემების წაშლა",
+    "deleteHint": "წაშლის განაცხადებს, ჯავშნებს და შენახულს. დასადასტურებლად აკრიფე {word}.",
+    "deleteWord": "წაშლა",
+    "deleteMismatch": "დასადასტურებლად აკრიფე ზუსტად {word}.",
+    "deleteButton": "წაშლა",
+    "deleteDone": "თქვენი მონაცემები წაიშალა.",
+    "loginHint": "არასავალდებულო. შედით, რომ განაცხადები და შენახული მოწყობილობებს შორის გადაიტანოთ.",
+    "login": "შესვლა",
+    "linkSent": "შეამოწმეთ ფოსტა — შესვლის ბმული გაიგზავნა {email}-ზე.",
+    "signedInAs": "შესული ხართ როგორც {email}",
+    "syncNow": "ანგარიშში შენახვა",
+    "restore": "ამ მოწყობილობაზე აღდგენა",
+    "signOut": "გასვლა",
+    "syncDone": "ანგარიშში შენახულია.",
+    "restoreDone": "ამ მოწყობილობაზე აღდგა."
+  },
+  "legal": {
+    "consent": "გაგზავნით თქვენ ეთანხმებით <terms>წესებს</terms> და <privacy>კონფიდენციალურობის პოლიტიკას</privacy>."
+  },
+  "privacy": {
+    "title": "კონფიდენციალურობის პოლიტიკა",
+    "draftNote": "მონახაზი. [ფრჩხილებში] მონაცემები შეივსება გაშვებამდე.",
+    "operator": "ოპერატორი: [დასახელება], [მისამართი]. ICO რეგისტრაცია: [ICO ნომერი]. კონტაქტი: [EMAIL].",
+    "collectTitle": "რას ვაგროვებთ",
+    "collectBody": "განაცხადის ან ჯავშნის გაგზავნისას: სახელი, ტელეფონი, ფოსტა და მისამართი. გამოყენების ანალიტიკა თქვენი IP-მისამართისა და მოწყობილობის მონაცემების გარეშე. შენახული ბარათები ინახება თქვენს ბრაუზერში.",
+    "retentionTitle": "რამდენ ხანს ვინახავთ",
+    "retentionBody": "განაცხადისა და ჯავშნის მონაცემებს ვინახავთ სანამ სერვისი ეწყობა და გონივრული ვადით შემდეგ; ანალიტიკა განზოგადებულია. მონაცემები ნებისმიერ დროს შეგიძლიათ წაშალოთ.",
+    "shareTitle": "ვის ვუზიარებთ",
+    "shareBody": "თქვენს კონტაქტს ვუზიარებთ მხოლოდ განაცხადზე ან ჯავშანზე შერჩეულ ოსტატს. მონაცემებს არ ვყიდით.",
+    "rightsTitle": "თქვენი უფლებები",
+    "rightsBody": "UK GDPR-ის მიხედვით შეგიძლიათ მიიღოთ, შეასწოროთ, გადმოტვირთოთ ან წაშალოთ მონაცემები და გააპროტესტოთ დამუშავება. მოგვწერეთ [EMAIL].",
+    "deleteTitle": "მონაცემების წაშლა",
+    "deleteBody": "პროფილში «ჩემი მონაცემების წაშლა» შლის განაცხადებს, ჯავშნებს და შენახულს. ასევე შეგიძლიათ ყველაფერი ფაილად ჩამოტვირთოთ."
+  },
+  "terms": {
+    "title": "გამოყენების წესები",
+    "platformTitle": "პლატფორმა, და არა გარიგების მხარე",
+    "platformBody": "SNG Services აკავშირებს კლიენტებს დამოუკიდებელ ოსტატებთან. ჩვენ არ ვართ გარიგების მხარე თქვენსა და ოსტატს შორის.",
+    "responsibilityTitle": "ოსტატის პასუხისმგებლობა",
+    "responsibilityBody": "ოსტატი პასუხისმგებელია სერვისზე, მის ხარისხსა და ფასზე, ასევე საჭირო რეგისტრაციასა თუ დაზღვევაზე.",
+    "cancellationsTitle": "გაუქმება",
+    "cancellationsBody": "განაცხადის ან ჯავშნის გაუქმება შესაძლებელია დადასტურებამდე. დადასტურების შემდეგ ცვლილებები შეათანხმეთ ოსტატთან პირდაპირ.",
+    "complaintsTitle": "საჩივრები",
+    "complaintsBody": "თუ რამე ვერ გამოვიდა, მოგვწერეთ [EMAIL] — დაგეხმარებით რითაც შევძლებთ."
+  },
+  "cabinet": {
+    "title": "კაბინეტი",
+    "signOut": "გასვლა",
+    "loginTitle": "შედით ფოსტით",
+    "loginBody": "რომ ეს არ დაკარგოთ და მიიღოთ განაცხადები თქვენს ბარათზე.",
+    "login": "შესვლა",
+    "loginSending": "იგზავნება…",
+    "loginSent": "შეამოწმეთ ფოსტა — ბმული გაიგზავნა {email}-ზე.",
+    "incoming": "შემომავალი",
+    "myRequests": "ჩემი განაცხადები",
+    "myBookings": "ჩემი ჯავშნები",
+    "bookingsOnMyCards": "ჯავშნები ჩემს ბარათებზე",
+    "contacted": "ვის მივწერე",
+    "tabs": {
+      "cards": "ბარათები",
+      "requests": "განაცხადები",
+      "bookings": "ჯავშნები",
+      "account": "ანგარიში"
+    },
+    "cards": {
+      "create": "ბარათის შექმნა",
+      "createSubmit": "შექმნა",
+      "creating": "იქმნება…",
+      "cancel": "გაუქმება",
+      "name": "სახელი",
+      "borough": "რაიონი",
+      "phone": "ტელეფონი",
+      "languages": "ენები",
+      "servicesPlaceholder": "სერვისები: შ 25 60; მ 30 90",
+      "servicesHint": "თითო: დასახელება, ფასი £, წუთი. გამოყავით ;-ით",
+      "emptyTitle": "თქვენ ჯერ არ გაქვთ ბარათი.",
+      "emptyBody": "სერვისებს სთავაზობთ? შექმენით ბარათი — რუსულენოვანი კლიენტები გნახავენ.",
+      "published": "გამოქვეყნებული",
+      "draft": "შემოწმებაში",
+      "draftNote": "ბარათი შემოწმებაშია. დაგირეკავთ ენის დასადასტურებლად და გამოვაქვეყნებთ.",
+      "backToCards": "ბარათებთან"
+    },
+    "account": {
+      "name": "საჯარო სახელი",
+      "namePlaceholder": "თქვენი სახელი",
+      "nameHint": "არასავალდებულო. შეიძლება საჯაროდ გამოჩნდეს.",
+      "save": "შენახვა",
+      "saved": "შენახულია",
+      "email": "ფოსტა",
+      "download": "ჩამოტვირთე ჩემი მონაცემები",
+      "deleteTitle": "ანგარიშის წაშლა",
+      "deleteWhat": "წაიშლება თქვენი განაცხადები, ჯავშნები, შენახული და ბარათ-მონახაზები.",
+      "deleteHint": "დასადასტურებლად აკრიფე {word}.",
+      "deleteWord": "წაშლა",
+      "deleteMismatch": "აკრიფე ზუსტად {word}.",
+      "deleteButton": "ანგარიშის წაშლა"
+    },
+    "claim": {
+      "title": "ბარათის წაღება",
+      "working": "მიმდინარეობს…",
+      "success": "ბარათი ახლა თქვენია.",
+      "toCards": "ჩემს ბარათებთან",
+      "invalid": "მოწვევა არასწორია ან ვადაგასულია.",
+      "needLogin": "შედით ზემოთ და თავიდან გახსენით ბმული."
+    }
   }
 }

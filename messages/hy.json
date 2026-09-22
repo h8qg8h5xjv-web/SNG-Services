@@ -13,7 +13,8 @@
     "home": "Home",
     "events": "Events",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cabinet": "Կաբինետ"
   },
   "language": {
     "label": "Language",
@@ -31,7 +32,18 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "Վայրեր",
-    "tabServices": "Ծառայություններ"
+    "tabServices": "Ծառայություններ",
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "Ինչպես է աշխատում",
+      "step1": "Նկարագրեք խնդիրը",
+      "step2": "Վարպետները պատասխանում են րոպեների ընթացքում",
+      "step3": "Ամրագրումը պատրաստ է"
+    },
+    "masters": {
+      "title": "Վարպե՞տ եք, թե՞ բիզնես եք վարում։ Ստացեք հայտեր ռուսախոս հաճախորդներից։",
+      "cta": "Իմանալ ավելին"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -45,7 +57,18 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "Սկզբում նորերը",
+    "filterTravels": "Տնային այց",
+    "filterVerified": "Փաստաթղթերը ստուգված են",
+    "emptyCallTitle": "Այստեղ դեռ ոչ ոք չկա — մենք լրացնում ենք կատալոգը։",
+    "emptyCallBody": "Աշխատո՞ւմ եք այս ոլորտում։ Տեղադրեք ձեր քարտը և կտեսնեն առաջինը։",
+    "emptyCallCta": "Տեղադրել քարտը",
+    "seoTitle": "{category} — ռուսախոս վարպետներ, Լոնդոն",
+    "seoTitleBorough": "{category} {borough}-ում — ռուսերենով",
+    "seoDescription": "Գտեք «{category}» կատեգորիայի ռուսախոս վարպետներ Լոնդոնում՝ ստուգված լեզու, արագ հայտեր, առցանց ամրագրում։",
+    "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։",
+    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -72,7 +95,13 @@
     "dbsVerified": "DBS ստուգված է ({type})",
     "openNow": "Բաց է հիմա",
     "closedNow": "Փակ է հիմա",
-    "gallery": "Լուսանկարներ"
+    "gallery": "Լուսանկարներ",
+    "photoCount": "{current}/{total}",
+    "call": "Զանգահարել",
+    "message": "Գրել",
+    "unclaimed": "Կազմված է բաց աղբյուրներից",
+    "claimCta": "Սա դո՞ւք եք։ Ստացեք քարտը",
+    "servicesUnknown": "Ճշտեք վարպետի մոտ."
   },
   "search": {
     "title": "Search",
@@ -102,7 +131,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# մարդ գնում է} other {# մարդ գնում է}}",
+    "imGoing": "Գնում եմ",
+    "notGoing": "Չեմ գնում",
+    "youAreGoing": "Դուք գնում եք",
+    "goingNamePlaceholder": "Ձեր անունը (ըստ ցանկության)"
   },
   "eventCategory": {
     "concert": "Concert",
@@ -223,7 +257,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Փոխանցվում է ձեռքով",
+      "handled": "Փոխանցվել է վարպետին"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -247,7 +283,10 @@
       "other": "Other regulated"
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
-    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
+    "confirmedTitle": "Done",
+    "manualTitle": "Հայտը կփոխանցենք ձեռքով",
+    "manualBody": "Այս տարածքում վարպետները դեռ քիչ են։ Մենք հայտը կփոխանցենք ձեռքով և կպատասխանենք օրվա ընթացքում։ Հայտի համարը՝ {ref}."
   },
   "business": {
     "cabinet": "Business",
@@ -293,12 +332,78 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "Վերջին 30 օրը",
+      "views": "Քարտի դիտումներ",
+      "contacts": "Կոնտակտների բացումներ",
+      "requests": "Հայտեր"
+    },
+    "settings": {
+      "title": "Կարգավորումներ",
+      "travels": "Այցելում եմ հաճախորդին",
+      "travelsHint": "Հայտնվեք «Տնային այց» զտիչում։"
+    },
+    "tabs": {
+      "requests": "Հայտեր",
+      "profile": "Պրոֆիլ",
+      "languages": "Լեզուներ",
+      "services": "Ծառայություններ",
+      "bookings": "Գրառումներ",
+      "schedule": "Ժամանակացույց"
+    },
+    "profile": {
+      "descriptionRu": "Նկարագրություն (ռուսերեն)",
+      "descriptionEn": "Նկարագրություն (English)",
+      "borough": "Թաղամաս",
+      "address": "Հասցե",
+      "phone": "Հեռախոս",
+      "website": "Կայք",
+      "travels": "Այցելում եմ հաճախորդին",
+      "photos": "Լուսանկարներ ({max}-ը)",
+      "cover": "Շապիկ",
+      "makeCover": "Դարձնել շապիկ",
+      "removePhoto": "Ջնջել լուսանկարը",
+      "save": "Պահպանել",
+      "saving": "Պահպանվում է…",
+      "saved": "Պահպանվեց"
+    },
+    "languages": {
+      "hint": "Նշեք լեզուները, որոնցով աշխատում եք. Յուրաքանչյուրը հաստատում է ադմինը.",
+      "verified": "Հաստատված",
+      "pending": "Ստուգման մեջ",
+      "claim": "Հայտարարել",
+      "remove": "Հեռացնել"
+    },
+    "services": {
+      "priceHint": "Գինը £-ով, տևողությունը րոպեներով.",
+      "name": "Անվանում",
+      "price": "Գին £",
+      "duration": "Րոպե",
+      "save": "Պահպանել",
+      "add": "Ավելացնել",
+      "delete": "Ջնջել"
+    },
+    "bookings": {
+      "empty": "Դեռ գրառումներ չկան.",
+      "status": {
+        "confirmed": "Հաստատված",
+        "pending": "Սպասման մեջ",
+        "cancelled": "Չեղարկված"
+      }
+    },
+    "schedule": {
+      "hint": "Ոչ պարտադիր. Միայն առցանց ամրագրման համար.",
+      "save": "Պահպանել",
+      "saving": "Պահպանվում է…",
+      "saved": "Պահպանվեց"
+    }
   },
   "footer": {
     "forBusiness": "For business",
     "terms": "Terms",
-    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch.",
+    "privacy": "Գաղտնիություն"
   },
   "forBusiness": {
     "title": "For business",
@@ -321,5 +426,143 @@
     "sent": "Thanks — we’ve got your request and will be in touch.",
     "needContact": "Leave an email or a phone so we can reply.",
     "formError": "Could not send. Try again."
+  },
+  "trust": {
+    "homeTitle": "Language verified for everyone",
+    "homeSubtitle": "we call the master ourselves",
+    "oneVerified": "{lang} verified",
+    "manyVerified": "{langs} verified",
+    "checkedOn": "Verified {date}",
+    "checkedByUs": "We called the master ourselves"
+  },
+  "saved": {
+    "title": "Saved",
+    "empty": "Nothing saved yet",
+    "add": "Save",
+    "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Տեղադրել հավելվածը",
+    "installBody": "Ավելացրեք SNG Services գլխավոր էկրանին՝ արագ մուտքի համար.",
+    "installButton": "Տեղադրել",
+    "close": "Փակել",
+    "iosBefore": "Տեղադրելու համար՝ սեղմեք",
+    "iosAfter": "→ «Գլխավոր էկրանին»."
+  },
+  "profile": {
+    "loading": "Բեռնվում է…",
+    "bookingsEmpty": "Դեռ գրառումներ չկան.",
+    "upcoming": "Առաջիկա",
+    "past": "Անցած",
+    "myRequests": "Իմ հայտերը",
+    "myBookings": "Իմ գրառումները",
+    "account": "Հաշիվ",
+    "dataTitle": "Իմ տվյալները",
+    "download": "Ներբեռնել իմ տվյալները",
+    "deleteTitle": "Ջնջել իմ տվյալները",
+    "deleteHint": "Ջնջում է հայտերը, գրառումները և պահպանվածը. Հաստատելու համար մուտքագրեք {word}.",
+    "deleteWord": "ՋՆՋԵԼ",
+    "deleteMismatch": "Հաստատելու համար մուտքագրեք ճշգրիտ {word}.",
+    "deleteButton": "Ջնջել",
+    "deleteDone": "Ձեր տվյալները ջնջվել են.",
+    "loginHint": "Ոչ պարտադիր. Մուտք գործեք՝ հայտերն ու պահպանվածը սարքերի միջև տեղափոխելու համար.",
+    "login": "Մուտք",
+    "linkSent": "Ստուգեք փոստը — մուտքի հղումն ուղարկվել է {email}-ին.",
+    "signedInAs": "Մուտք եք գործել որպես {email}",
+    "syncNow": "Պահուստավորել հաշվում",
+    "restore": "Վերականգնել այս սարքում",
+    "signOut": "Դուրս գալ",
+    "syncDone": "Պահուստավորվեց.",
+    "restoreDone": "Վերականգնվեց այս սարքում."
+  },
+  "legal": {
+    "consent": "Ուղարկելով՝ դուք համաձայնում եք <terms>Պայմաններին</terms> և <privacy>Գաղտնիության քաղաքականությանը</privacy>."
+  },
+  "privacy": {
+    "title": "Գաղտնիության քաղաքականություն",
+    "draftNote": "Սևագիր. [Փակագծերում] տվյալները կլրացվեն մինչ գործարկումը.",
+    "operator": "Օպերատոր՝ [ԱՆՎԱՆՈՒՄ], [ՀԱՍՑԵ]. ICO գրանցում՝ [ICO ՀԱՄԱՐ]. Կապ՝ [EMAIL].",
+    "collectTitle": "Ինչ ենք հավաքում",
+    "collectBody": "Հայտ կամ ամրագրում ուղարկելիս՝ ձեր անունը, հեռախոսը, փոստը և հասցեն. Օգտագործման վերլուծություն՝ առանց ձեր IP-հասցեի և սարքի տվյալների. Պահպանված քարտերը պահվում են ձեր բրաուզերում.",
+    "retentionTitle": "Որքան ենք պահում",
+    "retentionBody": "Հայտի և ամրագրման տվյալները պահում ենք ծառայության կազմակերպման ընթացքում և ողջամիտ ժամկետ հետո; վերլուծությունն ընդհանրացված է. Կարող եք ջնջել տվյալները ցանկացած պահի.",
+    "shareTitle": "Ում ենք փոխանցում",
+    "shareBody": "Ձեր կոնտակտները փոխանցում ենք միայն հայտով կամ ամրագրմամբ ընտրված վարպետին. Տվյալները չենք վաճառում.",
+    "rightsTitle": "Ձեր իրավունքները",
+    "rightsBody": "UK GDPR-ի համաձայն կարող եք մուտք գործել, ուղղել, ներբեռնել կամ ջնջել տվյալները և առարկել մշակմանը. Գրեք [EMAIL].",
+    "deleteTitle": "Տվյալների ջնջում",
+    "deleteBody": "Պրոֆիլում «Ջնջել իմ տվյալները» կոճակը ջնջում է հայտերը, ամրագրումները և պահպանվածը. Կարող եք նաև ամեն ինչ ներբեռնել ֆայլով."
+  },
+  "terms": {
+    "title": "Օգտագործման պայմաններ",
+    "platformTitle": "Հարթակ, ոչ գործարքի կողմ",
+    "platformBody": "SNG Services-ը կապում է հաճախորդներին անկախ վարպետների հետ. Մենք ձեր և վարպետի միջև գործարքի կողմ չենք.",
+    "responsibilityTitle": "Վարպետի պատասխանատվությունը",
+    "responsibilityBody": "Վարպետը պատասխանատու է ծառայության, դրա որակի ու գնի, ինչպես նաև անհրաժեշտ գրանցման կամ ապահովագրության համար.",
+    "cancellationsTitle": "Չեղարկումներ",
+    "cancellationsBody": "Հայտը կամ ամրագրումը կարելի է չեղարկել մինչ հաստատումը. Հաստատումից հետո փոփոխությունները համաձայնեցրեք վարպետի հետ ուղիղ.",
+    "complaintsTitle": "Բողոքներ",
+    "complaintsBody": "Եթե ինչ-որ բան սխալ ընթացավ, գրեք [EMAIL]՝ կօգնենք ինչով կկարողանանք."
+  },
+  "cabinet": {
+    "title": "Կաբինետ",
+    "signOut": "Դուրս գալ",
+    "loginTitle": "Մուտք գործեք փոստով",
+    "loginBody": "որ սա չկորցնեք և ստանաք հայտեր ձեր քարտի համար.",
+    "login": "Մուտք",
+    "loginSending": "Ուղարկվում է…",
+    "loginSent": "Ստուգեք փոստը — հղումն ուղարկվել է {email}-ին.",
+    "incoming": "Մուտքային",
+    "myRequests": "Իմ հայտերը",
+    "myBookings": "Իմ գրառումները",
+    "bookingsOnMyCards": "Գրառումներ իմ քարտերին",
+    "contacted": "Ում եմ գրել",
+    "tabs": {
+      "cards": "Քարտեր",
+      "requests": "Հայտեր",
+      "bookings": "Գրառումներ",
+      "account": "Հաշիվ"
+    },
+    "cards": {
+      "create": "Ստեղծել քարտ",
+      "createSubmit": "Ստեղծել",
+      "creating": "Ստեղծվում է…",
+      "cancel": "Չեղարկել",
+      "name": "Անուն",
+      "borough": "Թաղամաս",
+      "phone": "Հեռախոս",
+      "languages": "Լեզուներ",
+      "servicesPlaceholder": "Ծառայություններ: Սանրվածք 25 60; Մատնահարդարում 30 90",
+      "servicesHint": "Յուրաքանչյուրը՝ անվանում, գին £, րոպե. Բաժանեք ;-ով",
+      "emptyTitle": "Դուք դեռ քարտ չունեք.",
+      "emptyBody": "Ծառայություններ եք մատուցո՞ւմ։ Ստեղծեք քարտ — ձեզ կգտնեն ռուսախոս հաճախորդները.",
+      "published": "Հրապարակված",
+      "draft": "Ստուգման մեջ",
+      "draftNote": "Քարտը ստուգման մեջ է. Կզանգենք լեզուն հաստատելու և կհրապարակենք.",
+      "backToCards": "Դեպի քարտեր"
+    },
+    "account": {
+      "name": "Հրապարակային անուն",
+      "namePlaceholder": "Ձեր անունը",
+      "nameHint": "Ոչ պարտադիր. Կարող է հրապարակային ցուցադրվել.",
+      "save": "Պահպանել",
+      "saved": "Պահպանվեց",
+      "email": "Փոստ",
+      "download": "Ներբեռնել իմ տվյալները",
+      "deleteTitle": "Ջնջել հաշիվը",
+      "deleteWhat": "Կվերանան ձեր հայտերը, գրառումները, պահպանվածը և քարտ-սևագրերը.",
+      "deleteHint": "Հաստատելու համար մուտքագրեք {word}.",
+      "deleteWord": "ՋՆՋԵԼ",
+      "deleteMismatch": "Մուտքագրեք ճշգրիտ {word}.",
+      "deleteButton": "Ջնջել հաշիվը"
+    },
+    "claim": {
+      "title": "Ստանալ քարտը",
+      "working": "Ստացվում է…",
+      "success": "Քարտն այժմ ձերն է.",
+      "toCards": "Դեպի իմ քարտերը",
+      "invalid": "Հրավերն անվավեր է կամ ժամկետանց.",
+      "needLogin": "Մուտք գործեք վերևում և նորից բացեք հղումը."
+    }
   }
 }

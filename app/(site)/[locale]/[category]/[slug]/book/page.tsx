@@ -37,7 +37,7 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
         <BackButton />
-        <h1 className="mb-6 text-title font-semibold">{t('booking.title', { name })}</h1>
+        <h1 className="mb-6 text-title font-extrabold tracking-tight">{t('booking.title', { name })}</h1>
 
         {provider.fulfillment_type === 'native_booking' && provider.services.length > 0 ? (
           // "Today" is resolved on the server (London date) and passed in so the

@@ -13,7 +13,8 @@
     "home": "Home",
     "events": "Events",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cabinet": "Cabinet"
   },
   "language": {
     "label": "Language",
@@ -31,7 +32,18 @@
     "more": "More",
     "less": "Less",
     "tabPlaces": "Places",
-    "tabServices": "Services"
+    "tabServices": "Services",
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "How it works",
+      "step1": "Describe the task",
+      "step2": "Masters reply in minutes",
+      "step3": "Booking ready"
+    },
+    "masters": {
+      "title": "Are you a master or run a business? Get requests from Russian-speaking clients.",
+      "cta": "Learn more"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -45,7 +57,18 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "Newest",
+    "filterTravels": "Home visits",
+    "filterVerified": "Documents verified",
+    "emptyCallTitle": "No one here yet — we're building the catalogue.",
+    "emptyCallBody": "Work in this field? List your card and be seen first.",
+    "emptyCallCta": "List your card",
+    "seoTitle": "{category} — Russian-speaking masters, London",
+    "seoTitleBorough": "{category} in {borough} — in Russian",
+    "seoDescription": "Find Russian-speaking {category} masters in London: verified language, quick requests, online booking.",
+    "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking.",
+    "orderNote": "Order: alphabetical by default; you can sort by price or newest."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -72,7 +95,13 @@
     "dbsVerified": "DBS checked ({type})",
     "openNow": "Open now",
     "closedNow": "Closed now",
-    "gallery": "Photos"
+    "gallery": "Photos",
+    "photoCount": "{current}/{total}",
+    "call": "Call",
+    "message": "Message",
+    "unclaimed": "Compiled from public sources",
+    "claimCta": "Is this you? Claim the card",
+    "servicesUnknown": "Ask the master."
   },
   "search": {
     "title": "Search",
@@ -102,7 +131,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# person going} other {# people going}}",
+    "imGoing": "I'm going",
+    "notGoing": "Not going",
+    "youAreGoing": "You're going",
+    "goingNamePlaceholder": "Your name (optional)"
   },
   "eventCategory": {
     "concert": "Concert",
@@ -223,7 +257,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Being passed on by hand",
+      "handled": "Passed to a master"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -247,7 +283,10 @@
       "other": "Other regulated"
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
-    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely."
+    "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
+    "confirmedTitle": "Done",
+    "manualTitle": "We'll pass your request on by hand",
+    "manualBody": "There are still few masters in this area. We’ll pass your request on by hand and reply within a day. Request number: {ref}."
   },
   "business": {
     "cabinet": "Business",
@@ -293,12 +332,78 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "Last 30 days",
+      "views": "Card views",
+      "contacts": "Contact opens",
+      "requests": "Requests"
+    },
+    "settings": {
+      "title": "Settings",
+      "travels": "I travel to the client",
+      "travelsHint": "Show up in the “Home visits” filter."
+    },
+    "tabs": {
+      "requests": "Requests",
+      "profile": "Profile",
+      "languages": "Languages",
+      "services": "Services",
+      "bookings": "Bookings",
+      "schedule": "Schedule"
+    },
+    "profile": {
+      "descriptionRu": "Description (Russian)",
+      "descriptionEn": "Description (English)",
+      "borough": "Borough",
+      "address": "Address",
+      "phone": "Phone",
+      "website": "Website",
+      "travels": "I travel to the client",
+      "photos": "Photos (up to {max})",
+      "cover": "Cover",
+      "makeCover": "Make cover",
+      "removePhoto": "Remove photo",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved"
+    },
+    "languages": {
+      "hint": "Claim the languages you serve in. An admin verifies each.",
+      "verified": "Verified",
+      "pending": "Pending",
+      "claim": "Claim",
+      "remove": "Remove"
+    },
+    "services": {
+      "priceHint": "Price in £, duration in minutes.",
+      "name": "Name",
+      "price": "Price £",
+      "duration": "Minutes",
+      "save": "Save",
+      "add": "Add",
+      "delete": "Delete"
+    },
+    "bookings": {
+      "empty": "No bookings yet.",
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
+      }
+    },
+    "schedule": {
+      "hint": "Optional. Only for online booking.",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved"
+    }
   },
   "footer": {
     "forBusiness": "For business",
     "terms": "Terms",
-    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch.",
+    "privacy": "Privacy"
   },
   "forBusiness": {
     "title": "For business",
@@ -321,5 +426,143 @@
     "sent": "Thanks — we’ve got your request and will be in touch.",
     "needContact": "Leave an email or a phone so we can reply.",
     "formError": "Could not send. Try again."
+  },
+  "trust": {
+    "homeTitle": "Language verified for everyone",
+    "homeSubtitle": "we call the master ourselves",
+    "oneVerified": "{lang} verified",
+    "manyVerified": "{langs} verified",
+    "checkedOn": "Verified {date}",
+    "checkedByUs": "We called the master ourselves"
+  },
+  "saved": {
+    "title": "Saved",
+    "empty": "Nothing saved yet",
+    "add": "Save",
+    "remove": "Remove from saved"
+  },
+  "pwa": {
+    "installTitle": "Install the app",
+    "installBody": "Add SNG Services to your home screen for quick access.",
+    "installButton": "Install",
+    "close": "Close",
+    "iosBefore": "To install: tap",
+    "iosAfter": "→ Add to Home Screen."
+  },
+  "profile": {
+    "loading": "Loading…",
+    "bookingsEmpty": "No bookings yet.",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "myRequests": "My requests",
+    "myBookings": "My bookings",
+    "account": "Account",
+    "dataTitle": "My data",
+    "download": "Download my data",
+    "deleteTitle": "Delete my data",
+    "deleteHint": "Removes requests, bookings and saved. Type {word} to confirm.",
+    "deleteWord": "DELETE",
+    "deleteMismatch": "Type {word} exactly to confirm.",
+    "deleteButton": "Delete",
+    "deleteDone": "Your data has been deleted.",
+    "loginHint": "Optional. Sign in to move requests and saved between devices.",
+    "login": "Sign in",
+    "linkSent": "Check your inbox — a sign-in link went to {email}.",
+    "signedInAs": "Signed in as {email}",
+    "syncNow": "Back up to account",
+    "restore": "Restore to this device",
+    "signOut": "Sign out",
+    "syncDone": "Backed up.",
+    "restoreDone": "Restored to this device."
+  },
+  "legal": {
+    "consent": "By sending, you agree to the <terms>Terms</terms> and <privacy>Privacy policy</privacy>."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "draftNote": "Draft. Details in [brackets] will be completed before launch.",
+    "operator": "Operator: [COMPANY], [ADDRESS]. ICO registration: [ICO NUMBER]. Contact: [EMAIL].",
+    "collectTitle": "What we collect",
+    "collectBody": "When you send a request or booking: your name, phone, email and address. Usage analytics without your IP address or device details. Saved providers are stored in your browser.",
+    "retentionTitle": "How long we keep it",
+    "retentionBody": "Request and booking data is kept while the service is arranged and for a reasonable period after; analytics are aggregated. You can delete your data at any time.",
+    "shareTitle": "Who we share with",
+    "shareBody": "Your contact details are shared only with the master matched to your request or booking. We do not sell your data.",
+    "rightsTitle": "Your rights",
+    "rightsBody": "Under UK GDPR you can access, correct, export or delete your data and object to processing. Contact [EMAIL].",
+    "deleteTitle": "Deleting your data",
+    "deleteBody": "Use “Delete my data” in your profile to remove requests, bookings and saved items. You can also download everything as a file."
+  },
+  "terms": {
+    "title": "Terms of use",
+    "platformTitle": "A platform, not a party",
+    "platformBody": "SNG Services connects clients with independent masters. We are not a party to the deal between you and a master.",
+    "responsibilityTitle": "The master’s responsibility",
+    "responsibilityBody": "The master is responsible for the service, its quality and price, and any required registration or insurance.",
+    "cancellationsTitle": "Cancellations",
+    "cancellationsBody": "You can cancel a request or booking before it is confirmed. After confirmation, arrange changes with the master directly.",
+    "complaintsTitle": "Complaints",
+    "complaintsBody": "If something goes wrong, contact [EMAIL] and we will help where we can."
+  },
+  "cabinet": {
+    "title": "Cabinet",
+    "signOut": "Sign out",
+    "loginTitle": "Sign in by email",
+    "loginBody": "so you don't lose this and can get requests to your own card.",
+    "login": "Sign in",
+    "loginSending": "Sending…",
+    "loginSent": "Check your inbox — a link went to {email}.",
+    "incoming": "Incoming",
+    "myRequests": "My requests",
+    "myBookings": "My bookings",
+    "bookingsOnMyCards": "On my cards",
+    "contacted": "Who I contacted",
+    "tabs": {
+      "cards": "Cards",
+      "requests": "Requests",
+      "bookings": "Bookings",
+      "account": "Account"
+    },
+    "cards": {
+      "create": "Create card",
+      "createSubmit": "Create",
+      "creating": "Creating…",
+      "cancel": "Cancel",
+      "name": "Name",
+      "borough": "Borough",
+      "phone": "Phone",
+      "languages": "Languages",
+      "servicesPlaceholder": "Services: Haircut 25 60; Manicure 30 90",
+      "servicesHint": "Each: name, price £, minutes. Separate with ;",
+      "emptyTitle": "You don't have a card yet.",
+      "emptyBody": "Offer services? Create a card — Russian-speaking clients will find you.",
+      "published": "Published",
+      "draft": "On review",
+      "draftNote": "Card on review. We'll call to confirm the language and publish it.",
+      "backToCards": "Back to cards"
+    },
+    "account": {
+      "name": "Public name",
+      "namePlaceholder": "Your name",
+      "nameHint": "Optional. May be shown publicly.",
+      "save": "Save",
+      "saved": "Saved",
+      "email": "Email",
+      "download": "Download my data",
+      "deleteTitle": "Delete account",
+      "deleteWhat": "This removes your requests, bookings, saved items and draft cards.",
+      "deleteHint": "Type {word} to confirm.",
+      "deleteWord": "DELETE",
+      "deleteMismatch": "Type {word} exactly.",
+      "deleteButton": "Delete account"
+    },
+    "claim": {
+      "title": "Claim your card",
+      "working": "Claiming…",
+      "success": "The card is now yours.",
+      "toCards": "Go to my cards",
+      "invalid": "This invite is invalid or expired.",
+      "needLogin": "Sign in above, then open the link again."
+    }
   }
 }

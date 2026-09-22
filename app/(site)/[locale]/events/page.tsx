@@ -7,6 +7,7 @@ import { FilterChipLink } from '@/components/ui/FilterChip'
 import { ButtonLink } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { listUpcomingEvents } from '@/lib/queries/events'
+import { getEventsAttendance } from '@/lib/events/attendance'
 import { groupEvents, type GroupKey } from '@/lib/events/group'
 
 export const dynamic = 'force-dynamic'
@@ -40,6 +41,7 @@ export default async function EventsPage({
     : ''
 
   const events = await listUpcomingEvents()
+  const attendance = await getEventsAttendance(events.map((e) => e.id))
   const allGroups = groupEvents(events, new Date())
   const groups = when ? allGroups.filter((g) => g.key === when) : allGroups
 
@@ -48,7 +50,7 @@ export default async function EventsPage({
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="pt-6">
-          <h1 className="text-title font-semibold">{t('events.title')}</h1>
+          <h1 className="text-title font-extrabold tracking-tight">{t('events.title')}</h1>
           <p className="mt-2 text-slate-500">{t('events.subtitle')}</p>
         </div>
 
@@ -81,7 +83,12 @@ export default async function EventsPage({
                 <h2 className="mb-4 text-h2 font-semibold">{t(`events.${group.key}`)}</h2>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {group.events.map((event) => (
-                    <EventCard key={event.id} event={event} locale={locale} />
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      locale={locale}
+                      attendance={attendance.get(event.id)}
+                    />
                   ))}
                 </div>
               </section>

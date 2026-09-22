@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconClock, IconCircleCheck, IconMoodSad } from '@tabler/icons-react'
+import { IconClock, IconMoodSad } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
-import { Button } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui/Button'
+import { SuccessScreen } from '@/components/ui/SuccessScreen'
 import { formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import {
@@ -34,7 +35,12 @@ export default function RequestStatus({
   const [state, setState] = useState(initial)
   const [busy, setBusy] = useState(false)
   const done =
-    state.status === 'confirmed' || state.status === 'cancelled' || state.status === 'expired'
+    state.status === 'confirmed' ||
+    state.status === 'cancelled' ||
+    state.status === 'expired' ||
+    // manual / handled never change on their own — an admin passes them on by hand.
+    state.status === 'manual' ||
+    state.status === 'handled'
 
   useEffect(() => {
     if (done) return
@@ -80,39 +86,52 @@ export default function RequestStatus({
   if (state.status === 'matched' && state.match) {
     const when = state.match.startsAt ? dtf.format(new Date(state.match.startsAt)) : ''
     return (
-      <div className="rounded-lg border border-green-200 bg-green-100 p-6">
-        <div className="flex items-center gap-2">
-          <IconCircleCheck className="h-6 w-6 text-green-700" stroke={1.5} />
-          <h1 className="text-h2 font-semibold text-green-700">{t('matchedTitle')}</h1>
-        </div>
-        <p className="mt-2 text-body">
-          {t('matchedBody', {
-            provider: state.match.providerName,
-            when,
-            price: state.match.pricePence != null ? formatPrice(state.match.pricePence) : '—',
-          })}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Button onClick={onConfirm} disabled={busy}>
-            {t('confirm')}
-          </Button>
-          <Button variant="secondary" onClick={onCancel} disabled={busy}>
-            {t('cancel')}
-          </Button>
-        </div>
-      </div>
+      <SuccessScreen
+        title={t('matchedTitle')}
+        message={t('matchedBody', {
+          provider: state.match.providerName,
+          when,
+          price: state.match.pricePence != null ? formatPrice(state.match.pricePence) : '—',
+        })}
+        action={
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button onClick={onConfirm} disabled={busy}>
+              {t('confirm')}
+            </Button>
+            <Button variant="secondary" onClick={onCancel} disabled={busy}>
+              {t('cancel')}
+            </Button>
+          </div>
+        }
+      />
     )
   }
 
   if (state.status === 'confirmed') {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-lg border border-slate-200 p-8 text-center">
-        <IconCircleCheck className="h-6 w-6 text-green-700" stroke={1.5} />
-        <p className="text-body">{t('confirmedBody')}</p>
-        <Link href="/bookings" className="text-body font-semibold text-accent hover:underline">
-          {t('goToBookings')}
-        </Link>
-      </div>
+      <SuccessScreen
+        title={t('confirmedTitle')}
+        message={t('confirmedBody')}
+        action={
+          <ButtonLink href="/bookings" className="w-full sm:w-auto">
+            {t('goToBookings')}
+          </ButtonLink>
+        }
+      />
+    )
+  }
+
+  if (state.status === 'manual' || state.status === 'handled') {
+    return (
+      <SuccessScreen
+        title={t('manualTitle')}
+        message={t('manualBody', { ref: ref_ })}
+        action={
+          <Link href="/" className="text-body font-semibold text-accent hover:underline">
+            {t('backHome')}
+          </Link>
+        }
+      />
     )
   }
 

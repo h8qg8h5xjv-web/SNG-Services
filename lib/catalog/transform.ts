@@ -1,4 +1,9 @@
-import type { FulfillmentType, EntityType } from '@/types/database'
+import type {
+  FulfillmentType,
+  EntityType,
+  CredentialStatus,
+  ClaimStatus,
+} from '@/types/database'
 import { pickProviderContent, pickCategoryName, type Translation } from '../i18n/content'
 import { parseOpeningHours, type OpeningHours } from '../hours'
 
@@ -15,6 +20,16 @@ export type ProviderWithRelations = {
   external_order_url: string | null
   entity_type: EntityType
   booking_enabled: boolean
+  travels_to_client: boolean
+  claim_status: ClaimStatus
+  insurance_status: CredentialStatus
+  insurance_expires_at: string | null
+  dbs_status: CredentialStatus
+  dbs_expires_at: string | null
+  gas_safe_status: CredentialStatus
+  gas_safe_expires_at: string | null
+  electrical_status: CredentialStatus
+  electrical_expires_at: string | null
   opening_hours: unknown
   phone: string | null
   website: string | null
@@ -28,7 +43,12 @@ export type ProviderWithRelations = {
     duration_min: number
     capacity: number
   }[]
-  provider_languages: { language_code: string }[]
+  provider_languages: {
+    language_code: string
+    status?: string
+    expires_at?: string | null
+    languages?: { name_native: string } | null
+  }[]
 }
 
 export type PriceRange = { min: number; max: number }
@@ -48,8 +68,41 @@ export type ProviderCardVM = {
   openingHours: OpeningHours | null
   phone: string | null
   website: string | null
+  travelsToClient: boolean
+  // Card entered from public data with no owner yet — shows an honest source note.
+  unclaimed: boolean
+  // Native names of languages with a live 'verified' badge — trust signal on the
+  // card in place of a rating (DESIGN §5). Empty when none.
+  verifiedLanguages: string[]
   // Prices are never surfaced for external_order providers (DESIGN §4 / PROMPTS §4).
   priceRange: PriceRange | null
+}
+
+// A credential (insurance/DBS/Gas Safe/electrical) that is verified and not expired.
+function credentialActive(
+  status: CredentialStatus,
+  expires: string | null,
+  now: number,
+): boolean {
+  return status === 'verified' && (expires === null || Date.parse(expires) > now)
+}
+
+/**
+ * "Documents verified" for the category filter (idea #5): at least one verified,
+ * non-expired credential — insurance, DBS, Gas Safe or electrical. Deliberately
+ * NOT language: every published provider already has a verified language, so a
+ * language-based filter would exclude almost no one. Expiry from expires_at, no job.
+ */
+export function hasVerifiedDocument(
+  p: ProviderWithRelations,
+  now: number = Date.now(),
+): boolean {
+  return (
+    credentialActive(p.insurance_status, p.insurance_expires_at, now) ||
+    credentialActive(p.dbs_status, p.dbs_expires_at, now) ||
+    credentialActive(p.gas_safe_status, p.gas_safe_expires_at, now) ||
+    credentialActive(p.electrical_status, p.electrical_expires_at, now)
+  )
 }
 
 // The two homepage lenses (DESIGN §2в). A bookable place is both a place (on the
@@ -79,6 +132,16 @@ export function toCard(
   locale: string,
 ): ProviderCardVM {
   const { name } = pickProviderContent(provider, provider.provider_translations, locale)
+  const now = Date.now()
+  // Only 'verified' and not expired counts as a trust badge (DESIGN §5).
+  const verifiedLanguages = provider.provider_languages
+    .filter(
+      (l) =>
+        l.status === 'verified' &&
+        l.languages != null &&
+        (l.expires_at == null || Date.parse(l.expires_at) > now),
+    )
+    .map((l) => l.languages!.name_native)
   return {
     id: provider.id,
     slug: provider.slug,
@@ -94,6 +157,9 @@ export function toCard(
     openingHours: parseOpeningHours(provider.opening_hours),
     phone: provider.phone,
     website: provider.website,
+    travelsToClient: provider.travels_to_client,
+    unclaimed: provider.claim_status === 'unclaimed',
+    verifiedLanguages,
     priceRange: priceRangeOf(provider),
   }
 }
@@ -133,7 +199,7 @@ export function matchesQuery(
 
 // --- Filter & sort ----------------------------------------------------------
 
-export type SortKey = 'relevance' | 'price' | 'slot'
+export type SortKey = 'relevance' | 'price' | 'newest'
 
 export function filterByBorough(
   providers: ProviderWithRelations[],
@@ -141,6 +207,21 @@ export function filterByBorough(
 ): ProviderWithRelations[] {
   if (!borough) return providers
   return providers.filter((p) => p.borough === borough)
+}
+
+export type CategoryFacets = { travels: boolean; verifiedOnly: boolean }
+
+/** URL-driven facet filters for the category page (idea #5). */
+export function filterByFacets(
+  providers: ProviderWithRelations[],
+  facets: CategoryFacets,
+  now: number = Date.now(),
+): ProviderWithRelations[] {
+  return providers.filter(
+    (p) =>
+      (!facets.travels || p.travels_to_client) &&
+      (!facets.verifiedOnly || hasVerifiedDocument(p, now)),
+  )
 }
 
 export function boroughsOf(providers: ProviderWithRelations[]): string[] {
@@ -168,9 +249,10 @@ export function sortProviders(
   switch (sort) {
     case 'price':
       return copy.sort((a, b) => minPrice(a) - minPrice(b) || byName(a, b))
-    // 'slot' (nearest free slot) needs the slot engine from step 7. Until then it
-    // falls back to relevance ordering. Marked so it is not mistaken for done.
-    case 'slot':
+    case 'newest':
+      return copy.sort(
+        (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || byName(a, b),
+      )
     case 'relevance':
     default:
       return copy.sort(byName)

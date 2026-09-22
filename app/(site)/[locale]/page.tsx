@@ -1,7 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { IconLanguage, IconBriefcase } from '@tabler/icons-react'
 import { SectionHeading } from '@/components/ui/Section'
+import { InfoBlock } from '@/components/ui/InfoBlock'
+import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
+import HomeHowItWorks from '@/components/HomeHowItWorks'
 import RecentlyViewed from '@/components/RecentlyViewed'
 import CategoryGrid from '@/components/CategoryGrid'
 import AvailableToday from '@/components/AvailableToday'
@@ -43,6 +47,10 @@ export default async function HomePage({
   const services = (
     <>
       <ServiceNeedBar />
+      {/* Trust, not rating (DESIGN §5): we verify service language for everyone. */}
+      <div className="py-2">
+        <InfoBlock icon={IconLanguage} title={t('trust.homeTitle')} subtitle={t('trust.homeSubtitle')} />
+      </div>
       <RecentlyViewed />
       <AvailableToday providers={availableToday} locale={locale} />
       <section className="py-6">
@@ -63,7 +71,7 @@ export default async function HomePage({
           itself sits on plain white below (task §2). */}
       <section className="bg-linear-to-b from-accent-soft to-white">
         <div className="mx-auto w-full max-w-5xl px-4 py-10">
-          <h1 className="max-w-md text-title font-semibold">{t('home.heroTitle')}</h1>
+          <h1 className="max-w-md text-display font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
           <p className="mt-4 text-slate-500">{t('home.heroSubtitle')}</p>
         </div>
       </section>
@@ -73,9 +81,24 @@ export default async function HomePage({
           <SearchBar />
         </div>
 
+        <HomeHowItWorks />
+
         <div className="mb-2">
           <HomeTabs services={services} places={<PlacesExplorer places={placeCards} />} />
         </div>
+
+        {/* For masters (idea #3): invite providers to receive requests. */}
+        <section className="my-8 flex flex-col gap-3 rounded-lg bg-accent-soft p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-accent">
+              <IconBriefcase className="h-6 w-6" stroke={1.5} />
+            </span>
+            <p className="text-body font-semibold">{t('home.masters.title')}</p>
+          </div>
+          <ButtonLink href="/for-business" className="w-full sm:w-auto">
+            {t('home.masters.cta')}
+          </ButtonLink>
+        </section>
       </main>
     </>
   )

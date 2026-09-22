@@ -19,6 +19,8 @@ const TONE: Record<GuestRequestState['status'], 'success' | 'neutral' | 'error'>
   completed: 'success',
   expired: 'error',
   cancelled: 'error',
+  manual: 'neutral',
+  handled: 'success',
 }
 
 export default function MyRequests() {

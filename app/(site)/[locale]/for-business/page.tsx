@@ -34,7 +34,7 @@ export default async function ForBusinessPage({
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
-        <h1 className="text-title font-semibold">{t('title')}</h1>
+        <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
         <p className="mt-2 text-body text-slate-500">{t('intro')}</p>
 
         <ul className="mt-4 space-y-2">
@@ -47,7 +47,7 @@ export default async function ForBusinessPage({
         </ul>
 
         <div className="mt-6">
-          <ButtonLink href="/business/login" className="w-full sm:w-auto">
+          <ButtonLink href="/cabinet/cards" className="w-full sm:w-auto">
             {t('enter')}
           </ButtonLink>
         </div>

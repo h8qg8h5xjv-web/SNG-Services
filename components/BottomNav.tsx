@@ -15,7 +15,7 @@ const ITEMS: { href: string; labelKey: string; Icon: IconComponent }[] = [
   { href: '/', labelKey: 'nav.home', Icon: IconHome },
   { href: '/events', labelKey: 'nav.events', Icon: IconCalendarEvent },
   { href: '/bookings', labelKey: 'nav.bookings', Icon: IconCalendarCheck },
-  { href: '/profile', labelKey: 'nav.profile', Icon: IconUser },
+  { href: '/cabinet', labelKey: 'nav.cabinet', Icon: IconUser },
 ]
 
 export default function BottomNav() {
@@ -28,18 +28,19 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white sm:hidden">
-      <ul className="mx-auto flex max-w-5xl">
+    // Floating pill nav (DESIGN-SYSTEM §3): hovers 12px off each edge, mobile only.
+    <nav className="floating-bottom fixed inset-x-3 z-30 sm:hidden">
+      <ul className="mx-auto flex max-w-md items-center rounded-full border border-slate-200 bg-white p-1">
         {ITEMS.map(({ href, labelKey, Icon }) => {
           const active = isActive(href)
           return (
             <li key={href} className="flex-1">
-              {/* min-h-14: off-scale on purpose — the nav's own touch height. */}
+              {/* min-h-14: off-scale on purpose — the nav's own touch height (§4). */}
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-meta ${
-                  active ? 'text-slate-900' : 'text-slate-500'
+                className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-full text-meta transition-colors ${
+                  active ? 'bg-slate-100 font-semibold text-slate-900' : 'text-slate-500'
                 }`}
               >
                 {/* 24px — navigation icon (DESIGN-SYSTEM §7). */}

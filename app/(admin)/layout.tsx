@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Inter } from 'next/font/google'
 import '../globals.css'
 
-const inter = Inter({ variable: '--font-inter', subsets: ['latin'], weight: ['400', '600'] })
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], weight: ['400', '600', '700', '800'] })
 
 export const metadata: Metadata = {
   title: 'Admin · SNG Services',

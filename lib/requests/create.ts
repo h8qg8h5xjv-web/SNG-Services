@@ -3,7 +3,15 @@
 import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { parseUkPostcode } from '@/lib/postcode'
-import { advanceRequests } from './advance'
+import { advanceRequests, loadMatchPool } from './advance'
+import { eligibleProviderCount } from './match'
+
+// §1: below this many eligible masters a request is not broadcast but queued for
+// a manual hand-off. Env-tunable; 3 by default.
+function minTargets(): number {
+  const n = Number(process.env.REQUEST_MIN_TARGETS)
+  return Number.isInteger(n) && n > 0 ? n : 3
+}
 
 // A time window the client offers (REQUESTS §3) — not an exact time.
 const windowSchema = z.object({
@@ -31,7 +39,8 @@ const createSchema = z.object({
 })
 
 export type CreateRequestResult =
-  | { ok: true; ref: string; token: string }
+  // manual = too few eligible masters, queued for hand-off instead of broadcast (§1).
+  | { ok: true; ref: string; token: string; manual: boolean }
   // 'no_regulated_providers': a hard LEGAL D3a stop — no verified master exists.
   | { ok: false; error: string; code?: 'no_regulated_providers' }
 
@@ -88,7 +97,27 @@ export async function createRequest(input: unknown): Promise<CreateRequestResult
     }
   }
 
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString() // ~1h horizon
+  const now = new Date()
+
+  // §1 emptiness guard: count who could actually be asked. Below the threshold we
+  // don't broadcast into a near-empty pool — the request is queued as 'manual'
+  // for a hand-off. A specific-master request is a direct ask, never manual.
+  const pool = await loadMatchPool(supabase, now)
+  const eligible = eligibleProviderCount(
+    {
+      type: d.type,
+      category_id: d.categoryId,
+      borough: d.borough,
+      budget_max_pence: d.budgetMaxPence,
+      target_provider_id: d.targetProviderId,
+      regulated_kind: d.regulatedKind,
+    },
+    pool,
+    now,
+  )
+  const manual = !d.targetProviderId && eligible < minTargets()
+
+  const expiresAt = new Date(now.getTime() + 60 * 60 * 1000).toISOString() // ~1h horizon
 
   const { data: request, error } = await supabase
     .from('requests')
@@ -105,8 +134,9 @@ export async function createRequest(input: unknown): Promise<CreateRequestResult
       regulated_kind: d.regulatedKind,
       description: d.description,
       budget_max_pence: d.budgetMaxPence,
-      status: 'broadcasting',
-      expires_at: expiresAt,
+      // manual requests never enter the wave job (it only touches 'broadcasting').
+      status: manual ? 'manual' : 'broadcasting',
+      expires_at: manual ? null : expiresAt,
     })
     .select('id, public_ref, guest_token')
     .single()
@@ -128,8 +158,9 @@ export async function createRequest(input: unknown): Promise<CreateRequestResult
   ])
   if (cErr || wErr) return { ok: false, error: (cErr ?? wErr)!.message }
 
-  // Wave 1 now (idempotent); waves 2/3 + expiry are the background job's.
-  await advanceRequests()
+  // Wave 1 now (idempotent); waves 2/3 + expiry are the background job's. Manual
+  // requests are skipped — an admin hands them off from the queue instead.
+  if (!manual) await advanceRequests()
 
-  return { ok: true, ref: request.public_ref, token: request.guest_token }
+  return { ok: true, ref: request.public_ref, token: request.guest_token, manual }
 }
