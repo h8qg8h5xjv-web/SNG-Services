@@ -53,10 +53,61 @@ export class ConsoleChannel implements NotificationChannel {
   }
 }
 
-// Single place that decides which channel is live. When a domain + Resend are
-// ready, return the Resend channel here (README) — call sites don't change.
+// §5: writes each master notification to the notification_queue table so an
+// admin can send it by hand (WhatsApp) until email/SMS is wired. Server-side,
+// service role — bypasses RLS. Best-effort: a queue failure never breaks a flow.
+export class AdminQueueChannel implements NotificationChannel {
+  readonly name = 'admin_queue'
+
+  async send(message: ProviderNotification): Promise<void> {
+    try {
+      const { createAdminClient } = await import('@/lib/supabase/admin')
+      const supabase = createAdminClient()
+      // The admin sends via WhatsApp, so include the master's phone.
+      let phone: string | null = null
+      if (message.providerId) {
+        const { data } = await supabase
+          .from('providers')
+          .select('phone')
+          .eq('id', message.providerId)
+          .maybeSingle()
+        phone = data?.phone ?? null
+      }
+      await supabase.from('notification_queue').insert({
+        provider_id: message.providerId || null,
+        provider_name: message.providerName,
+        recipient_phone: phone,
+        recipient_emails: message.emails.length > 0 ? message.emails : null,
+        kind: message.kind,
+        request_ref: message.requestRef,
+        subject: message.subject,
+        body: message.body,
+        cta_path: message.ctaPath,
+        status: 'unsent',
+      })
+    } catch {
+      // Never let queueing break a request/booking flow.
+    }
+  }
+}
+
+// Fans a message out to several channels in order. Used to keep the console
+// stand-in while also queueing for the admin.
+export class CompositeChannel implements NotificationChannel {
+  readonly name: string
+  constructor(private readonly channels: NotificationChannel[]) {
+    this.name = channels.map((c) => c.name).join('+')
+  }
+  async send(message: ProviderNotification): Promise<void> {
+    for (const c of this.channels) await c.send(message)
+  }
+}
+
+// Single place that decides which channel is live. Today: console (dev insight)
+// + admin queue (the actionable one). When a domain + Resend are ready, add the
+// Resend channel here (README) — call sites don't change.
 let channel: NotificationChannel | null = null
 export function getNotificationChannel(): NotificationChannel {
-  if (!channel) channel = new ConsoleChannel()
+  if (!channel) channel = new CompositeChannel([new ConsoleChannel(), new AdminQueueChannel()])
   return channel
 }

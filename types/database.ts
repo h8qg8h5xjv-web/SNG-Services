@@ -917,6 +917,43 @@ export interface Database {
         }
         Relationships: []
       }
+      notification_queue: {
+        Row: {
+          id: string
+          provider_id: string | null
+          provider_name: string | null
+          recipient_phone: string | null
+          recipient_emails: string[] | null
+          kind: string | null
+          request_ref: string | null
+          subject: string
+          body: string
+          cta_path: string | null
+          status: 'unsent' | 'sent'
+          created_at: string
+          sent_at: string | null
+        }
+        Insert: {
+          id?: string
+          provider_id?: string | null
+          provider_name?: string | null
+          recipient_phone?: string | null
+          recipient_emails?: string[] | null
+          kind?: string | null
+          request_ref?: string | null
+          subject: string
+          body: string
+          cta_path?: string | null
+          status?: 'unsent' | 'sent'
+          created_at?: string
+          sent_at?: string | null
+        }
+        Update: {
+          status?: 'unsent' | 'sent'
+          sent_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: Record<never, never>
     Functions: {

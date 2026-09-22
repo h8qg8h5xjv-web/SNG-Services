@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getCurrentUser, isAdmin } from '@/lib/admin/auth'
 import { getManualRequestCount } from '@/lib/admin/requests'
+import { getUnsentNotificationCount } from '@/lib/admin/notifications'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard' },
   { href: '/admin/requests', label: 'Requests' },
+  { href: '/admin/notifications', label: 'Notifications' },
   { href: '/admin/providers', label: 'Providers' },
   { href: '/admin/events', label: 'Events' },
   { href: '/admin/bookings', label: 'Bookings' },
@@ -22,7 +24,9 @@ export default async function DashboardLayout({
   const user = await getCurrentUser()
   if (!user) redirect('/admin/login')
 
-  const manualCount = isAdmin(user) ? await getManualRequestCount() : 0
+  const [manualCount, unsentCount] = isAdmin(user)
+    ? await Promise.all([getManualRequestCount(), getUnsentNotificationCount()])
+    : [0, 0]
 
   if (!isAdmin(user)) {
     return (
@@ -53,6 +57,11 @@ export default async function DashboardLayout({
                 {item.href === '/admin/requests' && manualCount > 0 && (
                   <span className="ml-1 rounded-full bg-amber-500 px-1.5 py-0.5 text-meta font-semibold text-white">
                     {manualCount}
+                  </span>
+                )}
+                {item.href === '/admin/notifications' && unsentCount > 0 && (
+                  <span className="ml-1 rounded-full bg-amber-500 px-1.5 py-0.5 text-meta font-semibold text-white">
+                    {unsentCount}
                   </span>
                 )}
               </Link>
