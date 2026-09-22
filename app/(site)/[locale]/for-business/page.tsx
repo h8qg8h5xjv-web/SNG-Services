@@ -47,7 +47,7 @@ export default async function ForBusinessPage({
         </ul>
 
         <div className="mt-6">
-          <ButtonLink href="/business/login" className="w-full sm:w-auto">
+          <ButtonLink href="/cabinet/cards" className="w-full sm:w-auto">
             {t('enter')}
           </ButtonLink>
         </div>

@@ -140,7 +140,7 @@ export async function notifyNewTargets(requestId: string): Promise<number> {
       emails,
       subject: `New request ${summary.public_ref}`,
       body: waveBody(summary),
-      ctaPath: `${SITE_URL}/en/business/requests`,
+      ctaPath: `${SITE_URL}/en/cabinet/requests`,
     }
     await channel.send(message)
     // Record the send exactly as a real channel would.
@@ -171,7 +171,7 @@ export async function notifyMatch(requestId: string, providerId: string): Promis
       `You took request ${summary.public_ref}.`,
       'The client\'s contacts and full address are now in your cabinet.',
     ].join('\n'),
-    ctaPath: `${SITE_URL}/en/business/requests`,
+    ctaPath: `${SITE_URL}/en/cabinet/requests`,
   })
 }
 
@@ -198,7 +198,7 @@ export async function notifyCancel(requestId: string): Promise<void> {
       emails,
       subject: `Request ${summary.public_ref} cancelled`,
       body: `Request ${summary.public_ref} was cancelled by the client. No action needed.`,
-      ctaPath: `${SITE_URL}/en/business/requests`,
+      ctaPath: `${SITE_URL}/en/cabinet/requests`,
     })
   }
 }

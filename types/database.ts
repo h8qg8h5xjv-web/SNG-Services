@@ -645,6 +645,7 @@ export interface Database {
           budget_max_pence?: number | null
           manual_handled_at?: string | null
           manual_handled_to?: string | null
+          customer_id?: string | null
         }
         Relationships: []
       }
@@ -769,6 +770,7 @@ export interface Database {
           locale: string | null
           search_query: string | null
           contact_channel: ContactChannel | null
+          user_id: string | null
           occurred_at: string
         }
         Insert: {
@@ -782,6 +784,7 @@ export interface Database {
           locale?: string | null
           search_query?: string | null
           contact_channel?: ContactChannel | null
+          user_id?: string | null
           occurred_at?: string
         }
         Update: {
@@ -945,17 +948,20 @@ export interface Database {
           user_id: string
           saved: string[]
           requests: Json
+          display_name: string | null
           updated_at: string
         }
         Insert: {
           user_id: string
           saved?: string[]
           requests?: Json
+          display_name?: string | null
           updated_at?: string
         }
         Update: {
           saved?: string[]
           requests?: Json
+          display_name?: string | null
           updated_at?: string
         }
         Relationships: []

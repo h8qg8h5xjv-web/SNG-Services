@@ -1,13 +1,11 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import LanguageSwitcher from './LanguageSwitcher'
-import BusinessNavLink from './BusinessNavLink'
 
 const NAV = [
   { href: '/', key: 'nav.home' },
   { href: '/events', key: 'nav.events' },
-  { href: '/bookings', key: 'nav.bookings' },
-  { href: '/profile', key: 'nav.profile' },
+  { href: '/cabinet', key: 'nav.cabinet' },
 ]
 
 // Home header per DESIGN §3: city (London for now, but the slot stays) + the
@@ -33,7 +31,6 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <BusinessNavLink />
           <LanguageSwitcher />
         </div>
       </div>

@@ -15,7 +15,7 @@ const ITEMS: { href: string; labelKey: string; Icon: IconComponent }[] = [
   { href: '/', labelKey: 'nav.home', Icon: IconHome },
   { href: '/events', labelKey: 'nav.events', Icon: IconCalendarEvent },
   { href: '/bookings', labelKey: 'nav.bookings', Icon: IconCalendarCheck },
-  { href: '/profile', labelKey: 'nav.profile', Icon: IconUser },
+  { href: '/cabinet', labelKey: 'nav.cabinet', Icon: IconUser },
 ]
 
 export default function BottomNav() {

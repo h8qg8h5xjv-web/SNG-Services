@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { recordEvents, type TrackEvent } from '@/lib/tracking/events'
+import { createClient } from '@/lib/supabase/server'
 
 // Receives batched analytics events from the client (impressions, booking_started).
 // Always returns 204 — logging must never affect the user.
@@ -9,7 +10,18 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as { events?: TrackEvent[] }
     const events = Array.isArray(body?.events) ? body.events.slice(0, 50) : []
     const sessionId = (await cookies()).get('sng_sid')?.value ?? null
-    await recordEvents(events, sessionId)
+    // Attribute events to the signed-in user (enables "who I contacted"); null for guests.
+    let userId: string | null = null
+    try {
+      const supabase = await createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      userId = user?.id ?? null
+    } catch {
+      // no session — stays a guest event
+    }
+    await recordEvents(events, sessionId, userId)
   } catch {
     // ignore malformed payloads
   }

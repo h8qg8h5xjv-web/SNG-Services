@@ -13,7 +13,8 @@
     "home": "Home",
     "events": "Events",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cabinet": "Cabinet"
   },
   "language": {
     "label": "Language",
@@ -502,5 +503,66 @@
     "cancellationsBody": "You can cancel a request or booking before it is confirmed. After confirmation, arrange changes with the master directly.",
     "complaintsTitle": "Complaints",
     "complaintsBody": "If something goes wrong, contact [EMAIL] and we will help where we can."
+  },
+  "cabinet": {
+    "title": "Cabinet",
+    "signOut": "Sign out",
+    "loginTitle": "Sign in by email",
+    "loginBody": "so you don't lose this and can get requests to your own card.",
+    "login": "Sign in",
+    "loginSending": "Sending…",
+    "loginSent": "Check your inbox — a link went to {email}.",
+    "incoming": "Incoming",
+    "myRequests": "My requests",
+    "myBookings": "My bookings",
+    "bookingsOnMyCards": "On my cards",
+    "contacted": "Who I contacted",
+    "tabs": {
+      "cards": "Cards",
+      "requests": "Requests",
+      "bookings": "Bookings",
+      "account": "Account"
+    },
+    "cards": {
+      "create": "Create card",
+      "createSubmit": "Create",
+      "creating": "Creating…",
+      "cancel": "Cancel",
+      "name": "Name",
+      "borough": "Borough",
+      "phone": "Phone",
+      "languages": "Languages",
+      "servicesPlaceholder": "Services: Haircut 25 60; Manicure 30 90",
+      "servicesHint": "Each: name, price £, minutes. Separate with ;",
+      "emptyTitle": "You don't have a card yet.",
+      "emptyBody": "Offer services? Create a card — Russian-speaking clients will find you.",
+      "published": "Published",
+      "draft": "On review",
+      "draftNote": "Card on review. We'll call to confirm the language and publish it.",
+      "backToCards": "Back to cards"
+    },
+    "account": {
+      "name": "Public name",
+      "namePlaceholder": "Your name",
+      "nameHint": "Optional. May be shown publicly.",
+      "save": "Save",
+      "saved": "Saved",
+      "email": "Email",
+      "download": "Download my data",
+      "deleteTitle": "Delete account",
+      "deleteWhat": "This removes your requests, bookings, saved items and draft cards.",
+      "deleteHint": "Type {word} to confirm.",
+      "deleteWord": "DELETE",
+      "deleteMismatch": "Type {word} exactly.",
+      "deleteButton": "Delete account"
+    },
+    "claim": {
+      "title": "Claim your card",
+      "working": "Claiming…",
+      "success": "The card is now yours.",
+      "toCards": "Go to my cards",
+      "invalid": "This invite is invalid or expired.",
+      "needLogin": "Sign in above, then open the link again."
+    }
   }
 }

@@ -43,7 +43,7 @@ export async function setTravelsToClient(input: unknown): Promise<BusinessAction
     .update({ travels_to_client: value })
     .eq('id', providerId)
   if (error) return { ok: false, error: error.message }
-  revalidatePath('/business/requests')
+  revalidatePath('/cabinet/requests')
   return { ok: true }
 }
 
@@ -101,7 +101,7 @@ export async function saveCabinetProfile(input: unknown): Promise<BusinessAction
       .eq('locale', 'ru')
   }
 
-  revalidatePath('/business/profile')
+  revalidatePath('/cabinet/cards')
   return { ok: true }
 }
 
@@ -155,7 +155,7 @@ export async function saveCabinetService(input: unknown): Promise<BusinessAction
     })
     if (error) return { ok: false, error: error.message }
   }
-  revalidatePath('/business/services')
+  revalidatePath('/cabinet/cards')
   return { ok: true }
 }
 
@@ -171,7 +171,7 @@ export async function deleteCabinetService(
     .eq('id', serviceId)
     .eq('provider_id', providerId)
   if (error) return { ok: false, error: error.message }
-  revalidatePath('/business/services')
+  revalidatePath('/cabinet/cards')
   return { ok: true }
 }
 
@@ -197,7 +197,7 @@ export async function setCabinetLanguage(
       .eq('language_code', code)
     if (error) return { ok: false, error: error.message }
   }
-  revalidatePath('/business/languages')
+  revalidatePath('/cabinet/cards')
   return { ok: true }
 }
 
@@ -233,7 +233,7 @@ export async function saveCabinetSchedule(input: unknown): Promise<BusinessActio
     // The DB trigger rejects schedules for non-native_booking providers.
     if (error) return { ok: false, error: error.message }
   }
-  revalidatePath('/business/schedule')
+  revalidatePath('/cabinet/cards')
   return { ok: true }
 }
 
@@ -312,7 +312,7 @@ export async function acceptRequest(input: unknown): Promise<BusinessActionResul
   if (won === false) return { ok: true, won: false } // lost the race — calm message in UI
 
   await notifyMatch(requestId, providerId) // match event (§8)
-  revalidatePath('/business/requests')
+  revalidatePath('/cabinet/requests')
   return { ok: true, won: true }
 }
 
@@ -334,7 +334,7 @@ export async function declineRequest(input: unknown): Promise<BusinessActionResu
     .eq('request_id', requestId)
     .eq('provider_id', providerId)
   if (error) return { ok: false, error: error.message }
-  revalidatePath('/business/requests')
+  revalidatePath('/cabinet/requests')
   return { ok: true }
 }
 
@@ -372,6 +372,6 @@ export async function submitOffer(input: unknown): Promise<BusinessActionResult>
     .update({ response: 'accepted', responded_at: new Date().toISOString() })
     .eq('request_id', d.requestId)
     .eq('provider_id', d.providerId)
-  revalidatePath('/business/requests')
+  revalidatePath('/cabinet/requests')
   return { ok: true }
 }

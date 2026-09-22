@@ -35,6 +35,7 @@ const UUID = /^[0-9a-fA-F-]{36}$/
 export async function recordEvents(
   events: TrackEvent[],
   sessionId: string | null,
+  userId: string | null = null,
 ): Promise<void> {
   const clean = events.filter(
     (e) => e && UUID.test(e.provider_id) && TYPES.has(e.event_type),
@@ -55,6 +56,7 @@ export async function recordEvents(
             ? e.contact_channel
             : null,
         session_id: sessionId,
+        user_id: userId,
       })),
     )
   } catch {

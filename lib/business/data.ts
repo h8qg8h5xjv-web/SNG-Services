@@ -64,22 +64,34 @@ export async function getMyProviderIds(): Promise<string[]> {
   return (data ?? []).map((m) => m.provider_id)
 }
 
-export type MyProvider = { id: string; name: string; travelsToClient: boolean }
+export type MyProvider = {
+  id: string
+  name: string
+  travelsToClient: boolean
+  status: string
+  categorySlug: string | null
+}
 
-/** The signed-in master's providers with the fields the cabinet lets them edit. */
+/** The signed-in master's providers. Read via the service role AFTER scoping to
+ *  their own ids (member RLS hides drafts), so their draft cards show too. */
 export async function getMyProviders(): Promise<MyProvider[]> {
   const ids = await getMyProviderIds()
   if (ids.length === 0) return []
-  const supabase = await createClient()
-  const { data } = await supabase
+  const admin = createAdminClient()
+  const { data } = await admin
     .from('providers')
-    .select('id, name_en, travels_to_client')
+    .select('id, name_en, travels_to_client, status, categories(slug)')
     .in('id', ids)
     .order('name_en', { ascending: true })
+    .returns<
+      { id: string; name_en: string; travels_to_client: boolean; status: string; categories: { slug: string } | null }[]
+    >()
   return (data ?? []).map((p) => ({
     id: p.id,
     name: p.name_en,
     travelsToClient: p.travels_to_client,
+    status: p.status,
+    categorySlug: p.categories?.slug ?? null,
   }))
 }
 
@@ -149,6 +161,7 @@ async function ownedIds(): Promise<Set<string>> {
 export type CabinetProfile = {
   id: string
   name: string
+  status: string
   entityType: 'place' | 'pro'
   descriptionEn: string | null
   descriptionRu: string | null
@@ -166,7 +179,7 @@ export async function getCabinetProfile(providerId: string): Promise<CabinetProf
   const { data } = await admin
     .from('providers')
     .select(
-      'id, name_en, entity_type, description_en, borough, address, phone, website, ' +
+      'id, name_en, status, entity_type, description_en, borough, address, phone, website, ' +
         'travels_to_client, cover_image, venue_photos, provider_translations(locale, description)',
     )
     .eq('id', providerId)
@@ -174,6 +187,7 @@ export async function getCabinetProfile(providerId: string): Promise<CabinetProf
     .returns<{
       id: string
       name_en: string
+      status: string
       entity_type: 'place' | 'pro'
       description_en: string | null
       borough: string
@@ -194,6 +208,7 @@ export async function getCabinetProfile(providerId: string): Promise<CabinetProf
   return {
     id: data.id,
     name: data.name_en,
+    status: data.status,
     entityType: data.entity_type,
     descriptionEn: data.description_en,
     descriptionRu: data.provider_translations.find((t) => t.locale === 'ru')?.description ?? null,

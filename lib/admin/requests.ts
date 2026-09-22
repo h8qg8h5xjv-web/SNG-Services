@@ -63,7 +63,7 @@ function buildMessage(r: RequestRow, contactName: string, contactPhone: string):
     r.description ? `Задача: ${r.description}` : null,
     r.budget_max_pence != null ? `Бюджет: до ${formatPrice(r.budget_max_pence)}` : null,
     `Клиент: ${contactName}, ${contactPhone}`,
-    `Кабинет мастера: ${siteUrl}/ru/business/requests`,
+    `Кабинет мастера: ${siteUrl}/ru/cabinet`,
   ]
   return lines.filter(Boolean).join('\n')
 }
