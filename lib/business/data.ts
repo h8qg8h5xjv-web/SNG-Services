@@ -63,6 +63,25 @@ export async function getMyProviderIds(): Promise<string[]> {
   return (data ?? []).map((m) => m.provider_id)
 }
 
+export type MyProvider = { id: string; name: string; travelsToClient: boolean }
+
+/** The signed-in master's providers with the fields the cabinet lets them edit. */
+export async function getMyProviders(): Promise<MyProvider[]> {
+  const ids = await getMyProviderIds()
+  if (ids.length === 0) return []
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('providers')
+    .select('id, name_en, travels_to_client')
+    .in('id', ids)
+    .order('name_en', { ascending: true })
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    name: p.name_en,
+    travelsToClient: p.travels_to_client,
+  }))
+}
+
 export async function getBusinessRequests(): Promise<BusinessRequest[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -116,4 +135,33 @@ export async function getBusinessRequests(): Promise<BusinessRequest[]> {
 export async function getNewRequestCount(): Promise<number> {
   const requests = await getBusinessRequests()
   return requests.filter((r) => r.active).length
+}
+
+export type ProviderStats = { views: number; contacts: number; requests: number }
+
+/**
+ * Cabinet stats block (idea #4): card views, contact opens and requests over the
+ * last N days for the signed-in master's providers. All three queries run under
+ * the user's session — RLS (provider_events_member_read, request_targets member
+ * policy) scopes every row to their own providers; code adds no filtering.
+ */
+export async function getProviderStats(days = 30): Promise<ProviderStats> {
+  const supabase = await createClient()
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+
+  const [events, targets] = await Promise.all([
+    supabase
+      .from('provider_events')
+      .select('event_type')
+      .gte('occurred_at', since)
+      .in('event_type', ['click', 'contact_reveal']),
+    supabase.from('request_targets').select('id').gte('notified_at', since),
+  ])
+
+  const rows = events.data ?? []
+  return {
+    views: rows.filter((e) => e.event_type === 'click').length,
+    contacts: rows.filter((e) => e.event_type === 'contact_reveal').length,
+    requests: (targets.data ?? []).length,
+  }
 }

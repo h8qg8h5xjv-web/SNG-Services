@@ -20,6 +20,8 @@ export type Urgency = 'today' | 'this_week' | 'flexible'
 // LEGAL D3a: which regulated activity a request touches (null = none).
 export type RegulatedKind = 'gas' | 'electrical' | 'other'
 export type CatalogRequestStatus = 'new' | 'handled' | 'dismissed'
+// Which contact channel a visitor opened on a provider card (analytics idea #4).
+export type ContactChannel = 'call' | 'message' | 'website'
 export type EventCategory =
   | 'концерт'
   | 'стендап'
@@ -114,6 +116,7 @@ export interface Database {
           entity_type: EntityType
           claim_status: ClaimStatus
           booking_enabled: boolean
+          travels_to_client: boolean
           opening_hours: Json | null
           venue_photos: string[] | null
           travel_radius_km: number | null
@@ -167,6 +170,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null
           travel_radius_km?: number | null
@@ -220,6 +224,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null
           travel_radius_km?: number | null
@@ -757,6 +762,7 @@ export interface Database {
           category_id: string | null
           locale: string | null
           search_query: string | null
+          contact_channel: ContactChannel | null
           occurred_at: string
         }
         Insert: {
@@ -769,6 +775,7 @@ export interface Database {
           category_id?: string | null
           locale?: string | null
           search_query?: string | null
+          contact_channel?: ContactChannel | null
           occurred_at?: string
         }
         Update: {
@@ -780,6 +787,7 @@ export interface Database {
           session_id?: string | null
           category_id?: string | null
           locale?: string | null
+          contact_channel?: ContactChannel | null
           occurred_at?: string
         }
         Relationships: [

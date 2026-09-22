@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconMoodSad } from '@tabler/icons-react'
+import { IconMoodSad, IconBriefcase } from '@tabler/icons-react'
 import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import { ButtonLink } from '@/components/ui/Button'
+import { InfoBlock } from '@/components/ui/InfoBlock'
 import CategoryFilters from '@/components/CategoryFilters'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
@@ -16,26 +17,58 @@ import { rankProviders } from '@/lib/ranking'
 import {
   toCard,
   filterByBorough,
+  filterByFacets,
   boroughsOf,
   isServiceEligible,
   type SortKey,
 } from '@/lib/catalog/transform'
 
-const SORT_KEYS: SortKey[] = ['relevance', 'price', 'slot']
+const SORT_KEYS: SortKey[] = ['relevance', 'price', 'newest']
+
+// Below this, the category is too thin to be worth indexing (idea #7).
+const MIN_INDEXABLE = 3
 
 function parseSort(value: string | undefined): SortKey {
   return SORT_KEYS.includes(value as SortKey) ? (value as SortKey) : 'relevance'
 }
 
+type SearchParams = { borough?: string; sort?: string; travels?: string; verified?: string }
+
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; category: string }>
+  searchParams: Promise<SearchParams>
 }): Promise<Metadata> {
   const { locale, category } = await params
   const cat = await getCategoryBySlug(category)
   if (!cat) return {}
-  return { title: pickCategoryName(cat, locale) }
+
+  const t = await getTranslations({ locale, namespace: 'catalog' })
+  const name = pickCategoryName(cat, locale)
+
+  // Provider set drives both the borough-specific title and the noindex rule.
+  const all = (await listProvidersByCategory(cat.id)).filter(isServiceEligible)
+  const boroughs = boroughsOf(all)
+  const sp = await searchParams
+  const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
+
+  const title = borough
+    ? t('seoTitleBorough', { category: name, borough })
+    : t('seoTitle', { category: name })
+  const description = borough
+    ? t('seoDescriptionBorough', { category: name, borough })
+    : t('seoDescription', { category: name })
+
+  // Thin categories (and any filtered view) stay out of the index; links still followed.
+  const indexable = all.length >= MIN_INDEXABLE && !borough && !sp.travels && !sp.verified
+
+  return {
+    title,
+    description,
+    robots: indexable ? undefined : { index: false, follow: true },
+  }
 }
 
 export default async function CategoryPage({
@@ -43,7 +76,7 @@ export default async function CategoryPage({
   searchParams,
 }: {
   params: Promise<{ locale: string; category: string }>
-  searchParams: Promise<{ borough?: string; sort?: string }>
+  searchParams: Promise<SearchParams>
 }) {
   const { locale, category } = await params
   setRequestLocale(locale)
@@ -58,16 +91,19 @@ export default async function CategoryPage({
   const boroughs = boroughsOf(all)
   const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
   const sort = parseSort(sp.sort)
+  const travels = sp.travels === '1'
+  const verifiedOnly = sp.verified === '1'
 
-  const filtered = rankProviders(filterByBorough(all, borough || null), {
-    locale,
-    sort,
-    categorySlug: category,
+  const faceted = filterByFacets(filterByBorough(all, borough || null), {
+    travels,
+    verifiedOnly,
   })
+  const filtered = rankProviders(faceted, { locale, sort, categorySlug: category })
   const cards = filtered.map((p) => toCard(p, category, locale))
 
   const t = await getTranslations('catalog')
   const tr = await getTranslations('request')
+  const isEmpty = all.length === 0
 
   return (
     <>
@@ -85,9 +121,24 @@ export default async function CategoryPage({
           <div className="mb-6">
             <CategoryFilters
               boroughs={boroughs}
-              currentBorough={borough}
-              currentSort={sort}
+              current={{ borough, sort, travels, verifiedOnly }}
             />
+          </div>
+        )}
+
+        {/* Empty category (idea #1): invite masters to list, before the request path. */}
+        {isEmpty && (
+          <div className="mb-6">
+            <InfoBlock
+              icon={IconBriefcase}
+              title={t('emptyCallTitle')}
+              subtitle={t('emptyCallBody')}
+            />
+            <div className="mt-3">
+              <ButtonLink href="/for-business" className="w-full sm:w-auto">
+                {t('emptyCallCta')}
+              </ButtonLink>
+            </div>
           </div>
         )}
 
@@ -97,9 +148,7 @@ export default async function CategoryPage({
           <ButtonLink href={`/request?category=${category}`}>{tr('submit')}</ButtonLink>
         </div>
 
-        {all.length === 0 ? (
-          <EmptyState icon={IconMoodSad} text={t('emptyCategory')} />
-        ) : cards.length === 0 ? (
+        {isEmpty ? null : cards.length === 0 ? (
           <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
         ) : (
           <>

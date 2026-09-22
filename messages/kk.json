@@ -32,7 +32,17 @@
     "less": "Less",
     "tabPlaces": "Орындар",
     "tabServices": "Қызметтер",
-    "freeAt": "Free at {time}"
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "Бұл қалай жұмыс істейді",
+      "step1": "Тапсырманы сипаттаңыз",
+      "step2": "Мамандар минут ішінде жауап береді",
+      "step3": "Жазылу дайын"
+    },
+    "masters": {
+      "title": "Сіз маман немесе бизнес жүргізесіз бе? Орыс тілді клиенттерден өтінімдер алыңыз.",
+      "cta": "Толығырақ"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -46,7 +56,17 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "Алдымен жаңалары",
+    "filterTravels": "Үйге шығу",
+    "filterVerified": "Тек тексерілгендер",
+    "emptyCallTitle": "Мұнда әзірге ешкім жоқ — біз каталогты толтырып жатырмыз.",
+    "emptyCallBody": "Осы салада жұмыс істейсіз бе? Картаңызды орналастырыңыз, сізді бірінші көреді.",
+    "emptyCallCta": "Карта орналастыру",
+    "seoTitle": "{category} — орыс тілді мамандар, Лондон",
+    "seoTitleBorough": "{borough} ауданындағы {category} — орысша",
+    "seoDescription": "Лондондағы «{category}» санатының орыс тілді мамандарын табыңыз: тексерілген тіл, жылдам өтінімдер, онлайн жазылу.",
+    "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу."
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -74,7 +94,10 @@
     "openNow": "Қазір ашық",
     "closedNow": "Қазір жабық",
     "gallery": "Фото",
-    "photoCount": "{current}/{total}"
+    "photoCount": "{current}/{total}",
+    "call": "Қоңырау шалу",
+    "message": "Жазу",
+    "unclaimed": "Ашық дереккөздер бойынша жасалған"
   },
   "search": {
     "title": "Search",
@@ -296,7 +319,18 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "Соңғы 30 күн",
+      "views": "Карта қаралымдары",
+      "contacts": "Байланыс ашылымдары",
+      "requests": "Өтінімдер"
+    },
+    "settings": {
+      "title": "Параметрлер",
+      "travels": "Үйге шығамын",
+      "travelsHint": "«Үйге шығу» сүзгісінде көріну."
+    }
   },
   "footer": {
     "forBusiness": "For business",

@@ -32,7 +32,17 @@
     "less": "Свернуть",
     "tabPlaces": "Места",
     "tabServices": "Услуги",
-    "freeAt": "Свободно в {time}"
+    "freeAt": "Свободно в {time}",
+    "how": {
+      "title": "Как это работает",
+      "step1": "Опишите задачу",
+      "step2": "Мастера отвечают за минуты",
+      "step3": "Запись готова"
+    },
+    "masters": {
+      "title": "Вы мастер или ведёте бизнес? Получайте заявки от русскоязычных клиентов.",
+      "cta": "Узнать больше"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {Нет мастеров} one {# мастер} few {# мастера} many {# мастеров} other {# мастера}}",
@@ -46,7 +56,17 @@
     "emptyCategory": "Здесь пока нет мастеров.",
     "emptyFiltered": "По этим фильтрам ничего нет.",
     "from": "от",
-    "priceOnRequest": "Цена по запросу"
+    "priceOnRequest": "Цена по запросу",
+    "sortNewest": "Сначала новые",
+    "filterTravels": "Выезд на дом",
+    "filterVerified": "Только проверенные",
+    "emptyCallTitle": "Здесь пока никого нет — мы наполняем каталог.",
+    "emptyCallBody": "Вы работаете в этой сфере? Разместите карточку, вас увидят первым.",
+    "emptyCallCta": "Разместить карточку",
+    "seoTitle": "{category} — русскоязычные мастера, Лондон",
+    "seoTitleBorough": "{category} в {borough} — на русском",
+    "seoDescription": "Найдите русскоязычных мастеров категории «{category}» в Лондоне: проверенный язык, быстрые заявки, запись онлайн.",
+    "seoDescriptionBorough": "Русскоязычные мастера категории «{category}» в районе {borough}, Лондон — проверенный язык и запись онлайн."
   },
   "fulfillment": {
     "nativeBadge": "Запись здесь",
@@ -74,7 +94,10 @@
     "openNow": "Открыто сейчас",
     "closedNow": "Закрыто сейчас",
     "gallery": "Фото",
-    "photoCount": "{current}/{total}"
+    "photoCount": "{current}/{total}",
+    "call": "Позвонить",
+    "message": "Написать",
+    "unclaimed": "Составлено по открытым источникам"
   },
   "search": {
     "title": "Поиск",
@@ -296,7 +319,18 @@
     },
     "myCabinet": "Мой кабинет",
     "noAccess": "Нет доступа?",
-    "noAccessLink": "Напишите нам"
+    "noAccessLink": "Напишите нам",
+    "stats": {
+      "title": "За 30 дней",
+      "views": "Просмотры карточки",
+      "contacts": "Открытия контактов",
+      "requests": "Заявки"
+    },
+    "settings": {
+      "title": "Настройки",
+      "travels": "Выезжаю на дом",
+      "travelsHint": "Показываться в фильтре «Выезд на дом»."
+    }
   },
   "footer": {
     "forBusiness": "Для бизнеса",

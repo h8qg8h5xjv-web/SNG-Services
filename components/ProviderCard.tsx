@@ -64,6 +64,9 @@ export default function ProviderCard({
           <p className="truncate text-meta text-slate-500">
             {[card.categoryName, card.borough].filter(Boolean).join(' · ')}
           </p>
+          {card.unclaimed && (
+            <p className="truncate text-label text-slate-400">{t('provider.unclaimed')}</p>
+          )}
 
           {trust ? (
             <p className="mt-1 flex items-center gap-1 text-meta font-semibold text-accent">

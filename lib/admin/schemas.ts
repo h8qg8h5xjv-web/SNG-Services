@@ -68,6 +68,7 @@ export const providerInputSchema = z
     entity_type: z.enum(ENTITY_TYPES),
     claim_status: z.enum(CLAIM_STATUSES),
     booking_enabled: z.boolean().default(true),
+    travels_to_client: z.boolean().default(false),
     travel_radius_km: z.number().int().min(0).nullable().default(null),
     opening_hours: openingHoursSchema.default(null),
     venue_photos: z.array(z.string()).max(6).nullable().default(null),

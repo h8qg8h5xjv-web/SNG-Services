@@ -25,6 +25,7 @@ import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
 import VenueGallery from '@/components/site/VenueGallery'
 import RecordRecentView from '@/components/RecordRecentView'
+import ContactButtons from '@/components/ContactButtons'
 import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
 import {
@@ -257,6 +258,11 @@ export default async function ProviderPage({
             <p className="mt-4 whitespace-pre-line text-slate-900">{description}</p>
           )}
 
+          {/* Honest source note for cards entered from public data (idea #7). */}
+          {provider.claim_status === 'unclaimed' && (
+            <p className="mt-4 text-meta text-slate-400">{t('provider.unclaimed')}</p>
+          )}
+
           {cta && <div className="mt-6 hidden sm:block">{cta}</div>}
         </div>
 
@@ -315,6 +321,21 @@ export default async function ProviderPage({
 
         <section className="border-t border-slate-200 py-6">
           <SectionHeading>{t('provider.contacts')}</SectionHeading>
+          <div className="mb-4">
+            <ContactButtons
+              providerId={provider.id}
+              locale={locale}
+              phone={provider.phone}
+              messageHref={
+                provider.telegram
+                  ? `https://t.me/${provider.telegram.replace(/^@/, '')}`
+                  : provider.instagram
+                    ? `https://instagram.com/${provider.instagram.replace(/^@/, '')}`
+                    : null
+              }
+              website={provider.website}
+            />
+          </div>
           <ul className="space-y-2 text-body">
             {provider.phone && (
               <li>

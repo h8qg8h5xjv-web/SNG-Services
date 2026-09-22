@@ -58,6 +58,7 @@ export async function saveProvider(
     entity_type: d.entity_type,
     claim_status: d.claim_status,
     booking_enabled: d.booking_enabled,
+    travels_to_client: d.travels_to_client,
     // Pro-only; the DB CHECK rejects a radius on a place, so null it explicitly.
     travel_radius_km: d.entity_type === 'pro' ? d.travel_radius_km : null,
     // Place-only; null them for a pro so the CHECK holds.

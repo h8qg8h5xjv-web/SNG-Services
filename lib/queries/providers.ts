@@ -3,6 +3,7 @@ import type {
   FulfillmentType,
   LanguageVerificationStatus,
   EntityType,
+  ClaimStatus,
   CredentialStatus,
   DbsType,
   Json,
@@ -12,7 +13,9 @@ import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
 const LIST_SELECT =
   'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, ' +
-  'entity_type, booking_enabled, opening_hours, phone, website, created_at, ' +
+  'entity_type, booking_enabled, travels_to_client, claim_status, opening_hours, phone, website, created_at, ' +
+  'insurance_status, insurance_expires_at, dbs_status, dbs_expires_at, ' +
+  'gas_safe_status, gas_safe_expires_at, electrical_status, electrical_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
@@ -64,7 +67,9 @@ export type ProviderDetail = {
   fulfillment_type: FulfillmentType
   external_order_url: string | null
   entity_type: EntityType
+  claim_status: ClaimStatus
   booking_enabled: boolean
+  travels_to_client: boolean
   travel_radius_km: number | null
   opening_hours: Json | null
   venue_photos: string[] | null
@@ -104,7 +109,7 @@ export type ProviderDetail = {
 const DETAIL_SELECT =
   'id, slug, name_en, description_en, borough, address, lat, lng, phone, telegram, instagram, website, ' +
   'cover_image, fulfillment_type, external_order_url, ' +
-  'entity_type, booking_enabled, travel_radius_km, opening_hours, venue_photos, ' +
+  'entity_type, claim_status, booking_enabled, travels_to_client, travel_radius_km, opening_hours, venue_photos, ' +
   'insurance_status, insurance_expires_at, dbs_status, dbs_type, dbs_expires_at, ' +
   'categories(slug,name_en,name_ru), ' +
   'provider_translations(locale,name,description), ' +

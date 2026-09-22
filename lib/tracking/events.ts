@@ -1,10 +1,12 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { ContactChannel } from '@/types/database'
 
 export type TrackEventType =
   | 'impression'
   | 'click'
   | 'booking_started'
   | 'booking_completed'
+  | 'contact_reveal'
 
 export type TrackEvent = {
   provider_id: string
@@ -13,6 +15,7 @@ export type TrackEvent = {
   surface?: string | null
   category_id?: string | null
   locale?: string | null
+  contact_channel?: ContactChannel | null
 }
 
 const TYPES = new Set<TrackEventType>([
@@ -20,7 +23,9 @@ const TYPES = new Set<TrackEventType>([
   'click',
   'booking_started',
   'booking_completed',
+  'contact_reveal',
 ])
+const CHANNELS = new Set<ContactChannel>(['call', 'message', 'website'])
 const UUID = /^[0-9a-fA-F-]{36}$/
 
 /**
@@ -45,6 +50,10 @@ export async function recordEvents(
         surface: e.surface ?? null,
         category_id: e.category_id ?? null,
         locale: e.locale ?? null,
+        contact_channel:
+          e.event_type === 'contact_reveal' && e.contact_channel && CHANNELS.has(e.contact_channel)
+            ? e.contact_channel
+            : null,
         session_id: sessionId,
       })),
     )

@@ -24,6 +24,29 @@ async function assertMember(providerId: string): Promise<boolean> {
   return Boolean(data)
 }
 
+const travelsSchema = z.object({
+  providerId: z.string().uuid(),
+  value: z.boolean(),
+})
+
+// Master toggles "I travel to the client" (idea #5). Membership is proven first;
+// the write then goes through the service role, like the other cabinet writes.
+export async function setTravelsToClient(input: unknown): Promise<BusinessActionResult> {
+  const parsed = travelsSchema.safeParse(input)
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  const { providerId, value } = parsed.data
+  if (!(await assertMember(providerId))) return { ok: false, error: 'Not authorized.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('providers')
+    .update({ travels_to_client: value })
+    .eq('id', providerId)
+  if (error) return { ok: false, error: error.message }
+  revalidatePath('/business/requests')
+  return { ok: true }
+}
+
 const acceptSchema = z.object({
   requestId: z.string().uuid(),
   providerId: z.string().uuid(),

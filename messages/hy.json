@@ -32,7 +32,17 @@
     "less": "Less",
     "tabPlaces": "Վայրեր",
     "tabServices": "Ծառայություններ",
-    "freeAt": "Free at {time}"
+    "freeAt": "Free at {time}",
+    "how": {
+      "title": "Ինչպես է աշխատում",
+      "step1": "Նկարագրեք խնդիրը",
+      "step2": "Վարպետները պատասխանում են րոպեների ընթացքում",
+      "step3": "Ամրագրումը պատրաստ է"
+    },
+    "masters": {
+      "title": "Վարպե՞տ եք, թե՞ բիզնես եք վարում։ Ստացեք հայտեր ռուսախոս հաճախորդներից։",
+      "cta": "Իմանալ ավելին"
+    }
   },
   "catalog": {
     "providersCount": "{count, plural, =0 {No providers} one {# provider} other {# providers}}",
@@ -46,7 +56,17 @@
     "emptyCategory": "No providers here yet.",
     "emptyFiltered": "Nothing matches these filters.",
     "from": "from",
-    "priceOnRequest": "Price on request"
+    "priceOnRequest": "Price on request",
+    "sortNewest": "Սկզբում նորերը",
+    "filterTravels": "Տնային այց",
+    "filterVerified": "Միայն ստուգվածները",
+    "emptyCallTitle": "Այստեղ դեռ ոչ ոք չկա — մենք լրացնում ենք կատալոգը։",
+    "emptyCallBody": "Աշխատո՞ւմ եք այս ոլորտում։ Տեղադրեք ձեր քարտը և կտեսնեն առաջինը։",
+    "emptyCallCta": "Տեղադրել քարտը",
+    "seoTitle": "{category} — ռուսախոս վարպետներ, Լոնդոն",
+    "seoTitleBorough": "{category} {borough}-ում — ռուսերենով",
+    "seoDescription": "Գտեք «{category}» կատեգորիայի ռուսախոս վարպետներ Լոնդոնում՝ ստուգված լեզու, արագ հայտեր, առցանց ամրագրում։",
+    "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -74,7 +94,10 @@
     "openNow": "Բաց է հիմա",
     "closedNow": "Փակ է հիմա",
     "gallery": "Լուսանկարներ",
-    "photoCount": "{current}/{total}"
+    "photoCount": "{current}/{total}",
+    "call": "Զանգահարել",
+    "message": "Գրել",
+    "unclaimed": "Կազմված է բաց աղբյուրներից"
   },
   "search": {
     "title": "Search",
@@ -296,7 +319,18 @@
     },
     "myCabinet": "My cabinet",
     "noAccess": "No access yet?",
-    "noAccessLink": "Write to us"
+    "noAccessLink": "Write to us",
+    "stats": {
+      "title": "Վերջին 30 օրը",
+      "views": "Քարտի դիտումներ",
+      "contacts": "Կոնտակտների բացումներ",
+      "requests": "Հայտեր"
+    },
+    "settings": {
+      "title": "Կարգավորումներ",
+      "travels": "Այցելում եմ հաճախորդին",
+      "travelsHint": "Հայտնվեք «Տնային այց» զտիչում։"
+    }
   },
   "footer": {
     "forBusiness": "For business",

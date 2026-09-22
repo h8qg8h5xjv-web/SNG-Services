@@ -1,8 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconInbox } from '@tabler/icons-react'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { getBusinessRequests } from '@/lib/business/data'
+import { getBusinessRequests, getProviderStats, getMyProviders } from '@/lib/business/data'
 import RequestCard from '@/components/business/RequestCard'
+import StatsBlock from '@/components/business/StatsBlock'
+import TravelsToggle from '@/components/business/TravelsToggle'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,12 +16,20 @@ export default async function BusinessRequestsPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('business')
-  const requests = await getBusinessRequests()
+  const [requests, stats, providers] = await Promise.all([
+    getBusinessRequests(),
+    getProviderStats(),
+    getMyProviders(),
+  ])
   const active = requests.filter((r) => r.active)
   const answered = requests.filter((r) => !r.active)
 
   return (
     <div className="space-y-8">
+      <StatsBlock stats={stats} />
+
+      <TravelsToggle providers={providers} />
+
       <div>
         <h1 className="mb-1 text-title font-extrabold tracking-tight">{t('nav.requests')}</h1>
         <p className="text-meta text-slate-500">{t('requestsIntro')}</p>
