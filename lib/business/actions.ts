@@ -47,6 +47,196 @@ export async function setTravelsToClient(input: unknown): Promise<BusinessAction
   return { ok: true }
 }
 
+// --- §2 cabinet: profile / services / languages / schedule --------------------
+
+const profileSchema = z.object({
+  providerId: z.string().uuid(),
+  descriptionEn: z.string().trim().max(2000).nullable().default(null),
+  descriptionRu: z.string().trim().max(2000).nullable().default(null),
+  borough: z.string().trim().min(1),
+  address: z.string().trim().max(300).nullable().default(null),
+  phone: z.string().trim().max(50).nullable().default(null),
+  website: z.string().trim().max(300).nullable().default(null),
+  travelsToClient: z.boolean(),
+  photos: z.array(z.string()).max(6).default([]),
+})
+
+// Changes are visible on the public site immediately (no draft copy).
+export async function saveCabinetProfile(input: unknown): Promise<BusinessActionResult> {
+  const parsed = profileSchema.safeParse(input)
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  const d = parsed.data
+  if (!(await assertMember(d.providerId))) return { ok: false, error: 'Not authorized.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('providers')
+    .update({
+      description_en: d.descriptionEn,
+      borough: d.borough,
+      address: d.address,
+      phone: d.phone,
+      website: d.website,
+      travels_to_client: d.travelsToClient,
+      cover_image: d.photos[0] ?? null, // first photo is the cover
+      venue_photos: d.photos.length > 0 ? d.photos : null,
+    })
+    .eq('id', d.providerId)
+  if (error) return { ok: false, error: error.message }
+
+  // Russian description lives in provider_translations (public site prefers it).
+  if (d.descriptionRu && d.descriptionRu.trim()) {
+    const { error: tErr } = await admin
+      .from('provider_translations')
+      .upsert(
+        { provider_id: d.providerId, locale: 'ru', description: d.descriptionRu },
+        { onConflict: 'provider_id,locale' },
+      )
+    if (tErr) return { ok: false, error: tErr.message }
+  } else {
+    await admin
+      .from('provider_translations')
+      .delete()
+      .eq('provider_id', d.providerId)
+      .eq('locale', 'ru')
+  }
+
+  revalidatePath('/business/profile')
+  return { ok: true }
+}
+
+// Photo upload goes through the service role: the images bucket is admin-write
+// only, so a master can't upload from the client. Membership is proven first.
+export async function uploadCabinetPhoto(
+  providerId: string,
+  formData: FormData,
+): Promise<{ ok: true; path: string } | { ok: false; error: string }> {
+  if (!(await assertMember(providerId))) return { ok: false, error: 'Not authorized.' }
+  const file = formData.get('photo')
+  if (!(file instanceof File)) return { ok: false, error: 'No file.' }
+  if (file.size > 5 * 1024 * 1024) return { ok: false, error: 'Photo is too large (max 5MB).' }
+  const ext = file.name.includes('.') ? file.name.split('.').pop() : 'jpg'
+  const path = `venues/${crypto.randomUUID()}.${ext}`
+  const admin = createAdminClient()
+  const { error } = await admin.storage
+    .from('images')
+    .upload(path, file, { upsert: true, cacheControl: '3600' })
+  if (error) return { ok: false, error: error.message }
+  return { ok: true, path }
+}
+
+const serviceSchema = z.object({
+  providerId: z.string().uuid(),
+  id: z.string().uuid().nullable().default(null),
+  name: z.string().trim().min(1),
+  pricePence: z.number().int().min(0),
+  durationMin: z.number().int().positive(),
+})
+
+export async function saveCabinetService(input: unknown): Promise<BusinessActionResult> {
+  const parsed = serviceSchema.safeParse(input)
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  const d = parsed.data
+  if (!(await assertMember(d.providerId))) return { ok: false, error: 'Not authorized.' }
+  const admin = createAdminClient()
+  if (d.id) {
+    const { error } = await admin
+      .from('services')
+      .update({ name_en: d.name, price_pence: d.pricePence, duration_min: d.durationMin })
+      .eq('id', d.id)
+      .eq('provider_id', d.providerId)
+    if (error) return { ok: false, error: error.message }
+  } else {
+    const { error } = await admin.from('services').insert({
+      provider_id: d.providerId,
+      name_en: d.name,
+      price_pence: d.pricePence,
+      duration_min: d.durationMin,
+    })
+    if (error) return { ok: false, error: error.message }
+  }
+  revalidatePath('/business/services')
+  return { ok: true }
+}
+
+export async function deleteCabinetService(
+  providerId: string,
+  serviceId: string,
+): Promise<BusinessActionResult> {
+  if (!(await assertMember(providerId))) return { ok: false, error: 'Not authorized.' }
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('services')
+    .delete()
+    .eq('id', serviceId)
+    .eq('provider_id', providerId)
+  if (error) return { ok: false, error: error.message }
+  revalidatePath('/business/services')
+  return { ok: true }
+}
+
+// A master may CLAIM or drop a language, never verify it — we only ever insert
+// with the default status ('claimed'); an admin verifies elsewhere.
+export async function setCabinetLanguage(
+  providerId: string,
+  code: string,
+  claimed: boolean,
+): Promise<BusinessActionResult> {
+  if (!(await assertMember(providerId))) return { ok: false, error: 'Not authorized.' }
+  const admin = createAdminClient()
+  if (claimed) {
+    const { error } = await admin
+      .from('provider_languages')
+      .upsert({ provider_id: providerId, language_code: code }, { onConflict: 'provider_id,language_code', ignoreDuplicates: true })
+    if (error) return { ok: false, error: error.message }
+  } else {
+    const { error } = await admin
+      .from('provider_languages')
+      .delete()
+      .eq('provider_id', providerId)
+      .eq('language_code', code)
+    if (error) return { ok: false, error: error.message }
+  }
+  revalidatePath('/business/languages')
+  return { ok: true }
+}
+
+const scheduleSchema = z.object({
+  providerId: z.string().uuid(),
+  rows: z
+    .array(
+      z.object({
+        dayOfWeek: z.number().int().min(0).max(6),
+        startTime: z.string().regex(/^\d{2}:\d{2}$/),
+        endTime: z.string().regex(/^\d{2}:\d{2}$/),
+      }),
+    )
+    .max(50),
+})
+
+export async function saveCabinetSchedule(input: unknown): Promise<BusinessActionResult> {
+  const parsed = scheduleSchema.safeParse(input)
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  const d = parsed.data
+  if (!(await assertMember(d.providerId))) return { ok: false, error: 'Not authorized.' }
+  const admin = createAdminClient()
+  await admin.from('schedules').delete().eq('provider_id', d.providerId)
+  if (d.rows.length > 0) {
+    const { error } = await admin.from('schedules').insert(
+      d.rows.map((r) => ({
+        provider_id: d.providerId,
+        day_of_week: r.dayOfWeek,
+        start_time: r.startTime,
+        end_time: r.endTime,
+      })),
+    )
+    // The DB trigger rejects schedules for non-native_booking providers.
+    if (error) return { ok: false, error: error.message }
+  }
+  revalidatePath('/business/schedule')
+  return { ok: true }
+}
+
 const acceptSchema = z.object({
   requestId: z.string().uuid(),
   providerId: z.string().uuid(),

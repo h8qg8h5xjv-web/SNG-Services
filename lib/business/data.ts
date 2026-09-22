@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 // Reads for the business cabinet. All queries run under the signed-in master's
 // session, so RLS does the access control: a provider member sees only the
@@ -135,6 +136,182 @@ export async function getBusinessRequests(): Promise<BusinessRequest[]> {
 export async function getNewRequestCount(): Promise<number> {
   const requests = await getBusinessRequests()
   return requests.filter((r) => r.active).length
+}
+
+// Cabinet reads use the service role AFTER confirming the provider is one of the
+// signed-in master's own (via RLS-scoped provider_members). This lets a master
+// see their own DRAFT card too (member RLS on providers only exposes published),
+// while ownership is still enforced — never a bare admin read.
+async function ownedIds(): Promise<Set<string>> {
+  return new Set(await getMyProviderIds())
+}
+
+export type CabinetProfile = {
+  id: string
+  name: string
+  entityType: 'place' | 'pro'
+  descriptionEn: string | null
+  descriptionRu: string | null
+  borough: string
+  address: string | null
+  phone: string | null
+  website: string | null
+  travelsToClient: boolean
+  photos: string[]
+}
+
+export async function getCabinetProfile(providerId: string): Promise<CabinetProfile | null> {
+  if (!(await ownedIds()).has(providerId)) return null
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('providers')
+    .select(
+      'id, name_en, entity_type, description_en, borough, address, phone, website, ' +
+        'travels_to_client, cover_image, venue_photos, provider_translations(locale, description)',
+    )
+    .eq('id', providerId)
+    .maybeSingle()
+    .returns<{
+      id: string
+      name_en: string
+      entity_type: 'place' | 'pro'
+      description_en: string | null
+      borough: string
+      address: string | null
+      phone: string | null
+      website: string | null
+      travels_to_client: boolean
+      cover_image: string | null
+      venue_photos: string[] | null
+      provider_translations: { locale: string; description: string | null }[]
+    }>()
+  if (!data) return null
+  const photos = data.venue_photos && data.venue_photos.length > 0
+    ? data.venue_photos
+    : data.cover_image
+      ? [data.cover_image]
+      : []
+  return {
+    id: data.id,
+    name: data.name_en,
+    entityType: data.entity_type,
+    descriptionEn: data.description_en,
+    descriptionRu: data.provider_translations.find((t) => t.locale === 'ru')?.description ?? null,
+    borough: data.borough,
+    address: data.address,
+    phone: data.phone,
+    website: data.website,
+    travelsToClient: data.travels_to_client,
+    photos,
+  }
+}
+
+export type CabinetService = {
+  id: string
+  name: string
+  pricePence: number
+  durationMin: number
+}
+
+export async function getCabinetServices(providerId: string): Promise<CabinetService[]> {
+  if (!(await ownedIds()).has(providerId)) return []
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('services')
+    .select('id, name_en, price_pence, duration_min')
+    .eq('provider_id', providerId)
+    .order('created_at', { ascending: true })
+  return (data ?? []).map((s) => ({
+    id: s.id,
+    name: s.name_en,
+    pricePence: s.price_pence,
+    durationMin: s.duration_min,
+  }))
+}
+
+export type CabinetLanguage = { code: string; name: string; status: string | null }
+
+export async function getCabinetLanguages(
+  providerId: string,
+): Promise<{ all: { code: string; name: string }[]; claimed: CabinetLanguage[] }> {
+  if (!(await ownedIds()).has(providerId)) return { all: [], claimed: [] }
+  const admin = createAdminClient()
+  const [{ data: all }, { data: mine }] = await Promise.all([
+    admin.from('languages').select('code, name_native').order('sort_order', { ascending: true }),
+    admin
+      .from('provider_languages')
+      .select('language_code, status, languages(name_native)')
+      .eq('provider_id', providerId)
+      .returns<{ language_code: string; status: string; languages: { name_native: string } | null }[]>(),
+  ])
+  return {
+    all: (all ?? []).map((l) => ({ code: l.code, name: l.name_native })),
+    claimed: (mine ?? []).map((l) => ({
+      code: l.language_code,
+      name: l.languages?.name_native ?? l.language_code,
+      status: l.status,
+    })),
+  }
+}
+
+export type CabinetScheduleRow = { id: string; dayOfWeek: number; startTime: string; endTime: string }
+
+export async function getCabinetSchedule(providerId: string): Promise<CabinetScheduleRow[]> {
+  if (!(await ownedIds()).has(providerId)) return []
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('schedules')
+    .select('id, day_of_week, start_time, end_time')
+    .eq('provider_id', providerId)
+    .order('day_of_week', { ascending: true })
+  return (data ?? []).map((s) => ({
+    id: s.id,
+    dayOfWeek: s.day_of_week,
+    startTime: s.start_time,
+    endTime: s.end_time,
+  }))
+}
+
+export type CabinetBooking = {
+  id: string
+  startsAt: string
+  status: string
+  serviceName: string | null
+  customerName: string
+  customerPhone: string
+  customerEmail: string | null
+}
+
+// Bookings for the master's providers. Contacts appear ONLY on their own rows —
+// enforced by the read being scoped to the member's provider ids (and by RLS if
+// this were the user session). Upcoming first.
+export async function getCabinetBookings(): Promise<CabinetBooking[]> {
+  const ids = [...(await ownedIds())]
+  if (ids.length === 0) return []
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('bookings')
+    .select('id, starts_at, status, customer_name, customer_phone, customer_email, services(name_en)')
+    .in('provider_id', ids)
+    .order('starts_at', { ascending: false })
+    .returns<{
+      id: string
+      starts_at: string
+      status: string
+      customer_name: string
+      customer_phone: string
+      customer_email: string | null
+      services: { name_en: string } | null
+    }[]>()
+  return (data ?? []).map((b) => ({
+    id: b.id,
+    startsAt: b.starts_at,
+    status: b.status,
+    serviceName: b.services?.name_en ?? null,
+    customerName: b.customer_name,
+    customerPhone: b.customer_phone,
+    customerEmail: b.customer_email,
+  }))
 }
 
 export type ProviderStats = { views: number; contacts: number; requests: number }

@@ -335,6 +335,60 @@
       "title": "Settings",
       "travels": "I travel to the client",
       "travelsHint": "Show up in the “Home visits” filter."
+    },
+    "tabs": {
+      "requests": "Requests",
+      "profile": "Profile",
+      "languages": "Languages",
+      "services": "Services",
+      "bookings": "Bookings",
+      "schedule": "Schedule"
+    },
+    "profile": {
+      "descriptionRu": "Description (Russian)",
+      "descriptionEn": "Description (English)",
+      "borough": "Borough",
+      "address": "Address",
+      "phone": "Phone",
+      "website": "Website",
+      "travels": "I travel to the client",
+      "photos": "Photos (up to {max})",
+      "cover": "Cover",
+      "makeCover": "Make cover",
+      "removePhoto": "Remove photo",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved"
+    },
+    "languages": {
+      "hint": "Claim the languages you serve in. An admin verifies each.",
+      "verified": "Verified",
+      "pending": "Pending",
+      "claim": "Claim",
+      "remove": "Remove"
+    },
+    "services": {
+      "priceHint": "Price in £, duration in minutes.",
+      "name": "Name",
+      "price": "Price £",
+      "duration": "Minutes",
+      "save": "Save",
+      "add": "Add",
+      "delete": "Delete"
+    },
+    "bookings": {
+      "empty": "No bookings yet.",
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
+      }
+    },
+    "schedule": {
+      "hint": "Optional. Only for online booking.",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved"
     }
   },
   "footer": {

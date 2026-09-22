@@ -335,6 +335,60 @@
       "title": "Параметрлер",
       "travels": "Үйге шығамын",
       "travelsHint": "«Үйге шығу» сүзгісінде көріну."
+    },
+    "tabs": {
+      "requests": "Өтінімдер",
+      "profile": "Профиль",
+      "languages": "Тілдер",
+      "services": "Қызметтер",
+      "bookings": "Жазбалар",
+      "schedule": "Кесте"
+    },
+    "profile": {
+      "descriptionRu": "Сипаттама (орысша)",
+      "descriptionEn": "Сипаттама (English)",
+      "borough": "Аудан",
+      "address": "Мекенжай",
+      "phone": "Телефон",
+      "website": "Сайт",
+      "travels": "Үйге шығамын",
+      "photos": "Фото ({max} дейін)",
+      "cover": "Мұқаба",
+      "makeCover": "Мұқаба ету",
+      "removePhoto": "Фотоны жою",
+      "save": "Сақтау",
+      "saving": "Сақталуда…",
+      "saved": "Сақталды"
+    },
+    "languages": {
+      "hint": "Жұмыс істейтін тілдерді белгілеңіз. Әрқайсысын әкімші растайды.",
+      "verified": "Расталған",
+      "pending": "Тексерілуде",
+      "claim": "Мәлімдеу",
+      "remove": "Алып тастау"
+    },
+    "services": {
+      "priceHint": "Бағасы £, ұзақтығы минутпен.",
+      "name": "Атауы",
+      "price": "Баға £",
+      "duration": "Минут",
+      "save": "Сақтау",
+      "add": "Қосу",
+      "delete": "Жою"
+    },
+    "bookings": {
+      "empty": "Әзірге жазбалар жоқ.",
+      "status": {
+        "confirmed": "Расталған",
+        "pending": "Күтуде",
+        "cancelled": "Бас тартылған"
+      }
+    },
+    "schedule": {
+      "hint": "Міндетті емес. Тек онлайн жазылу үшін.",
+      "save": "Сақтау",
+      "saving": "Сақталуда…",
+      "saved": "Сақталды"
     }
   },
   "footer": {

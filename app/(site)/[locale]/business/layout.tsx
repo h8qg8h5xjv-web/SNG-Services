@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconInbox, IconLogout } from '@tabler/icons-react'
-import { Link } from '@/i18n/navigation'
+import { IconLogout } from '@tabler/icons-react'
 import { createClient } from '@/lib/supabase/server'
 import { getMyProviderIds, getNewRequestCount } from '@/lib/business/data'
+import CabinetTabs from '@/components/business/CabinetTabs'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,21 +33,9 @@ export default async function BusinessLayout({
 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col">
-      <header className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-        <span className="text-body font-semibold">{t('cabinet')}</span>
-        <nav className="flex items-center gap-4">
-          <Link
-            href="/business/requests"
-            className="flex min-h-11 items-center gap-2 text-body font-semibold text-accent"
-          >
-            <IconInbox className="h-5 w-5" stroke={1.5} />
-            {t('nav.requests')}
-            {newCount > 0 && (
-              <span className="rounded-full bg-accent px-2 py-0.5 text-meta font-semibold text-white">
-                {newCount}
-              </span>
-            )}
-          </Link>
+      <header className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-body font-semibold">{t('cabinet')}</span>
           <form action={`/${locale}/business/auth/signout`} method="post">
             <button
               type="submit"
@@ -57,7 +45,8 @@ export default async function BusinessLayout({
               <IconLogout className="h-5 w-5" stroke={1.5} />
             </button>
           </form>
-        </nav>
+        </div>
+        <CabinetTabs newCount={newCount} />
       </header>
       <main className="flex-1 px-4 py-6">{children}</main>
     </div>
