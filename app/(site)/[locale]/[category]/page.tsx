@@ -12,24 +12,29 @@ import TrackImpressions from '@/components/TrackImpressions'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getCategoryBySlug } from '@/lib/queries/categories'
 import { listProvidersByCategory } from '@/lib/queries/providers'
+import { getResponseMedians } from '@/lib/queries/response-time'
 import { pickCategoryName } from '@/lib/i18n/content'
 import { rankProviders } from '@/lib/ranking'
 import {
   toCard,
-  filterByBorough,
+  filterByBoroughs,
   filterByFacets,
   boroughsOf,
+  hasVerifiedDocument,
   isServiceEligible,
   type SortKey,
 } from '@/lib/catalog/transform'
 
 const SORT_KEYS: SortKey[] = ['relevance', 'price', 'newest']
-
-// Below this, the category is too thin to be worth indexing (idea #7).
 const MIN_INDEXABLE = 3
 
 function parseSort(value: string | undefined): SortKey {
   return SORT_KEYS.includes(value as SortKey) ? (value as SortKey) : 'relevance'
+}
+function parseBoroughs(value: string | undefined, valid: string[]): string[] {
+  if (!value) return []
+  const set = new Set(valid)
+  return value.split(',').map((s) => s.trim()).filter((b) => set.has(b))
 }
 
 type SearchParams = { borough?: string; sort?: string; travels?: string; verified?: string }
@@ -47,12 +52,11 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: 'catalog' })
   const name = pickCategoryName(cat, locale)
-
-  // Provider set drives both the borough-specific title and the noindex rule.
   const all = (await listProvidersByCategory(cat.id)).filter(isServiceEligible)
-  const boroughs = boroughsOf(all)
+  const boroughList = boroughsOf(all)
   const sp = await searchParams
-  const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
+  const boroughs = parseBoroughs(sp.borough, boroughList)
+  const borough = boroughs.length === 1 ? boroughs[0] : ''
 
   const title = borough
     ? t('seoTitleBorough', { category: name, borough })
@@ -60,15 +64,9 @@ export async function generateMetadata({
   const description = borough
     ? t('seoDescriptionBorough', { category: name, borough })
     : t('seoDescription', { category: name })
+  const indexable = all.length >= MIN_INDEXABLE && boroughs.length === 0 && !sp.travels && !sp.verified
 
-  // Thin categories (and any filtered view) stay out of the index; links still followed.
-  const indexable = all.length >= MIN_INDEXABLE && !borough && !sp.travels && !sp.verified
-
-  return {
-    title,
-    description,
-    robots: indexable ? undefined : { index: false, follow: true },
-  }
+  return { title, description, robots: indexable ? undefined : { index: false, follow: true } }
 }
 
 export default async function CategoryPage({
@@ -85,21 +83,22 @@ export default async function CategoryPage({
   const cat = await getCategoryBySlug(category)
   if (!cat) notFound()
 
-  // The category page is the Services lens — exclude listing-only places
-  // (they appear under the Places tab, browsed by borough).
   const all = (await listProvidersByCategory(cat.id)).filter(isServiceEligible)
-  const boroughs = boroughsOf(all)
-  const borough = sp.borough && boroughs.includes(sp.borough) ? sp.borough : ''
+  const boroughList = boroughsOf(all)
+  const boroughs = parseBoroughs(sp.borough, boroughList)
   const sort = parseSort(sp.sort)
   const travels = sp.travels === '1'
   const verifiedOnly = sp.verified === '1'
 
-  const faceted = filterByFacets(filterByBorough(all, borough || null), {
-    travels,
-    verifiedOnly,
-  })
+  const faceted = filterByFacets(filterByBoroughs(all, boroughs), { travels, verifiedOnly })
   const filtered = rankProviders(faceted, { locale, sort, categorySlug: category })
   const cards = filtered.map((p) => toCard(p, category, locale))
+
+  // Facets for the live "Показать N" count; medians for "отвечает за N мин".
+  const facets = all.map((p) => ({ borough: p.borough, travels: p.travels_to_client, verified: hasVerifiedDocument(p) }))
+  const medians = await getResponseMedians(filtered.map((p) => p.id))
+  const responseMins: Record<string, number> = {}
+  for (const [id, m] of medians) responseMins[id] = m
 
   const t = await getTranslations('catalog')
   const tr = await getTranslations('request')
@@ -108,65 +107,51 @@ export default async function CategoryPage({
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-4">
+      <main className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 pt-4 sm:px-6">
         <BackButton />
-        <div className="py-6">
+        <div className="py-5">
           <h1 className="text-title font-extrabold tracking-tight">{pickCategoryName(cat, locale)}</h1>
-          <p className="mt-1 text-body text-slate-500">
-            {t('providersCount', { count: all.length })}
-          </p>
+          <p className="mt-1 text-meta text-slate-500">{t('providersCount', { count: all.length })}</p>
+          {all.length > 0 && <p className="mt-1 text-label text-slate-400">{t('orderNote')}</p>}
+        </div>
+
+        <div className="sm:flex sm:gap-6">
           {all.length > 0 && (
-            <p className="mt-2 text-meta text-slate-400">{t('orderNote')}</p>
-          )}
-        </div>
-
-        {all.length > 0 && (
-          <div className="mb-6">
-            <CategoryFilters
-              boroughs={boroughs}
-              current={{ borough, sort, travels, verifiedOnly }}
-            />
-          </div>
-        )}
-
-        {/* Empty category (idea #1): invite masters to list, before the request path. */}
-        {isEmpty && (
-          <div className="mb-6">
-            <InfoBlock
-              icon={IconBriefcase}
-              title={t('emptyCallTitle')}
-              subtitle={t('emptyCallBody')}
-            />
-            <div className="mt-3">
-              <ButtonLink href="/for-business" className="w-full sm:w-auto">
-                {t('emptyCallCta')}
-              </ButtonLink>
+            <div className="mb-4 sm:mb-0">
+              <CategoryFilters boroughs={boroughList} facets={facets} current={{ boroughs, sort, travels, verifiedOnly }} />
             </div>
+          )}
+
+          <div className="min-w-0 flex-1">
+            {/* Request path — main route for "any master". */}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-slate-200 bg-white p-4">
+              <p className="text-body text-slate-500">{tr('leaveRequest')}</p>
+              <ButtonLink href={`/request?category=${category}`}>{tr('submit')}</ButtonLink>
+            </div>
+
+            {isEmpty ? (
+              <div className="rounded-card border border-slate-200 bg-white p-4">
+                <InfoBlock icon={IconBriefcase} title={t('emptyCallTitle')} subtitle={t('emptyCallBody')} />
+                <div className="mt-3">
+                  <ButtonLink href="/for-business" className="w-full sm:w-auto">
+                    {t('emptyCallCta')}
+                  </ButtonLink>
+                </div>
+              </div>
+            ) : cards.length === 0 ? (
+              <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
+            ) : (
+              <>
+                <ProviderGrid cards={cards} surface="category" responseMins={responseMins} />
+                <TrackImpressions
+                  surface="category"
+                  locale={locale}
+                  items={cards.map((c, i) => ({ providerId: c.id, position: i + 1, categoryId: cat.id }))}
+                />
+              </>
+            )}
           </div>
-        )}
-
-        {/* Request is the main path (REQUESTS 12.2): "any master" for this category. */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4">
-          <p className="text-body text-slate-500">{tr('leaveRequest')}</p>
-          <ButtonLink href={`/request?category=${category}`}>{tr('submit')}</ButtonLink>
         </div>
-
-        {isEmpty ? null : cards.length === 0 ? (
-          <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
-        ) : (
-          <>
-            <ProviderGrid cards={cards} surface="category" />
-            <TrackImpressions
-              surface="category"
-              locale={locale}
-              items={cards.map((c, i) => ({
-                providerId: c.id,
-                position: i + 1,
-                categoryId: cat.id,
-              }))}
-            />
-          </>
-        )}
       </main>
     </>
   )

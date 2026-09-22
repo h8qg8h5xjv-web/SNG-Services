@@ -47,6 +47,12 @@
     "masters": {
       "title": "Are you a master or run a business? Get requests from Russian-speaking clients.",
       "cta": "Learn more"
+    },
+    "suggestKind": {
+      "category": "Category",
+      "provider": "Master",
+      "borough": "District",
+      "service": "Service"
     }
   },
   "catalog": {
@@ -73,7 +79,12 @@
     "seoDescription": "Find Russian-speaking {category} masters in London: verified language, quick requests, online booking.",
     "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking.",
     "orderNote": "Order: alphabetical by default; you can sort by price or newest.",
-    "respondsIn": "responds in {min} min"
+    "respondsIn": "responds in {min} min",
+    "filters": "Filters",
+    "showN": "Show {count}",
+    "reset": "Reset",
+    "filtersTrust": "Trust",
+    "filtersFormat": "Format"
   },
   "fulfillment": {
     "nativeBadge": "Book here",

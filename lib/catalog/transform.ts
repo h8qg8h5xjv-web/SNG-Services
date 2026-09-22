@@ -214,6 +214,16 @@ export function filterByBorough(
   return providers.filter((p) => p.borough === borough)
 }
 
+// Multi-borough (checkbox filters, §4). Empty = all.
+export function filterByBoroughs(
+  providers: ProviderWithRelations[],
+  boroughs: string[],
+): ProviderWithRelations[] {
+  if (boroughs.length === 0) return providers
+  const set = new Set(boroughs)
+  return providers.filter((p) => set.has(p.borough))
+}
+
 export type CategoryFacets = { travels: boolean; verifiedOnly: boolean }
 
 /** URL-driven facet filters for the category page (idea #5). */
