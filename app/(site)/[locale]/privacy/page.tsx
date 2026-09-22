@@ -11,24 +11,25 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'terms' })
+  const t = await getTranslations({ locale, namespace: 'privacy' })
   return { title: t('title'), robots: { index: false, follow: true } }
 }
 
-export default async function TermsPage({
+export default async function PrivacyPage({
   params,
 }: {
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations('terms')
+  const t = await getTranslations('privacy')
 
   const sections: [string, string][] = [
-    [t('platformTitle'), t('platformBody')],
-    [t('responsibilityTitle'), t('responsibilityBody')],
-    [t('cancellationsTitle'), t('cancellationsBody')],
-    [t('complaintsTitle'), t('complaintsBody')],
+    [t('collectTitle'), t('collectBody')],
+    [t('retentionTitle'), t('retentionBody')],
+    [t('shareTitle'), t('shareBody')],
+    [t('rightsTitle'), t('rightsBody')],
+    [t('deleteTitle'), t('deleteBody')],
   ]
 
   return (
@@ -37,6 +38,10 @@ export default async function TermsPage({
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
+        <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-meta text-amber-900">
+          {t('draftNote')}
+        </p>
+        <p className="mt-4 text-body text-slate-500">{t('operator')}</p>
         <div className="mt-6 space-y-6">
           {sections.map(([title, body]) => (
             <section key={title}>

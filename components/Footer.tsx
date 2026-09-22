@@ -17,6 +17,9 @@ export default function Footer() {
           <Link href="/terms" className="text-slate-500 hover:text-slate-900">
             {t('footer.terms')}
           </Link>
+          <Link href="/privacy" className="text-slate-500 hover:text-slate-900">
+            {t('footer.privacy')}
+          </Link>
         </nav>
         <span className="text-meta text-slate-400">
           © {year} {t('common.appName')}

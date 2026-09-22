@@ -7,6 +7,7 @@ import { getSlots, createBooking, getSlotParticipants } from '@/lib/booking/acti
 import { formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import { Button, ButtonLink } from '@/components/ui/Button'
+import Consent from '@/components/Consent'
 import { Input, Select } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
 import { SuccessScreen } from '@/components/ui/SuccessScreen'
@@ -335,6 +336,7 @@ export default function BookingWidget({
           <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
             {submitting ? t('submitting') : t('submit')}
           </Button>
+          <Consent />
         </>
       )}
     </form>

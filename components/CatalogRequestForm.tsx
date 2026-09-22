@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { IconCircleCheck } from '@tabler/icons-react'
+import Consent from '@/components/Consent'
 
 // "Get into the catalog" lead form. Registration is invite-only — this only
 // sends a request to the admin, it never creates a card (CABINETS §3).
@@ -60,6 +61,7 @@ export default function CatalogRequestForm() {
       <Button type="submit" disabled={pending} className="w-full sm:w-auto">
         {pending ? t('sending') : t('send')}
       </Button>
+      <Consent />
     </form>
   )
 }

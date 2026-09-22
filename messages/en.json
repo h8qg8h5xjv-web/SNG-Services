@@ -394,7 +394,8 @@
   "footer": {
     "forBusiness": "For business",
     "terms": "Terms",
-    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch."
+    "termsPlaceholder": "The terms of use and privacy policy are being prepared and will be published before launch.",
+    "privacy": "Privacy"
   },
   "forBusiness": {
     "title": "For business",
@@ -465,5 +466,34 @@
     "signOut": "Sign out",
     "syncDone": "Backed up.",
     "restoreDone": "Restored to this device."
+  },
+  "legal": {
+    "consent": "By sending, you agree to the <terms>Terms</terms> and <privacy>Privacy policy</privacy>."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "draftNote": "Draft. Details in [brackets] will be completed before launch.",
+    "operator": "Operator: [COMPANY], [ADDRESS]. ICO registration: [ICO NUMBER]. Contact: [EMAIL].",
+    "collectTitle": "What we collect",
+    "collectBody": "When you send a request or booking: your name, phone, email and address. Usage analytics without your IP address or device details. Saved providers are stored in your browser.",
+    "retentionTitle": "How long we keep it",
+    "retentionBody": "Request and booking data is kept while the service is arranged and for a reasonable period after; analytics are aggregated. You can delete your data at any time.",
+    "shareTitle": "Who we share with",
+    "shareBody": "Your contact details are shared only with the master matched to your request or booking. We do not sell your data.",
+    "rightsTitle": "Your rights",
+    "rightsBody": "Under UK GDPR you can access, correct, export or delete your data and object to processing. Contact [EMAIL].",
+    "deleteTitle": "Deleting your data",
+    "deleteBody": "Use “Delete my data” in your profile to remove requests, bookings and saved items. You can also download everything as a file."
+  },
+  "terms": {
+    "title": "Terms of use",
+    "platformTitle": "A platform, not a party",
+    "platformBody": "SNG Services connects clients with independent masters. We are not a party to the deal between you and a master.",
+    "responsibilityTitle": "The master’s responsibility",
+    "responsibilityBody": "The master is responsible for the service, its quality and price, and any required registration or insurance.",
+    "cancellationsTitle": "Cancellations",
+    "cancellationsBody": "You can cancel a request or booking before it is confirmed. After confirmation, arrange changes with the master directly.",
+    "complaintsTitle": "Complaints",
+    "complaintsBody": "If something goes wrong, contact [EMAIL] and we will help where we can."
   }
 }
