@@ -610,6 +610,8 @@ export interface Database {
           description: string | null
           budget_max_pence: number | null
           status: string
+          manual_handled_at: string | null
+          manual_handled_to: string | null
           created_at: string
           expires_at: string | null
         }
@@ -631,6 +633,8 @@ export interface Database {
           description?: string | null
           budget_max_pence?: number | null
           status?: string
+          manual_handled_at?: string | null
+          manual_handled_to?: string | null
           created_at?: string
           expires_at?: string | null
         }
@@ -639,6 +643,8 @@ export interface Database {
           expires_at?: string | null
           description?: string | null
           budget_max_pence?: number | null
+          manual_handled_at?: string | null
+          manual_handled_to?: string | null
         }
         Relationships: []
       }

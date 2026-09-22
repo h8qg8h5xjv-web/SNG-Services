@@ -35,7 +35,12 @@ export default function RequestStatus({
   const [state, setState] = useState(initial)
   const [busy, setBusy] = useState(false)
   const done =
-    state.status === 'confirmed' || state.status === 'cancelled' || state.status === 'expired'
+    state.status === 'confirmed' ||
+    state.status === 'cancelled' ||
+    state.status === 'expired' ||
+    // manual / handled never change on their own — an admin passes them on by hand.
+    state.status === 'manual' ||
+    state.status === 'handled'
 
   useEffect(() => {
     if (done) return
@@ -111,6 +116,20 @@ export default function RequestStatus({
           <ButtonLink href="/bookings" className="w-full sm:w-auto">
             {t('goToBookings')}
           </ButtonLink>
+        }
+      />
+    )
+  }
+
+  if (state.status === 'manual' || state.status === 'handled') {
+    return (
+      <SuccessScreen
+        title={t('manualTitle')}
+        message={t('manualBody', { ref: ref_ })}
+        action={
+          <Link href="/" className="text-body font-semibold text-accent hover:underline">
+            {t('backHome')}
+          </Link>
         }
       />
     )

@@ -249,7 +249,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Being passed on by hand",
+      "handled": "Passed to a master"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -274,7 +276,9 @@
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
     "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
-    "confirmedTitle": "Done"
+    "confirmedTitle": "Done",
+    "manualTitle": "We'll pass your request on by hand",
+    "manualBody": "There are still few masters in this area. We’ll pass your request on by hand and reply within a day. Request number: {ref}."
   },
   "business": {
     "cabinet": "Business",

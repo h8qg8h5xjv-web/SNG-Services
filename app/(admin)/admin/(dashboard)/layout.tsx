@@ -2,9 +2,11 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getCurrentUser, isAdmin } from '@/lib/admin/auth'
+import { getManualRequestCount } from '@/lib/admin/requests'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/requests', label: 'Requests' },
   { href: '/admin/providers', label: 'Providers' },
   { href: '/admin/events', label: 'Events' },
   { href: '/admin/bookings', label: 'Bookings' },
@@ -19,6 +21,8 @@ export default async function DashboardLayout({
 }) {
   const user = await getCurrentUser()
   if (!user) redirect('/admin/login')
+
+  const manualCount = isAdmin(user) ? await getManualRequestCount() : 0
 
   if (!isAdmin(user)) {
     return (
@@ -46,6 +50,11 @@ export default async function DashboardLayout({
             {NAV.map((item) => (
               <Link key={item.href} href={item.href} className="text-slate-500 hover:text-slate-900">
                 {item.label}
+                {item.href === '/admin/requests' && manualCount > 0 && (
+                  <span className="ml-1 rounded-full bg-amber-500 px-1.5 py-0.5 text-meta font-semibold text-white">
+                    {manualCount}
+                  </span>
+                )}
               </Link>
             ))}
           </nav>

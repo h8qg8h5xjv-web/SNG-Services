@@ -249,7 +249,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Передаємо вручну",
+      "handled": "Передана майстру"
     },
     "urgency": "Наскільки терміново?",
     "urgencyOption": {
@@ -274,7 +276,9 @@
     },
     "regulatedNote": "Заявка піде лише майстрам із підтвердженою реєстрацією.",
     "noRegulatedProviders": "У каталозі поки немає майстрів із підтвердженою реєстрацією для цієї роботи. Передати її безпечно ми не можемо.",
-    "confirmedTitle": "Готово"
+    "confirmedTitle": "Готово",
+    "manualTitle": "Передамо заявку вручну",
+    "manualBody": "Майстрів у цьому районі поки мало. Ми передамо заявку вручну та відповімо протягом дня. Номер заявки: {ref}."
   },
   "business": {
     "cabinet": "Кабінет",

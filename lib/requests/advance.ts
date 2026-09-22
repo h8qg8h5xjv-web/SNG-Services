@@ -21,19 +21,12 @@ function effectiveVerified(status: string, expiresAt: string | null, now: Date):
   return !expiresAt || new Date(expiresAt) > now
 }
 
-export async function advanceRequests(
-  now: Date = new Date(),
-): Promise<{ targeted: number; expired: number }> {
-  const supabase = createAdminClient()
-
-  const { data: requests } = await supabase
-    .from('requests')
-    .select(
-      'id, type, category_id, borough, budget_max_pence, target_provider_id, created_at, urgency, regulated_kind',
-    )
-    .eq('status', 'broadcasting')
-  if (!requests || requests.length === 0) return { targeted: 0, expired: 0 }
-
+// The published-provider pool for wave matching. Shared by the wave job and by
+// the pre-broadcast eligibility check (§1), so both see the same candidates.
+export async function loadMatchPool(
+  supabase: ReturnType<typeof createAdminClient>,
+  now: Date,
+): Promise<MatchProvider[]> {
   const { data: provs } = await supabase
     .from('providers')
     .select(
@@ -56,7 +49,7 @@ export async function advanceRequests(
       }[]
     >()
 
-  const pool: MatchProvider[] = (provs ?? []).map((p) => ({
+  return (provs ?? []).map((p) => ({
     id: p.id,
     category_id: p.category_id,
     borough: p.borough,
@@ -66,6 +59,22 @@ export async function advanceRequests(
     gas_safe_verified: effectiveVerified(p.gas_safe_status, p.gas_safe_expires_at, now),
     electrical_verified: effectiveVerified(p.electrical_status, p.electrical_expires_at, now),
   }))
+}
+
+export async function advanceRequests(
+  now: Date = new Date(),
+): Promise<{ targeted: number; expired: number }> {
+  const supabase = createAdminClient()
+
+  const { data: requests } = await supabase
+    .from('requests')
+    .select(
+      'id, type, category_id, borough, budget_max_pence, target_provider_id, created_at, urgency, regulated_kind',
+    )
+    .eq('status', 'broadcasting')
+  if (!requests || requests.length === 0) return { targeted: 0, expired: 0 }
+
+  const pool = await loadMatchPool(supabase, now)
 
   let targeted = 0
   let expired = 0

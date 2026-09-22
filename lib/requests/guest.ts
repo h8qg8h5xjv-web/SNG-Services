@@ -12,7 +12,16 @@ export type GuestOffer = {
 }
 
 export type GuestRequestState = {
-  status: 'draft' | 'broadcasting' | 'matched' | 'confirmed' | 'expired' | 'cancelled' | 'completed'
+  status:
+    | 'draft'
+    | 'broadcasting'
+    | 'matched'
+    | 'confirmed'
+    | 'expired'
+    | 'cancelled'
+    | 'completed'
+    | 'manual'
+    | 'handled'
   type: 'fixed' | 'quote'
   askedCount: number
   maxWave: number

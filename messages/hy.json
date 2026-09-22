@@ -249,7 +249,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Փոխանցվում է ձեռքով",
+      "handled": "Փոխանցվել է վարպետին"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -274,7 +276,9 @@
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
     "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
-    "confirmedTitle": "Done"
+    "confirmedTitle": "Done",
+    "manualTitle": "Հայտը կփոխանցենք ձեռքով",
+    "manualBody": "Այս տարածքում վարպետները դեռ քիչ են։ Մենք հայտը կփոխանցենք ձեռքով և կպատասխանենք օրվա ընթացքում։ Հայտի համարը՝ {ref}."
   },
   "business": {
     "cabinet": "Business",

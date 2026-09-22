@@ -249,7 +249,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "გადაეცემა ხელით",
+      "handled": "გადაეცა ოსტატს"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -274,7 +276,9 @@
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
     "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
-    "confirmedTitle": "Done"
+    "confirmedTitle": "Done",
+    "manualTitle": "განაცხადს ხელით გადავცემთ",
+    "manualBody": "ამ რაიონში ოსტატები ჯერ ცოტაა. განაცხადს ხელით გადავცემთ და დღის განმავლობაში გიპასუხებთ. განაცხადის ნომერი: {ref}."
   },
   "business": {
     "cabinet": "Business",

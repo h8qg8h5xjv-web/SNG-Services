@@ -249,7 +249,9 @@
       "confirmed": "Confirmed",
       "completed": "Completed",
       "expired": "Expired",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "manual": "Қолмен беріледі",
+      "handled": "Маманға берілді"
     },
     "urgency": "How urgent?",
     "urgencyOption": {
@@ -274,7 +276,9 @@
     },
     "regulatedNote": "Only masters with a verified registration will be asked.",
     "noRegulatedProviders": "No masters with a verified registration for this work yet. We can’t pass it on safely.",
-    "confirmedTitle": "Done"
+    "confirmedTitle": "Done",
+    "manualTitle": "Өтінімді қолмен береміз",
+    "manualBody": "Бұл ауданда мамандар әзірге аз. Біз өтінімді қолмен береміз және бір күн ішінде жауап береміз. Өтінім нөмірі: {ref}."
   },
   "business": {
     "cabinet": "Business",
