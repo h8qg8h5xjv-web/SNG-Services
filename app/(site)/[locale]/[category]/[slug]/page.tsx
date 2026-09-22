@@ -326,13 +326,6 @@ export default async function ProviderPage({
               providerId={provider.id}
               locale={locale}
               phone={provider.phone}
-              messageHref={
-                provider.telegram
-                  ? `https://t.me/${provider.telegram.replace(/^@/, '')}`
-                  : provider.instagram
-                    ? `https://instagram.com/${provider.instagram.replace(/^@/, '')}`
-                    : null
-              }
               website={provider.website}
             />
           </div>
