@@ -12,11 +12,11 @@ import type { Translation } from '@/lib/i18n/content'
 import type { ProviderWithRelations } from '@/lib/catalog/transform'
 
 const LIST_SELECT =
-  'id, slug, name_en, description_en, borough, cover_image, venue_photos, fulfillment_type, external_order_url, ' +
+  'id, slug, name_en, description_en, borough, address, lat, lng, cover_image, venue_photos, fulfillment_type, external_order_url, ' +
   'entity_type, booking_enabled, travels_to_client, claim_status, opening_hours, phone, website, created_at, ' +
   'insurance_status, insurance_expires_at, dbs_status, dbs_expires_at, ' +
   'gas_safe_status, gas_safe_expires_at, electrical_status, electrical_expires_at, ' +
-  'categories(slug,name_en,name_ru), ' +
+  'categories(slug,name_en,name_ru,icon), ' +
   'provider_translations(locale,name,description), ' +
   'services(name_en,name_ru,price_pence,duration_min,capacity), ' +
   'provider_languages(language_code,status,expires_at,languages(name_native))'

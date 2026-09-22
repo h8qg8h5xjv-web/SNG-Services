@@ -14,6 +14,9 @@ export type ProviderWithRelations = {
   name_en: string
   description_en: string | null
   borough: string
+  address: string | null
+  lat: number | null
+  lng: number | null
   cover_image: string | null
   venue_photos: string[] | null
   fulfillment_type: FulfillmentType
@@ -34,7 +37,7 @@ export type ProviderWithRelations = {
   phone: string | null
   website: string | null
   created_at: string
-  categories?: { slug: string; name_en: string; name_ru: string } | null
+  categories?: { slug: string; name_en: string; name_ru: string; icon?: string | null } | null
   provider_translations: Translation[]
   services: {
     name_en: string
@@ -60,6 +63,12 @@ export type ProviderCardVM = {
   categoryName: string
   name: string
   borough: string
+  address: string | null
+  // Geo for the map; null when the provider has no coordinates (not shown on map).
+  lat: number | null
+  lng: number | null
+  // DB icon string of the category, for place markers (see CategoryIcon registry).
+  categoryIcon: string | null
   coverImage: string | null
   fulfillment: FulfillmentType
   externalUrl: string | null
@@ -152,6 +161,10 @@ export function toCard(
     categoryName: provider.categories ? pickCategoryName(provider.categories, locale) : '',
     name,
     borough: provider.borough,
+    address: provider.address,
+    lat: provider.lat,
+    lng: provider.lng,
+    categoryIcon: provider.categories?.icon ?? null,
     coverImage: provider.venue_photos?.[0] ?? provider.cover_image,
     fulfillment: provider.fulfillment_type,
     externalUrl: provider.external_order_url,

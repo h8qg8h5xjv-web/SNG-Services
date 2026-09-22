@@ -582,5 +582,15 @@
       "invalid": "This invite is invalid or expired.",
       "needLogin": "Sign in above, then open the link again."
     }
+  },
+  "map": {
+    "locate": "I'm here",
+    "count": "{count} on the map",
+    "moveToSee": "Move the map to see places",
+    "showList": "Show list",
+    "showMap": "Show map",
+    "viewList": "List",
+    "viewMap": "Map",
+    "openLarge": "Open map"
   }
 }
