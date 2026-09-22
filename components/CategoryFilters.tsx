@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconAdjustmentsHorizontal, IconX, IconChevronDown } from '@tabler/icons-react'
+import { IconAdjustmentsHorizontal, IconX, IconChevronDown, IconList, IconMap } from '@tabler/icons-react'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
@@ -10,11 +10,14 @@ import type { SortKey } from '@/lib/catalog/transform'
 
 const SORTS: SortKey[] = ['relevance', 'price', 'newest']
 
+export type ViewMode = 'list' | 'map'
+
 export type CategoryFilterState = {
   boroughs: string[]
   sort: SortKey
   travels: boolean
   verifiedOnly: boolean
+  view: ViewMode
 }
 
 type Facet = { borough: string; travels: boolean; verified: boolean }
@@ -32,6 +35,7 @@ export default function CategoryFilters({
   current: CategoryFilterState
 }) {
   const t = useTranslations('catalog')
+  const tm = useTranslations('map')
   const router = useRouter()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
@@ -43,6 +47,7 @@ export default function CategoryFilters({
     if (next.sort !== 'relevance') qs.set('sort', next.sort)
     if (next.travels) qs.set('travels', '1')
     if (next.verifiedOnly) qs.set('verified', '1')
+    if (next.view === 'map') qs.set('view', 'map')
     const query = qs.toString()
     router.replace(query ? `${pathname}?${query}` : pathname)
   }
@@ -79,10 +84,36 @@ export default function CategoryFilters({
   const chipOn = 'bg-slate-900 text-white'
   const chipOff = 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50'
 
+  // «Список / Карта» toggle (Maps §2): reused in the mobile chips row and the
+  // desktop sidebar. Keeps every other filter in place.
+  const seg =
+    'chip-press focus-ring inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-meta font-semibold transition-colors'
+  const viewToggle = (
+    <div className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-slate-300 bg-white p-0.5">
+      <button
+        type="button"
+        onClick={() => apply({ ...current, view: 'list' })}
+        aria-pressed={current.view === 'list'}
+        className={`${seg} ${current.view === 'list' ? chipOn : 'text-slate-700'}`}
+      >
+        <IconList className="h-4 w-4" stroke={2} /> {tm('viewList')}
+      </button>
+      <button
+        type="button"
+        onClick={() => apply({ ...current, view: 'map' })}
+        aria-pressed={current.view === 'map'}
+        className={`${seg} ${current.view === 'map' ? chipOn : 'text-slate-700'}`}
+      >
+        <IconMap className="h-4 w-4" stroke={2} /> {tm('viewMap')}
+      </button>
+    </div>
+  )
+
   return (
     <>
-      {/* Mobile: chips row (§4). Фильтры first, then active filters, then sort. */}
-      <div className="-mx-3.5 flex gap-2 overflow-x-auto px-3.5 pb-1 sm:hidden">
+      {/* Mobile: chips row (§4). Список/Карта first, then Фильтры, active filters, sort. */}
+      <div className="-mx-3.5 flex items-center gap-2 overflow-x-auto px-3.5 pb-1 sm:hidden">
+        {viewToggle}
         <button type="button" onClick={openSheet} className={`${chip} ${activeCount ? chipOn : chipOff}`}>
           <IconAdjustmentsHorizontal className="h-5 w-5" stroke={2} />
           {t('filters')}
@@ -115,6 +146,7 @@ export default function CategoryFilters({
 
       {/* Desktop: left sidebar (§4), 200px, applies immediately. */}
       <aside className="hidden w-52 shrink-0 sm:block">
+        <div className="mb-4">{viewToggle}</div>
         <div className="rounded-card border border-slate-200 bg-white p-4">
           <Group title={t('filtersBorough')}>
             {boroughs.map((b) => (
@@ -180,7 +212,7 @@ export default function CategoryFilters({
           </Button>
           <button
             type="button"
-            onClick={() => setDraft({ boroughs: [], sort: 'relevance', travels: false, verifiedOnly: false })}
+            onClick={() => setDraft({ boroughs: [], sort: 'relevance', travels: false, verifiedOnly: false, view: current.view })}
             className="focus-ring min-h-11 px-2 text-body text-slate-500 hover:text-slate-900"
           >
             {t('reset')}

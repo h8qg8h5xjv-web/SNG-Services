@@ -7,6 +7,7 @@ import BackButton from '@/components/BackButton'
 import { ButtonLink } from '@/components/ui/Button'
 import { InfoBlock } from '@/components/ui/InfoBlock'
 import CategoryFilters from '@/components/CategoryFilters'
+import CategoryMapView from '@/components/map/CategoryMapView'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -37,7 +38,7 @@ function parseBoroughs(value: string | undefined, valid: string[]): string[] {
   return value.split(',').map((s) => s.trim()).filter((b) => set.has(b))
 }
 
-type SearchParams = { borough?: string; sort?: string; travels?: string; verified?: string }
+type SearchParams = { borough?: string; sort?: string; travels?: string; verified?: string; view?: string }
 
 export async function generateMetadata({
   params,
@@ -89,6 +90,7 @@ export default async function CategoryPage({
   const sort = parseSort(sp.sort)
   const travels = sp.travels === '1'
   const verifiedOnly = sp.verified === '1'
+  const view = sp.view === 'map' ? 'map' : 'list'
 
   const faceted = filterByFacets(filterByBoroughs(all, boroughs), { travels, verifiedOnly })
   const filtered = rankProviders(faceted, { locale, sort, categorySlug: category })
@@ -118,7 +120,7 @@ export default async function CategoryPage({
         <div className="sm:flex sm:gap-6">
           {all.length > 0 && (
             <div className="mb-4 sm:mb-0">
-              <CategoryFilters boroughs={boroughList} facets={facets} current={{ boroughs, sort, travels, verifiedOnly }} />
+              <CategoryFilters boroughs={boroughList} facets={facets} current={{ boroughs, sort, travels, verifiedOnly, view }} />
             </div>
           )}
 
@@ -140,6 +142,8 @@ export default async function CategoryPage({
               </div>
             ) : cards.length === 0 ? (
               <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
+            ) : view === 'map' ? (
+              <CategoryMapView cards={cards} />
             ) : (
               <>
                 <ProviderGrid cards={cards} surface="category" responseMins={responseMins} />

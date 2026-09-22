@@ -162,3 +162,10 @@ body {
    desktop map column. */
 .near-selected { position: absolute; left: 0.75rem; right: 0.75rem; bottom: 7.25rem; z-index: 20; }
 @media (min-width: 640px) { .near-selected { bottom: 0.75rem; } }
+
+/* Category «Карта» view: an inline, rounded map panel. */
+.category-map { position: relative; height: 30rem; overflow: hidden; border-radius: var(--radius-card); }
+@media (min-width: 640px) { .category-map { height: 38rem; } }
+
+/* Detail page «Адрес» mini map: a short, tappable static map. */
+.address-map { position: relative; height: 12rem; }

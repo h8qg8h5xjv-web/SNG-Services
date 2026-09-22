@@ -27,6 +27,7 @@ import OpeningHours from '@/components/site/OpeningHours'
 import VenueGallery from '@/components/site/VenueGallery'
 import RecordRecentView from '@/components/RecordRecentView'
 import ContactButtons from '@/components/ContactButtons'
+import AddressMap from '@/components/map/AddressMap'
 import EventCard from '@/components/EventCard'
 import JsonLd from '@/components/JsonLd'
 import {
@@ -404,6 +405,9 @@ export default async function ProviderPage({
               </li>
             )}
           </ul>
+          {provider.lat != null && provider.lng != null && (
+            <AddressMap lat={provider.lat} lng={provider.lng} />
+          )}
           {provider.fulfillment_type === 'enquiry' && (
             <p className="mt-3 text-body text-slate-500">{t('provider.enquiryHint')}</p>
           )}
