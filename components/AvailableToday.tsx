@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import Tilt from '@/components/Tilt'
 import SaveHeart from '@/components/SaveHeart'
+import NoPhoto from '@/components/NoPhoto'
 import { resolveImageUrl } from '@/lib/images'
 import { dateTimeFormat } from '@/lib/intl'
 import type { AvailableTodayProvider } from '@/lib/slots/service'
@@ -39,8 +40,10 @@ export default function AvailableToday({
                   className="block h-full overflow-hidden rounded-lg border border-slate-200 transition-colors hover:border-accent"
                 >
                   <div className="relative aspect-photo w-full bg-slate-100">
-                    {image && (
+                    {image ? (
                       <Image src={image} alt="" fill sizes="176px" className="object-cover" />
+                    ) : (
+                      <NoPhoto categorySlug={p.categorySlug} className="h-full w-full" />
                     )}
                     <SaveHeart slug={p.slug} />
                     <span className="absolute bottom-2 left-2 rounded-full bg-green-700 px-2 py-1 text-meta font-semibold text-white">

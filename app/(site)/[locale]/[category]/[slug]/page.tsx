@@ -11,10 +11,11 @@ import {
   IconWorld,
   IconMapPin,
   IconExternalLink,
-  IconPhoto,
   IconLanguage,
   IconCircleCheck,
 } from '@tabler/icons-react'
+import { Link } from '@/i18n/navigation'
+import NoPhoto from '@/components/NoPhoto'
 import { ButtonLink } from '@/components/ui/Button'
 import { InfoBlock } from '@/components/ui/InfoBlock'
 import Header from '@/components/Header'
@@ -199,10 +200,7 @@ export default async function ProviderPage({
             />
           ) : (
             // No photo (e.g. an unclaimed place — we don't take others' images).
-            <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-slate-400">
-              <IconPhoto className="h-10 w-10" stroke={1.5} />
-              <span className="text-body">{name}</span>
-            </div>
+            <NoPhoto categorySlug={category} className="h-full w-full" iconClassName="h-12 w-12" />
           )}
           <div className="absolute left-3 top-3">
             <BackButton floating />
@@ -258,13 +256,26 @@ export default async function ProviderPage({
             <p className="mt-4 whitespace-pre-line text-slate-900">{description}</p>
           )}
 
-          {/* Honest source note for cards entered from public data (idea #7). */}
+          {/* Honest source note for cards entered from public data (idea #7 / §12). */}
           {provider.claim_status === 'unclaimed' && (
-            <p className="mt-4 text-meta text-slate-400">{t('provider.unclaimed')}</p>
+            <p className="mt-4 text-meta text-slate-400">
+              {t('provider.unclaimed')}{' '}
+              <Link href="/for-business" className="font-semibold text-accent hover:underline">
+                {t('provider.claimCta')}
+              </Link>
+            </p>
           )}
 
           {cta && <div className="mt-6 hidden sm:block">{cta}</div>}
         </div>
+
+        {/* No services on a non-external provider → tell the client to ask (§13). */}
+        {!isExternal && provider.services.length === 0 && (
+          <section className="border-t border-slate-200 py-6">
+            <SectionHeading>{t('provider.services')}</SectionHeading>
+            <p className="text-body text-slate-500">{t('provider.servicesUnknown')}</p>
+          </section>
+        )}
 
         {/* Services — hidden entirely for external_order (no prices shown at all). */}
         {!isExternal && provider.services.length > 0 && (

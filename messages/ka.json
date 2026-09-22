@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "დარეკვა",
     "message": "მისწერა",
-    "unclaimed": "შედგენილია ღია წყაროებიდან"
+    "unclaimed": "შედგენილია ღია წყაროებიდან",
+    "claimCta": "ეს თქვენ ხართ? წაიღეთ ბარათი",
+    "servicesUnknown": "დააზუსტეთ ოსტატთან."
   },
   "search": {
     "title": "Search",

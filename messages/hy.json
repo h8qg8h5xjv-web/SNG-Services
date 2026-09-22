@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "Զանգահարել",
     "message": "Գրել",
-    "unclaimed": "Կազմված է բաց աղբյուրներից"
+    "unclaimed": "Կազմված է բաց աղբյուրներից",
+    "claimCta": "Սա դո՞ւք եք։ Ստացեք քարտը",
+    "servicesUnknown": "Ճշտեք վարպետի մոտ."
   },
   "search": {
     "title": "Search",

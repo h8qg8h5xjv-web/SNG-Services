@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "Call",
     "message": "Message",
-    "unclaimed": "Compiled from public sources"
+    "unclaimed": "Compiled from public sources",
+    "claimCta": "Is this you? Claim the card",
+    "servicesUnknown": "Ask the master."
   },
   "search": {
     "title": "Search",

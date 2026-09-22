@@ -1,11 +1,12 @@
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { IconPhoto, IconCircleCheck } from '@tabler/icons-react'
+import { IconCircleCheck } from '@tabler/icons-react'
 import { formatPrice } from '@/lib/format'
 import { Card } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import Tilt from '@/components/Tilt'
 import SaveHeart from '@/components/SaveHeart'
+import NoPhoto from '@/components/NoPhoto'
 import { resolveImageUrl } from '@/lib/images'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 import type { FulfillmentType } from '@/types/database'
@@ -49,9 +50,7 @@ export default function ProviderCard({
           {image ? (
             <Image src={image} alt="" fill sizes="92px" className="object-cover" />
           ) : (
-            <span className="flex h-full w-full items-center justify-center text-slate-400">
-              <IconPhoto className="h-8 w-8" stroke={1.5} />
-            </span>
+            <NoPhoto categorySlug={card.categorySlug} className="h-full w-full" />
           )}
           <SaveHeart slug={card.slug} />
         </div>

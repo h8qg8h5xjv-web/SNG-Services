@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "Қоңырау шалу",
     "message": "Жазу",
-    "unclaimed": "Ашық дереккөздер бойынша жасалған"
+    "unclaimed": "Ашық дереккөздер бойынша жасалған",
+    "claimCta": "Бұл сіз бе? Картаны алыңыз",
+    "servicesUnknown": "Маманнан сұраңыз."
   },
   "search": {
     "title": "Search",

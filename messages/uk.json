@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "Зателефонувати",
     "message": "Написати",
-    "unclaimed": "Складено за відкритими джерелами"
+    "unclaimed": "Складено за відкритими джерелами",
+    "claimCta": "Це ви? Заберіть картку",
+    "servicesUnknown": "Уточніть у майстра."
   },
   "search": {
     "title": "Search",

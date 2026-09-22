@@ -98,7 +98,9 @@
     "photoCount": "{current}/{total}",
     "call": "Позвонить",
     "message": "Написать",
-    "unclaimed": "Составлено по открытым источникам"
+    "unclaimed": "Составлено по открытым источникам",
+    "claimCta": "Это вы? Заберите карточку",
+    "servicesUnknown": "Уточните у мастера."
   },
   "search": {
     "title": "Поиск",
