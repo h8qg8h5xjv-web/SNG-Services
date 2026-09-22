@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { IconCalendarEvent } from '@tabler/icons-react'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { getSavedRequests } from '@/lib/requests/local-store'
 import { getGuestRequestState } from '@/lib/requests/guest'
 import { dateTimeFormat } from '@/lib/intl'
@@ -39,7 +40,19 @@ export default function MyBookings() {
     }
   }, [])
 
-  if (split === null) return <p className="text-body text-slate-500">{t('loading')}</p>
+  if (split === null) {
+    // Skeleton in the shape of the rows — no spinner, no "Loading" text (§5).
+    return (
+      <div className="space-y-2">
+        {[0, 1].map((i) => (
+          <div key={i} className="rounded-card border border-slate-200 bg-white p-3">
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="mt-2 h-3 w-1/3" />
+          </div>
+        ))}
+      </div>
+    )
+  }
   const { upcoming, past } = split
   if (upcoming.length === 0 && past.length === 0)
     return <EmptyState icon={IconCalendarEvent} text={t('bookingsEmpty')} />

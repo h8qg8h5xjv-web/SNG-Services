@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { IconSearch, IconClock } from '@tabler/icons-react'
-import { useRouter } from '@/i18n/navigation'
 import type { Suggestion } from '@/lib/search/suggest'
 
 const RECENT_KEY = 'sng_recent_searches'
@@ -24,12 +23,13 @@ function pushRecent(q: string) {
   }
 }
 
-// DESIGN-SYSTEM §2 / §11: flat field + visible "Найти"; typo/layout-tolerant
-// suggestions as you type; last three queries under the empty field.
+// DESIGN-SYSTEM §2 / §11: flat field + visible "Найти". A NATIVE GET form (so
+// Найти and Enter always navigate, even without JS — next-intl's router mangles
+// query strings, which broke search). Suggestions and the best-category jump use
+// window.location with locale-prefixed paths.
 export default function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
   const t = useTranslations('home')
   const locale = useLocale()
-  const router = useRouter()
   const [query, setQuery] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [best, setBest] = useState<string | null>(null)
@@ -67,21 +67,19 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
     return () => window.clearTimeout(timer.current)
   }, [query, locale])
 
-  function go(href: string, remember: string) {
-    pushRecent(remember)
-    setOpen(false)
-    router.push(href)
+  function goto(path: string) {
+    window.location.assign(`/${locale}${path}`)
   }
 
   function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
     const q = query.trim()
-    if (!q) {
-      router.push('/search')
-      return
+    if (!q) return // let the empty native submit go to /search
+    pushRecent(q)
+    // Enter without picking a suggestion → best category (§11); else native search.
+    if (best) {
+      e.preventDefault()
+      goto(`/${best}`)
     }
-    // Enter without picking a suggestion → best category, else full search (§11).
-    go(best ? `/${best}` : `/search?q=${encodeURIComponent(q)}`, q)
   }
 
   const showRecent = open && query.trim().length < 2 && recent.length > 0
@@ -89,7 +87,7 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
 
   return (
     <div ref={boxRef} className="relative w-full max-w-xl">
-      <form role="search" onSubmit={onSubmit} className="flex w-full gap-2">
+      <form role="search" action={`/${locale}/search`} method="get" onSubmit={onSubmit} className="flex w-full gap-2">
         <div className="relative flex-1">
           <IconSearch
             className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"
@@ -97,6 +95,7 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
           />
           <input
             type="search"
+            name="q"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => {
@@ -125,8 +124,8 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
-                  setQuery(r)
-                  go(`/search?q=${encodeURIComponent(r)}`, r)
+                  pushRecent(r)
+                  goto(`/search?q=${encodeURIComponent(r)}`)
                 }}
                 className="flex min-h-11 w-full items-center gap-2 px-3 text-left text-body text-slate-700 hover:bg-slate-50"
               >
@@ -140,7 +139,10 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
                 key={`${s.kind}-${s.href}`}
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
-                onClick={() => go(s.href, s.label)}
+                onClick={() => {
+                  pushRecent(s.label)
+                  goto(s.href)
+                }}
                 className="flex min-h-11 w-full items-center justify-between gap-2 px-3 text-left hover:bg-slate-50"
               >
                 <span className="truncate text-body text-slate-900">{s.label}</span>
