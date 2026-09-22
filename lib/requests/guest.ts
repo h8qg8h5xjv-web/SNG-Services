@@ -182,6 +182,24 @@ export async function confirmGuestMatch(ref: string, token: string): Promise<Gue
   return error ? { ok: false, error: error.message } : { ok: true }
 }
 
+// §3 GDPR: a guest deletes their own data. Each request is verified by its
+// (ref, token) before removal; deleting the request cascades its windows,
+// targets, contacts, matches and offers. Saved slugs are localStorage-only and
+// cleared on the client. Best-effort per request; returns how many were removed.
+export async function deleteGuestData(
+  refs: { ref: string; token: string }[],
+): Promise<{ ok: true; deleted: number }> {
+  const supabase = createAdminClient()
+  let deleted = 0
+  for (const r of refs.slice(0, 200)) {
+    const req = await findRequest(r.ref, r.token)
+    if (!req) continue
+    const { data } = await supabase.from('requests').delete().eq('id', req.id).select('id')
+    if (data && data.length) deleted++
+  }
+  return { ok: true, deleted }
+}
+
 export async function cancelGuestRequest(ref: string, token: string): Promise<GuestActionResult> {
   const supabase = createAdminClient()
   const req = await findRequest(ref, token)

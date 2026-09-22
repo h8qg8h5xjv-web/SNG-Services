@@ -439,5 +439,31 @@
     "close": "Close",
     "iosBefore": "To install: tap",
     "iosAfter": "→ Add to Home Screen."
+  },
+  "profile": {
+    "loading": "Loading…",
+    "bookingsEmpty": "No bookings yet.",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "myRequests": "My requests",
+    "myBookings": "My bookings",
+    "account": "Account",
+    "dataTitle": "My data",
+    "download": "Download my data",
+    "deleteTitle": "Delete my data",
+    "deleteHint": "Removes requests, bookings and saved. Type {word} to confirm.",
+    "deleteWord": "DELETE",
+    "deleteMismatch": "Type {word} exactly to confirm.",
+    "deleteButton": "Delete",
+    "deleteDone": "Your data has been deleted.",
+    "loginHint": "Optional. Sign in to move requests and saved between devices.",
+    "login": "Sign in",
+    "linkSent": "Check your inbox — a sign-in link went to {email}.",
+    "signedInAs": "Signed in as {email}",
+    "syncNow": "Back up to account",
+    "restore": "Restore to this device",
+    "signOut": "Sign out",
+    "syncDone": "Backed up.",
+    "restoreDone": "Restored to this device."
   }
 }

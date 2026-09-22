@@ -917,6 +917,26 @@ export interface Database {
         }
         Relationships: []
       }
+      user_sync: {
+        Row: {
+          user_id: string
+          saved: string[]
+          requests: Json
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          saved?: string[]
+          requests?: Json
+          updated_at?: string
+        }
+        Update: {
+          saved?: string[]
+          requests?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notification_queue: {
         Row: {
           id: string

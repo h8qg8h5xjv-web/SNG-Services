@@ -48,11 +48,7 @@ export function getSavedServerSnapshot(): readonly string[] {
   return EMPTY
 }
 
-export function toggleSaved(slug: string): void {
-  const current = getSavedSnapshot()
-  const next = current.includes(slug)
-    ? current.filter((s) => s !== slug)
-    : [slug, ...current]
+function write(next: string[]): void {
   cache = next.slice(0, 200)
   try {
     localStorage.setItem(KEY, JSON.stringify(cache))
@@ -60,4 +56,22 @@ export function toggleSaved(slug: string): void {
     // private mode / storage disabled — keep the in-memory list for this session
   }
   emit()
+}
+
+export function toggleSaved(slug: string): void {
+  const current = getSavedSnapshot()
+  const next = current.includes(slug)
+    ? current.filter((s) => s !== slug)
+    : [slug, ...current]
+  write(next)
+}
+
+// §3: replace the saved list (restore from account = union with the current one).
+export function setSaved(slugs: string[]): void {
+  write([...new Set([...slugs, ...getSavedSnapshot()])])
+}
+
+// §3 GDPR: wipe saved on "delete my data".
+export function clearSaved(): void {
+  write([])
 }
