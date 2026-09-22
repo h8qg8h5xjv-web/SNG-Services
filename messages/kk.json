@@ -128,7 +128,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# адам барады} other {# адам барады}}",
+    "imGoing": "Барамын",
+    "notGoing": "Бармаймын",
+    "youAreGoing": "Сіз барасыз",
+    "goingNamePlaceholder": "Атыңыз (міндетті емес)"
   },
   "eventCategory": {
     "concert": "Concert",

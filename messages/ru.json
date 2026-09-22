@@ -128,7 +128,12 @@
     "upcoming": "Ближайшие события",
     "subtitle": "Что происходит у своих",
     "emptyDay": "В этот день событий пока нет",
-    "seeAll": "Посмотреть все"
+    "seeAll": "Посмотреть все",
+    "going": "{count, plural, one {Идёт # человек} few {Идут # человека} many {Идут # человек} other {Идут # человек}}",
+    "imGoing": "Иду",
+    "notGoing": "Не иду",
+    "youAreGoing": "Вы идёте",
+    "goingNamePlaceholder": "Ваше имя (необязательно)"
   },
   "eventCategory": {
     "concert": "Концерт",

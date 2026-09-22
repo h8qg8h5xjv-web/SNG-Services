@@ -128,7 +128,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# ადამიანი მიდის} other {# ადამიანი მიდის}}",
+    "imGoing": "მივდივარ",
+    "notGoing": "აღარ მივდივარ",
+    "youAreGoing": "თქვენ მიდიხართ",
+    "goingNamePlaceholder": "თქვენი სახელი (არასავალდებულო)"
   },
   "eventCategory": {
     "concert": "Concert",

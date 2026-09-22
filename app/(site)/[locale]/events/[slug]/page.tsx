@@ -9,6 +9,8 @@ import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import JsonLd from '@/components/JsonLd'
 import { getEventBySlug } from '@/lib/queries/events'
+import { getEventAttendance } from '@/lib/events/attendance'
+import GoingButton from '@/components/events/GoingButton'
 import {
   pickEventTitle,
   pickEventDescription,
@@ -53,6 +55,7 @@ export default async function EventPage({
   const event = await getEventBySlug(slug)
   if (!event) notFound()
 
+  const attendance = await getEventAttendance(event.id)
   const t = await getTranslations()
   const title = pickEventTitle(event, locale)
   const description = pickEventDescription(event, locale)
@@ -139,6 +142,11 @@ export default async function EventPage({
               {description}
             </p>
           )}
+
+          {/* §4: who is going, and a guest "I'm going" toggle (no chat). */}
+          <div className="mt-6">
+            <GoingButton eventId={event.id} initial={attendance} />
+          </div>
 
           {tickets && <div className="mt-6 hidden sm:block">{tickets}</div>}
         </div>

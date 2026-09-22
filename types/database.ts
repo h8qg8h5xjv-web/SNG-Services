@@ -917,6 +917,29 @@ export interface Database {
         }
         Relationships: []
       }
+      event_attendees: {
+        Row: {
+          id: string
+          event_id: string
+          session_id: string | null
+          display_name: string | null
+          is_visible_to_group: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          session_id?: string | null
+          display_name?: string | null
+          is_visible_to_group?: boolean
+          created_at?: string
+        }
+        Update: {
+          display_name?: string | null
+          is_visible_to_group?: boolean
+        }
+        Relationships: []
+      }
       user_sync: {
         Row: {
           user_id: string

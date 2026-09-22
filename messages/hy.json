@@ -128,7 +128,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# մարդ գնում է} other {# մարդ գնում է}}",
+    "imGoing": "Գնում եմ",
+    "notGoing": "Չեմ գնում",
+    "youAreGoing": "Դուք գնում եք",
+    "goingNamePlaceholder": "Ձեր անունը (ըստ ցանկության)"
   },
   "eventCategory": {
     "concert": "Concert",

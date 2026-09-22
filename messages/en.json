@@ -128,7 +128,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "What’s on for the community",
     "emptyDay": "Nothing on this day yet",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "going": "{count, plural, one {# person going} other {# people going}}",
+    "imGoing": "I'm going",
+    "notGoing": "Not going",
+    "youAreGoing": "You're going",
+    "goingNamePlaceholder": "Your name (optional)"
   },
   "eventCategory": {
     "concert": "Concert",

@@ -128,7 +128,12 @@
     "upcoming": "Upcoming events",
     "subtitle": "Що відбувається у своїх",
     "emptyDay": "Цього дня подій поки немає",
-    "seeAll": "Переглянути всі"
+    "seeAll": "Переглянути всі",
+    "going": "{count, plural, one {Йде # людина} few {Йдуть # людини} many {Йдуть # людей} other {Йдуть # людей}}",
+    "imGoing": "Йду",
+    "notGoing": "Не йду",
+    "youAreGoing": "Ви йдете",
+    "goingNamePlaceholder": "Ваше імʼя (необовʼязково)"
   },
   "eventCategory": {
     "concert": "Concert",
