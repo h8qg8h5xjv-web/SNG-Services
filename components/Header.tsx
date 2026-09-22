@@ -1,38 +1,38 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import LanguageSwitcher from './LanguageSwitcher'
+import SearchBar from './SearchBar'
 
-const NAV = [
-  { href: '/', key: 'nav.home' },
-  { href: '/events', key: 'nav.events' },
-  { href: '/cabinet', key: 'nav.cabinet' },
-]
-
-// Home header per DESIGN §3: city (London for now, but the slot stays) + the
-// interface-language switcher. Service language is a separate concept and never
-// appears here. On wider screens the bottom-nav destinations move up here.
+// DESIGN-SYSTEM §2: dark ink bar. Mobile 52px — wordmark + language. Desktop 56px
+// — wordmark, centered search, catalog/afisha/cabinet links, language.
 export default function Header() {
   const t = useTranslations()
 
   return (
-    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3">
+    <header className="sticky top-0 z-20 bg-ink text-white">
+      <div className="mx-auto flex h-13 max-w-page items-center justify-between gap-4 px-3.5 sm:h-14 sm:px-6">
         <Link href="/" className="flex items-baseline gap-2">
-          <span className="text-h2 font-semibold">{t('common.appName')}</span>
-          <span className="text-body text-slate-500">{t('common.city')}</span>
+          <span className="text-h2 font-extrabold tracking-tight text-white">SNG</span>
+          <span className="hidden text-meta text-blue-200 sm:inline">{t('common.city')}</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-body sm:flex">
-          {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="text-slate-500 hover:text-slate-900">
-              {t(item.key)}
-            </Link>
-          ))}
+        <div className="hidden flex-1 justify-center sm:flex">
+          <SearchBar />
+        </div>
+
+        <nav className="hidden items-center gap-5 text-body sm:flex">
+          <Link href="/" className="text-blue-100 transition-colors hover:text-white">
+            {t('nav.catalog')}
+          </Link>
+          <Link href="/events" className="text-blue-100 transition-colors hover:text-white">
+            {t('nav.events')}
+          </Link>
+          <Link href="/cabinet" className="text-blue-100 transition-colors hover:text-white">
+            {t('nav.cabinet')}
+          </Link>
         </nav>
 
-        <div className="flex items-center gap-4">
-          <LanguageSwitcher />
-        </div>
+        <LanguageSwitcher />
       </div>
     </header>
   )

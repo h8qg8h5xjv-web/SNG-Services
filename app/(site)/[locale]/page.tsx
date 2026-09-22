@@ -67,20 +67,18 @@ export default async function HomePage({
   return (
     <>
       <Header />
-      {/* Hero: soft accent-to-white wash behind the title/subtitle; the search
-          itself sits on plain white below (task §2). */}
-      <section className="bg-linear-to-b from-accent-soft to-white">
-        <div className="mx-auto w-full max-w-5xl px-4 py-10">
-          <h1 className="max-w-md text-display font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
-          <p className="mt-4 text-slate-500">{t('home.heroSubtitle')}</p>
+      {/* Dark block: title, trust line, search (DESIGN-SYSTEM §3). No gradient. */}
+      <section className="bg-ink text-white">
+        <div className="mx-auto w-full max-w-page px-3.5 py-7 sm:px-6">
+          <h1 className="text-title font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
+          <p className="mt-2 text-meta text-blue-200">{t('home.heroSubtitle')}</p>
+          <div className="mt-4">
+            <SearchBar />
+          </div>
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <div className="py-6">
-          <SearchBar />
-        </div>
-
+      <main className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 sm:px-6">
         <HomeHowItWorks />
 
         <div className="mb-2">

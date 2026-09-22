@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Կաբինետ"
+    "cabinet": "Կաբինետ",
+    "search": "Որոնում",
+    "near": "Մոտակայքում",
+    "favorites": "Ընտրանի",
+    "catalog": "Կատալոգ"
   },
   "language": {
     "label": "Language",
@@ -68,7 +72,8 @@
     "seoTitleBorough": "{category} {borough}-ում — ռուսերենով",
     "seoDescription": "Գտեք «{category}» կատեգորիայի ռուսախոս վարպետներ Լոնդոնում՝ ստուգված լեզու, արագ հայտեր, առցանց ամրագրում։",
     "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։",
-    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության."
+    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության.",
+    "respondsIn": "պատասխանում է {min} րոպեում"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -433,7 +438,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "Լեզուն ստուգված",
+    "docsBadge": "Փաստաթղթեր"
   },
   "saved": {
     "title": "Saved",

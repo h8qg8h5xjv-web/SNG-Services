@@ -20,7 +20,7 @@ export function SuccessScreen({
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700">
         <IconCircleCheck className="h-8 w-8" stroke={2} />
       </span>
-      <h2 className="text-name font-extrabold tracking-tight">{title}</h2>
+      <h2 className="text-title font-extrabold tracking-tight">{title}</h2>
       {message && <p className="text-body text-slate-500">{message}</p>}
       {details && details.length > 0 && (
         <ul className="w-full max-w-sm space-y-2 text-left">

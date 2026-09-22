@@ -93,8 +93,8 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${inter.variable} h-full antialiased`}
     >
-      {/* has-floating-nav: bottom clearance for the floating mobile nav (§3). */}
-      <body className="has-floating-nav flex min-h-full flex-col">
+      {/* has-bottom-nav: bottom clearance for the sticky mobile nav (§2). */}
+      <body className="has-bottom-nav flex min-h-full flex-col">
         <NextIntlClientProvider>
           {children}
           <Footer />

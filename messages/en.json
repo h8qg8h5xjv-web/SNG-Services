@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Cabinet"
+    "cabinet": "Cabinet",
+    "search": "Search",
+    "near": "Nearby",
+    "favorites": "Saved",
+    "catalog": "Catalog"
   },
   "language": {
     "label": "Language",
@@ -68,7 +72,8 @@
     "seoTitleBorough": "{category} in {borough} — in Russian",
     "seoDescription": "Find Russian-speaking {category} masters in London: verified language, quick requests, online booking.",
     "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking.",
-    "orderNote": "Order: alphabetical by default; you can sort by price or newest."
+    "orderNote": "Order: alphabetical by default; you can sort by price or newest.",
+    "respondsIn": "responds in {min} min"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -433,7 +438,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "Language verified",
+    "docsBadge": "Documents"
   },
   "saved": {
     "title": "Saved",

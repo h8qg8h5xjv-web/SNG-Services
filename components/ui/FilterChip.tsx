@@ -6,9 +6,9 @@ import { Link } from '@/i18n/navigation'
 // slate-900 text; active = solid slate-900 fill. min-h-11 keeps a 44px touch
 // target (§6). `chevron` adds a ⌄ when the chip opens a choice (§2).
 const base =
-  'inline-flex min-h-11 items-center gap-1 rounded-full px-4 text-meta font-semibold transition-colors'
+  'chip-press focus-ring inline-flex min-h-11 items-center gap-1 rounded-full px-4 text-meta font-semibold transition-colors'
 const state = (active: boolean) =>
-  active ? 'bg-slate-900 text-white' : 'border-medium border-slate-900 text-slate-900'
+  active ? 'bg-slate-900 text-white' : 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50'
 
 export function FilterChip({
   active = false,

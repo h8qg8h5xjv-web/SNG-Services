@@ -214,7 +214,7 @@ export default async function ProviderPage({
         </div>
 
         <div className="py-6">
-          <h1 className="text-name font-extrabold tracking-tight">{name}</h1>
+          <h1 className="text-title font-extrabold tracking-tight">{name}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-x-2 text-slate-500">
             <span>{[provider.categories ? pickCategoryName(provider.categories, locale) : '', provider.borough].filter(Boolean).join(' · ')}</span>
             {provider.entity_type === 'place' && provider.opening_hours != null && (

@@ -5,7 +5,7 @@ import type {
   ClaimStatus,
 } from '@/types/database'
 import { pickProviderContent, pickCategoryName, type Translation } from '../i18n/content'
-import { parseOpeningHours, type OpeningHours } from '../hours'
+import { parseOpeningHours, isOpenNow, type OpeningHours } from '../hours'
 
 // Shape fetched from Supabase for a provider used in listings and cards.
 export type ProviderWithRelations = {
@@ -66,9 +66,12 @@ export type ProviderCardVM = {
   entityType: EntityType
   bookingEnabled: boolean
   openingHours: OpeningHours | null
+  openNow: boolean
   phone: string | null
   website: string | null
   travelsToClient: boolean
+  // A live verified credential (insurance/DBS/Gas Safe/electrical) — «Документы».
+  documentsVerified: boolean
   // Card entered from public data with no owner yet — shows an honest source note.
   unclaimed: boolean
   // Native names of languages with a live 'verified' badge — trust signal on the
@@ -155,9 +158,11 @@ export function toCard(
     entityType: provider.entity_type,
     bookingEnabled: provider.booking_enabled,
     openingHours: parseOpeningHours(provider.opening_hours),
+    openNow: provider.entity_type === 'place' && isOpenNow(parseOpeningHours(provider.opening_hours), new Date(now)),
     phone: provider.phone,
     website: provider.website,
     travelsToClient: provider.travels_to_client,
+    documentsVerified: hasVerifiedDocument(provider, now),
     unclaimed: provider.claim_status === 'unclaimed',
     verifiedLanguages,
     priceRange: priceRangeOf(provider),

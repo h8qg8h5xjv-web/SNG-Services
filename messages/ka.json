@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "კაბინეტი"
+    "cabinet": "კაბინეტი",
+    "search": "ძებნა",
+    "near": "ახლოს",
+    "favorites": "რჩეული",
+    "catalog": "კატალოგი"
   },
   "language": {
     "label": "Language",
@@ -68,7 +72,8 @@
     "seoTitleBorough": "{category} {borough}-ში — რუსულად",
     "seoDescription": "იპოვეთ «{category}» კატეგორიის რუსულენოვანი ოსტატები ლონდონში: დადასტურებული ენა, სწრაფი განაცხადები, ონლაინ ჯავშანი.",
     "seoDescriptionBorough": "რუსულენოვანი «{category}» ოსტატები {borough}-ში, ლონდონი — დადასტურებული ენა და ონლაინ ჯავშანი.",
-    "orderNote": "რიგი: ნაგულისხმევად ანბანურად; შეგიძლიათ დაალაგოთ ფასით ან სიახლით."
+    "orderNote": "რიგი: ნაგულისხმევად ანბანურად; შეგიძლიათ დაალაგოთ ფასით ან სიახლით.",
+    "respondsIn": "პასუხობს {min} წთ-ში"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -433,7 +438,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "ენა დადასტურებული",
+    "docsBadge": "დოკუმენტები"
   },
   "saved": {
     "title": "Saved",

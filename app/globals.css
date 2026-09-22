@@ -1,124 +1,132 @@
 @import "tailwindcss";
 
-/* Design system (DESIGN-SYSTEM.md). Colours come straight from the Tailwind
-   slate/teal/green/red palettes — no custom hex. No dark theme by decision. */
+/* Design system (DESIGN-SYSTEM.md). Colours come from the Tailwind palettes plus
+   one accent token — no custom hex. No dark theme by decision. Mobile-first,
+   dense, flat: page is slate-100, surfaces are white, borders slate-200, no
+   shadows, no 3D, no scroll-reveal. */
 @theme {
-  /* Inter is loaded via next/font; Georgian/Armenian fall back to system fonts
-     of the same name until ka/hy are enabled and self-hosted (next/font/local). */
   --font-sans:
     var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
     sans-serif;
 
-  /* Accent — ONE place (DESIGN-SYSTEM §1). Components use accent / accent-soft,
-     never a raw palette shade, so the accent changes here alone. */
+  /* Accent — ONE place. Components use accent / accent-soft, never a raw shade. */
   --color-accent: var(--color-blue-800);
   --color-accent-soft: var(--color-blue-50);
+  /* Dark bar (header, dark blocks). */
+  --color-ink: var(--color-blue-950);
 
-  /* Five sizes, nothing between (DESIGN-SYSTEM §2). */
-  --text-title: 1.5rem; /* 24 — page title, one per screen */
-  --text-title--line-height: 2rem;
-  --text-h2: 1.125rem; /* 18 — block heading */
-  --text-h2--line-height: 1.5rem;
-  --text-body: 0.9375rem; /* 15 — body, fields, buttons */
-  --text-body--line-height: 1.4rem;
-  --text-meta: 0.8125rem; /* 13 — borough, price, duration */
-  --text-meta--line-height: 1.15rem;
-  --text-label: 0.6875rem; /* 11 — labels, rarely */
-  --text-label--line-height: 1rem;
+  /* Type scale (DESIGN-SYSTEM §1). Weights 400/600/700/800 only. */
+  --text-title: 1.375rem; /* 22 — screen title, one per screen, 800 + tight */
+  --text-title--line-height: 1.75rem;
+  --text-h2: 1rem; /* 16 — block heading */
+  --text-h2--line-height: 1.4rem;
+  --text-name: 0.9375rem; /* 15 — name in a card, 700 */
+  --text-name--line-height: 1.3rem;
+  --text-body: 0.8125rem; /* 13 — body */
+  --text-body--line-height: 1.15rem;
+  --text-meta: 0.75rem; /* 12 — meta */
+  --text-meta--line-height: 1.05rem;
+  --text-label: 0.6875rem; /* 11 — auxiliary, slate-500 */
+  --text-label--line-height: 0.95rem;
+  /* Kept names used across the app; mapped onto the new scale. */
+  --text-display: 1.375rem;
+  --text-display--line-height: 1.75rem;
+  --text-section: 1rem;
+  --text-section--line-height: 1.4rem;
 
-  /* Showcase sizes (DESIGN-SYSTEM §2, TripAdvisor character) — used only with the
-     800 weight + tight tracking: home hero, name on a master/place card, and
-     home section headings. */
-  --text-display: 1.875rem; /* 30 — home hero title */
-  --text-display--line-height: 2.25rem;
-  --text-name: 1.6875rem; /* 27 — master/place name on its own card */
-  --text-name--line-height: 2rem;
-  --text-section: 1.0625rem; /* 17 — section heading */
-  --text-section--line-height: 1.5rem;
-
-  /* The one non-16:9 image ratio we use, as a token so no arbitrary value is needed. */
   --aspect-photo: 4 / 3;
 
-  /* Card photos are a touch rounder than cards (10px vs rounded-lg 8px). */
-  --radius-photo: 0.625rem;
+  /* Radii (DESIGN-SYSTEM §1): cards 12, controls 10, badges 5, chips full. */
+  --radius-card: 0.75rem; /* rounded-card */
+  --radius-control: 0.625rem; /* rounded-control — buttons, inputs */
+  --radius-badge: 0.3125rem; /* rounded-badge — icon squares, small tags */
+  --radius-photo: 0.75rem; /* avatars/media on cards */
+
+  /* Desktop content width (DESIGN-SYSTEM §1). max-w-page = 1200px. */
+  --container-page: 75rem;
 }
 
 body {
-  background: var(--color-white);
+  background: var(--color-slate-100);
   color: var(--color-slate-900);
   font-family: var(--font-sans);
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
 }
 
-/* 1.5px border for the outline pills — buttons, search, chips (DESIGN-SYSTEM §2).
-   Between Tailwind's 1px and 2px; a named utility, not an arbitrary value. */
-.border-medium { border-width: 1.5px; }
+/* Screen titles: 800 + tight tracking (DESIGN-SYSTEM §1). */
+.text-title { letter-spacing: -0.02em; }
 
-/* Floating bottom nav (DESIGN-SYSTEM §3): hovers 12px off every edge, clearing the
-   iOS home indicator. Off-scale bottom is interface physics (§4). */
-.floating-bottom { bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
-
-/* Body clearance so content never hides behind the floating nav. Mobile only. */
-.has-floating-nav { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+/* Sticky bottom navigation (DESIGN-SYSTEM §2): full-width white bar, top border,
+   safe-area padding. Mobile only. */
+.bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+.has-bottom-nav { padding-bottom: calc(3.5rem + env(safe-area-inset-bottom)); }
 @media (min-width: 640px) {
-  .has-floating-nav { padding-bottom: 0; }
+  .has-bottom-nav { padding-bottom: 0; }
 }
 
-/* Master page mobile CTA: pinned just above the floating nav; the page reserves
-   room for CTA + nav below its content. Interface physics (§4). */
-.cta-above-nav { bottom: calc(5rem + env(safe-area-inset-bottom)); }
-.pb-cta { padding-bottom: calc(11rem + env(safe-area-inset-bottom)); }
+/* Master page mobile sticky action bar sits above the bottom nav. */
+.cta-above-nav { bottom: calc(3.5rem + env(safe-area-inset-bottom)); }
+.pb-cta { padding-bottom: calc(9rem + env(safe-area-inset-bottom)); }
 @media (min-width: 640px) {
   .pb-cta { padding-bottom: 2rem; }
 }
 
 /* ---------------------------------------------------------------------------
-   Motion (DESIGN-SYSTEM §Motion). Every effect below is opt-in via a class and
-   fully removed under prefers-reduced-motion. The 3D tilt runs ONLY on real
-   hover/pointer devices — never on touch. Depth comes from transforms, never
-   shadows. No libraries: pure CSS + a tiny rAF handler for the tilt angle.
+   Отклик / Response (DESIGN-SYSTEM §Отклик). Only transform / opacity / outline,
+   ≤200ms, no shadows, no libraries. Everything here is disabled under
+   prefers-reduced-motion.
    --------------------------------------------------------------------------- */
 
-/* Staggered card entrance: fade + 8px rise. Steps of 30ms over a 180ms fade, so
-   the last card finishes by 300ms (task §3). Desktop + motion only. */
-@keyframes card-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
+/* Pressable: primary button / chip dips on press. */
+.press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+.chip-press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+
+/* Keyboard focus ring in the accent (buttons, links, chips). */
+.focus-ring:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* Search / text field focus: accent border + soft accent ring via outline. */
+.field:focus {
+  border-color: var(--color-accent);
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  outline-offset: 0;
 }
 
-/* Scroll reveal (events, task §5): 12px rise + fade, once. Hidden state applies
-   only where motion runs, so a no-JS / reduced-motion / mobile view stays
-   visible. */
-.reveal { transition: opacity 300ms ease, transform 300ms ease; }
-
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .stagger > * { opacity: 0; animation: card-in 180ms ease-out forwards; }
-  .stagger > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger > *:nth-child(2) { animation-delay: 30ms; }
-  .stagger > *:nth-child(3) { animation-delay: 60ms; }
-  .stagger > *:nth-child(4) { animation-delay: 90ms; }
-  .stagger > *:nth-child(n+5) { animation-delay: 120ms; }
-
-  .reveal:not(.is-visible) { opacity: 0; transform: translateY(12px); }
-
-  /* Hover lift for interactive cards that don't get the 3D tilt (task §3). */
-  .lift { transition: transform 200ms ease, border-color 200ms ease; }
-  .lift:hover { transform: translateY(-2px); }
-
-  /* 3D tilt scene + item. The angle is written to el.style.transform by the Tilt
-     component (rAF-throttled); the transition smooths the return on leave. */
-  .tilt-scene { perspective: 800px; }
-  .tilt-scene-far { perspective: 900px; }
-  .tilt { transition: transform 200ms ease; transform-style: preserve-3d; will-change: transform; }
-
-  /* Layered children float toward the viewer on hover — the depth illusion. */
-  .preserve-3d { transform-style: preserve-3d; }
-  .tilt-layer-1, .tilt-layer-2 { transition: transform 200ms ease; }
-  .tilt-scene:hover .tilt-layer-1 { transform: translateZ(10px); }
-  .tilt-scene:hover .tilt-layer-2 { transform: translateZ(20px); }
-
-  /* Event cover eases in behind its overlay on hover (task §5). */
-  .tilt-cover { transition: transform 200ms ease; }
-  .tilt-scene:hover .tilt-cover { transform: scale(1.04); }
+/* Heart / "going" toggle: springy pop when it turns on. */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
 }
+
+/* Suggestions dropdown reveal. */
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+.drop-in { animation: drop-in 150ms ease-out; }
+
+/* Sticky CTA slides up once when it appears. */
+@keyframes cta-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+.cta-in { animation: cta-in 200ms ease-out; }
+
+/* Success check draws its stroke once (the single "expensive" moment). */
+@keyframes check-draw { to { stroke-dashoffset: 0; } }
+.check-draw { stroke-dasharray: 48; stroke-dashoffset: 48; animation: check-draw 400ms ease forwards; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .press:active { transform: scale(0.97); }
+  .chip-press:active { transform: scale(0.96); }
+  .heart-pop { animation: heart-pop 250ms ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drop-in, .cta-in, .check-draw { animation: none; }
+  .check-draw { stroke-dashoffset: 0; }
+}
+
+/* Blur-up image: blurred until the sharp one loads (DESIGN-SYSTEM §Отклик). */
+.blur-up { filter: blur(12px); transition: filter 300ms ease; }
+.blur-up.loaded { filter: none; }

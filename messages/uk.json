@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Кабінет"
+    "cabinet": "Кабінет",
+    "search": "Пошук",
+    "near": "Поруч",
+    "favorites": "Обране",
+    "catalog": "Каталог"
   },
   "language": {
     "label": "Language",
@@ -68,7 +72,8 @@
     "seoTitleBorough": "{category} у {borough} — російською",
     "seoDescription": "Знайдіть російськомовних майстрів категорії «{category}» у Лондоні: перевірена мова, швидкі заявки, запис онлайн.",
     "seoDescriptionBorough": "Російськомовні майстри категорії «{category}» у районі {borough}, Лондон — перевірена мова та запис онлайн.",
-    "orderNote": "Порядок: за замовчуванням за абеткою; можна сортувати за ціною або новизною."
+    "orderNote": "Порядок: за замовчуванням за абеткою; можна сортувати за ціною або новизною.",
+    "respondsIn": "відповідає за {min} хв"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -433,7 +438,9 @@
     "oneVerified": "{lang} перевірено",
     "manyVerified": "{langs} перевірено",
     "checkedOn": "Перевірено {date}",
-    "checkedByUs": "Ми телефонували майстру самі"
+    "checkedByUs": "Ми телефонували майстру самі",
+    "langBadge": "Мова перевірена",
+    "docsBadge": "Документи"
   },
   "saved": {
     "title": "Збережене",

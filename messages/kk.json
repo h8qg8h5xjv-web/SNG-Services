@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Кабинет"
+    "cabinet": "Кабинет",
+    "search": "Іздеу",
+    "near": "Жақын",
+    "favorites": "Таңдаулы",
+    "catalog": "Каталог"
   },
   "language": {
     "label": "Language",
@@ -68,7 +72,8 @@
     "seoTitleBorough": "{borough} ауданындағы {category} — орысша",
     "seoDescription": "Лондондағы «{category}» санатының орыс тілді мамандарын табыңыз: тексерілген тіл, жылдам өтінімдер, онлайн жазылу.",
     "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу.",
-    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады."
+    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады.",
+    "respondsIn": "{min} мин ішінде жауап береді"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -433,7 +438,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "Тіл тексерілген",
+    "docsBadge": "Құжаттар"
   },
   "saved": {
     "title": "Saved",
