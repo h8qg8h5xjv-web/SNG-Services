@@ -7,6 +7,7 @@ import { TRANSLATION_LOCALES } from '@/lib/admin/schemas'
 import ImageUpload from './ImageUpload'
 import OpeningHoursEditor from './OpeningHoursEditor'
 import VenuePhotos from './VenuePhotos'
+import AddressGeocoder from './AddressGeocoder'
 import { parseOpeningHours, type OpeningHours } from '@/lib/hours'
 import type { AdminProviderDetail } from '@/lib/admin/data'
 import type { Category, Language } from '@/types'
@@ -408,14 +409,18 @@ export default function ProviderForm({
         </fieldset>
       )}
 
+      <AddressGeocoder
+        address={f.address}
+        lat={f.lat}
+        lng={f.lng}
+        onChange={(patch) => setF((prev) => ({ ...prev, ...patch }))}
+      />
+
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Latitude" value={f.lat} onChange={(v) => set('lat', v)} />
-        <Field label="Longitude" value={f.lng} onChange={(v) => set('lng', v)} />
         <Field label="Phone" value={f.phone} onChange={(v) => set('phone', v)} />
         <Field label="Telegram" value={f.telegram} onChange={(v) => set('telegram', v)} />
         <Field label="Instagram" value={f.instagram} onChange={(v) => set('instagram', v)} />
         <Field label="Website" value={f.website} onChange={(v) => set('website', v)} />
-        <Field label="Address" value={f.address} onChange={(v) => set('address', v)} />
       </div>
 
       <div>
