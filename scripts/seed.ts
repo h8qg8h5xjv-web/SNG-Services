@@ -5,6 +5,9 @@
 // Run via Node's native TypeScript stripping (no ts-node/tsx dependency):
 //   node --experimental-strip-types --env-file-if-exists=.env.local scripts/seed.ts
 //
+// Local databases only: a non-localhost URL is refused unless you pass
+// --allow-remote (npm run seed -- --allow-remote).
+//
 // Idempotency: categories/languages/providers/translations/events are upserted
 // on their natural keys; a provider's child collections (languages, services,
 // schedules, exceptions) are rebuilt each run. The provider is upserted as
@@ -19,6 +22,8 @@ const { createClient } =
   require('@supabase/supabase-js') as typeof import('@supabase/supabase-js')
 const fs = require('fs') as typeof import('fs')
 const path = require('path') as typeof import('path')
+const { assertLocalDb } =
+  require('./lib/assert-local-db.ts') as typeof import('./lib/assert-local-db.ts')
 /* eslint-enable @typescript-eslint/no-require-imports */
 
 type Tables = Database['public']['Tables']
@@ -429,6 +434,7 @@ async function main(): Promise<void> {
         'Set them in .env.local (see .env.local.example), or use `npm run seed:dry`.',
     )
   }
+  assertLocalDb(url, 'seed')
 
   const supabase = createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
