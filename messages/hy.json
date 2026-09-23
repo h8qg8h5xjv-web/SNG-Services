@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Կաբինետ"
+    "cabinet": "Կաբինետ",
+    "search": "Որոնում",
+    "near": "Մոտակայքում",
+    "favorites": "Ընտրանի",
+    "catalog": "Կատալոգ"
   },
   "language": {
     "label": "Language",
@@ -43,6 +47,12 @@
     "masters": {
       "title": "Վարպե՞տ եք, թե՞ բիզնես եք վարում։ Ստացեք հայտեր ռուսախոս հաճախորդներից։",
       "cta": "Իմանալ ավելին"
+    },
+    "suggestKind": {
+      "category": "Կատեգորիա",
+      "provider": "Վարպետ",
+      "borough": "Թաղամաս",
+      "service": "Ծառայություն"
     }
   },
   "catalog": {
@@ -68,7 +78,13 @@
     "seoTitleBorough": "{category} {borough}-ում — ռուսերենով",
     "seoDescription": "Գտեք «{category}» կատեգորիայի ռուսախոս վարպետներ Լոնդոնում՝ ստուգված լեզու, արագ հայտեր, առցանց ամրագրում։",
     "seoDescriptionBorough": "Ռուսախոս «{category}» վարպետներ {borough}-ում, Լոնդոն՝ ստուգված լեզու և առցանց ամրագրում։",
-    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության."
+    "orderNote": "Կարգը՝ ըստ լռելյայն այբբենական; կարող եք դասավորել ըստ գնի կամ նորության.",
+    "respondsIn": "պատասխանում է {min} րոպեում",
+    "filters": "Զտիչներ",
+    "showN": "Ցույց տալ {count}",
+    "reset": "Զրոյացնել",
+    "filtersTrust": "Վստահություն",
+    "filtersFormat": "Ձևաչափ"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -101,7 +117,8 @@
     "message": "Գրել",
     "unclaimed": "Կազմված է բաց աղբյուրներից",
     "claimCta": "Սա դո՞ւք եք։ Ստացեք քարտը",
-    "servicesUnknown": "Ճշտեք վարպետի մոտ."
+    "servicesUnknown": "Ճշտեք վարպետի մոտ.",
+    "whatsappText": "Բարև ձեզ! Գտա ձեզ SNG Services-ում ({name})։ Կասե՞ք գրանցման մասին։"
   },
   "search": {
     "title": "Search",
@@ -433,7 +450,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "Լեզուն ստուգված",
+    "docsBadge": "Փաստաթղթեր"
   },
   "saved": {
     "title": "Saved",
@@ -508,7 +527,7 @@
     "title": "Կաբինետ",
     "signOut": "Դուրս գալ",
     "loginTitle": "Մուտք գործեք փոստով",
-    "loginBody": "որ սա չկորցնեք և ստանաք հայտեր ձեր քարտի համար.",
+    "loginBody": "ձեր հայտերն ու պահպանվածը կմնան ձեզ հետ ցանկացած սարքում.",
     "login": "Մուտք",
     "loginSending": "Ուղարկվում է…",
     "loginSent": "Ստուգեք փոստը — հղումն ուղարկվել է {email}-ին.",
@@ -564,5 +583,27 @@
       "invalid": "Հրավերն անվավեր է կամ ժամկետանց.",
       "needLogin": "Մուտք գործեք վերևում և նորից բացեք հղումը."
     }
+  },
+  "map": {
+    "locate": "Ես այստեղ եմ",
+    "count": "{count} քարտեզի վրա",
+    "moveToSee": "Տեղափոխեք քարտեզը՝ վայրերը տեսնելու համար",
+    "showList": "Ցուցակ",
+    "showMap": "Քարտեզ",
+    "viewList": "Ցուցակ",
+    "viewMap": "Քարտեզ",
+    "openLarge": "Բացել քարտեզը"
+  },
+  "errors": {
+    "loadTitle": "Չհաջողվեց բեռնել",
+    "loadBody": "Ինչ-որ բան այն չէ։ Փորձեք կրկին։",
+    "retry": "Կրկնել"
+  },
+  "district": {
+    "title": "Թաղամաս",
+    "detect": "Որոշել",
+    "placeholder": "Ընտրեք թաղամասը",
+    "near": "Իմ մոտ",
+    "change": "Փոխել"
   }
 }

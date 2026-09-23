@@ -771,6 +771,7 @@ export interface Database {
           search_query: string | null
           contact_channel: ContactChannel | null
           user_id: string | null
+          value_ms: number | null
           occurred_at: string
         }
         Insert: {
@@ -785,6 +786,7 @@ export interface Database {
           search_query?: string | null
           contact_channel?: ContactChannel | null
           user_id?: string | null
+          value_ms?: number | null
           occurred_at?: string
         }
         Update: {
@@ -797,6 +799,7 @@ export interface Database {
           category_id?: string | null
           locale?: string | null
           contact_channel?: ContactChannel | null
+          value_ms?: number | null
           occurred_at?: string
         }
         Relationships: [

@@ -1,6 +1,12 @@
-import { getProviderStats, defaultDateRange } from '@/lib/tracking/events'
+import { getProviderStats, getFirstValueMedian, defaultDateRange } from '@/lib/tracking/events'
 
 const isDate = (v: string | undefined): v is string => !!v && /^\d{4}-\d{2}-\d{2}$/.test(v)
+
+// "N сек" from ms, one decimal under a minute.
+function formatMs(ms: number): string {
+  const s = ms / 1000
+  return s < 60 ? `${s.toFixed(1)} сек` : `${Math.round(s / 60)} мин ${Math.round(s % 60)} сек`
+}
 
 export default async function AnalyticsPage({
   searchParams,
@@ -12,11 +18,33 @@ export default async function AnalyticsPage({
   const from = isDate(sp.from) ? sp.from : fallback.from
   const to = isDate(sp.to) ? sp.to : fallback.to
 
-  const stats = await getProviderStats(`${from}T00:00:00Z`, `${to}T23:59:59Z`)
+  const [stats, firstValue] = await Promise.all([
+    getProviderStats(`${from}T00:00:00Z`, `${to}T23:59:59Z`),
+    getFirstValueMedian(`${from}T00:00:00Z`, `${to}T23:59:59Z`),
+  ])
+  // Goal: a real action within 60s of arriving.
+  const withinGoal = firstValue.medianMs != null && firstValue.medianMs <= 60_000
 
   return (
     <div className="space-y-4">
       <h1 className="text-h2 font-semibold">Analytics</h1>
+
+      {/* Time to first value — the headline metric (goal &lt; 60s). */}
+      <div className="rounded-lg border border-slate-200 p-4">
+        <p className="text-slate-500">Время до первой пользы (медиана)</p>
+        <p className="mt-1 text-h2 font-semibold">
+          {firstValue.medianMs != null ? (
+            <span className={withinGoal ? 'text-green-700' : 'text-red-700'}>
+              {formatMs(firstValue.medianMs)}
+            </span>
+          ) : (
+            <span className="text-slate-400">—</span>
+          )}
+        </p>
+        <p className="mt-1 text-meta text-slate-400">
+          Цель: до 60 сек · выборка: {firstValue.count}
+        </p>
+      </div>
 
       <form method="get" className="flex flex-wrap items-end gap-3">
         <label className="text-body">

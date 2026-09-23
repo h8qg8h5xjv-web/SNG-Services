@@ -42,7 +42,7 @@ export default async function CabinetCardEditPage({
       </Link>
 
       <div>
-        <h2 className="text-name font-extrabold tracking-tight">{profile.name}</h2>
+        <h2 className="text-title font-extrabold tracking-tight">{profile.name}</h2>
         {profile.status !== 'published' && (
           <p className="mt-1 text-meta text-slate-500">{t('draftNote')}</p>
         )}

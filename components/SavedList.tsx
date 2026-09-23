@@ -23,9 +23,9 @@ export default function SavedList({ cards }: { cards: ProviderCardVM[] }) {
   }
 
   return (
-    <div className="stagger grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {items.map((card, i) => (
-        <ProviderCard key={card.slug} card={card} index={i + 1} />
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {items.map((card) => (
+        <ProviderCard key={card.slug} card={card} />
       ))}
     </div>
   )

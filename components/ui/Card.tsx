@@ -17,8 +17,8 @@ export function Card({
   className?: string
   children: ReactNode
 }) {
-  const cls = `block overflow-hidden rounded-lg border border-slate-200 ${
-    href ? 'transition-colors hover:border-accent' : ''
+  const cls = `block overflow-hidden rounded-card border border-slate-200 bg-white ${
+    href ? 'transition-colors hover:border-accent active:bg-slate-50' : ''
   } ${className}`
   if (href && external) {
     return (

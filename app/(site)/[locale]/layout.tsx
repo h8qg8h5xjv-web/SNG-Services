@@ -11,6 +11,7 @@ import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
 import InstallPrompt from '@/components/InstallPrompt'
+import SessionStart from '@/components/SessionStart'
 import '../../globals.css'
 
 // Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
@@ -93,13 +94,14 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${inter.variable} h-full antialiased`}
     >
-      {/* has-floating-nav: bottom clearance for the floating mobile nav (§3). */}
-      <body className="has-floating-nav flex min-h-full flex-col">
+      {/* has-bottom-nav: bottom clearance for the sticky mobile nav (§2). */}
+      <body className="has-bottom-nav flex min-h-full flex-col">
         <NextIntlClientProvider>
           {children}
           <Footer />
           <BottomNav />
           <InstallPrompt />
+          <SessionStart />
         </NextIntlClientProvider>
       </body>
     </html>

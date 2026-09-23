@@ -14,7 +14,11 @@
     "events": "Events",
     "bookings": "Bookings",
     "profile": "Profile",
-    "cabinet": "Кабинет"
+    "cabinet": "Кабинет",
+    "search": "Іздеу",
+    "near": "Жақын",
+    "favorites": "Таңдаулы",
+    "catalog": "Каталог"
   },
   "language": {
     "label": "Language",
@@ -43,6 +47,12 @@
     "masters": {
       "title": "Сіз маман немесе бизнес жүргізесіз бе? Орыс тілді клиенттерден өтінімдер алыңыз.",
       "cta": "Толығырақ"
+    },
+    "suggestKind": {
+      "category": "Санат",
+      "provider": "Маман",
+      "borough": "Аудан",
+      "service": "Қызмет"
     }
   },
   "catalog": {
@@ -68,7 +78,13 @@
     "seoTitleBorough": "{borough} ауданындағы {category} — орысша",
     "seoDescription": "Лондондағы «{category}» санатының орыс тілді мамандарын табыңыз: тексерілген тіл, жылдам өтінімдер, онлайн жазылу.",
     "seoDescriptionBorough": "{borough} ауданындағы «{category}» санатының орыс тілді мамандары, Лондон — тексерілген тіл және онлайн жазылу.",
-    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады."
+    "orderNote": "Реті: әдепкіде әліпби бойынша; бағасы немесе жаңалығы бойынша сұрыптауға болады.",
+    "respondsIn": "{min} мин ішінде жауап береді",
+    "filters": "Сүзгілер",
+    "showN": "Көрсету {count}",
+    "reset": "Тазалау",
+    "filtersTrust": "Сенім",
+    "filtersFormat": "Формат"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -101,7 +117,8 @@
     "message": "Жазу",
     "unclaimed": "Ашық дереккөздер бойынша жасалған",
     "claimCta": "Бұл сіз бе? Картаны алыңыз",
-    "servicesUnknown": "Маманнан сұраңыз."
+    "servicesUnknown": "Маманнан сұраңыз.",
+    "whatsappText": "Сәлеметсіз бе! Сізді SNG Services-тен таптым ({name}). Жазылу туралы айтып жіберіңізші."
   },
   "search": {
     "title": "Search",
@@ -433,7 +450,9 @@
     "oneVerified": "{lang} verified",
     "manyVerified": "{langs} verified",
     "checkedOn": "Verified {date}",
-    "checkedByUs": "We called the master ourselves"
+    "checkedByUs": "We called the master ourselves",
+    "langBadge": "Тіл тексерілген",
+    "docsBadge": "Құжаттар"
   },
   "saved": {
     "title": "Saved",
@@ -508,7 +527,7 @@
     "title": "Кабинет",
     "signOut": "Шығу",
     "loginTitle": "Пошта арқылы кіріңіз",
-    "loginBody": "мұны жоғалтпау және өз картаңызға өтінімдер алу үшін.",
+    "loginBody": "өтінімдер мен сақталған кез келген құрылғыда сізбен қалады.",
     "login": "Кіру",
     "loginSending": "Жіберілуде…",
     "loginSent": "Поштаңызды тексеріңіз — сілтеме {email} мекенжайына жіберілді.",
@@ -564,5 +583,27 @@
       "invalid": "Шақыру жарамсыз немесе мерзімі өткен.",
       "needLogin": "Жоғарыда кіріп, сілтемені қайта ашыңыз."
     }
+  },
+  "map": {
+    "locate": "Мен осындамын",
+    "count": "картада {count}",
+    "moveToSee": "Орындарды көру үшін картаны жылжытыңыз",
+    "showList": "Тізімді көрсету",
+    "showMap": "Картаны көрсету",
+    "viewList": "Тізім",
+    "viewMap": "Карта",
+    "openLarge": "Картаны ашу"
+  },
+  "errors": {
+    "loadTitle": "Жүктеу мүмкін болмады",
+    "loadBody": "Бірдеңе дұрыс болмады. Қайталап көріңіз.",
+    "retry": "Қайталау"
+  },
+  "district": {
+    "title": "Аудан",
+    "detect": "Анықтау",
+    "placeholder": "Ауданды таңдаңыз",
+    "near": "Маған жақын",
+    "change": "Өзгерту"
   }
 }

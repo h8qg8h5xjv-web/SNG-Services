@@ -5,7 +5,7 @@ import type {
   ClaimStatus,
 } from '@/types/database'
 import { pickProviderContent, pickCategoryName, type Translation } from '../i18n/content'
-import { parseOpeningHours, type OpeningHours } from '../hours'
+import { parseOpeningHours, isOpenNow, type OpeningHours } from '../hours'
 
 // Shape fetched from Supabase for a provider used in listings and cards.
 export type ProviderWithRelations = {
@@ -14,6 +14,9 @@ export type ProviderWithRelations = {
   name_en: string
   description_en: string | null
   borough: string
+  address: string | null
+  lat: number | null
+  lng: number | null
   cover_image: string | null
   venue_photos: string[] | null
   fulfillment_type: FulfillmentType
@@ -34,7 +37,7 @@ export type ProviderWithRelations = {
   phone: string | null
   website: string | null
   created_at: string
-  categories?: { slug: string; name_en: string; name_ru: string } | null
+  categories?: { slug: string; name_en: string; name_ru: string; icon?: string | null } | null
   provider_translations: Translation[]
   services: {
     name_en: string
@@ -60,15 +63,24 @@ export type ProviderCardVM = {
   categoryName: string
   name: string
   borough: string
+  address: string | null
+  // Geo for the map; null when the provider has no coordinates (not shown on map).
+  lat: number | null
+  lng: number | null
+  // DB icon string of the category, for place markers (see CategoryIcon registry).
+  categoryIcon: string | null
   coverImage: string | null
   fulfillment: FulfillmentType
   externalUrl: string | null
   entityType: EntityType
   bookingEnabled: boolean
   openingHours: OpeningHours | null
+  openNow: boolean
   phone: string | null
   website: string | null
   travelsToClient: boolean
+  // A live verified credential (insurance/DBS/Gas Safe/electrical) — «Документы».
+  documentsVerified: boolean
   // Card entered from public data with no owner yet — shows an honest source note.
   unclaimed: boolean
   // Native names of languages with a live 'verified' badge — trust signal on the
@@ -149,15 +161,21 @@ export function toCard(
     categoryName: provider.categories ? pickCategoryName(provider.categories, locale) : '',
     name,
     borough: provider.borough,
+    address: provider.address,
+    lat: provider.lat,
+    lng: provider.lng,
+    categoryIcon: provider.categories?.icon ?? null,
     coverImage: provider.venue_photos?.[0] ?? provider.cover_image,
     fulfillment: provider.fulfillment_type,
     externalUrl: provider.external_order_url,
     entityType: provider.entity_type,
     bookingEnabled: provider.booking_enabled,
     openingHours: parseOpeningHours(provider.opening_hours),
+    openNow: provider.entity_type === 'place' && isOpenNow(parseOpeningHours(provider.opening_hours), new Date(now)),
     phone: provider.phone,
     website: provider.website,
     travelsToClient: provider.travels_to_client,
+    documentsVerified: hasVerifiedDocument(provider, now),
     unclaimed: provider.claim_status === 'unclaimed',
     verifiedLanguages,
     priceRange: priceRangeOf(provider),
@@ -207,6 +225,16 @@ export function filterByBorough(
 ): ProviderWithRelations[] {
   if (!borough) return providers
   return providers.filter((p) => p.borough === borough)
+}
+
+// Multi-borough (checkbox filters, §4). Empty = all.
+export function filterByBoroughs(
+  providers: ProviderWithRelations[],
+  boroughs: string[],
+): ProviderWithRelations[] {
+  if (boroughs.length === 0) return providers
+  const set = new Set(boroughs)
+  return providers.filter((p) => set.has(p.borough))
 }
 
 export type CategoryFacets = { travels: boolean; verifiedOnly: boolean }

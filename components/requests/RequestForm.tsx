@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation'
 import { createRequest } from '@/lib/requests/create'
 import { uploadRequestPhotos } from '@/lib/requests/photos'
 import { saveRequest } from '@/lib/requests/local-store'
+import { markFirstValue } from '@/lib/tracking/first-value'
 import { formatPrice } from '@/lib/format'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea, Select } from '@/components/ui/Input'
@@ -149,6 +150,7 @@ export default function RequestForm({
     })
     if (result.ok) {
       saveRequest(result.ref, result.token) // so it shows under "Bookings"
+      markFirstValue() // leaving a request is a "first value" action (§ metric #1)
       router.push(`/requests/${result.ref}?token=${result.token}`)
     } else {
       setPending(false)
