@@ -6,7 +6,6 @@ import { IconWorld, IconPhone } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { Card, CardMedia, CardBody } from '@/components/ui/Card'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import Tilt from '@/components/Tilt'
 import SaveHeart from '@/components/SaveHeart'
 import { isOpenNow } from '@/lib/hours'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
@@ -27,7 +26,6 @@ export default function PlaceCard({ card }: { card: ProviderCardVM }) {
   }, [card.openingHours])
 
   return (
-    <Tilt maxDeg={3} translateZ={6}>
       <Card className="flex h-full flex-col">
         <CardMedia
           src={card.coverImage}
@@ -78,6 +76,5 @@ export default function PlaceCard({ card }: { card: ProviderCardVM }) {
           )}
         </CardBody>
       </Card>
-    </Tilt>
   )
 }

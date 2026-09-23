@@ -5,8 +5,6 @@ import { dateTimeFormat } from '@/lib/intl'
 import { pickEventTitle } from '@/lib/events/constants'
 import { resolveImageUrl } from '@/lib/images'
 import { Card } from '@/components/ui/Card'
-import Tilt from '@/components/Tilt'
-import Reveal from '@/components/Reveal'
 import Attendance from '@/components/events/Attendance'
 import type { EventListItem } from '@/lib/queries/events'
 import type { EventAttendance } from '@/lib/events/attendance'
@@ -15,7 +13,7 @@ const TZ = 'Europe/London'
 
 // Event card (§7): photo on top with a date chip (top-left) and price (top-right),
 // then the title and meta in a light body BELOW the image. The ONE Card component
-// (DESIGN-SYSTEM §5). Wrapped in Reveal (scroll-in) and Tilt (hover).
+// (DESIGN-SYSTEM §5).
 export default function EventCard({
   event,
   locale,
@@ -36,8 +34,6 @@ export default function EventCard({
   const free = event.price_from_pence == null
 
   return (
-    <Reveal className="h-full">
-      <Tilt perspective="far" maxDeg={4} translateZ={14} className="h-full">
         <Card href={`/events/${event.slug}`} className="block h-full overflow-hidden">
           <div className="relative aspect-video w-full overflow-hidden">
             {cover ? (
@@ -46,11 +42,11 @@ export default function EventCard({
                 alt=""
                 fill
                 sizes="(max-width: 640px) 100vw, 33vw"
-                className="tilt-cover object-cover"
+                className="object-cover"
               />
             ) : (
               // No cover: an accent gradient instead of a grey box (task §5).
-              <div className="tilt-cover h-full w-full bg-linear-to-br from-accent to-accent-soft" />
+              <div className="h-full w-full bg-linear-to-br from-accent to-accent-soft" />
             )}
 
             <span className="absolute left-3 top-3 rounded-lg bg-white px-2 py-1 text-center leading-none">
@@ -82,7 +78,5 @@ export default function EventCard({
             )}
           </div>
         </Card>
-      </Tilt>
-    </Reveal>
   )
 }
