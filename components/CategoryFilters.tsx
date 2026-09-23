@@ -6,6 +6,7 @@ import { IconAdjustmentsHorizontal, IconX, IconChevronDown, IconList, IconMap } 
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
+import Select from '@/components/ui/Select'
 import type { SortKey } from '@/lib/catalog/transform'
 
 const SORTS: SortKey[] = ['relevance', 'price', 'newest']
@@ -172,9 +173,13 @@ export default function CategoryFilters({
             <Check label={t('filterTravels')} checked={current.travels} onChange={() => apply({ ...current, travels: !current.travels })} />
           </Group>
           <Group title={t('sortLabel')}>
-            {SORTS.map((s) => (
-              <Check kind="radio" key={s} label={sortLabel[s]} checked={current.sort === s} onChange={() => apply({ ...current, sort: s })} />
-            ))}
+            <Select
+              value={current.sort}
+              onChange={(v) => apply({ ...current, sort: v as SortKey })}
+              options={SORTS.map((s) => ({ value: s, label: sortLabel[s] }))}
+              ariaLabel={t('sortLabel')}
+              className="w-full"
+            />
           </Group>
         </div>
       </aside>
@@ -195,9 +200,13 @@ export default function CategoryFilters({
             <Check label={t('filterTravels')} checked={draft.travels} onChange={() => setDraft((d) => ({ ...d, travels: !d.travels }))} />
           </Group>
           <Group title={t('sortLabel')}>
-            {SORTS.map((s) => (
-              <Check kind="radio" key={s} label={sortLabel[s]} checked={draft.sort === s} onChange={() => setDraft((d) => ({ ...d, sort: s }))} />
-            ))}
+            <Select
+              value={draft.sort}
+              onChange={(v) => setDraft((d) => ({ ...d, sort: v as SortKey }))}
+              options={SORTS.map((s) => ({ value: s, label: sortLabel[s] }))}
+              ariaLabel={t('sortLabel')}
+              className="w-full"
+            />
           </Group>
         </div>
         <div className="mt-4 flex items-center gap-3">
@@ -244,8 +253,13 @@ function Check({
   kind?: 'checkbox' | 'radio'
 }) {
   return (
-    <label className="flex min-h-9 cursor-pointer items-center gap-2 text-body">
-      <input type={kind} checked={checked} onChange={onChange} className="h-4 w-4 accent-blue-800" />
+    <label className="flex min-h-11 cursor-pointer items-center gap-2 text-body">
+      <input
+        type={kind}
+        checked={checked}
+        onChange={onChange}
+        className={kind === 'checkbox' ? 'check-3d' : 'h-4 w-4 accent-blue-800'}
+      />
       {label}
     </label>
   )

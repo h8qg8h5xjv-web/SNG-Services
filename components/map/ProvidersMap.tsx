@@ -9,12 +9,13 @@ import CategoryIcon from '@/components/CategoryIcon'
 import type { MapPoint } from '@/lib/maps/points'
 import { LONDON_CENTER } from '@/lib/maps/distance'
 import { OSM_STYLE } from '@/lib/maps/style'
+import { BLUE_800, BLUE_950, WHITE } from '@/lib/palette'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-// Colours mirror the design tokens (globals.css). MapLibre paint props and the
-// SVG markers take plain hex strings, so they cannot use Tailwind classes.
-const ACCENT = '#1e40af' // --color-accent (blue-800)
-const INK = '#172554' // --color-ink (blue-950)
+// Colours come from the shared palette (lib/palette). MapLibre paint props and the
+// SVG markers take literal hex, so they cannot use CSS tokens at runtime.
+const ACCENT = BLUE_800
+const INK = BLUE_950
 
 // The OSM raster style has no glyph endpoint, so every marker — price pills,
 // cluster counts, category discs — is a self-contained SVG image generated on
@@ -50,7 +51,7 @@ const esc = (s: string) =>
 
 function discSvg(inner: string, size: number): string {
   const r = size / 2 - 4
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="#ffffff" stroke="${ACCENT}" stroke-width="4"/>${inner}</svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="${WHITE}" stroke="${ACCENT}" stroke-width="4"/>${inner}</svg>`
 }
 
 function categorySvg(iconName: string): string {
@@ -71,13 +72,13 @@ function masterDotSvg(): string {
 function pricePillSvg(label: string): string {
   const h = 48
   const w = Math.max(64, 40 + label.length * 22)
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="4" y="4" rx="${(h - 8) / 2}" width="${w - 8}" height="${h - 8}" fill="#ffffff" stroke="${ACCENT}" stroke-width="4"/><text x="${w / 2}" y="${h / 2}" fill="${INK}" font-family="system-ui,Arial,sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(label)}</text></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="4" y="4" rx="${(h - 8) / 2}" width="${w - 8}" height="${h - 8}" fill="${WHITE}" stroke="${ACCENT}" stroke-width="4"/><text x="${w / 2}" y="${h / 2}" fill="${INK}" font-family="system-ui,Arial,sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(label)}</text></svg>`
 }
 
 function clusterSvg(count: string): string {
   const n = parseInt(count, 10) || 0
   const size = n >= 50 ? 68 : n >= 10 ? 56 : 48
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 5}" fill="${ACCENT}" stroke="#ffffff" stroke-width="5"/><text x="${size / 2}" y="${size / 2}" fill="#ffffff" font-family="system-ui,Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(count)}</text></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 5}" fill="${ACCENT}" stroke="${WHITE}" stroke-width="5"/><text x="${size / 2}" y="${size / 2}" fill="${WHITE}" font-family="system-ui,Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(count)}</text></svg>`
 }
 
 function svgToImage(svg: string): HTMLImageElement {
@@ -281,7 +282,7 @@ export default function ProvidersMap({
           type="button"
           onClick={locateMe}
           aria-label={locateLabel}
-          className="press focus-ring absolute left-3 top-3 z-10 flex min-h-11 items-center gap-2 rounded-control border border-slate-200 bg-white px-3 text-body font-semibold text-slate-900 shadow-sm"
+          className="press focus-ring absolute left-3 top-3 z-10 flex min-h-11 items-center gap-2 rounded-control border border-slate-200 bg-white px-3 text-body font-semibold text-slate-900"
         >
           <IconCurrentLocation className="h-5 w-5 text-accent" stroke={2} />
           {locateLabel}

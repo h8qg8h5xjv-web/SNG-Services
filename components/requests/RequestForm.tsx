@@ -9,7 +9,8 @@ import { saveRequest } from '@/lib/requests/local-store'
 import { markFirstValue } from '@/lib/tracking/first-value'
 import { formatPrice } from '@/lib/format'
 import { Button } from '@/components/ui/Button'
-import { Input, Textarea, Select } from '@/components/ui/Input'
+import { Input, Textarea } from '@/components/ui/Input'
+import Select from '@/components/ui/Select'
 import { FilterChip } from '@/components/ui/FilterChip'
 import Consent from '@/components/Consent'
 import type { PriceGuide } from '@/lib/requests/price-guide'
@@ -189,13 +190,14 @@ export default function RequestForm({
       {type === 'fixed' && targetProviderId && services.length > 0 && (
         <div>
           <label className="mb-1 block text-body text-slate-500">{t('service')}</label>
-          <Select value={serviceId} onChange={(e) => setServiceId(e.target.value)} className="w-full">
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={serviceId}
+            onChange={setServiceId}
+            options={services.map((s) => ({ value: s.id, label: s.name }))}
+            ariaLabel={t('service')}
+            title={t('service')}
+            className="w-full"
+          />
         </div>
       )}
 
@@ -250,13 +252,14 @@ export default function RequestForm({
       {!fixedBorough && (
         <div>
           <label className="mb-1 block text-body text-slate-500">{t('borough')}</label>
-          <Select value={borough} onChange={(e) => setBorough(e.target.value)} className="w-full">
-            {boroughs.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={borough}
+            onChange={setBorough}
+            options={boroughs.map((b) => ({ value: b, label: b }))}
+            ariaLabel={t('borough')}
+            title={t('borough')}
+            className="w-full"
+          />
         </div>
       )}
 
@@ -290,15 +293,12 @@ export default function RequestForm({
               <label className="mb-1 block text-body text-slate-500">{t('regulatedKind')}</label>
               <Select
                 value={regulatedKind}
-                onChange={(e) => setRegulatedKind(e.target.value as RegulatedKind)}
+                onChange={(v) => setRegulatedKind(v as RegulatedKind)}
+                options={REGULATED_KINDS.map((k) => ({ value: k, label: t(`regulatedKindOption.${k}`) }))}
+                ariaLabel={t('regulatedKind')}
+                title={t('regulatedKind')}
                 className="w-full"
-              >
-                {REGULATED_KINDS.map((k) => (
-                  <option key={k} value={k}>
-                    {t(`regulatedKindOption.${k}`)}
-                  </option>
-                ))}
-              </Select>
+              />
               <p className="mt-1 text-meta text-slate-500">{t('regulatedNote')}</p>
             </div>
           )}

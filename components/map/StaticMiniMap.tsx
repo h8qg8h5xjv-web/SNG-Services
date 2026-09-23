@@ -3,9 +3,10 @@
 import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
 import { OSM_STYLE } from '@/lib/maps/style'
+import { BLUE_800 } from '@/lib/palette'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-const ACCENT = '#1e40af'
+const ACCENT = BLUE_800
 
 // A non-interactive map with a single marker for the «Адрес» block. All gestures
 // are disabled — the surrounding link opens the full OSM map (§3).

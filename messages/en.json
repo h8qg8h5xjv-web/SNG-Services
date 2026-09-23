@@ -7,7 +7,8 @@
     "appName": "SNG Services",
     "city": "London",
     "back": "Back",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "selectSearch": "Search"
   },
   "nav": {
     "home": "Home",
@@ -256,9 +257,9 @@
     "cancelRequest": "Cancel request",
     "leaveRequest": "Not sure who? Leave a request",
     "askThisMaster": "Ask this master",
-    "needTitle": "What do you need done?",
+    "needTitle": "Describe the task — masters will reply",
     "needPlaceholder": "e.g. hair stylist, clean the flat",
-    "needGo": "Find",
+    "needGo": "Send",
     "notRecognised": "We couldn’t match “{query}” to a category.",
     "chooseCategory": "Choose a category",
     "foundFor": "For “{category}” — here’s who fits",
@@ -558,7 +559,8 @@
       "published": "Published",
       "draft": "On review",
       "draftNote": "Card on review. We'll call to confirm the language and publish it.",
-      "backToCards": "Back to cards"
+      "backToCards": "Back to cards",
+      "category": "Category"
     },
     "account": {
       "name": "Public name",

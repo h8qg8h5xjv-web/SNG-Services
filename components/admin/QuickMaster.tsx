@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { quickCreateMaster } from '@/lib/admin/quick-master-actions'
+import Select from '@/components/ui/Select'
 
 // §10 fast master entry. Admin UI — English, palette only. Creates a draft; the
 // admin finishes it in the full form. Services line: "Name price£ minutes; …".
@@ -54,13 +55,14 @@ export default function QuickMaster({
       <h2 className="mb-3 text-body font-semibold">Quick master</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         <input className={field} placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <select className={field} value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name_en}
-            </option>
-          ))}
-        </select>
+        <Select
+          value={categoryId}
+          onChange={setCategoryId}
+          options={categories.map((c) => ({ value: c.id, label: c.name_en }))}
+          ariaLabel="Category"
+          title="Category"
+          className="w-full"
+        />
         <input className={field} placeholder="Borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
         <input className={field} placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
       </div>

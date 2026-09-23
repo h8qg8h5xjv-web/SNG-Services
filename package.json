@@ -15,7 +15,8 @@
     "seed:test-master": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/create-test-master.ts",
     "requests:advance": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/advance-once.ts",
     "demo:hide": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/demo-visibility.ts hide",
-    "demo:show": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/demo-visibility.ts show"
+    "demo:show": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/demo-visibility.ts show",
+    "test": "node --experimental-strip-types --test \"lib/**/*.test.ts\""
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

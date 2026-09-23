@@ -7,7 +7,8 @@
     "appName": "SNG Services",
     "city": "London",
     "back": "Артқа",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "selectSearch": "Іздеу"
   },
   "nav": {
     "home": "Home",
@@ -256,9 +257,9 @@
     "cancelRequest": "Cancel request",
     "leaveRequest": "Not sure who? Leave a request",
     "askThisMaster": "Ask this master",
-    "needTitle": "What do you need done?",
+    "needTitle": "Тапсырманы сипаттаңыз — шеберлер жауап береді",
     "needPlaceholder": "e.g. hair stylist, clean the flat",
-    "needGo": "Find",
+    "needGo": "Жіберу",
     "notRecognised": "We couldn’t match “{query}” to a category.",
     "chooseCategory": "Choose a category",
     "foundFor": "For “{category}” — here’s who fits",
@@ -558,7 +559,8 @@
       "published": "Жарияланған",
       "draft": "Тексерілуде",
       "draftNote": "Карта тексерілуде. Тілді растау үшін қоңырау шаламыз және жариялаймыз.",
-      "backToCards": "Карталарға"
+      "backToCards": "Карталарға",
+      "category": "Санат"
     },
     "account": {
       "name": "Ашық аты",

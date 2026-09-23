@@ -6,6 +6,7 @@ import {
   setLanguageVerification,
   VERIFICATION_METHODS,
 } from '@/lib/admin/language-actions'
+import Select from '@/components/ui/Select'
 import type { AdminProviderLanguage } from '@/lib/admin/data'
 import type { Language } from '@/types'
 import type { LanguageVerificationMethod } from '@/types/database'
@@ -111,18 +112,14 @@ function LanguageRow({
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <select
+        <Select
           value={method}
-          onChange={(e) => setMethod(e.target.value as LanguageVerificationMethod)}
+          onChange={(v) => setMethod(v as LanguageVerificationMethod)}
+          options={VERIFICATION_METHODS.map((m) => ({ value: m, label: METHOD_LABEL[m] }))}
+          ariaLabel="Method"
           disabled={pending}
-          className="min-h-9 rounded-lg border border-slate-200 bg-transparent px-2 text-body"
-        >
-          {VERIFICATION_METHODS.map((m) => (
-            <option key={m} value={m}>
-              {METHOD_LABEL[m]}
-            </option>
-          ))}
-        </select>
+          className="w-48"
+        />
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}

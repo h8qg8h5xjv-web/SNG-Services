@@ -7,7 +7,8 @@
     "appName": "SNG Services",
     "city": "London",
     "back": "Назад",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "selectSearch": "Пошук"
   },
   "nav": {
     "home": "Home",
@@ -256,9 +257,9 @@
     "cancelRequest": "Cancel request",
     "leaveRequest": "Not sure who? Leave a request",
     "askThisMaster": "Ask this master",
-    "needTitle": "What do you need done?",
+    "needTitle": "Опишіть завдання — майстри відповідять",
     "needPlaceholder": "e.g. hair stylist, clean the flat",
-    "needGo": "Find",
+    "needGo": "Надіслати",
     "notRecognised": "We couldn’t match “{query}” to a category.",
     "chooseCategory": "Choose a category",
     "foundFor": "For “{category}” — here’s who fits",
@@ -558,7 +559,8 @@
       "published": "Опубліковано",
       "draft": "На перевірці",
       "draftNote": "Картка на перевірці. Ми зателефонуємо підтвердити мову та опублікуємо.",
-      "backToCards": "До карток"
+      "backToCards": "До карток",
+      "category": "Категорія"
     },
     "account": {
       "name": "Публічне ім'я",

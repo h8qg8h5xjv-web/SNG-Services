@@ -15,7 +15,10 @@ export async function GET(request: NextRequest) {
   try {
     const corpus = await buildCorpus(locale)
     return NextResponse.json({ suggestions: suggest(q, corpus), best: bestCategory(q, corpus) })
-  } catch {
+  } catch (err) {
+    // Suggestions are best-effort for the user, but a silent empty list hid a real
+    // prod failure (missing Supabase env / RLS / data). Log so Vercel shows it.
+    console.error('[suggest] failed to build corpus or match', err)
     return NextResponse.json({ suggestions: [], best: null })
   }
 }

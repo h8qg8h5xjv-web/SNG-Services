@@ -8,6 +8,7 @@ import ImageUpload from './ImageUpload'
 import OpeningHoursEditor from './OpeningHoursEditor'
 import VenuePhotos from './VenuePhotos'
 import AddressGeocoder from './AddressGeocoder'
+import Select from '@/components/ui/Select'
 import { parseOpeningHours, type OpeningHours } from '@/lib/hours'
 import type { AdminProviderDetail } from '@/lib/admin/data'
 import type { Category, Language } from '@/types'
@@ -270,19 +271,16 @@ export default function ProviderForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-body">
           <span className="text-slate-500">Category</span>
-          <select
-            value={f.category_id}
-            onChange={(e) => set('category_id', e.target.value)}
-            required
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="">—</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name_en}
-              </option>
-            ))}
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.category_id}
+              onChange={(v) => set('category_id', v)}
+              options={[{ value: '', label: '—' }, ...categories.map((c) => ({ value: c.id, label: c.name_en }))]}
+              ariaLabel="Category"
+              title="Category"
+              className="w-full"
+            />
+          </div>
         </label>
         <Field label="Borough" value={f.borough} onChange={(v) => set('borough', v)} required />
       </div>
@@ -290,26 +288,31 @@ export default function ProviderForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-body">
           <span className="text-slate-500">Fulfillment</span>
-          <select
-            value={f.fulfillment_type}
-            onChange={(e) => set('fulfillment_type', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="native_booking">native_booking</option>
-            <option value="external_order">external_order</option>
-            <option value="enquiry">enquiry</option>
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.fulfillment_type}
+              onChange={(v) => set('fulfillment_type', v)}
+              options={[
+                { value: 'native_booking', label: 'native_booking' },
+                { value: 'external_order', label: 'external_order' },
+                { value: 'enquiry', label: 'enquiry' },
+              ]}
+              ariaLabel="Fulfillment"
+              className="w-full"
+            />
+          </div>
         </label>
         <label className="block text-body">
           <span className="text-slate-500">Status</span>
-          <select
-            value={f.status}
-            onChange={(e) => set('status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="draft">draft</option>
-            <option value="published">published</option>
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.status}
+              onChange={(v) => set('status', v)}
+              options={[{ value: 'draft', label: 'draft' }, { value: 'published', label: 'published' }]}
+              ariaLabel="Status"
+              className="w-full"
+            />
+          </div>
         </label>
       </div>
 
@@ -327,26 +330,34 @@ export default function ProviderForm({
       <div className="grid gap-4 sm:grid-cols-3">
         <label className="block text-body">
           <span className="text-slate-500">Entity type</span>
-          <select
-            value={f.entity_type}
-            onChange={(e) => set('entity_type', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="place">place — заведение</option>
-            <option value="pro">pro — специалист</option>
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.entity_type}
+              onChange={(v) => set('entity_type', v)}
+              options={[
+                { value: 'place', label: 'place — заведение' },
+                { value: 'pro', label: 'pro — специалист' },
+              ]}
+              ariaLabel="Entity type"
+              className="w-full"
+            />
+          </div>
         </label>
         <label className="block text-body">
           <span className="text-slate-500">Claim status</span>
-          <select
-            value={f.claim_status}
-            onChange={(e) => set('claim_status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="unclaimed">unclaimed</option>
-            <option value="claimed">claimed</option>
-            <option value="invited">invited</option>
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.claim_status}
+              onChange={(v) => set('claim_status', v)}
+              options={[
+                { value: 'unclaimed', label: 'unclaimed' },
+                { value: 'claimed', label: 'claimed' },
+                { value: 'invited', label: 'invited' },
+              ]}
+              ariaLabel="Claim status"
+              className="w-full"
+            />
+          </div>
         </label>
         <label className="flex items-center gap-2 self-end pb-2 text-body">
           <input
@@ -563,17 +574,13 @@ export default function ProviderForm({
           <div className="space-y-2">
             {schedule.map((r, i) => (
               <div key={i} className="flex flex-wrap items-center gap-2">
-                <select
-                  value={r.day_of_week}
-                  onChange={(e) => updateRow(setSchedule, i, 'day_of_week', Number(e.target.value))}
-                  className="min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body"
-                >
-                  {DAYS.map((d) => (
-                    <option key={d.value} value={d.value}>
-                      {d.label}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={String(r.day_of_week)}
+                  onChange={(v) => updateRow(setSchedule, i, 'day_of_week', Number(v))}
+                  options={DAYS.map((d) => ({ value: String(d.value), label: d.label }))}
+                  ariaLabel="Day"
+                  className="w-32"
+                />
                 <input
                   type="time"
                   value={r.start_time}

@@ -7,8 +7,8 @@ import SaveHeart from '@/components/SaveHeart'
 import { resolveImageUrl } from '@/lib/images'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
-// Six accent-ish tints for the no-photo avatar; picked deterministically by name.
-const TINTS = ['bg-blue-600', 'bg-rose-500', 'bg-amber-500', 'bg-emerald-600', 'bg-violet-600', 'bg-teal-600']
+// Blue-family tints for the no-photo avatar (palette only); picked deterministically.
+const TINTS = ['bg-blue-950', 'bg-blue-900', 'bg-blue-800', 'bg-blue-700', 'bg-blue-600', 'bg-blue-500']
 function tintFor(name: string): string {
   let h = 0
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0

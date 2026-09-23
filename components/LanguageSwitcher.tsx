@@ -4,11 +4,11 @@ import { useTransition } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { localeConfigs } from '@/i18n/locales'
-import { Select } from '@/components/ui/Input'
+import Select from '@/components/ui/Select'
 
 // Only enabled locales are offered. Switching keeps the current path and changes
 // the locale prefix; next-intl stores the choice in the NEXT_LOCALE cookie.
-const options = localeConfigs.filter((l) => l.enabled)
+const options = localeConfigs.filter((l) => l.enabled).map((l) => ({ value: l.code, label: l.name }))
 
 export default function LanguageSwitcher() {
   const t = useTranslations('language')
@@ -17,27 +17,21 @@ export default function LanguageSwitcher() {
   const router = useRouter()
   const [, startTransition] = useTransition()
 
-  function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const next = event.target.value
+  function onChange(next: string) {
     if (next === locale) return
-    // Change only the locale of the current path. Not disabled while pending —
-    // a stuck-pending transition must never freeze the control.
     startTransition(() => {
       router.replace(pathname, { locale: next })
     })
   }
 
   return (
-    <label className="inline-flex items-center gap-2 text-body">
-      <span className="sr-only">{t('change')}</span>
-      <Select aria-label={t('change')} value={locale} onChange={onChange} className="text-slate-900">
-
-        {options.map((l) => (
-          <option key={l.code} value={l.code}>
-            {l.name}
-          </option>
-        ))}
-      </Select>
-    </label>
+    <Select
+      value={locale}
+      onChange={onChange}
+      options={options}
+      ariaLabel={t('change')}
+      title={t('change')}
+      className="w-36"
+    />
   )
 }

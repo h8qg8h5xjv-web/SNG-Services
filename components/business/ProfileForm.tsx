@@ -3,10 +3,9 @@
 import { useState, useTransition } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { IconPhoto, IconX, IconStar } from '@tabler/icons-react'
+import { IconPhoto, IconX, IconStar, IconHome, IconHomeFilled } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
-import { FilterChip } from '@/components/ui/FilterChip'
 import { saveCabinetProfile, uploadCabinetPhoto } from '@/lib/business/actions'
 import { resolveImageUrl } from '@/lib/images'
 import type { CabinetProfile } from '@/lib/business/data'
@@ -107,9 +106,22 @@ export default function ProfileForm({ profile }: { profile: CabinetProfile }) {
         </div>
       </div>
 
-      <FilterChip active={travels} onClick={() => setTravels((v) => !v)}>
+      {/* 3D toggle (§Эффекты): raised → pressed, icon outline→fill. */}
+      <button
+        type="button"
+        onClick={() => setTravels((v) => !v)}
+        aria-pressed={travels}
+        className={`toggle-3d inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-meta font-semibold ${
+          travels ? 'text-accent' : 'text-slate-700'
+        }`}
+      >
+        {travels ? (
+          <IconHomeFilled className="h-5 w-5" />
+        ) : (
+          <IconHome className="h-5 w-5" stroke={2} />
+        )}
         {t('travels')}
-      </FilterChip>
+      </button>
 
       <div>
         <label className="mb-1 block text-body text-slate-500">{t('photos', { max: MAX_PHOTOS })}</label>

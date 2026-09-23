@@ -4,7 +4,8 @@ import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
-import { Input, Select } from '@/components/ui/Input'
+import { Input } from '@/components/ui/Input'
+import Select from '@/components/ui/Select'
 import { createMyCard } from '@/lib/cabinet/actions'
 
 // Self-serve card creation (name, category, borough, phone, languages, services
@@ -51,13 +52,15 @@ export default function CreateCardForm({
     <div className="rounded-lg border border-slate-200 p-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <Input placeholder={t('name')} value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
-        <Select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full">
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </Select>
+        <Select
+          value={categoryId}
+          onChange={setCategoryId}
+          options={categories.map((c) => ({ value: c.id, label: c.name }))}
+          ariaLabel={t('category')}
+          title={t('category')}
+          placeholder={t('category')}
+          className="w-full"
+        />
         <Input placeholder={t('borough')} value={borough} onChange={(e) => setBorough(e.target.value)} className="w-full" />
         <Input type="tel" placeholder={t('phone')} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
       </div>

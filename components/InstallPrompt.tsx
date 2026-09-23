@@ -87,7 +87,7 @@ export default function InstallPrompt() {
   if (!mode) return null
 
   return (
-    <div className="floating-bottom fixed inset-x-3 bottom-24 z-30 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:mx-auto sm:max-w-md">
+    <div className="floating-bottom fixed inset-x-3 bottom-24 z-30 rounded-lg border border-slate-200 bg-white p-4 sm:mx-auto sm:max-w-md">
       <div className="flex items-start gap-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
           <IconDownload className="h-6 w-6" stroke={1.5} />

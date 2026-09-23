@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { saveEvent, deleteEvent } from '@/lib/admin/event-actions'
 import { EVENT_CATEGORIES } from '@/lib/events/constants'
 import ImageUpload from './ImageUpload'
+import Select from '@/components/ui/Select'
 import type { AdminEventDetail } from '@/lib/admin/data'
 
 const orNull = (s: string) => (s.trim() === '' ? null : s.trim())
@@ -129,17 +130,16 @@ export default function EventForm({
         <Field label="Slug" value={f.slug} onChange={(v) => set('slug', v)} required />
         <label className="block text-body">
           <span className="text-slate-500">Category</span>
-          <select
-            value={f.category}
-            onChange={(e) => set('category', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            {EVENT_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.category}
+              onChange={(v) => set('category', v)}
+              options={EVENT_CATEGORIES.map((c) => ({ value: c, label: c }))}
+              ariaLabel="Category"
+              title="Category"
+              className="w-full"
+            />
+          </div>
         </label>
         <Field label="Title (EN)" value={f.title_en} onChange={(v) => set('title_en', v)} required />
         <Field label="Title (RU)" value={f.title_ru} onChange={(v) => set('title_ru', v)} />
@@ -213,29 +213,28 @@ export default function EventForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-body">
           <span className="text-slate-500">Organizer (provider)</span>
-          <select
-            value={f.organizer_provider_id}
-            onChange={(e) => set('organizer_provider_id', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="">— none —</option>
-            {providerOptions.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name_en}
-              </option>
-            ))}
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.organizer_provider_id}
+              onChange={(v) => set('organizer_provider_id', v)}
+              options={[{ value: '', label: '— none —' }, ...providerOptions.map((p) => ({ value: p.id, label: p.name_en }))]}
+              ariaLabel="Organizer"
+              title="Organizer"
+              className="w-full"
+            />
+          </div>
         </label>
         <label className="block text-body">
           <span className="text-slate-500">Status</span>
-          <select
-            value={f.status}
-            onChange={(e) => set('status', e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-transparent px-3"
-          >
-            <option value="draft">draft</option>
-            <option value="published">published</option>
-          </select>
+          <div className="mt-1">
+            <Select
+              value={f.status}
+              onChange={(v) => set('status', v)}
+              options={[{ value: 'draft', label: 'draft' }, { value: 'published', label: 'published' }]}
+              ariaLabel="Status"
+              className="w-full"
+            />
+          </div>
         </label>
       </div>
 

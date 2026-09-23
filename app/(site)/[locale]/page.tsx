@@ -3,7 +3,6 @@ import { IconBriefcase } from '@tabler/icons-react'
 import { SectionHeading } from '@/components/ui/Section'
 import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
-import SearchBar from '@/components/SearchBar'
 import DistrictBar from '@/components/DistrictBar'
 import HomeHowItWorks from '@/components/HomeHowItWorks'
 import RecentlyViewed from '@/components/RecentlyViewed'
@@ -48,9 +47,7 @@ export default async function HomePage({
         <div className="mx-auto w-full max-w-page px-3.5 py-7 sm:px-6">
           <h1 className="text-title font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
           <p className="mt-2 text-meta text-blue-200">{t('home.heroSubtitle')}</p>
-          <div className="mt-4">
-            <SearchBar />
-          </div>
+          {/* Search lives in the header (§2); the hero keeps title, subtitle, district. */}
           {boroughs.length > 0 && <DistrictBar boroughs={boroughs} />}
         </div>
       </section>

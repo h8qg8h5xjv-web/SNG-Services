@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { setProviderCredential, DBS_TYPES } from '@/lib/admin/credential-actions'
+import Select from '@/components/ui/Select'
 import type { AdminProviderDetail } from '@/lib/admin/data'
 import type { CredentialStatus, DbsType } from '@/types/database'
 
@@ -104,18 +105,16 @@ function CredentialCard({
         {kind === 'dbs' && (
           <label className="block text-body">
             <span className="text-slate-500">Тип DBS (для детей нужен enhanced)</span>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value as DbsType)}
-              disabled={pending}
-              className="mt-1 min-h-9 w-full rounded-lg border border-slate-200 bg-transparent px-2 text-body"
-            >
-              {DBS_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
+            <div className="mt-1">
+              <Select
+                value={type}
+                onChange={(v) => setType(v as DbsType)}
+                options={DBS_TYPES.map((t) => ({ value: t, label: t }))}
+                ariaLabel="DBS type"
+                disabled={pending}
+                className="w-full"
+              />
+            </div>
           </label>
         )}
         <label className="block text-body sm:col-span-2">

@@ -21,14 +21,5 @@ export function Textarea({
   )
 }
 
-export function Select({
-  className = '',
-  ...rest
-}: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select
-      className={`field min-h-11 rounded-control border border-slate-200 bg-white px-3 text-body ${className}`}
-      {...rest}
-    />
-  )
-}
+// The design-system dropdown is components/ui/Select.tsx (a custom listbox, not a
+// native <select>). This file keeps only the text inputs.
