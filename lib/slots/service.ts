@@ -69,6 +69,8 @@ export type AvailableTodayProvider = {
   categorySlug: string
   name_en: string
   borough: string
+  lat: number | null
+  lng: number | null
   cover_image: string | null
   nextSlot: string // ISO
 }
@@ -90,7 +92,7 @@ export async function getAvailableTodayProviders(
   const { data: providers } = await supabase
     .from('providers')
     .select(
-      'slug, name_en, borough, cover_image, categories(slug), ' +
+      'slug, name_en, borough, lat, lng, cover_image, categories(slug), ' +
         'services(id,duration_min,capacity), ' +
         'schedules(day_of_week,start_time,end_time), ' +
         'schedule_exceptions(exception_date,is_closed,start_time,end_time)',
@@ -102,6 +104,8 @@ export async function getAvailableTodayProviders(
         slug: string
         name_en: string
         borough: string
+        lat: number | null
+        lng: number | null
         cover_image: string | null
         categories: { slug: string } | null
         services: { id: string; duration_min: number; capacity: number }[]
@@ -171,6 +175,8 @@ export async function getAvailableTodayProviders(
         categorySlug: p.categories.slug,
         name_en: p.name_en,
         borough: p.borough,
+        lat: p.lat,
+        lng: p.lng,
         cover_image: p.cover_image,
         nextSlot: earliest,
       })

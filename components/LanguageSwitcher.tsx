@@ -30,7 +30,8 @@ export default function LanguageSwitcher() {
   return (
     <label className="inline-flex items-center gap-2 text-body">
       <span className="sr-only">{t('change')}</span>
-      <Select aria-label={t('change')} value={locale} onChange={onChange}>
+      <Select aria-label={t('change')} value={locale} onChange={onChange} className="text-slate-900">
+
         {options.map((l) => (
           <option key={l.code} value={l.code}>
             {l.name}

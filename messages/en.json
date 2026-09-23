@@ -47,6 +47,12 @@
     "masters": {
       "title": "Are you a master or run a business? Get requests from Russian-speaking clients.",
       "cta": "Learn more"
+    },
+    "suggestKind": {
+      "category": "Category",
+      "provider": "Master",
+      "borough": "District",
+      "service": "Service"
     }
   },
   "catalog": {
@@ -73,7 +79,12 @@
     "seoDescription": "Find Russian-speaking {category} masters in London: verified language, quick requests, online booking.",
     "seoDescriptionBorough": "Russian-speaking {category} masters in {borough}, London — verified language and online booking.",
     "orderNote": "Order: alphabetical by default; you can sort by price or newest.",
-    "respondsIn": "responds in {min} min"
+    "respondsIn": "responds in {min} min",
+    "filters": "Filters",
+    "showN": "Show {count}",
+    "reset": "Reset",
+    "filtersTrust": "Trust",
+    "filtersFormat": "Format"
   },
   "fulfillment": {
     "nativeBadge": "Book here",
@@ -106,7 +117,8 @@
     "message": "Message",
     "unclaimed": "Compiled from public sources",
     "claimCta": "Is this you? Claim the card",
-    "servicesUnknown": "Ask the master."
+    "servicesUnknown": "Ask the master.",
+    "whatsappText": "Hello! I found you on SNG Services ({name}). Could you tell me about booking?"
   },
   "search": {
     "title": "Search",
@@ -515,7 +527,7 @@
     "title": "Cabinet",
     "signOut": "Sign out",
     "loginTitle": "Sign in by email",
-    "loginBody": "so you don't lose this and can get requests to your own card.",
+    "loginBody": "your requests and saved items stay with you on any device.",
     "login": "Sign in",
     "loginSending": "Sending…",
     "loginSent": "Check your inbox — a link went to {email}.",
@@ -571,5 +583,27 @@
       "invalid": "This invite is invalid or expired.",
       "needLogin": "Sign in above, then open the link again."
     }
+  },
+  "map": {
+    "locate": "I'm here",
+    "count": "{count} on the map",
+    "moveToSee": "Move the map to see places",
+    "showList": "Show list",
+    "showMap": "Show map",
+    "viewList": "List",
+    "viewMap": "Map",
+    "openLarge": "Open map"
+  },
+  "errors": {
+    "loadTitle": "Couldn't load",
+    "loadBody": "Something went wrong. Please try again.",
+    "retry": "Retry"
+  },
+  "district": {
+    "title": "Area",
+    "detect": "Detect",
+    "placeholder": "Choose an area",
+    "near": "Near me",
+    "change": "Change"
   }
 }

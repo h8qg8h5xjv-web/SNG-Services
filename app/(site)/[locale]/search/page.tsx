@@ -9,6 +9,7 @@ import TrackImpressions from '@/components/TrackImpressions'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { IconSearch } from '@tabler/icons-react'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
+import { getResponseMedians } from '@/lib/queries/response-time'
 import { matchesQuery, toCard, isServiceCard, isPlaceCard } from '@/lib/catalog/transform'
 import { rankProviders } from '@/lib/ranking'
 
@@ -46,6 +47,11 @@ export default async function SearchPage({
   // One search over both, results grouped: the current section first (DESIGN §4).
   const serviceCards = cards.filter(isServiceCard)
   const placeCards = cards.filter(isPlaceCard)
+
+  // "Отвечает за N мин" on the service cards (§5): median from request_targets.
+  const medians = await getResponseMedians(serviceCards.map((c) => c.id))
+  const responseMins: Record<string, number> = {}
+  for (const [id, m] of medians) responseMins[id] = m
   const servicesGroup = { key: 'services' as const, title: t('servicesGroup'), cards: serviceCards }
   const placesGroup = { key: 'places' as const, title: t('placesGroup'), cards: placeCards }
   const groups = (placesFirst ? [placesGroup, servicesGroup] : [servicesGroup, placesGroup]).filter(
@@ -79,7 +85,7 @@ export default async function SearchPage({
                       ))}
                     </div>
                   ) : (
-                    <ProviderGrid cards={group.cards} surface="search" />
+                    <ProviderGrid cards={group.cards} surface="search" responseMins={responseMins} />
                   )}
                 </section>
               ))}

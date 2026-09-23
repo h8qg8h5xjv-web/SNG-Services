@@ -130,3 +130,42 @@ body {
 /* Blur-up image: blurred until the sharp one loads (DESIGN-SYSTEM §Отклик). */
 .blur-up { filter: blur(12px); transition: filter 300ms ease; }
 .blur-up.loaded { filter: none; }
+
+/* --- Maps ("Рядом") --------------------------------------------------------- */
+/* The mobile map fills the viewport between the sticky header (h-13) and the
+   bottom nav (~3.5rem); the desktop split fills below the header (h-14). */
+.near-stage-mobile { position: relative; height: calc(100dvh - 6.75rem); }
+.near-stage-desktop { height: calc(100dvh - 3.5rem); }
+
+/* Draggable bottom sheet: peek shows the count; open shows the list. */
+.near-sheet {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  background: #fff;
+  border-top-left-radius: var(--radius-card);
+  border-top-right-radius: var(--radius-card);
+  box-shadow: 0 -4px 20px rgb(15 23 42 / 0.10);
+  transition: height 250ms ease;
+}
+.near-sheet--peek { height: 6.5rem; }
+.near-sheet--open { height: 82%; }
+@media (prefers-reduced-motion: reduce) { .near-sheet { transition: none; } }
+
+/* MapLibre attribution: keep it small and unobtrusive in the corner. */
+.maplibregl-ctrl-attrib { font-size: 10px; }
+
+/* Selected-marker card: floats above the mobile sheet peek, or at the foot of the
+   desktop map column. */
+.near-selected { position: absolute; left: 0.75rem; right: 0.75rem; bottom: 7.25rem; z-index: 20; }
+@media (min-width: 640px) { .near-selected { bottom: 0.75rem; } }
+
+/* Category «Карта» view: an inline, rounded map panel. */
+.category-map { position: relative; height: 30rem; overflow: hidden; border-radius: var(--radius-card); }
+@media (min-width: 640px) { .category-map { height: 38rem; } }
+
+/* Detail page «Адрес» mini map: a short, tappable static map. */
+.address-map { position: relative; height: 12rem; }

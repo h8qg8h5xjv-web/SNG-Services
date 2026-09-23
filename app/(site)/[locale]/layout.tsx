@@ -11,6 +11,7 @@ import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
 import InstallPrompt from '@/components/InstallPrompt'
+import SessionStart from '@/components/SessionStart'
 import '../../globals.css'
 
 // Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
@@ -100,6 +101,7 @@ export default async function LocaleLayout({
           <Footer />
           <BottomNav />
           <InstallPrompt />
+          <SessionStart />
         </NextIntlClientProvider>
       </body>
     </html>

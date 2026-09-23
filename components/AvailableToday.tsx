@@ -1,12 +1,15 @@
+'use client'
+
+import { useMemo } from 'react'
 import Image from 'next/image'
 import { SectionHeading } from '@/components/ui/Section'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
-import Tilt from '@/components/Tilt'
 import SaveHeart from '@/components/SaveHeart'
 import NoPhoto from '@/components/NoPhoto'
 import { resolveImageUrl } from '@/lib/images'
 import { dateTimeFormat } from '@/lib/intl'
+import { useDistrict, sortByDistrict } from '@/lib/district'
 import type { AvailableTodayProvider } from '@/lib/slots/service'
 
 export default function AvailableToday({
@@ -17,6 +20,9 @@ export default function AvailableToday({
   locale: string
 }) {
   const t = useTranslations('home')
+  const district = useDistrict()
+  // Reorder by the visitor's chosen area (§3): closest / same borough first.
+  const ordered = useMemo(() => sortByDistrict(providers, district), [providers, district])
   if (providers.length === 0) return null
 
   const timeFmt = dateTimeFormat(locale, {
@@ -29,12 +35,11 @@ export default function AvailableToday({
     <section className="py-6">
       <SectionHeading>{t('availableToday')}</SectionHeading>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
-        {providers.map((p) => {
+        {ordered.map((p) => {
           const image = resolveImageUrl(p.cover_image)
           return (
             <li key={p.slug} className="w-44 shrink-0 snap-start">
               {/* Vertical card in a horizontal lane (DESIGN §4): photo, name, borough. */}
-              <Tilt maxDeg={3} translateZ={6}>
                 <Link
                   href={`/${p.categorySlug}/${p.slug}/book`}
                   className="block h-full overflow-hidden rounded-lg border border-slate-200 transition-colors hover:border-accent"
@@ -55,7 +60,6 @@ export default function AvailableToday({
                     <p className="truncate text-meta text-slate-500">{p.borough}</p>
                   </div>
                 </Link>
-              </Tilt>
             </li>
           )
         })}
