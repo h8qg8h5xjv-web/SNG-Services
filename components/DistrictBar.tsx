@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { IconMapPin, IconCurrentLocation } from '@tabler/icons-react'
 import { useDistrict, setDistrict } from '@/lib/district'
+import Select from '@/components/ui/Select'
 
 // A one-line "your area" control under the hero search (§3). Asked once; the
 // choice (shared location or a picked borough) is remembered per device and used
@@ -43,23 +44,17 @@ export default function DistrictBar({ boroughs }: { boroughs: string[] }) {
           >
             <IconCurrentLocation className="h-4 w-4" stroke={2} /> {t('detect')}
           </button>
-          <select
-            aria-label={t('placeholder')}
-            defaultValue=""
-            onChange={(e) => {
-              if (e.target.value) setDistrict({ kind: 'borough', name: e.target.value })
-            }}
-            className="focus-ring min-h-9 rounded-control border border-white/30 bg-transparent px-2 text-white"
-          >
-            <option value="" disabled className="text-slate-900">
-              {t('placeholder')}
-            </option>
-            {boroughs.map((b) => (
-              <option key={b} value={b} className="text-slate-900">
-                {b}
-              </option>
-            ))}
-          </select>
+          <Select
+            value=""
+            onChange={(v) => setDistrict({ kind: 'borough', name: v })}
+            options={boroughs.map((b) => ({ value: b, label: b }))}
+            placeholder={t('placeholder')}
+            ariaLabel={t('placeholder')}
+            title={t('placeholder')}
+            searchable
+            searchPlaceholder={t('placeholder')}
+            className="w-48"
+          />
         </span>
       )}
     </div>

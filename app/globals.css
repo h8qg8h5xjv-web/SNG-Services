@@ -3,8 +3,8 @@
 /* Design system (DESIGN-SYSTEM.md). Colours: blue-950 / blue-800 / blue-50 / white
    plus the neutral slate base — no other hues. No dark theme by decision.
    Mobile-first, dense, flat: page is slate-100, surfaces white, borders slate-200.
-   Shadows and gradients live ONLY in the four effects at the end of this file
-   (running-border button, 3D toggle, 3D search, field-with-action). */
+   Shadows and gradients live ONLY in the five effects at the end of this file
+   (running-border button, 3D toggle, 3D search, field-with-action, dropdown panel). */
 @theme {
   --font-sans:
     var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
@@ -173,8 +173,9 @@ body {
 
 /* ===========================================================================
    EFFECTS (DESIGN-SYSTEM §Эффекты). Shadows and gradients are allowed ONLY in
-   these four, and only in blue-950 / blue-800 / blue-50 / white. CSS-only, no JS,
-   all disabled under prefers-reduced-motion.
+   these five, and only in blue-950 / blue-800 / blue-50 / white. CSS-only, no JS,
+   all disabled under prefers-reduced-motion. (#5 the dropdown panel is further
+   below, near the other Select styles.)
    =========================================================================== */
 
 /* 1. Running-border button — primary CTAs. The light stripe animates ONLY on
@@ -404,3 +405,15 @@ body {
   .field-action__btn:active { transform: none; }
   .field-action__btn { transition: none; }
 }
+
+/* 5. Dropdown panel (Select) — the one place a plain drop shadow is allowed.
+   Desktop panel under the trigger; radius 12px, soft blue-800/15 shadow. */
+.select-panel {
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+/* Mobile select bottom sheet slides up. */
+@keyframes select-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+.select-sheet { max-height: 85%; animation: select-sheet-in 200ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .select-sheet { animation: none; } }

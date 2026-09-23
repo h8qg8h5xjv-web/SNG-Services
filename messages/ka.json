@@ -7,7 +7,8 @@
     "appName": "SNG Services",
     "city": "London",
     "back": "უკან",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "selectSearch": "ძებნა"
   },
   "nav": {
     "home": "Home",
@@ -256,9 +257,9 @@
     "cancelRequest": "Cancel request",
     "leaveRequest": "Not sure who? Leave a request",
     "askThisMaster": "Ask this master",
-    "needTitle": "What do you need done?",
+    "needTitle": "აღწერეთ დავალება — ოსტატები გიპასუხებენ",
     "needPlaceholder": "e.g. hair stylist, clean the flat",
-    "needGo": "Find",
+    "needGo": "გაგზავნა",
     "notRecognised": "We couldn’t match “{query}” to a category.",
     "chooseCategory": "Choose a category",
     "foundFor": "For “{category}” — here’s who fits",
@@ -558,7 +559,8 @@
       "published": "გამოქვეყნებული",
       "draft": "შემოწმებაში",
       "draftNote": "ბარათი შემოწმებაშია. დაგირეკავთ ენის დასადასტურებლად და გამოვაქვეყნებთ.",
-      "backToCards": "ბარათებთან"
+      "backToCards": "ბარათებთან",
+      "category": "კატეგორია"
     },
     "account": {
       "name": "საჯარო სახელი",

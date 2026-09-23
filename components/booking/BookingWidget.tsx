@@ -8,7 +8,8 @@ import { formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import Consent from '@/components/Consent'
-import { Input, Select } from '@/components/ui/Input'
+import { Input } from '@/components/ui/Input'
+import Select from '@/components/ui/Select'
 import { FilterChip } from '@/components/ui/FilterChip'
 import { SuccessScreen } from '@/components/ui/SuccessScreen'
 import type { Slot } from '@/lib/slots/compute'
@@ -214,13 +215,17 @@ export default function BookingWidget({
       {/* Service */}
       <div>
         <label className="mb-1 block text-body text-slate-500">{t('service')}</label>
-        <Select value={serviceId} onChange={(e) => setServiceId(e.target.value)} className="w-full">
-          {services.map((s) => (
-            <option key={s.id} value={s.id}>
-              {(locale === 'ru' ? s.name_ru ?? s.name_en : s.name_en)} · {formatPrice(s.price_pence)}
-            </option>
-          ))}
-        </Select>
+        <Select
+          value={serviceId}
+          onChange={setServiceId}
+          options={services.map((s) => ({
+            value: s.id,
+            label: `${locale === 'ru' ? s.name_ru ?? s.name_en : s.name_en} · ${formatPrice(s.price_pence)}`,
+          }))}
+          ariaLabel={t('service')}
+          title={t('service')}
+          className="w-full"
+        />
       </div>
 
       {/* Date */}
