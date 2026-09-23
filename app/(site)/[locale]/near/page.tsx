@@ -5,6 +5,7 @@ import NearExplorer from '@/components/map/NearExplorer'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ButtonLink } from '@/components/ui/Button'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
+import { getResponseMedians } from '@/lib/queries/response-time'
 import { toCard } from '@/lib/catalog/transform'
 
 export const dynamic = 'force-dynamic'
@@ -23,6 +24,11 @@ export default async function NearPage({
   const cards = providers.map((p) => toCard(p, p.categories?.slug ?? '', locale))
   const mappable = cards.filter((c) => c.lat != null && c.lng != null)
 
+  // "Отвечает за N мин" (§5): median from request_targets for the shown providers.
+  const medians = await getResponseMedians(mappable.map((c) => c.id))
+  const responseMins: Record<string, number> = {}
+  for (const [id, m] of medians) responseMins[id] = m
+
   return (
     <>
       <Header />
@@ -39,7 +45,7 @@ export default async function NearPage({
         </main>
       ) : (
         <main className="flex-1">
-          <NearExplorer cards={mappable} />
+          <NearExplorer cards={mappable} responseMins={responseMins} />
         </main>
       )}
     </>

@@ -26,7 +26,13 @@ function useIsDesktop(): boolean {
   return isDesktop
 }
 
-export default function NearExplorer({ cards }: { cards: ProviderCardVM[] }) {
+export default function NearExplorer({
+  cards,
+  responseMins,
+}: {
+  cards: ProviderCardVM[]
+  responseMins?: Record<string, number>
+}) {
   const t = useTranslations('map')
   const router = useRouter()
   const isDesktop = useIsDesktop()
@@ -67,14 +73,14 @@ export default function NearExplorer({ cards }: { cards: ProviderCardVM[] }) {
     ) : (
       <div className="space-y-2 p-3.5">
         {visibleCards.map((c) => (
-          <ProviderCard key={c.id} card={c} surface="near" />
+          <ProviderCard key={c.id} card={c} surface="near" responseMin={responseMins?.[c.id] ?? null} />
         ))}
       </div>
     )
 
   const selectedOverlay = selectedCard && (
     <div className="near-selected">
-      <ProviderCard card={selectedCard} surface="near" />
+      <ProviderCard card={selectedCard} surface="near" responseMin={responseMins?.[selectedCard.id] ?? null} />
     </div>
   )
 
