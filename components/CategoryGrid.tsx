@@ -23,19 +23,20 @@ export default function CategoryGrid({ items }: { items: CategoryTile[] }) {
 
   return (
     <div>
-      <ul className="stagger grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* §3: four tiles per row on mobile, seven on desktop. */}
+      <ul className="stagger grid grid-cols-4 gap-2 sm:grid-cols-7 sm:gap-3">
         {visible.map((c) => (
           <li key={c.slug}>
             {/* Category tile: full 3D tilt with layered icon/label (task §4). */}
             <Tilt maxDeg={6} translateZ={12}>
               <Link
                 href={`/${c.slug}`}
-                className="preserve-3d flex h-full min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-slate-200 p-4 text-center transition-colors hover:border-accent"
+                className="preserve-3d flex h-full min-h-20 flex-col items-center justify-center gap-1.5 rounded-lg border border-slate-200 p-2 text-center transition-colors hover:border-accent"
               >
                 <span className="tilt-layer-2">
                   <CategoryIcon name={c.icon} className="h-6 w-6" />
                 </span>
-                <span className="tilt-layer-1 text-body font-semibold leading-tight">{c.name}</span>
+                <span className="tilt-layer-1 text-meta font-semibold leading-tight">{c.name}</span>
               </Link>
             </Tilt>
           </li>

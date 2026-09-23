@@ -35,6 +35,18 @@ export async function listProvidersByCategory(
   return data ?? []
 }
 
+// Distinct boroughs of published providers, for the home district picker (§3).
+export async function getDistinctBoroughs(): Promise<string[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('providers')
+    .select('borough')
+    .eq('status', 'published')
+    .returns<{ borough: string }[]>()
+  if (error) throw error
+  return Array.from(new Set((data ?? []).map((r) => r.borough).filter(Boolean))).sort()
+}
+
 export async function listAllPublishedProviders(): Promise<
   ProviderWithRelations[]
 > {

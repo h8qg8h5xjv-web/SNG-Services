@@ -598,5 +598,12 @@
     "loadTitle": "Couldn't load",
     "loadBody": "Something went wrong. Please try again.",
     "retry": "Retry"
+  },
+  "district": {
+    "title": "Area",
+    "detect": "Detect",
+    "placeholder": "Choose an area",
+    "near": "Near me",
+    "change": "Change"
   }
 }

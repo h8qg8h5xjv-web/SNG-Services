@@ -9,11 +9,17 @@ import { Button } from '@/components/ui/Button'
 // own gentle prompt (idea #2). Minimal shape — the platform type isn't in lib.dom.
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<unknown> }
 
-const DISMISS_KEY = 'sng_pwa_dismissed'
+const DISMISS_KEY = 'sng_pwa_dismissed_at'
+const DISMISS_DAYS = 30
+const DISMISS_MS = DISMISS_DAYS * 24 * 60 * 60 * 1000
 
+// Dismissal lasts 30 days, not forever — the hint returns later (§3).
 function dismissed(): boolean {
   try {
-    return localStorage.getItem(DISMISS_KEY) === '1'
+    const raw = localStorage.getItem(DISMISS_KEY)
+    if (!raw) return false
+    const ts = Number(raw)
+    return Number.isFinite(ts) && Date.now() - ts < DISMISS_MS
   } catch {
     return false
   }
@@ -63,7 +69,7 @@ export default function InstallPrompt() {
   function close() {
     setMode(null)
     try {
-      localStorage.setItem(DISMISS_KEY, '1')
+      localStorage.setItem(DISMISS_KEY, String(Date.now()))
     } catch {
       // private mode — the banner simply reappears next session
     }

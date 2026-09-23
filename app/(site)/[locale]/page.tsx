@@ -4,12 +4,14 @@ import { SectionHeading } from '@/components/ui/Section'
 import { ButtonLink } from '@/components/ui/Button'
 import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
+import DistrictBar from '@/components/DistrictBar'
 import HomeHowItWorks from '@/components/HomeHowItWorks'
 import RecentlyViewed from '@/components/RecentlyViewed'
 import CategoryGrid from '@/components/CategoryGrid'
 import AvailableToday from '@/components/AvailableToday'
 import ServiceNeedBar from '@/components/requests/ServiceNeedBar'
 import { getHomeCategories } from '@/lib/queries/categories'
+import { getDistinctBoroughs } from '@/lib/queries/providers'
 import { getAvailableTodayProviders } from '@/lib/slots/service'
 import { pickCategoryName } from '@/lib/i18n/content'
 
@@ -26,9 +28,10 @@ export default async function HomePage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations()
-  const [categories, availableToday] = await Promise.all([
+  const [categories, availableToday, boroughs] = await Promise.all([
     getHomeCategories(),
     getAvailableTodayProviders(),
+    getDistinctBoroughs(),
   ])
   const tiles = categories.map(({ category, count }) => ({
     slug: category.slug,
@@ -48,6 +51,7 @@ export default async function HomePage({
           <div className="mt-4">
             <SearchBar />
           </div>
+          {boroughs.length > 0 && <DistrictBar boroughs={boroughs} />}
         </div>
       </section>
 

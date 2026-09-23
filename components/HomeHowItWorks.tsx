@@ -15,7 +15,8 @@ export default async function HomeHowItWorks() {
   return (
     <section className="py-6">
       <SectionHeading>{t('title')}</SectionHeading>
-      <ol className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {/* §3: one card holding the three steps. */}
+      <ol className="grid grid-cols-1 gap-4 rounded-card border border-slate-200 bg-white p-4 sm:grid-cols-3">
         {steps.map((s, i) => (
           <li key={i} className="flex items-center gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
