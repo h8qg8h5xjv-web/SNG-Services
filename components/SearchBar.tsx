@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { IconSearch, IconClock } from '@tabler/icons-react'
+import { searchNavPath } from '@/lib/search/target'
 import type { Suggestion } from '@/lib/search/suggest'
 
 const RECENT_KEY = 'sng_recent_searches'
@@ -32,7 +33,6 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
   const locale = useLocale()
   const [query, setQuery] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-  const [best, setBest] = useState<string | null>(null)
   const [recent, setRecent] = useState<string[]>([])
   const [open, setOpen] = useState(false)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -52,14 +52,12 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
     timer.current = window.setTimeout(async () => {
       if (q.length < 2) {
         setSuggestions([])
-        setBest(null)
         return
       }
       try {
         const res = await fetch(`/api/suggest?q=${encodeURIComponent(q)}&locale=${locale}`)
-        const data = (await res.json()) as { suggestions: Suggestion[]; best: string | null }
+        const data = (await res.json()) as { suggestions: Suggestion[] }
         setSuggestions(data.suggestions ?? [])
-        setBest(data.best ?? null)
       } catch {
         setSuggestions([])
       }
@@ -72,14 +70,13 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
   }
 
   function onSubmit(e: React.FormEvent) {
-    const q = query.trim()
-    if (!q) return // let the empty native submit go to /search
-    pushRecent(q)
-    // Enter without picking a suggestion → best category (§11); else native search.
-    if (best) {
-      e.preventDefault()
-      goto(`/${best}`)
-    }
+    // Always navigate from React state so the typed text is never lost. The native
+    // action=/{locale}/search + name="q" stays only as a no-JS fallback.
+    const path = searchNavPath(query)
+    if (!path) return
+    e.preventDefault()
+    pushRecent(query.trim())
+    goto(path)
   }
 
   const showRecent = open && query.trim().length < 2 && recent.length > 0

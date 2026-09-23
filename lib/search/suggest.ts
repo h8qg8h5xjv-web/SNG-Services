@@ -1,4 +1,4 @@
-import { toRuLayout, toEnLayout, translitLat, levenshtein } from './keyboard'
+import { toRuLayout, toEnLayout, translitLat, levenshtein } from './keyboard.ts'
 
 export type Suggestion = {
   kind: 'category' | 'provider' | 'borough' | 'service'
