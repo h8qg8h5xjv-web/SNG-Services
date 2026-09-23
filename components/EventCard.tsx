@@ -13,10 +13,9 @@ import type { EventAttendance } from '@/lib/events/attendance'
 
 const TZ = 'Europe/London'
 
-// Event card (task §5): the whole card is the cover. A bottom-up dark gradient
-// keeps white text legible on any image (or none), a date chip sits top-left and
-// the price top-right. Still the ONE Card component (DESIGN-SYSTEM §5) — just a
-// media-only body with an overlay. Wrapped in Reveal (scroll-in) and Tilt (hover).
+// Event card (§7): photo on top with a date chip (top-left) and price (top-right),
+// then the title and meta in a light body BELOW the image. The ONE Card component
+// (DESIGN-SYSTEM §5). Wrapped in Reveal (scroll-in) and Tilt (hover).
 export default function EventCard({
   event,
   locale,
@@ -39,23 +38,20 @@ export default function EventCard({
   return (
     <Reveal className="h-full">
       <Tilt perspective="far" maxDeg={4} translateZ={14} className="h-full">
-        <Card href={`/events/${event.slug}`} className="block h-full">
+        <Card href={`/events/${event.slug}`} className="block h-full overflow-hidden">
           <div className="relative aspect-video w-full overflow-hidden">
             {cover ? (
               <Image
                 src={cover}
                 alt=""
                 fill
-                sizes="(max-width: 640px) 100vw, 50vw"
+                sizes="(max-width: 640px) 100vw, 33vw"
                 className="tilt-cover object-cover"
               />
             ) : (
               // No cover: an accent gradient instead of a grey box (task §5).
               <div className="tilt-cover h-full w-full bg-linear-to-br from-accent to-accent-soft" />
             )}
-
-            {/* Legibility: white text always reads on this bottom band. */}
-            <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 to-transparent" />
 
             <span className="absolute left-3 top-3 rounded-lg bg-white px-2 py-1 text-center leading-none">
               <span className="block text-body font-semibold text-slate-900">{day}</span>
@@ -73,16 +69,17 @@ export default function EventCard({
                 </span>
               )}
             </span>
+          </div>
 
-            <div className="absolute inset-x-3 bottom-3">
-              <h3 className="text-body font-semibold text-white">{title}</h3>
-              {meta && <p className="text-meta text-white">{meta}</p>}
-              {attendance && attendance.total > 0 && (
-                <div className="mt-1.5">
-                  <Attendance data={attendance} dark />
-                </div>
-              )}
-            </div>
+          {/* Text under the image (§7). */}
+          <div className="p-3">
+            <h3 className="text-body font-semibold text-slate-900">{title}</h3>
+            {meta && <p className="mt-0.5 text-meta text-slate-500">{meta}</p>}
+            {attendance && attendance.total > 0 && (
+              <div className="mt-1.5">
+                <Attendance data={attendance} />
+              </div>
+            )}
           </div>
         </Card>
       </Tilt>

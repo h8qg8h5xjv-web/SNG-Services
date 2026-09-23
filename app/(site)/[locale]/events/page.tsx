@@ -81,7 +81,7 @@ export default async function EventsPage({
             {groups.map((group) => (
               <section key={group.key}>
                 <h2 className="mb-4 text-h2 font-semibold">{t(`events.${group.key}`)}</h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {group.events.map((event) => (
                     <EventCard
                       key={event.id}
