@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { IconPhone, IconMessage, IconWorld } from '@tabler/icons-react'
 import type { ContactChannel } from '@/types/database'
+import { markFirstValue } from '@/lib/tracking/first-value'
 
 // Public card contact actions (idea #4): Call / Message / Website. A click logs a
 // pseudonymous contact_reveal event (channel only, no IP / user-agent) via the
@@ -12,6 +13,8 @@ const PILL =
   'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-medium border-slate-900 bg-white px-6 text-body font-semibold text-slate-900 transition-colors'
 
 function track(providerId: string, channel: ContactChannel, locale: string) {
+  // Opening a contact is a "first value" action (§ metric #1).
+  markFirstValue(providerId)
   const body = JSON.stringify({
     events: [
       {

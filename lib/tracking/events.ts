@@ -7,15 +7,18 @@ export type TrackEventType =
   | 'booking_started'
   | 'booking_completed'
   | 'contact_reveal'
+  | 'first_value'
 
 export type TrackEvent = {
-  provider_id: string
+  provider_id?: string | null
   event_type: TrackEventType
   position?: number | null
   surface?: string | null
   category_id?: string | null
   locale?: string | null
   contact_channel?: ContactChannel | null
+  // Elapsed ms from the first visit to the first real action (first_value only).
+  value_ms?: number | null
 }
 
 const TYPES = new Set<TrackEventType>([
@@ -24,6 +27,7 @@ const TYPES = new Set<TrackEventType>([
   'booking_started',
   'booking_completed',
   'contact_reveal',
+  'first_value',
 ])
 const CHANNELS = new Set<ContactChannel>(['call', 'message', 'website'])
 const UUID = /^[0-9a-fA-F-]{36}$/
@@ -38,14 +42,18 @@ export async function recordEvents(
   userId: string | null = null,
 ): Promise<void> {
   const clean = events.filter(
-    (e) => e && UUID.test(e.provider_id) && TYPES.has(e.event_type),
+    (e) =>
+      e &&
+      TYPES.has(e.event_type) &&
+      // first_value may have no provider (a request with no specific master).
+      (UUID.test(e.provider_id ?? '') || e.event_type === 'first_value'),
   )
   if (clean.length === 0) return
   try {
     const supabase = createAdminClient()
     await supabase.from('provider_events').insert(
       clean.map((e) => ({
-        provider_id: e.provider_id,
+        provider_id: UUID.test(e.provider_id ?? '') ? e.provider_id : null,
         event_type: e.event_type,
         position: e.position ?? null,
         surface: e.surface ?? null,
@@ -54,6 +62,10 @@ export async function recordEvents(
         contact_channel:
           e.event_type === 'contact_reveal' && e.contact_channel && CHANNELS.has(e.contact_channel)
             ? e.contact_channel
+            : null,
+        value_ms:
+          e.event_type === 'first_value' && typeof e.value_ms === 'number' && Number.isFinite(e.value_ms)
+            ? Math.max(0, Math.round(e.value_ms))
             : null,
         session_id: sessionId,
         user_id: userId,
@@ -142,4 +154,34 @@ export async function getProviderStats(
       ctr: r.impressions > 0 ? r.clicks / r.impressions : 0,
     }))
     .sort((a, b) => b.impressions - a.impressions)
+}
+
+export type FirstValueStat = { medianMs: number | null; count: number }
+
+/**
+ * "Time to first value": the median elapsed time (ms) from a visitor's first
+ * visit to their first real action, over a period. The product goal is < 60s.
+ */
+export async function getFirstValueMedian(
+  fromIso: string,
+  toIso: string,
+): Promise<FirstValueStat> {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('provider_events')
+    .select('value_ms')
+    .eq('event_type', 'first_value')
+    .not('value_ms', 'is', null)
+    .gte('occurred_at', fromIso)
+    .lte('occurred_at', toIso)
+
+  const values = (data ?? [])
+    .map((r) => r.value_ms as number)
+    .filter((v) => Number.isFinite(v))
+    .sort((a, b) => a - b)
+  if (values.length === 0) return { medianMs: null, count: 0 }
+  const mid = Math.floor(values.length / 2)
+  const medianMs =
+    values.length % 2 === 0 ? Math.round((values[mid - 1] + values[mid]) / 2) : values[mid]
+  return { medianMs, count: values.length }
 }
