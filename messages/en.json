@@ -117,7 +117,8 @@
     "message": "Message",
     "unclaimed": "Compiled from public sources",
     "claimCta": "Is this you? Claim the card",
-    "servicesUnknown": "Ask the master."
+    "servicesUnknown": "Ask the master.",
+    "whatsappText": "Hello! I found you on SNG Services ({name}). Could you tell me about booking?"
   },
   "search": {
     "title": "Search",
@@ -592,5 +593,10 @@
     "viewList": "List",
     "viewMap": "Map",
     "openLarge": "Open map"
+  },
+  "errors": {
+    "loadTitle": "Couldn't load",
+    "loadBody": "Something went wrong. Please try again.",
+    "retry": "Retry"
   }
 }

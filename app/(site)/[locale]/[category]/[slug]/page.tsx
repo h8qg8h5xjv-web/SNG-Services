@@ -13,6 +13,7 @@ import {
   IconExternalLink,
   IconLanguage,
   IconCircleCheck,
+  IconBrandWhatsapp,
 } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import NoPhoto from '@/components/NoPhoto'
@@ -122,6 +123,25 @@ export default async function ProviderPage({
   const isNative = provider.fulfillment_type === 'native_booking' && provider.booking_enabled
 
   const durationLabels = { hour: t('units.hour'), min: t('units.min') }
+
+  // §6 sticky bar: "from" price, and a WhatsApp link with a prefilled message.
+  const priceFrom =
+    !isExternal && provider.services.length > 0
+      ? Math.min(...provider.services.map((s) => s.price_pence))
+      : null
+  const waNumber = provider.phone ? provider.phone.replace(/[^0-9]/g, '') : ''
+  const waText = t('provider.whatsappText', { name })
+  const waHref = waNumber
+    ? `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`
+    : null
+  const hasContacts = Boolean(
+    provider.phone ||
+      provider.telegram ||
+      provider.instagram ||
+      provider.website ||
+      provider.address ||
+      (provider.lat != null && provider.lng != null),
+  )
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   const businessLd: Record<string, unknown> = {
@@ -311,12 +331,19 @@ export default async function ProviderPage({
           </section>
         )}
 
-        {/* Place-only: informational opening hours + venue gallery (DESIGN §2в). */}
+        {/* Place-only: informational opening hours (DESIGN §2в). */}
         {provider.entity_type === 'place' && (
           <div className="border-t border-slate-200">
             <OpeningHours hours={provider.opening_hours} locale={locale} />
-            <VenueGallery photos={provider.venue_photos} />
           </div>
+        )}
+
+        {/* Gallery (§6): shown for any provider with more than the cover photo. */}
+        {(provider.venue_photos?.length ?? 0) > 1 && (
+          <section className="border-t border-slate-200 py-6">
+            <SectionHeading>{t('provider.gallery')}</SectionHeading>
+            <VenueGallery photos={provider.venue_photos} />
+          </section>
         )}
 
         {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}
@@ -331,6 +358,7 @@ export default async function ProviderPage({
           </section>
         )}
 
+        {(hasContacts || provider.fulfillment_type === 'enquiry') && (
         <section className="border-t border-slate-200 py-6">
           <SectionHeading>{t('provider.contacts')}</SectionHeading>
           <div className="mb-4">
@@ -339,6 +367,7 @@ export default async function ProviderPage({
               locale={locale}
               phone={provider.phone}
               website={provider.website}
+              waText={waText}
             />
           </div>
           <ul className="space-y-2 text-body">
@@ -412,12 +441,33 @@ export default async function ProviderPage({
             <p className="mt-3 text-body text-slate-500">{t('provider.enquiryHint')}</p>
           )}
         </section>
+        )}
       </main>
 
-      {/* Mobile: CTA pinned above the floating bottom nav (DESIGN §3/§7). */}
-      {cta && (
-        <div className="cta-above-nav fixed inset-x-3 z-20 rounded-full sm:hidden">
-          {cta}
+      {/* Mobile sticky bar (§6): from-price + primary CTA + square WhatsApp button,
+          pinned above the floating bottom nav. */}
+      {(cta || waHref) && (
+        <div className="cta-above-nav fixed inset-x-0 z-20 border-t border-slate-200 bg-white px-3 py-2 sm:hidden">
+          <div className="flex items-center gap-2">
+            {priceFrom != null && (
+              <div className="flex shrink-0 flex-col leading-tight">
+                <span className="text-label text-slate-500">{t('catalog.from')}</span>
+                <span className="text-body font-bold text-slate-900">{formatPrice(priceFrom)}</span>
+              </div>
+            )}
+            {cta && <div className="min-w-0 flex-1">{cta}</div>}
+            {waHref && (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('provider.message')}
+                className="press focus-ring flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-green-600 text-white"
+              >
+                <IconBrandWhatsapp className="h-6 w-6" stroke={2} />
+              </a>
+            )}
+          </div>
         </div>
       )}
     </>

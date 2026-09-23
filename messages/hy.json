@@ -117,7 +117,8 @@
     "message": "Գրել",
     "unclaimed": "Կազմված է բաց աղբյուրներից",
     "claimCta": "Սա դո՞ւք եք։ Ստացեք քարտը",
-    "servicesUnknown": "Ճշտեք վարպետի մոտ."
+    "servicesUnknown": "Ճշտեք վարպետի մոտ.",
+    "whatsappText": "Բարև ձեզ! Գտա ձեզ SNG Services-ում ({name})։ Կասե՞ք գրանցման մասին։"
   },
   "search": {
     "title": "Search",
@@ -592,5 +593,10 @@
     "viewList": "Ցուցակ",
     "viewMap": "Քարտեզ",
     "openLarge": "Բացել քարտեզը"
+  },
+  "errors": {
+    "loadTitle": "Չհաջողվեց բեռնել",
+    "loadBody": "Ինչ-որ բան այն չէ։ Փորձեք կրկին։",
+    "retry": "Կրկնել"
   }
 }

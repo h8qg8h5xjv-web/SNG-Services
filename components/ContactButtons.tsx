@@ -41,16 +41,21 @@ export default function ContactButtons({
   locale,
   phone,
   website,
+  waText,
 }: {
   providerId: string
   locale: string
   phone: string | null
   website: string | null
+  waText?: string
 }) {
   const t = useTranslations('provider')
   // §6: Call and Message both come from the phone; no phone → neither button.
-  // "Message" opens WhatsApp with the number stripped to digits.
+  // "Message" opens WhatsApp with the number stripped to digits and a prefilled text.
   const waNumber = phone ? phone.replace(/[^0-9]/g, '') : ''
+  const waHref = waNumber
+    ? `https://wa.me/${waNumber}${waText ? `?text=${encodeURIComponent(waText)}` : ''}`
+    : ''
   if (!phone && !website) return null
 
   return (
@@ -67,7 +72,7 @@ export default function ContactButtons({
       )}
       {waNumber && (
         <a
-          href={`https://wa.me/${waNumber}`}
+          href={waHref}
           target="_blank"
           rel="noopener noreferrer"
           className={PILL}

@@ -117,7 +117,8 @@
     "message": "მისწერა",
     "unclaimed": "შედგენილია ღია წყაროებიდან",
     "claimCta": "ეს თქვენ ხართ? წაიღეთ ბარათი",
-    "servicesUnknown": "დააზუსტეთ ოსტატთან."
+    "servicesUnknown": "დააზუსტეთ ოსტატთან.",
+    "whatsappText": "გამარჯობა! გნახეთ SNG Services-ზე ({name}). შემიძლიათ ჩავეწერო?"
   },
   "search": {
     "title": "Search",
@@ -592,5 +593,10 @@
     "viewList": "სია",
     "viewMap": "რუკა",
     "openLarge": "რუკის გახსნა"
+  },
+  "errors": {
+    "loadTitle": "ჩატვირთვა ვერ მოხერხდა",
+    "loadBody": "რაღაც შეცდომა მოხდა. სცადეთ ხელახლა.",
+    "retry": "ხელახლა"
   }
 }
