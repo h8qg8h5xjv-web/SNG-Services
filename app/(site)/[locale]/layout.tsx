@@ -12,6 +12,7 @@ import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
 import InstallPrompt from '@/components/InstallPrompt'
 import SessionStart from '@/components/SessionStart'
+import { BLUE_800 } from '@/lib/palette'
 import '../../globals.css'
 
 // Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
@@ -27,7 +28,7 @@ const inter = Inter({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 // Accent theme colour for the browser UI / installed app (PWA, idea #8).
-export const viewport: Viewport = { themeColor: '#1e40af' }
+export const viewport: Viewport = { themeColor: BLUE_800 }
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))

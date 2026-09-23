@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconArrowRight } from '@tabler/icons-react'
+import { IconArrowRight, IconPencil } from '@tabler/icons-react'
 import { useRouter } from '@/i18n/navigation'
-import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui/Button'
 
 // The central element of the Services tab (REQUESTS 12.2): describe the task in
 // free text ("мастер по волосам", "убрать квартиру") → matching masters + the
@@ -24,18 +22,28 @@ export default function ServiceNeedBar() {
   return (
     <section className="py-6">
       <h2 className="mb-2 text-h2 font-semibold">{t('needTitle')}</h2>
-      <form onSubmit={onSubmit} className="flex w-full gap-2">
-        <Input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder={t('needPlaceholder')}
-          aria-label={t('needTitle')}
-          className="flex-1"
-        />
-        <Button type="submit" aria-label={t('needGo')}>
-          <IconArrowRight className="h-5 w-5" stroke={2} />
-          <span className="sr-only sm:not-sr-only">{t('needGo')}</span>
-        </Button>
+      {/* Field with an inner action (§Эффекты). */}
+      <form onSubmit={onSubmit}>
+        <div className="field-action min-h-12">
+          <span className="field-action__icon">
+            <IconPencil className="h-5 w-5" stroke={2} />
+          </span>
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder={t('needPlaceholder')}
+            aria-label={t('needTitle')}
+            className="field-action__field min-h-11 text-body"
+          />
+          <button
+            type="submit"
+            aria-label={t('needGo')}
+            className="field-action__btn focus-ring min-h-11 px-4 text-body"
+          >
+            <span className="sr-only sm:not-sr-only">{t('needGo')}</span>
+            <IconArrowRight className="field-action__arrow h-5 w-5" stroke={2} />
+          </button>
+        </div>
       </form>
     </section>
   )

@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { IconMail } from '@tabler/icons-react'
+import { IconMail, IconArrowRight } from '@tabler/icons-react'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 
 // Soft sign-in prompt shown at the top of the cabinet when signed out. Magic link;
 // on return, browser data auto-links to the account (see AutoLink).
@@ -46,19 +44,30 @@ export default function LoginBlock() {
           {status === 'sent' ? (
             <p className="mt-3 text-meta font-semibold text-green-700">{t('loginSent', { email })}</p>
           ) : (
-            <form onSubmit={onSubmit} className="mt-3 flex flex-wrap items-center gap-2">
-              <Input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-56"
-              />
-              <Button type="submit" disabled={status === 'sending'}>
-                {status === 'sending' ? t('loginSending') : t('login')}
-              </Button>
-              {status === 'error' && <span className="text-meta text-red-700">{message}</span>}
+            <form onSubmit={onSubmit} className="mt-3">
+              {/* Field with an inner action (§Эффекты). */}
+              <div className="field-action min-h-12">
+                <span className="field-action__icon">
+                  <IconMail className="h-5 w-5" stroke={2} />
+                </span>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="field-action__field min-h-11 text-body"
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="field-action__btn focus-ring min-h-11 px-4 text-body"
+                >
+                  <span>{status === 'sending' ? t('loginSending') : t('login')}</span>
+                  <IconArrowRight className="field-action__arrow h-5 w-5" stroke={2} />
+                </button>
+              </div>
+              {status === 'error' && <p className="mt-1 text-meta text-red-700">{message}</p>}
             </form>
           )}
         </div>

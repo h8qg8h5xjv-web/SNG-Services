@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-/* Design system (DESIGN-SYSTEM.md). Colours come from the Tailwind palettes plus
-   one accent token — no custom hex. No dark theme by decision. Mobile-first,
-   dense, flat: page is slate-100, surfaces are white, borders slate-200, no
-   shadows, no 3D, no scroll-reveal. */
+/* Design system (DESIGN-SYSTEM.md). Colours: blue-950 / blue-800 / blue-50 / white
+   plus the neutral slate base — no other hues. No dark theme by decision.
+   Mobile-first, dense, flat: page is slate-100, surfaces white, borders slate-200.
+   Shadows and gradients live ONLY in the four effects at the end of this file
+   (running-border button, 3D toggle, 3D search, field-with-action). */
 @theme {
   --font-sans:
     var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
@@ -145,10 +146,10 @@ body {
   display: flex;
   flex-direction: column;
   max-height: 100%;
-  background: #fff;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-slate-200);
   border-top-left-radius: var(--radius-card);
   border-top-right-radius: var(--radius-card);
-  box-shadow: 0 -4px 20px rgb(15 23 42 / 0.10);
   transition: height 250ms ease;
 }
 .near-sheet--peek { height: 6.5rem; }
@@ -169,3 +170,237 @@ body {
 
 /* Detail page «Адрес» mini map: a short, tappable static map. */
 .address-map { position: relative; height: 12rem; }
+
+/* ===========================================================================
+   EFFECTS (DESIGN-SYSTEM §Эффекты). Shadows and gradients are allowed ONLY in
+   these four, and only in blue-950 / blue-800 / blue-50 / white. CSS-only, no JS,
+   all disabled under prefers-reduced-motion.
+   =========================================================================== */
+
+/* 1. Running-border button — primary CTAs. The light stripe animates ONLY on
+   hover / focus (and :active on touch), never idle, so a long list of buttons
+   costs nothing at rest. */
+@property --btn-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes btn-runner-spin { to { --btn-angle: 360deg; } }
+
+.btn-runner { position: relative; transition: transform 150ms ease, box-shadow 200ms ease; }
+.btn-runner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--btn-angle),
+    transparent 0turn 0.6turn,
+    color-mix(in srgb, var(--color-white) 95%, transparent) 0.75turn,
+    transparent 0.9turn 1turn
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+.btn-runner-glow {
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
+    0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+@media (hover: hover) {
+  .btn-runner:hover, .btn-runner:focus-visible {
+    transform: scale(1.03);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
+      0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  }
+  .btn-runner:hover::before, .btn-runner:focus-visible::before {
+    opacity: 1;
+    animation: btn-runner-spin 2s linear infinite;
+  }
+}
+@media (hover: none) {
+  .btn-runner:active {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
+      0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  }
+  .btn-runner:active::before { opacity: 1; animation: btn-runner-spin 2s linear infinite; }
+}
+.btn-runner:active { transform: scale(1); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-runner, .btn-runner::before { animation: none; transition: none; }
+  .btn-runner:hover, .btn-runner:focus-visible, .btn-runner:active { transform: none; }
+}
+
+/* 2. 3D toggle — raised by default, pressed (swapped inset shadows) when on. The
+   outline→fill icon is the component's own two glyphs. Radius inherits from the
+   element, so it works on the round heart and on a pill chip alike. */
+.toggle-3d {
+  background: var(--color-accent-soft);
+  box-shadow:
+    inset 2px 2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
+    inset -2px -2px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition: box-shadow 200ms ease, color 200ms ease;
+}
+.toggle-3d.is-on, .toggle-3d[aria-pressed="true"] {
+  box-shadow:
+    inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
+    inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+/* Native checkbox as a round 3D toggle (filter checks). Empty → filled dot. */
+.check-3d {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background: var(--color-accent-soft);
+  box-shadow:
+    inset 2px 2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
+    inset -2px -2px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition: box-shadow 200ms ease;
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+}
+.check-3d::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  transform: scale(0);
+  transition: transform 200ms ease;
+}
+.check-3d:checked {
+  box-shadow:
+    inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
+    inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+.check-3d:checked::after { transform: scale(1); }
+@media (prefers-reduced-motion: reduce) {
+  .toggle-3d, .check-3d, .check-3d::after { transition: none; }
+}
+
+/* 3. 3D search field — a light capsule with a raised edge and a blue submit
+   circle. Header, home, search page. */
+.search-3d {
+  position: relative;
+  border-radius: 9999px;
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    var(--color-white),
+    color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-white))
+  );
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+.search-3d::before,
+.search-3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.search-3d::before {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-white) 90%, transparent), transparent 55%);
+}
+.search-3d::after {
+  background: linear-gradient(315deg, color-mix(in srgb, var(--color-accent) 28%, transparent), transparent 55%);
+}
+.search-3d__field {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  border: 0;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, var(--color-white), var(--color-accent-soft));
+  color: var(--color-slate-900);
+  transition: background 200ms ease;
+}
+.search-3d__field:focus { outline: none; }
+.search-3d:focus-within .search-3d__field {
+  background: linear-gradient(180deg, var(--color-white), color-mix(in srgb, var(--color-accent-soft) 40%, var(--color-white)));
+}
+.search-3d__go {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  transition: background 150ms ease;
+}
+.search-3d__go:hover { background: var(--color-ink); }
+@media (prefers-reduced-motion: reduce) {
+  .search-3d__field, .search-3d__go { transition: none; }
+}
+
+/* 4. Field with an inner action — dark capsule, left icon, transparent field, a
+   white button whose arrow springs on hover. Email sign-in, "what do you need",
+   business lead form. */
+.field-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-ink);
+  padding: 0.3125rem 0.3125rem 0.3125rem 1rem;
+}
+.field-action__icon {
+  display: flex;
+  flex: none;
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
+}
+.field-action__field {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-white);
+}
+.field-action__field::placeholder { color: color-mix(in srgb, var(--color-white) 55%, transparent); }
+.field-action__field:focus { outline: none; }
+.field-action__btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-weight: 700;
+  transition: transform 150ms ease;
+}
+.field-action__arrow { transition: transform 300ms ease; }
+@media (hover: hover) {
+  .field-action__btn:hover .field-action__arrow { animation: jello-vertical 0.9s both; }
+}
+.field-action__btn:active { transform: scale(0.9); }
+@keyframes jello-vertical {
+  0% { transform: scale3d(1, 1, 1); }
+  30% { transform: scale3d(0.75, 1.25, 1); }
+  40% { transform: scale3d(1.25, 0.75, 1); }
+  50% { transform: scale3d(0.85, 1.15, 1); }
+  65% { transform: scale3d(1.05, 0.95, 1); }
+  75% { transform: scale3d(0.95, 1.05, 1); }
+  100% { transform: scale3d(1, 1, 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-action__btn:hover .field-action__arrow { animation: none; }
+  .field-action__btn:active { transform: none; }
+  .field-action__btn { transition: none; }
+}

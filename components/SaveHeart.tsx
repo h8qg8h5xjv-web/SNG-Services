@@ -25,7 +25,7 @@ export default function SaveHeart({ slug, big = false }: { slug: string; big?: b
         e.stopPropagation()
         toggleSaved(slug)
       }}
-      className={`absolute right-2 top-2 flex ${box} items-center justify-center rounded-full bg-white transition-colors ${
+      className={`toggle-3d ${active ? 'is-on' : ''} absolute right-2 top-2 flex ${box} items-center justify-center rounded-full ${
         active ? 'text-accent' : 'text-slate-900'
       }`}
     >

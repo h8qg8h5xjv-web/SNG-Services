@@ -87,31 +87,27 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
 
   return (
     <div ref={boxRef} className="relative w-full max-w-xl">
-      <form role="search" action={`/${locale}/search`} method="get" onSubmit={onSubmit} className="flex w-full gap-2">
-        <div className="relative flex-1">
-          <IconSearch
-            className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"
-            stroke={2}
-          />
-          <input
-            type="search"
-            name="q"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => {
-              setRecent(readRecent())
-              setOpen(true)
-            }}
-            placeholder={t('searchPlaceholder')}
-            aria-label={t('searchPlaceholder')}
-            className="field min-h-11 w-full rounded-control border border-slate-200 bg-white pl-10 pr-3 text-body text-slate-900"
-          />
-        </div>
+      {/* 3D search capsule (§Эффекты): raised light edge, blue submit circle. */}
+      <form role="search" action={`/${locale}/search`} method="get" onSubmit={onSubmit} className="search-3d flex w-full items-center">
+        <input
+          type="search"
+          name="q"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => {
+            setRecent(readRecent())
+            setOpen(true)
+          }}
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchPlaceholder')}
+          className="search-3d__field min-h-11 pl-4 pr-14 text-body"
+        />
         <button
           type="submit"
-          className="press focus-ring min-h-11 shrink-0 rounded-control bg-accent px-4 text-body font-semibold text-white hover:bg-blue-900"
+          aria-label={t('search')}
+          className="search-3d__go focus-ring h-11 w-11"
         >
-          {t('search')}
+          <IconSearch className="h-5 w-5" stroke={2} />
         </button>
       </form>
 

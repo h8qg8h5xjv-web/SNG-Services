@@ -9,7 +9,8 @@ type Variant = 'primary' | 'secondary' | 'link'
 const BASE =
   'press focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-5 text-body font-semibold transition-colors'
 const VARIANT: Record<Variant, string> = {
-  primary: 'bg-ink text-white hover:bg-blue-900',
+  // Primary CTAs carry the running-border effect (globals.css §Эффекты).
+  primary: 'btn-runner bg-ink text-white',
   secondary: 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50',
   link: 'min-h-0 rounded-none px-0 text-accent hover:underline',
 }

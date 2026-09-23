@@ -244,8 +244,13 @@ function Check({
   kind?: 'checkbox' | 'radio'
 }) {
   return (
-    <label className="flex min-h-9 cursor-pointer items-center gap-2 text-body">
-      <input type={kind} checked={checked} onChange={onChange} className="h-4 w-4 accent-blue-800" />
+    <label className="flex min-h-11 cursor-pointer items-center gap-2 text-body">
+      <input
+        type={kind}
+        checked={checked}
+        onChange={onChange}
+        className={kind === 'checkbox' ? 'check-3d' : 'h-4 w-4 accent-blue-800'}
+      />
       {label}
     </label>
   )

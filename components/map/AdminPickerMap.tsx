@@ -4,9 +4,10 @@ import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
 import { OSM_STYLE } from '@/lib/maps/style'
 import { LONDON_CENTER } from '@/lib/maps/distance'
+import { BLUE_800 } from '@/lib/palette'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-const ACCENT = '#1e40af'
+const ACCENT = BLUE_800
 
 // Admin map with one draggable marker. Dragging it — or clicking the map — reports
 // new coordinates so the form's lat/lng stay in sync (§4).
