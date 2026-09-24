@@ -18,6 +18,12 @@ type SelectProps = {
   className?: string
   id?: string
   disabled?: boolean
+  // pill = toolbar filter (42px, round); field = form control (52px, 12px radius).
+  variant?: 'pill' | 'field'
+  // A filter with a non-default value gets an ink border (.sel.on).
+  active?: boolean
+  invalid?: boolean
+  describedBy?: string
 }
 
 // Type-ahead timing lives at module scope so the component render stays pure.
@@ -31,7 +37,7 @@ function pushTypeahead(state: { buf: string; at: number }, key: string): string 
 function useIsDesktop(): boolean {
   const [isDesktop, setIsDesktop] = useState(false)
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 640px)')
+    const mq = window.matchMedia('(min-width: 721px)')
     const update = () => setIsDesktop(mq.matches)
     update()
     mq.addEventListener('change', update)
@@ -40,9 +46,9 @@ function useIsDesktop(): boolean {
   return isDesktop
 }
 
-// Design-system dropdown (DESIGN-SYSTEM §Эффекты #5). Trigger looks like a field;
-// desktop opens an anchored panel, mobile a bottom sheet. Search appears when
-// there are >8 options. Full keyboard + listbox aria.
+// v2 dropdown (DEMO_MAP §4 «Select»). Trigger is a pill (toolbars) or a field
+// (forms); desktop opens an anchored panel, phones a bottom sheet. Search
+// appears when there are >8 options. Full keyboard + listbox aria.
 export default function Select({
   value,
   onChange,
@@ -55,6 +61,10 @@ export default function Select({
   className = '',
   id,
   disabled = false,
+  variant = 'field',
+  active: isOn = false,
+  invalid = false,
+  describedBy,
 }: SelectProps) {
   const isDesktop = useIsDesktop()
   const [open, setOpen] = useState(false)
@@ -177,10 +187,10 @@ export default function Select({
       aria-activedescendant={activeId}
       aria-label={ariaLabel ?? title}
       onKeyDown={onListKeyDown}
-      className="max-h-72 overflow-y-auto py-1 outline-none"
+      className="sel-list"
     >
       {filtered.length === 0 ? (
-        <li className="px-3 py-2 text-meta text-slate-400">—</li>
+        <li className="sel-empty">—</li>
       ) : (
         filtered.map((o, i) => {
           const isSel = o.value === value
@@ -196,12 +206,11 @@ export default function Select({
               onMouseEnter={() => setActive(i)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => choose(o)}
-              className={`flex min-h-11 cursor-pointer items-center justify-between gap-2 px-3 text-body ${
-                isSel ? 'bg-accent-soft font-semibold text-accent' : isActive ? 'bg-slate-100 text-slate-900' : 'text-slate-900'
-              } ${o.disabled ? 'cursor-not-allowed text-slate-300' : ''}`}
+              data-active={isActive || undefined}
+              className="sel-opt"
             >
               <span className="truncate">{o.label}</span>
-              {isSel && <IconCheck className="h-5 w-5 shrink-0" stroke={2} />}
+              {isSel && <IconCheck stroke={2} aria-hidden="true" />}
             </li>
           )
         })
@@ -210,9 +219,9 @@ export default function Select({
   )
 
   const search = withSearch ? (
-    <div className="border-b border-slate-100 p-2">
+    <div className="sel-search">
       <div className="relative">
-        <IconSearch className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" stroke={2} />
+        <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-icon-mute" stroke={2} aria-hidden="true" />
         <input
           ref={searchRef}
           value={query}
@@ -223,14 +232,18 @@ export default function Select({
           onKeyDown={onListKeyDown}
           placeholder={searchPlaceholder ?? ''}
           aria-label={searchPlaceholder ?? ariaLabel ?? title}
-          className="field min-h-10 w-full rounded-control border border-slate-200 bg-white pl-8 pr-3 text-body"
+          className="input pl-9"
         />
       </div>
     </div>
   ) : null
 
   return (
-    <div ref={rootRef} className={`relative ${className}`}>
+    <div
+      ref={rootRef}
+      className={`sel ${variant === 'field' ? 'fld' : ''} ${isOn ? 'on' : ''} ${className}`}
+      data-invalid={invalid || undefined}
+    >
       <button
         ref={triggerRef}
         type="button"
@@ -240,17 +253,19 @@ export default function Select({
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         aria-label={ariaLabel}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy}
         disabled={disabled}
         onClick={() => (open ? setOpen(false) : openPanel())}
         onKeyDown={onTriggerKeyDown}
-        className="field focus-ring flex min-h-11 w-full items-center justify-between gap-2 rounded-control border border-slate-200 bg-white px-3 text-body text-slate-900 disabled:opacity-60"
+        className="sel-trigger"
       >
-        <span className={`truncate ${selected ? '' : 'text-slate-400'}`}>{triggerLabel}</span>
-        <IconChevronDown className="h-5 w-5 shrink-0 text-slate-500" stroke={2} />
+        <span className={`truncate ${selected ? '' : 'ph'}`}>{triggerLabel}</span>
+        <IconChevronDown stroke={2} aria-hidden="true" />
       </button>
 
       {open && isDesktop && (
-        <div className="select-panel absolute left-0 right-0 top-full z-40 mt-1 overflow-hidden border border-slate-200">
+        <div className="sel-panel">
           {search}
           {list}
         </div>
@@ -259,19 +274,12 @@ export default function Select({
       {open && !isDesktop && (
         <div
           role="presentation"
-          className="fixed inset-0 z-50 flex items-end bg-slate-900/50"
+          className="sel-sheet-backdrop"
           onClick={() => setOpen(false)}
         >
-          <div
-            className="select-sheet flex w-full flex-col rounded-t-lg bg-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col items-center pt-2">
-              <span className="h-1 w-10 rounded-full bg-slate-300" />
-              {(title ?? ariaLabel) && (
-                <p className="mt-2 text-body font-semibold text-slate-900">{title ?? ariaLabel}</p>
-              )}
-            </div>
+          <div className="sel-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="grab-static" aria-hidden="true" />
+            {(title ?? ariaLabel) && <p className="sheet-title">{title ?? ariaLabel}</p>}
             {search}
             {list}
           </div>

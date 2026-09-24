@@ -1,6 +1,10 @@
 // Fails if the code uses a Tailwind arbitrary value (text-[..], bg-[#..], p-[..])
-// or an inline style={{ }} — both banned by DESIGN-SYSTEM §8. New tokens go in the
-// design system (globals.css), not inline. Run: npm run check:styles
+// or an inline style={{ }} — both banned by DESIGN-SYSTEM.md. New tokens go in the
+// design system (globals.css / app/styles), not inline. Run: npm run check:styles
+//
+// One exception (DESIGN-SYSTEM.md «Проверка стилей»): an inline style whose keys
+// are ALL CSS custom properties, e.g. style={{ '--i': index }}. That passes data
+// to a rule in the stylesheet (stagger delays, progress); it never styles.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -11,6 +15,16 @@ const ROOTS = ['app', 'components']
 const ARBITRARY =
   /\b(?:text|bg|border|rounded|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|gap-x|gap-y|space-x|space-y|w|h|min-w|min-h|max-w|max-h|top|left|right|bottom|inset|leading|tracking|grid-cols|grid-rows|aspect|z|opacity|flex|basis|size)-\[[^\]]+\]/
 const INLINE_STYLE = /style=\{\{/
+// Object literal made only of '--custom-property': value pairs.
+const CUSTOM_PROPS_ONLY = /^\s*(?:(['"])--[a-z0-9-]+\1\s*:\s*(?:`[^`]*`|[^,}`]+),?\s*)+$/i
+
+// The style object's source, from `style={{` to its closing `}}` (may span lines).
+function styleObject(lines: string[], i: number): string {
+  let text = lines[i].slice(lines[i].indexOf('style={{') + 'style={{'.length)
+  const end = () => text.replace(/`[^`]*`/g, (m) => ' '.repeat(m.length)).indexOf('}}')
+  for (let j = i + 1; end() < 0 && j < lines.length; j++) text += ' ' + lines[j]
+  return text.slice(0, end())
+}
 
 function walk(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -26,7 +40,9 @@ for (const root of ROOTS) {
     const lines = fs.readFileSync(file, 'utf8').split('\n')
     lines.forEach((line, i) => {
       if (ARBITRARY.test(line)) problems.push(`${file}:${i + 1}  arbitrary value: ${line.trim()}`)
-      if (INLINE_STYLE.test(line)) problems.push(`${file}:${i + 1}  inline style: ${line.trim()}`)
+      if (INLINE_STYLE.test(line) && !CUSTOM_PROPS_ONLY.test(styleObject(lines, i))) {
+        problems.push(`${file}:${i + 1}  inline style: ${line.trim()}`)
+      }
     })
   }
 }

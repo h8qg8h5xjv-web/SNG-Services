@@ -1,419 +1,93 @@
 @import "tailwindcss";
+@import "./styles/base.css";
+@import "./styles/chrome.css";
+@import "./styles/forms.css";
+@import "./styles/overlays.css";
+@import "./styles/transitions.css";
+@import "./styles/legacy.css";
 
-/* Design system (DESIGN-SYSTEM.md). Colours: blue-950 / blue-800 / blue-50 / white
-   plus the neutral slate base — no other hues. No dark theme by decision.
-   Mobile-first, dense, flat: page is slate-100, surfaces white, borders slate-200.
-   Shadows and gradients live ONLY in the five effects at the end of this file
-   (running-border button, 3D toggle, 3D search, field-with-action, dropdown panel). */
-@theme {
-  --font-sans:
-    var(--font-inter), "Noto Sans Georgian", "Noto Sans Armenian", system-ui,
-    sans-serif;
+/* Design system v2 «окно» (DESIGN-SYSTEM.md). Night = dusk, day = paper, one
+   accent: lamp amber, and only for free slots, primary actions and focus.
+   Tokens live here; component classes live in ./styles/*.css. */
+@theme static {
+  --font-sans: var(--font-onest), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-unbounded), "Arial Black", system-ui, sans-serif;
 
-  /* Accent — ONE place. Components use accent / accent-soft, never a raw shade. */
+  --color-dusk: #0F1830;
+  --color-dusk-2: #16213F;
+  --color-dusk-3: #223056;
+  --color-lamp: #FFB547;
+  --color-lamp-hi: #FFD591;
+  --color-lamp-lo: #E0892A;
+  --color-lamp-hover: #FFC265;
+  --color-paper: #F3F5F9;
+  --color-card: #FFFFFF;
+  --color-ink: #121A2E;
+  --color-ink-hover: #1E2946;
+  --color-mute: #5E6780;
+  --color-mute-night: #A9B3CC;
+  --color-line: #DDE2EC;
+  --color-night-text: #EEF1F8;
+  --color-night-soft: #C5CCDD;
+  --color-night-link: #C9D0E2;
+  --color-chip-text: #D5DBEA;
+  --color-placeholder: #6B7389;
+  --color-icon-mute: #737B91;
+  --color-scroll: #9AA3BA;
+  --color-soft-line: #B9C1D3;
+  --color-dash: #C9D0DE;
+  --color-sep: #A2AABD;
+  --color-body-2: #3E4760;
+  --color-mark: #E1E7F1;
+  --color-note: #E7EBF3;
+  --color-notice: #FFF6E6;
+  --color-notice-line: #F3D9A8;
+  --color-pane-ink: #3A2208;
+  --color-err: #B42318;
+  --color-ok: #1F7A4D;
+
+  /* LEGACY (pre-v2 pages until they are ported). */
   --color-accent: var(--color-blue-800);
   --color-accent-soft: var(--color-blue-50);
-  /* Dark bar (header, dark blocks). */
-  --color-ink: var(--color-blue-950);
-
-  /* Type scale (DESIGN-SYSTEM §1). Weights 400/600/700/800 only. */
-  --text-title: 1.375rem; /* 22 — screen title, one per screen, 800 + tight */
+  --text-title: 1.375rem;
   --text-title--line-height: 1.75rem;
-  --text-h2: 1rem; /* 16 — block heading */
+  --text-h2: 1rem;
   --text-h2--line-height: 1.4rem;
-  --text-name: 0.9375rem; /* 15 — name in a card, 700 */
+  --text-name: 0.9375rem;
   --text-name--line-height: 1.3rem;
-  --text-body: 0.8125rem; /* 13 — body */
+  --text-body: 0.8125rem;
   --text-body--line-height: 1.15rem;
-  --text-meta: 0.75rem; /* 12 — meta */
+  --text-meta: 0.75rem;
   --text-meta--line-height: 1.05rem;
-  --text-label: 0.6875rem; /* 11 — auxiliary, slate-500 */
+  --text-label: 0.6875rem;
   --text-label--line-height: 0.95rem;
-  /* Kept names used across the app; mapped onto the new scale. */
   --text-display: 1.375rem;
   --text-display--line-height: 1.75rem;
   --text-section: 1rem;
   --text-section--line-height: 1.4rem;
-
+  --radius-card: 0.75rem;
+  --radius-control: 0.625rem;
+  --radius-badge: 0.3125rem;
+  --radius-photo: 0.75rem;
+  --container-page: 75rem;
   --aspect-photo: 4 / 3;
 
-  /* Radii (DESIGN-SYSTEM §1): cards 12, controls 10, badges 5, chips full. */
-  --radius-card: 0.75rem; /* rounded-card */
-  --radius-control: 0.625rem; /* rounded-control — buttons, inputs */
-  --radius-badge: 0.3125rem; /* rounded-badge — icon squares, small tags */
-  --radius-photo: 0.75rem; /* avatars/media on cards */
+  /* v2 type scale (px values from the demo; clamp() for display sizes). */
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.35;
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.4;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.55;
 
-  /* Desktop content width (DESIGN-SYSTEM §1). max-w-page = 1200px. */
-  --container-page: 75rem;
-}
+  /* Breakpoints of the design: phone ≤720, tablet ≤980, header links ≤1080. */
+  --breakpoint-tablet: 45.0625rem;
+  --breakpoint-desktop: 61.3125rem;
+  --breakpoint-wide: 67.5625rem;
 
-body {
-  background: var(--color-slate-100);
-  color: var(--color-slate-900);
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  line-height: var(--text-body--line-height);
-}
+  --container-wrap: 77.5rem;
 
-/* Screen titles: 800 + tight tracking (DESIGN-SYSTEM §1). */
-.text-title { letter-spacing: -0.02em; }
-
-/* Sticky bottom navigation (DESIGN-SYSTEM §2): full-width white bar, top border,
-   safe-area padding. Mobile only. */
-.bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
-.has-bottom-nav { padding-bottom: calc(3.5rem + env(safe-area-inset-bottom)); }
-@media (min-width: 640px) {
-  .has-bottom-nav { padding-bottom: 0; }
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-soft: cubic-bezier(.2, .8, .2, 1);
 }
 
-/* Master page mobile sticky action bar sits above the bottom nav. */
-.cta-above-nav { bottom: calc(3.5rem + env(safe-area-inset-bottom)); }
-.pb-cta { padding-bottom: calc(9rem + env(safe-area-inset-bottom)); }
-@media (min-width: 640px) {
-  .pb-cta { padding-bottom: 2rem; }
-}
-
-/* ---------------------------------------------------------------------------
-   Отклик / Response (DESIGN-SYSTEM §Отклик). Only transform / opacity / outline,
-   ≤200ms, no shadows, no libraries. Everything here is disabled under
-   prefers-reduced-motion.
-   --------------------------------------------------------------------------- */
-
-/* Pressable: primary button / chip dips on press. */
-.press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
-.chip-press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
-
-/* Keyboard focus ring in the accent (buttons, links, chips). */
-.focus-ring:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-
-/* Search / text field focus: accent border + soft accent ring via outline. */
-.field:focus {
-  border-color: var(--color-accent);
-  outline: 3px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-  outline-offset: 0;
-}
-
-/* Heart / "going" toggle: springy pop when it turns on. */
-@keyframes heart-pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.25); }
-  100% { transform: scale(1); }
-}
-
-/* Suggestions dropdown reveal. */
-@keyframes drop-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: none; }
-}
-.drop-in { animation: drop-in 150ms ease-out; }
-
-/* Sticky CTA slides up once when it appears. */
-@keyframes cta-in {
-  from { transform: translateY(100%); }
-  to { transform: none; }
-}
-.cta-in { animation: cta-in 200ms ease-out; }
-
-/* Success check draws its stroke once (the single "expensive" moment). */
-@keyframes check-draw { to { stroke-dashoffset: 0; } }
-.check-draw { stroke-dasharray: 48; stroke-dashoffset: 48; animation: check-draw 400ms ease forwards; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .press:active { transform: scale(0.97); }
-  .chip-press:active { transform: scale(0.96); }
-  .heart-pop { animation: heart-pop 250ms ease; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .drop-in, .cta-in, .check-draw { animation: none; }
-  .check-draw { stroke-dashoffset: 0; }
-}
-
-/* Blur-up image: blurred until the sharp one loads (DESIGN-SYSTEM §Отклик). */
-.blur-up { filter: blur(12px); transition: filter 300ms ease; }
-.blur-up.loaded { filter: none; }
-
-/* --- Maps ("Рядом") --------------------------------------------------------- */
-/* The mobile map fills the viewport between the sticky header (h-13) and the
-   bottom nav (~3.5rem); the desktop split fills below the header (h-14). */
-.near-stage-mobile { position: relative; height: calc(100dvh - 6.75rem); }
-.near-stage-desktop { height: calc(100dvh - 3.5rem); }
-
-/* Draggable bottom sheet: peek shows the count; open shows the list. */
-.near-sheet {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
-  background: var(--color-white);
-  border-top: 1px solid var(--color-slate-200);
-  border-top-left-radius: var(--radius-card);
-  border-top-right-radius: var(--radius-card);
-  transition: height 250ms ease;
-}
-.near-sheet--peek { height: 6.5rem; }
-.near-sheet--open { height: 82%; }
-@media (prefers-reduced-motion: reduce) { .near-sheet { transition: none; } }
-
-/* MapLibre attribution: keep it small and unobtrusive in the corner. */
-.maplibregl-ctrl-attrib { font-size: 10px; }
-
-/* Selected-marker card: floats above the mobile sheet peek, or at the foot of the
-   desktop map column. */
-.near-selected { position: absolute; left: 0.75rem; right: 0.75rem; bottom: 7.25rem; z-index: 20; }
-@media (min-width: 640px) { .near-selected { bottom: 0.75rem; } }
-
-/* Category «Карта» view: an inline, rounded map panel. */
-.category-map { position: relative; height: 30rem; overflow: hidden; border-radius: var(--radius-card); }
-@media (min-width: 640px) { .category-map { height: 38rem; } }
-
-/* Detail page «Адрес» mini map: a short, tappable static map. */
-.address-map { position: relative; height: 12rem; }
-
-/* ===========================================================================
-   EFFECTS (DESIGN-SYSTEM §Эффекты). Shadows and gradients are allowed ONLY in
-   these five, and only in blue-950 / blue-800 / blue-50 / white. CSS-only, no JS,
-   all disabled under prefers-reduced-motion. (#5 the dropdown panel is further
-   below, near the other Select styles.)
-   =========================================================================== */
-
-/* 1. Running-border button — primary CTAs. The light stripe animates ONLY on
-   hover / focus (and :active on touch), never idle, so a long list of buttons
-   costs nothing at rest. */
-@property --btn-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-@keyframes btn-runner-spin { to { --btn-angle: 360deg; } }
-
-.btn-runner { position: relative; transition: transform 150ms ease, box-shadow 200ms ease; }
-.btn-runner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(
-    from var(--btn-angle),
-    transparent 0turn 0.6turn,
-    color-mix(in srgb, var(--color-white) 95%, transparent) 0.75turn,
-    transparent 0.9turn 1turn
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 200ms ease;
-  pointer-events: none;
-}
-.btn-runner-glow {
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
-    0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
-}
-@media (hover: hover) {
-  .btn-runner:hover, .btn-runner:focus-visible {
-    transform: scale(1.03);
-    box-shadow:
-      0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
-      0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
-  }
-  .btn-runner:hover::before, .btn-runner:focus-visible::before {
-    opacity: 1;
-    animation: btn-runner-spin 2s linear infinite;
-  }
-}
-@media (hover: none) {
-  .btn-runner:active {
-    box-shadow:
-      0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
-      0 8px 22px color-mix(in srgb, var(--color-accent) 40%, transparent);
-  }
-  .btn-runner:active::before { opacity: 1; animation: btn-runner-spin 2s linear infinite; }
-}
-.btn-runner:active { transform: scale(1); }
-@media (prefers-reduced-motion: reduce) {
-  .btn-runner, .btn-runner::before { animation: none; transition: none; }
-  .btn-runner:hover, .btn-runner:focus-visible, .btn-runner:active { transform: none; }
-}
-
-/* 2. 3D toggle — raised by default, pressed (swapped inset shadows) when on. The
-   outline→fill icon is the component's own two glyphs. Radius inherits from the
-   element, so it works on the round heart and on a pill chip alike. */
-.toggle-3d {
-  background: var(--color-accent-soft);
-  box-shadow:
-    inset 2px 2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset -2px -2px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
-  transition: box-shadow 200ms ease, color 200ms ease;
-}
-.toggle-3d.is-on, .toggle-3d[aria-pressed="true"] {
-  box-shadow:
-    inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
-}
-/* Native checkbox as a round 3D toggle (filter checks). Empty → filled dot. */
-.check-3d {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 9999px;
-  background: var(--color-accent-soft);
-  box-shadow:
-    inset 2px 2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset -2px -2px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
-  transition: box-shadow 200ms ease;
-  display: inline-grid;
-  place-content: center;
-  cursor: pointer;
-}
-.check-3d::after {
-  content: "";
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  transform: scale(0);
-  transition: transform 200ms ease;
-}
-.check-3d:checked {
-  box-shadow:
-    inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
-}
-.check-3d:checked::after { transform: scale(1); }
-@media (prefers-reduced-motion: reduce) {
-  .toggle-3d, .check-3d, .check-3d::after { transition: none; }
-}
-
-/* 3. 3D search field — a light capsule with a raised edge and a blue submit
-   circle. Header, home, search page. */
-.search-3d {
-  position: relative;
-  border-radius: 9999px;
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    var(--color-white),
-    color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-white))
-  );
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 30%, transparent);
-}
-.search-3d::before,
-.search-3d::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-}
-.search-3d::before {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--color-white) 90%, transparent), transparent 55%);
-}
-.search-3d::after {
-  background: linear-gradient(315deg, color-mix(in srgb, var(--color-accent) 28%, transparent), transparent 55%);
-}
-.search-3d__field {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  border: 0;
-  border-radius: 9999px;
-  background: linear-gradient(180deg, var(--color-white), var(--color-accent-soft));
-  color: var(--color-slate-900);
-  transition: background 200ms ease;
-}
-.search-3d__field:focus { outline: none; }
-.search-3d:focus-within .search-3d__field {
-  background: linear-gradient(180deg, var(--color-white), color-mix(in srgb, var(--color-accent-soft) 40%, var(--color-white)));
-}
-.search-3d__go {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  color: var(--color-white);
-  transition: background 150ms ease;
-}
-.search-3d__go:hover { background: var(--color-ink); }
-@media (prefers-reduced-motion: reduce) {
-  .search-3d__field, .search-3d__go { transition: none; }
-}
-
-/* 4. Field with an inner action — dark capsule, left icon, transparent field, a
-   white button whose arrow springs on hover. Email sign-in, "what do you need",
-   business lead form. */
-.field-action {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  background: var(--color-ink);
-  padding: 0.3125rem 0.3125rem 0.3125rem 1rem;
-}
-.field-action__icon {
-  display: flex;
-  flex: none;
-  color: color-mix(in srgb, var(--color-white) 70%, transparent);
-}
-.field-action__field {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-white);
-}
-.field-action__field::placeholder { color: color-mix(in srgb, var(--color-white) 55%, transparent); }
-.field-action__field:focus { outline: none; }
-.field-action__btn {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 0.35rem;
-  border-radius: 9999px;
-  background: var(--color-white);
-  color: var(--color-ink);
-  font-weight: 700;
-  transition: transform 150ms ease;
-}
-.field-action__arrow { transition: transform 300ms ease; }
-@media (hover: hover) {
-  .field-action__btn:hover .field-action__arrow { animation: jello-vertical 0.9s both; }
-}
-.field-action__btn:active { transform: scale(0.9); }
-@keyframes jello-vertical {
-  0% { transform: scale3d(1, 1, 1); }
-  30% { transform: scale3d(0.75, 1.25, 1); }
-  40% { transform: scale3d(1.25, 0.75, 1); }
-  50% { transform: scale3d(0.85, 1.15, 1); }
-  65% { transform: scale3d(1.05, 0.95, 1); }
-  75% { transform: scale3d(0.95, 1.05, 1); }
-  100% { transform: scale3d(1, 1, 1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .field-action__btn:hover .field-action__arrow { animation: none; }
-  .field-action__btn:active { transform: none; }
-  .field-action__btn { transition: none; }
-}
-
-/* 5. Dropdown panel (Select) — the one place a plain drop shadow is allowed.
-   Desktop panel under the trigger; radius 12px, soft blue-800/15 shadow. */
-.select-panel {
-  border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--color-accent) 15%, transparent);
-}
-/* Mobile select bottom sheet slides up. */
-@keyframes select-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
-.select-sheet { max-height: 85%; animation: select-sheet-in 200ms ease-out; }
-@media (prefers-reduced-motion: reduce) { .select-sheet { animation: none; } }

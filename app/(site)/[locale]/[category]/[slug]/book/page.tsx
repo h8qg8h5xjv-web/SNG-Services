@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import { Link } from '@/i18n/navigation'
 import BookingWidget from '@/components/booking/BookingWidget'
@@ -34,8 +33,7 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
+      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
         <BackButton />
         <h1 className="mb-6 text-title font-extrabold tracking-tight">{t('booking.title', { name })}</h1>
 
@@ -62,7 +60,7 @@ export default async function BookPage({ params }: { params: Promise<Params> }) 
             </Link>
           </div>
         )}
-      </main>
+      </div>
     </>
   )
 }

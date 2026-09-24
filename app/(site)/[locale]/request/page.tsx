@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import RequestForm from '@/components/requests/RequestForm'
 import { createClient } from '@/lib/supabase/server'
@@ -60,8 +59,7 @@ export default async function RequestPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="mb-6 text-title font-extrabold tracking-tight">
           {provider
@@ -83,7 +81,7 @@ export default async function RequestPage({
           priceGuide={guide}
           regulatedApplies={regulatedApplies}
         />
-      </main>
+      </div>
     </>
   )
 }

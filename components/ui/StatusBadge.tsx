@@ -1,18 +1,19 @@
 import type { ReactNode } from 'react'
 
-// DESIGN-SYSTEM §5: status badge — rounded-full, 13px, green or slate. Colour is
-// never the only signal (§8): the label text always carries the meaning too.
+// v2 status (DEMO_MAP §4 «Request card»): a dot plus a label. Colour is never
+// the only signal — the label always carries the meaning.
 type Tone = 'success' | 'neutral' | 'error'
 
 const TONE: Record<Tone, string> = {
-  success: 'bg-green-100 text-green-700',
-  neutral: 'bg-slate-100 text-slate-500',
-  error: 'bg-red-100 text-red-700',
+  success: 'status taken',
+  neutral: 'status',
+  error: 'status error',
 }
 
 export function StatusBadge({ tone = 'neutral', children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={`inline-flex items-center gap-1 rounded-badge px-2 py-0.5 text-meta ${TONE[tone]}`}>
+    <span className={TONE[tone]}>
+      <i aria-hidden="true" />
       {children}
     </span>
   )

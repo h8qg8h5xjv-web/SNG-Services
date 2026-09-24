@@ -6,7 +6,6 @@ import { getAccount } from '@/lib/cabinet/data'
 import CabinetTabs from '@/components/cabinet/CabinetTabs'
 import LoginBlock from '@/components/cabinet/LoginBlock'
 import AutoLink from '@/components/cabinet/AutoLink'
-import Header from '@/components/Header'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,8 +27,7 @@ export default async function CabinetLayout({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto flex min-h-full w-full max-w-3xl flex-1 flex-col px-4 py-6">
+      <div className="mx-auto flex min-h-full w-full max-w-3xl flex-1 flex-col px-4 py-6">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
           {loggedIn && (
@@ -57,7 +55,7 @@ export default async function CabinetLayout({
         </div>
 
         {children}
-      </main>
+      </div>
     </>
   )
 }

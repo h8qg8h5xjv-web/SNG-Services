@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 
 export const dynamic = 'force-dynamic'
@@ -34,8 +33,7 @@ export default async function PrivacyPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
         <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-meta text-amber-900">
@@ -50,7 +48,7 @@ export default async function PrivacyPage({
             </section>
           ))}
         </div>
-      </main>
+      </div>
     </>
   )
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 
 export const dynamic = 'force-dynamic'
@@ -33,8 +32,7 @@ export default async function TermsPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
         <div className="mt-6 space-y-6">
@@ -45,7 +43,7 @@ export default async function TermsPage({
             </section>
           ))}
         </div>
-      </main>
+      </div>
     </>
   )
 }

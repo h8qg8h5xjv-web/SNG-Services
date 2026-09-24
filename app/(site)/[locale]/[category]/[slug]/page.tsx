@@ -19,7 +19,6 @@ import { Link } from '@/i18n/navigation'
 import NoPhoto from '@/components/NoPhoto'
 import { ButtonLink } from '@/components/ui/Button'
 import { InfoBlock } from '@/components/ui/InfoBlock'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import SaveHeart from '@/components/SaveHeart'
 import OpenNowInline from '@/components/OpenNowInline'
@@ -193,10 +192,9 @@ export default async function ProviderPage({
 
   return (
     <>
-      <Header />
       <JsonLd data={businessLd} />
       {/* pb-cta: reserves room below content for the mobile CTA + floating nav. */}
-      <main className={`mx-auto w-full max-w-3xl flex-1 px-4 ${cta ? 'pb-cta' : 'pb-8'} sm:pb-8`}>
+      <div className={`mx-auto w-full max-w-3xl flex-1 px-4 ${cta ? 'pb-cta' : 'pb-8'} sm:pb-8`}>
         <RecordRecentView
           item={{
             slug: provider.slug,
@@ -442,7 +440,7 @@ export default async function ProviderPage({
           )}
         </section>
         )}
-      </main>
+      </div>
 
       {/* Mobile sticky bar (§6): from-price + primary CTA + square WhatsApp button,
           pinned above the floating bottom nav. */}

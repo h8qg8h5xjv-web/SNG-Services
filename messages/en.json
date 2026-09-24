@@ -8,7 +8,10 @@
     "city": "London",
     "back": "Back",
     "viewAll": "View all",
-    "selectSearch": "Search"
+    "selectSearch": "Search",
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "undo": "Undo"
   },
   "nav": {
     "home": "Home",
@@ -19,7 +22,10 @@
     "search": "Search",
     "near": "Nearby",
     "favorites": "Saved",
-    "catalog": "Catalog"
+    "catalog": "Catalog",
+    "mainMenu": "Main menu",
+    "navigation": "Navigation",
+    "info": "Information"
   },
   "language": {
     "label": "Language",

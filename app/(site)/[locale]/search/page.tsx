@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { SectionHeading } from '@/components/ui/Section'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import SearchBar from '@/components/SearchBar'
 import ProviderGrid from '@/components/ProviderGrid'
 import PlaceCard from '@/components/PlaceCard'
@@ -60,8 +59,7 @@ export default async function SearchPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="py-6">
           <h1 className="mb-4 text-title font-extrabold tracking-tight">{t('title')}</h1>
           <SearchBar initialQuery={q} />
@@ -97,7 +95,7 @@ export default async function SearchPage({
             />
           </>
         )}
-      </main>
+      </div>
     </>
   )
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { IconCalendarEvent } from '@tabler/icons-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import EventCard from '@/components/EventCard'
 import { FilterChipLink } from '@/components/ui/FilterChip'
 import { ButtonLink } from '@/components/ui/Button'
@@ -47,8 +46,7 @@ export default async function EventsPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
         <div className="pt-6">
           <h1 className="text-title font-extrabold tracking-tight">{t('events.title')}</h1>
           <p className="mt-2 text-slate-500">{t('events.subtitle')}</p>
@@ -95,7 +93,7 @@ export default async function EventsPage({
             ))}
           </div>
         )}
-      </main>
+      </div>
     </>
   )
 }

@@ -8,7 +8,10 @@
     "city": "Лондон",
     "back": "Назад",
     "viewAll": "Показать все",
-    "selectSearch": "Поиск"
+    "selectSearch": "Поиск",
+    "skipToContent": "Перейти к содержимому",
+    "close": "Закрыть",
+    "undo": "Вернуть"
   },
   "nav": {
     "home": "Главная",
@@ -19,7 +22,10 @@
     "search": "Поиск",
     "near": "Рядом",
     "favorites": "Избранное",
-    "catalog": "Каталог"
+    "catalog": "Каталог",
+    "mainMenu": "Основное меню",
+    "navigation": "Навигация",
+    "info": "Информация"
   },
   "language": {
     "label": "Язык",

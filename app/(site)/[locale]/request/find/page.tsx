@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconMoodSad } from '@tabler/icons-react'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import ProviderGrid from '@/components/ProviderGrid'
 import { ButtonLink } from '@/components/ui/Button'
@@ -45,8 +44,7 @@ export default async function RequestFindPage({
     }
     return (
       <>
-        <Header />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
+        <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
           <BackButton />
           <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-slate-200 p-8 text-center">
             <IconMoodSad className="h-6 w-6 text-slate-400" stroke={1.5} />
@@ -65,7 +63,7 @@ export default async function RequestFindPage({
               </li>
             ))}
           </ul>
-        </main>
+        </div>
       </>
     )
   }
@@ -75,8 +73,7 @@ export default async function RequestFindPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">
           {t('foundFor', { category: pickCategoryName(category, locale) })}
@@ -95,7 +92,7 @@ export default async function RequestFindPage({
             {t('noMastersYet')}
           </p>
         )}
-      </main>
+      </div>
     </>
   )
 }

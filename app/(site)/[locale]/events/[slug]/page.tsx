@@ -5,7 +5,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconExternalLink, IconMapPin, IconCalendarEvent } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { ButtonLink } from '@/components/ui/Button'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import JsonLd from '@/components/JsonLd'
 import { getEventBySlug } from '@/lib/queries/events'
@@ -107,9 +106,8 @@ export default async function EventPage({
 
   return (
     <>
-      <Header />
       <JsonLd data={eventLd} />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
+      <div className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
         <BackButton />
         <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
           {image && (
@@ -179,7 +177,7 @@ export default async function EventPage({
             </a>
           </section>
         )}
-      </main>
+      </div>
 
       {/* bottom-14 is off-scale on purpose — sits just above the fixed bottom nav. */}
       {tickets && (

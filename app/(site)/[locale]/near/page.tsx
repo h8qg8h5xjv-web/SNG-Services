@@ -1,6 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconMapPin } from '@tabler/icons-react'
-import Header from '@/components/Header'
 import NearExplorer from '@/components/map/NearExplorer'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ButtonLink } from '@/components/ui/Button'
@@ -31,9 +30,8 @@ export default async function NearPage({
 
   return (
     <>
-      <Header />
       {mappable.length === 0 ? (
-        <main className="mx-auto w-full max-w-page flex-1 px-3.5 py-6 sm:px-6">
+        <div className="mx-auto w-full max-w-page flex-1 px-3.5 py-6 sm:px-6">
           <h1 className="text-title font-extrabold tracking-tight">{t('nav.near')}</h1>
           <div className="mt-4">
             <EmptyState
@@ -42,11 +40,11 @@ export default async function NearPage({
               action={<ButtonLink href="/">{t('nav.catalog')}</ButtonLink>}
             />
           </div>
-        </main>
+        </div>
       ) : (
-        <main className="flex-1">
+        <div className="flex-1">
           <NearExplorer cards={mappable} responseMins={responseMins} />
-        </main>
+        </div>
       )}
     </>
   )

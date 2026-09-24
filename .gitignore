@@ -42,3 +42,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 design-handoff/
+
+# Playwright MCP console logs
+.playwright-mcp/

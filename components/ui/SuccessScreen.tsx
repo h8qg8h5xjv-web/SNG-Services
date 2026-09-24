@@ -1,38 +1,38 @@
 import type { ReactNode } from 'react'
 import type { Icon } from '@tabler/icons-react'
-import { IconCircleCheck } from '@tabler/icons-react'
+import { Pane } from './Pane'
 
-// Success screen (DESIGN §8): green check, an 800 title, a line, an optional
-// icon-led detail list, and an action (usually the dark "Мои записи" pill).
+// v2 confirmation (DEMO_MAP §3.3 `.bk-done`, compact): a window that has gone
+// dark — the slot is now yours — a heading, a line, details and the next step.
 export function SuccessScreen({
   title,
   message,
   details,
   action,
+  time,
 }: {
   title: ReactNode
   message?: ReactNode
   details?: { icon: Icon; text: ReactNode }[]
   action?: ReactNode
+  time?: string
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-lg border border-slate-200 p-6 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700">
-        <IconCircleCheck className="h-8 w-8" stroke={2} />
-      </span>
-      <h2 className="text-title font-extrabold tracking-tight">{title}</h2>
-      {message && <p className="text-body text-slate-500">{message}</p>}
+    <div className="done-card">
+      <Pane off time={time ?? '✓'} />
+      <h2 className="h3">{title}</h2>
+      {message && <p className="muted">{message}</p>}
       {details && details.length > 0 && (
-        <ul className="w-full max-w-sm space-y-2 text-left">
+        <ul className="done-list">
           {details.map((d, i) => (
-            <li key={i} className="flex items-center gap-2 text-body">
-              <d.icon className="h-5 w-5 shrink-0 text-slate-500" stroke={1.5} />
+            <li key={i}>
+              <d.icon stroke={1.75} aria-hidden="true" />
               <span>{d.text}</span>
             </li>
           ))}
         </ul>
       )}
-      {action}
+      {action && <div className="acts">{action}</div>}
     </div>
   )
 }

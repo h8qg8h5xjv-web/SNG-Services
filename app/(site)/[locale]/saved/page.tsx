@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import SavedList from '@/components/SavedList'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
@@ -22,14 +21,13 @@ export default async function SavedPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
         <div className="mt-4">
           <SavedList cards={cards} />
         </div>
-      </main>
+      </div>
     </>
   )
 }

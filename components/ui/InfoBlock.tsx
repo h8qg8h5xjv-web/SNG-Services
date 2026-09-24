@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react'
 import type { Icon } from '@tabler/icons-react'
 
-// DESIGN-SYSTEM §5/§6: info block — white card with a blue-50 icon square on the
-// left and a title (600) + small subtitle on the right. Used for trust signals
-// (language verified) and hints. Part of the closed component list.
+// v2 trust line (DEMO_MAP §3.1 `.trust`, compact): ink circle with a lamp-hi
+// icon, a statement and an optional detail.
 export function InfoBlock({
   icon: IconCmp,
   title,
@@ -14,13 +13,13 @@ export function InfoBlock({
   subtitle?: ReactNode
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-        <IconCmp className="h-5 w-5" stroke={2} />
+    <div className="info">
+      <span className="info-ico" aria-hidden="true">
+        <IconCmp stroke={1.75} />
       </span>
       <div className="min-w-0">
-        <p className="text-body font-semibold">{title}</p>
-        {subtitle && <p className="text-meta text-slate-500">{subtitle}</p>}
+        <b>{title}</b>
+        {subtitle && <span>{subtitle}</span>}
       </div>
     </div>
   )

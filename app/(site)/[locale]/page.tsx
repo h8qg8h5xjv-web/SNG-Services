@@ -2,7 +2,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconBriefcase } from '@tabler/icons-react'
 import { SectionHeading } from '@/components/ui/Section'
 import { ButtonLink } from '@/components/ui/Button'
-import Header from '@/components/Header'
 import DistrictBar from '@/components/DistrictBar'
 import HomeHowItWorks from '@/components/HomeHowItWorks'
 import RecentlyViewed from '@/components/RecentlyViewed'
@@ -41,7 +40,6 @@ export default async function HomePage({
 
   return (
     <>
-      <Header />
       {/* Dark block: title, trust line, search (§3). No gradient, no tabs. */}
       <section className="bg-ink text-white">
         <div className="mx-auto w-full max-w-page px-3.5 py-7 sm:px-6">
@@ -52,7 +50,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 sm:px-6">
+      <div className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 sm:px-6">
         <div className="py-5">
           <ServiceNeedBar />
         </div>
@@ -84,7 +82,7 @@ export default async function HomePage({
             {t('cabinet.cards.create')}
           </ButtonLink>
         </section>
-      </main>
+      </div>
     </>
   )
 }

@@ -8,7 +8,10 @@
     "city": "London",
     "back": "Հետ",
     "viewAll": "View all",
-    "selectSearch": "Որոնում"
+    "selectSearch": "Որոնում",
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "undo": "Undo"
   },
   "nav": {
     "home": "Home",
@@ -19,7 +22,10 @@
     "search": "Որոնում",
     "near": "Մոտակայքում",
     "favorites": "Ընտրանի",
-    "catalog": "Կատալոգ"
+    "catalog": "Կատալոգ",
+    "mainMenu": "Main menu",
+    "navigation": "Navigation",
+    "info": "Information"
   },
   "language": {
     "label": "Language",

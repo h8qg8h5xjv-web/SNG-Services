@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconMoodSad, IconBriefcase } from '@tabler/icons-react'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import { ButtonLink } from '@/components/ui/Button'
 import { InfoBlock } from '@/components/ui/InfoBlock'
@@ -108,8 +107,7 @@ export default async function CategoryPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 pt-4 sm:px-6">
+      <div className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 pt-4 sm:px-6">
         <BackButton />
         <div className="py-5">
           <h1 className="text-title font-extrabold tracking-tight">{pickCategoryName(cat, locale)}</h1>
@@ -156,7 +154,7 @@ export default async function CategoryPage({
             )}
           </div>
         </div>
-      </main>
+      </div>
     </>
   )
 }

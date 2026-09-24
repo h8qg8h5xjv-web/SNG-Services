@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconCheck } from '@tabler/icons-react'
-import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import { ButtonLink } from '@/components/ui/Button'
 import { SectionHeading } from '@/components/ui/Section'
@@ -31,8 +30,7 @@ export default async function ForBusinessPage({
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
+      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
         <BackButton />
         <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
         <p className="mt-2 text-body text-slate-500">{t('intro')}</p>
@@ -58,7 +56,7 @@ export default async function ForBusinessPage({
           <p className="mb-4 text-body text-slate-500">{t('joinIntro')}</p>
           <CatalogRequestForm />
         </section>
-      </main>
+      </div>
     </>
   )
 }

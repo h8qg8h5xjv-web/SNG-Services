@@ -8,7 +8,7 @@ import { IconAlertTriangle } from '@tabler/icons-react'
 export default function ProviderError({ reset }: { reset: () => void }) {
   const t = useTranslations('errors')
   return (
-    <main className="mx-auto flex max-w-md flex-1 flex-col items-center justify-center px-4 py-20 text-center">
+    <div className="mx-auto flex max-w-md flex-1 flex-col items-center justify-center px-4 py-20 text-center">
       <IconAlertTriangle className="h-10 w-10 text-slate-400" stroke={1.5} />
       <h1 className="mt-3 text-h2 font-semibold text-slate-900">{t('loadTitle')}</h1>
       <p className="mt-1 text-body text-slate-500">{t('loadBody')}</p>
@@ -19,6 +19,6 @@ export default function ProviderError({ reset }: { reset: () => void }) {
       >
         {t('retry')}
       </button>
-    </main>
+    </div>
   )
 }

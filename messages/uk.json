@@ -8,7 +8,10 @@
     "city": "London",
     "back": "Назад",
     "viewAll": "View all",
-    "selectSearch": "Пошук"
+    "selectSearch": "Пошук",
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "undo": "Undo"
   },
   "nav": {
     "home": "Home",
@@ -19,7 +22,10 @@
     "search": "Пошук",
     "near": "Поруч",
     "favorites": "Обране",
-    "catalog": "Каталог"
+    "catalog": "Каталог",
+    "mainMenu": "Main menu",
+    "navigation": "Navigation",
+    "info": "Information"
   },
   "language": {
     "label": "Language",
