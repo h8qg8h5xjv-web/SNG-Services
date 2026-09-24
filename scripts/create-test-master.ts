@@ -5,6 +5,7 @@
 //   npm run seed:test-master -- --email=you@example.com --category=beauty --borough=Ealing
 //
 // Needs .env.local with NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
+// Local databases only unless you pass --allow-remote.
 // Sign in afterwards at /<locale>/business/login with the same email (locally the
 // magic link lands in Supabase Inbucket, http://localhost:54324).
 
@@ -13,6 +14,8 @@ import type { SupabaseClient, User } from '@supabase/supabase-js'
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 const { createClient } = require('@supabase/supabase-js') as typeof import('@supabase/supabase-js')
+const { assertLocalDb } =
+  require('./lib/assert-local-db.ts') as typeof import('./lib/assert-local-db.ts')
 /* eslint-enable @typescript-eslint/no-require-imports */
 
 type Client = SupabaseClient<Database>
@@ -47,6 +50,7 @@ async function main() {
     console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY (see .env.local.example).')
     process.exit(1)
   }
+  assertLocalDb(url, 'seed:test-master')
   const supabase = createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   })
