@@ -30,7 +30,7 @@ export default function Header() {
         </Link>
 
         <nav className="nav-links" aria-label={t('nav.mainMenu')}>
-          <Link href="/" aria-current={current('catalog')}>
+          <Link href="/catalog" aria-current={current('catalog')}>
             {t('nav.catalog')}
           </Link>
           <Link href="/near" className="opt-link" aria-current={current('near')}>

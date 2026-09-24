@@ -13,58 +13,12 @@
 
 /* Pressable: primary button / chip dips on press. */
 .press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
-.chip-press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
-
-/* Suggestions dropdown reveal. */
-@keyframes drop-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: none; }
-}
-.drop-in { animation: drop-in 150ms ease-out; }
 
 @media (prefers-reduced-motion: no-preference) {
   .press:active { transform: scale(0.97); }
-  .chip-press:active { transform: scale(0.96); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .drop-in { animation: none; }
 }
 
-/* --- Maps ("Рядом") --------------------------------------------------------- */
-/* The mobile map fills the viewport between the header and the floating tab
-   bar; the desktop split fills below the header. */
-.near-stage-mobile { position: relative; height: calc(100dvh - var(--hdr) - 76px - env(safe-area-inset-bottom)); }
-.near-stage-desktop { height: calc(100dvh - var(--hdr)); }
 
-/* Draggable bottom sheet: peek shows the count; open shows the list. */
-.near-sheet {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
-  background: var(--color-white);
-  border-top: 1px solid var(--color-slate-200);
-  border-top-left-radius: var(--radius-card);
-  border-top-right-radius: var(--radius-card);
-  transition: height 250ms ease;
-}
-.near-sheet--peek { height: 6.5rem; }
-.near-sheet--open { height: 82%; }
-@media (prefers-reduced-motion: reduce) { .near-sheet { transition: none; } }
-
-/* MapLibre attribution: keep it small and unobtrusive in the corner. */
-.maplibregl-ctrl-attrib { font-size: 10px; }
-
-/* Selected-marker card: floats above the mobile sheet peek, or at the foot of the
-   desktop map column. */
-.near-selected { position: absolute; left: 0.75rem; right: 0.75rem; bottom: 7.25rem; z-index: 20; }
-@media (min-width: 640px) { .near-selected { bottom: 0.75rem; } }
-
-/* Category «Карта» view: an inline, rounded map panel. */
-.category-map { position: relative; height: 30rem; overflow: hidden; border-radius: var(--radius-card); }
-@media (min-width: 640px) { .category-map { height: 38rem; } }
 
 
 /* ===========================================================================
@@ -87,99 +41,8 @@
     inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
     inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
-/* Native checkbox as a round 3D toggle (filter checks). Empty → filled dot. */
-.check-3d {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 9999px;
-  background: var(--color-accent-soft);
-  box-shadow:
-    inset 2px 2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset -2px -2px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
-  transition: box-shadow 200ms ease;
-  display: inline-grid;
-  place-content: center;
-  cursor: pointer;
-}
-.check-3d::after {
-  content: "";
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  transform: scale(0);
-  transition: transform 200ms ease;
-}
-.check-3d:checked {
-  box-shadow:
-    inset -2px -2px 4px color-mix(in srgb, var(--color-white) 90%, transparent),
-    inset 2px 2px 5px color-mix(in srgb, var(--color-accent) 45%, transparent);
-}
-.check-3d:checked::after { transform: scale(1); }
 @media (prefers-reduced-motion: reduce) {
-  .toggle-3d, .check-3d, .check-3d::after { transition: none; }
-}
-
-/* 3. 3D search field — a light capsule with a raised edge and a blue submit
-   circle. Header, home, search page. */
-.search-3d {
-  position: relative;
-  border-radius: 9999px;
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    var(--color-white),
-    color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-white))
-  );
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 30%, transparent);
-}
-.search-3d::before,
-.search-3d::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-}
-.search-3d::before {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--color-white) 90%, transparent), transparent 55%);
-}
-.search-3d::after {
-  background: linear-gradient(315deg, color-mix(in srgb, var(--color-accent) 28%, transparent), transparent 55%);
-}
-.search-3d__field {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  border: 0;
-  border-radius: 9999px;
-  background: linear-gradient(180deg, var(--color-white), var(--color-accent-soft));
-  color: var(--color-slate-900);
-  transition: background 200ms ease;
-}
-.search-3d__field:focus { outline: none; }
-.search-3d:focus-within .search-3d__field {
-  background: linear-gradient(180deg, var(--color-white), color-mix(in srgb, var(--color-accent-soft) 40%, var(--color-white)));
-}
-.search-3d__go {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  color: var(--color-white);
-  transition: background 150ms ease;
-}
-.search-3d__go:hover { background: var(--color-ink); }
-@media (prefers-reduced-motion: reduce) {
-  .search-3d__field, .search-3d__go { transition: none; }
+  .toggle-3d { transition: none; }
 }
 
 /* 4. Field with an inner action — dark capsule, left icon, transparent field, a

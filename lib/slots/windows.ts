@@ -91,3 +91,15 @@ export function countByCategory(windows: FreeWindow[]): Record<string, number> {
   for (const w of windows) counts[w.categorySlug] = (counts[w.categorySlug] ?? 0) + 1
   return counts
 }
+
+// Booking link for a window: straight to the details step of that slot.
+export function windowHref(w: Pick<FreeWindow, 'categorySlug' | 'slug' | 'serviceId' | 'start'>): string {
+  return `/${w.categorySlug}/${w.slug}/book?step=details&svc=${encodeURIComponent(w.serviceId)}&slot=${encodeURIComponent(w.start)}`
+}
+
+// Windows per provider slug, each list in time order (rows show the first 3).
+export function groupBySlug(windows: FreeWindow[]): Record<string, FreeWindow[]> {
+  const out: Record<string, FreeWindow[]> = {}
+  for (const w of windows) (out[w.slug] ??= []).push(w)
+  return out
+}

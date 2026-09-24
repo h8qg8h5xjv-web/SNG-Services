@@ -9,7 +9,7 @@ import { useMagnetic } from '@/components/ui/useMagnetic'
 import { Skyline } from '@/components/city/Skyline'
 import type { CityApi } from '@/components/city/scene'
 import type { FreeWindow } from '@/lib/slots/windows'
-import { earliestPerProvider } from '@/lib/slots/windows'
+import { earliestPerProvider, windowHref } from '@/lib/slots/windows'
 import { applyFilter, filterFor } from '@/lib/home/filter'
 import { searchNavPath } from '@/lib/search/target'
 import { formatPrice } from '@/lib/format'
@@ -27,10 +27,6 @@ const smooth = (a: number, b: number, v: number) => {
   return t * t * (3 - 2 * t)
 }
 const easeIO = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
-
-export function windowHref(w: FreeWindow): string {
-  return `/${w.categorySlug}/${w.slug}/book?svc=${encodeURIComponent(w.serviceId)}&slot=${encodeURIComponent(w.start)}`
-}
 
 type Chip = { slug: string; name: string }
 

@@ -189,7 +189,7 @@ export default async function ProviderPage({
         item={{ slug: provider.slug, categorySlug: category, name, borough: provider.borough, coverImage: provider.cover_image }}
       />
       <nav className="crumbs" aria-label={t('listing.crumbsLabel')}>
-        <Link href="/">{t('listing.catalog')}</Link>
+        <Link href="/catalog">{t('listing.catalog')}</Link>
         <span aria-hidden="true">/</span>
         <Link href={`/${category}`}>{categoryName}</Link>
         <span aria-hidden="true">/</span>

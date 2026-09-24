@@ -74,3 +74,19 @@
   dialog.dlg[open], .sel-sheet { animation: dlg-fade .15s linear both !important; }
   dialog.dlg::backdrop, .sel-sheet-backdrop { animation: dlg-fade .15s linear both !important; }
 }
+
+@layer components {
+  /* PWA install hint: a night card above the tab bar, like a toast. */
+  .install {
+    position: fixed; left: 12px; right: 12px; bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 29;
+    display: flex; gap: 14px; align-items: flex-start; padding: 16px 12px 16px 18px; border-radius: 18px;
+    background: var(--dusk-2); color: var(--night-text); box-shadow: 0 20px 50px -18px rgba(0, 0, 0, .6);
+    --ring-inner: var(--dusk);
+    animation: sheet-in .44s var(--spring-soft) both;
+  }
+  .install .logo-win { margin-top: 3px; }
+  .install-sub { margin-top: 2px; font-size: 14.5px; color: var(--mute-night); }
+  .install .icon-btn { width: 36px; height: 36px; margin: -6px -2px 0 0; flex: none; }
+  .install .icon-btn svg { width: 18px; height: 18px; }
+  @media (prefers-reduced-motion: reduce) { .install { animation: dlg-fade .15s linear both; } }
+}

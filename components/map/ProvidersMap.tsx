@@ -9,13 +9,13 @@ import CategoryIcon from '@/components/CategoryIcon'
 import type { MapPoint } from '@/lib/maps/points'
 import { LONDON_CENTER } from '@/lib/maps/distance'
 import { OSM_STYLE } from '@/lib/maps/style'
-import { BLUE_800, BLUE_950, WHITE } from '@/lib/palette'
+import { DUSK, INK, WHITE } from '@/lib/palette'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 // Colours come from the shared palette (lib/palette). MapLibre paint props and the
 // SVG markers take literal hex, so they cannot use CSS tokens at runtime.
-const ACCENT = BLUE_800
-const INK = BLUE_950
+// v2: markers in ink on white; clusters as dusk discs.
+const ACCENT = INK
 
 // The OSM raster style has no glyph endpoint, so every marker — price pills,
 // cluster counts, category discs — is a self-contained SVG image generated on
@@ -78,7 +78,7 @@ function pricePillSvg(label: string): string {
 function clusterSvg(count: string): string {
   const n = parseInt(count, 10) || 0
   const size = n >= 50 ? 68 : n >= 10 ? 56 : 48
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 5}" fill="${ACCENT}" stroke="${WHITE}" stroke-width="5"/><text x="${size / 2}" y="${size / 2}" fill="${WHITE}" font-family="system-ui,Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(count)}</text></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 5}" fill="${DUSK}" stroke="${WHITE}" stroke-width="5"/><text x="${size / 2}" y="${size / 2}" fill="${WHITE}" font-family="system-ui,Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="central">${esc(count)}</text></svg>`
 }
 
 function svgToImage(svg: string): HTMLImageElement {
@@ -282,9 +282,9 @@ export default function ProvidersMap({
           type="button"
           onClick={locateMe}
           aria-label={locateLabel}
-          className="press focus-ring absolute left-3 top-3 z-10 flex min-h-11 items-center gap-2 rounded-control border border-slate-200 bg-white px-3 text-body font-semibold text-slate-900"
+          className="btn btn-line btn-sm absolute left-3 top-3 z-10"
         >
-          <IconCurrentLocation className="h-5 w-5 text-accent" stroke={2} />
+          <IconCurrentLocation className="h-5 w-5" stroke={1.75} aria-hidden="true" />
           {locateLabel}
         </button>
       )}

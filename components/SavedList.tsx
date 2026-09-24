@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { IconHeart } from '@tabler/icons-react'
 import { EmptyState } from '@/components/ui/EmptyState'
-import ProviderCard from '@/components/ProviderCard'
+import ProviderGrid from '@/components/ProviderGrid'
 import { useSaved } from '@/lib/saved/use-saved'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
@@ -23,10 +23,6 @@ export default function SavedList({ cards }: { cards: ProviderCardVM[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {items.map((card) => (
-        <ProviderCard key={card.slug} card={card} />
-      ))}
-    </div>
+    <ProviderGrid cards={items} />
   )
 }
