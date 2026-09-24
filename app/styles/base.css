@@ -389,3 +389,8 @@
 @layer components {
   .tog svg, .dchip svg { width: 18px; height: 18px; flex: none; }
 }
+
+@layer components {
+  .save-btn[aria-pressed="true"] { color: var(--ink); }
+  .save-overlay { position: absolute; right: 8px; top: 8px; z-index: 2; }
+}

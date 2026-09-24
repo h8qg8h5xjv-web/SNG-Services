@@ -99,3 +99,9 @@ export default function NavMotion() {
 
   return null
 }
+
+// For programmatic navigations that belong to a flow (booking steps): tag the
+// next transition so it slides instead of fading.
+export function setNavKind(kind: 'step' | 'step-back' | 'pop') {
+  document.documentElement.dataset.vt = kind
+}

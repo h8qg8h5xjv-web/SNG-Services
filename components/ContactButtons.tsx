@@ -7,10 +7,9 @@ import { markFirstValue } from '@/lib/tracking/first-value'
 
 // Public card contact actions (idea #4): Call / Message / Website. A click logs a
 // pseudonymous contact_reveal event (channel only, no IP / user-agent) via the
-// same /api/track beacon as impressions, then follows the link. Styled as the
-// design-system secondary pill button (DESIGN-SYSTEM §5).
-const PILL =
-  'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-medium border-slate-900 bg-white px-6 text-body font-semibold text-slate-900 transition-colors'
+// same /api/track beacon as impressions, then follows the link. v2 outline
+// buttons on day surfaces.
+const PILL = 'btn btn-line btn-sm'
 
 function track(providerId: string, channel: ContactChannel, locale: string) {
   // Opening a contact is a "first value" action (§ metric #1).
@@ -62,14 +61,14 @@ export default function ContactButtons({
   if (!phone && !website) return null
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="contacts">
       {phone && (
         <a
           href={`tel:${phone}`}
           className={PILL}
           onClick={() => track(providerId, 'call', locale)}
         >
-          <IconPhone className="h-5 w-5" stroke={2} />
+          <IconPhone stroke={1.75} aria-hidden="true" />
           {t('call')}
         </a>
       )}
@@ -81,7 +80,7 @@ export default function ContactButtons({
           className={PILL}
           onClick={() => track(providerId, 'message', locale)}
         >
-          <IconMessage className="h-5 w-5" stroke={2} />
+          <IconMessage stroke={1.75} aria-hidden="true" />
           {t('message')}
         </a>
       )}
@@ -93,7 +92,7 @@ export default function ContactButtons({
           className={PILL}
           onClick={() => track(providerId, 'website', locale)}
         >
-          <IconWorld className="h-5 w-5" stroke={2} />
+          <IconWorld stroke={1.75} aria-hidden="true" />
           {t('website')}
         </a>
       )}

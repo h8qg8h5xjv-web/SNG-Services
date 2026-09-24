@@ -21,10 +21,8 @@ export default async function RequestWaitingPage({
   if (!initial) notFound()
 
   return (
-    <>
-      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
-        <RequestStatus ref_={ref} token={token} initial={initial} locale={locale} />
-      </div>
-    </>
+    <div className="wrap page pt-8">
+      <RequestStatus ref_={ref} token={token} initial={initial} locale={locale} />
+    </div>
   )
 }

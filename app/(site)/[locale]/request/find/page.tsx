@@ -1,9 +1,7 @@
 import { cookies } from 'next/headers'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconMoodSad } from '@tabler/icons-react'
-import BackButton from '@/components/BackButton'
+import { EmptyState } from '@/components/ui/EmptyState'
 import ProviderGrid from '@/components/ProviderGrid'
-import { ButtonLink } from '@/components/ui/Button'
 import { Link } from '@/i18n/navigation'
 import { listProvidersByCategory } from '@/lib/queries/providers'
 import { getCategoryBySlug } from '@/lib/queries/categories'
@@ -26,6 +24,8 @@ export default async function RequestFindPage({
   setRequestLocale(locale)
   const q = (await searchParams).q?.trim() ?? ''
   const t = await getTranslations('request')
+  const tl = await getTranslations('listing')
+  const tn = await getTranslations('nav')
   const supabase = await createClient()
 
   const { data: cats } = await supabase
@@ -43,28 +43,21 @@ export default async function RequestFindPage({
       await recordSearchEmpty(q, sessionId, locale)
     }
     return (
-      <>
-        <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
-          <BackButton />
-          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-slate-200 p-8 text-center">
-            <IconMoodSad className="h-6 w-6 text-slate-400" stroke={1.5} />
-            <p className="text-body text-slate-500">{t('notRecognised', { query: q })}</p>
-          </div>
-          <h2 className="mb-4 mt-8 text-h2 font-semibold">{t('chooseCategory')}</h2>
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link
-                  href={`/request?category=${c.slug}`}
-                  className="flex min-h-11 items-center justify-center rounded-lg border border-slate-200 px-4 text-center text-body font-semibold transition-colors hover:border-accent"
-                >
-                  {pickCategoryName(c, locale)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div className="wrap page">
+        <nav className="crumbs" aria-label={tl('crumbsLabel')}>
+          <Link href="/">{tn('home')}</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{t('chooseCategory')}</span>
+        </nav>
+        <EmptyState mark="?" title={t('chooseCategory')} text={t('notRecognised', { query: q })} />
+        <div className="dchips mt-8">
+          {categories.map((c) => (
+            <Link key={c.slug} href={`/request?category=${c.slug}`} className="dchip">
+              {pickCategoryName(c, locale)}
+            </Link>
+          ))}
         </div>
-      </>
+      </div>
     )
   }
 
@@ -72,27 +65,29 @@ export default async function RequestFindPage({
   const cards = providers.map((p) => toCard(p, category.slug, locale))
 
   return (
-    <>
-      <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
-        <BackButton />
-        <h1 className="text-title font-extrabold tracking-tight">
-          {t('foundFor', { category: pickCategoryName(category, locale) })}
-        </h1>
+    <div className="wrap page">
+      <nav className="crumbs" aria-label={tl('crumbsLabel')}>
+        <Link href="/">{tn('home')}</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{pickCategoryName(category, locale)}</span>
+      </nav>
+      <h1 className="ph1">{t('foundFor', { category: pickCategoryName(category, locale) })}</h1>
 
-        {/* Request is the main path — offered prominently above the masters. */}
-        <div className="my-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4">
-          <p className="text-body text-slate-500">{t('leaveRequest')}</p>
-          <ButtonLink href={`/request?category=${category.slug}`}>{t('submit')}</ButtonLink>
-        </div>
+      {/* Request is the main path — offered prominently above the masters. */}
+      <div className="card mt-6 flex flex-wrap items-center justify-between gap-4 p-5">
+        <p className="muted">{t('leaveRequest')}</p>
+        <Link href={`/request?category=${category.slug}`} className="btn btn-amber">
+          {t('submit')}
+        </Link>
+      </div>
 
+      <div className="find-list">
         {cards.length > 0 ? (
           <ProviderGrid cards={cards} surface="search" />
         ) : (
-          <p className="rounded-lg border border-dashed border-slate-200 p-8 text-center text-slate-500">
-            {t('noMastersYet')}
-          </p>
+          <EmptyState mark="—" text={t('noMastersYet')} />
         )}
       </div>
-    </>
+    </div>
   )
 }

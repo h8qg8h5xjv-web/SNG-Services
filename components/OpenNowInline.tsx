@@ -20,7 +20,8 @@ export default function OpenNowInline({ hours }: { hours: OpeningHours | null })
 
   if (open === null) return null
   return (
-    <span className={open ? 'font-semibold text-green-700' : 'text-slate-500'}>
+    <span className={open ? 'status taken' : 'status declined'}>
+      <i aria-hidden="true" />
       {open ? t('openNow') : t('closedNow')}
     </span>
   )

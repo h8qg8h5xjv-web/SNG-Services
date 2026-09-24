@@ -115,3 +115,9 @@
   .grab-static { position: relative; height: 22px; flex: none; }
   .grab-static::after { content: ""; position: absolute; left: 50%; top: 9px; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: var(--color-dash); }
 }
+
+@layer components {
+  .consent { font-size: 14px; color: var(--mute); }
+  .consent a { text-decoration: underline; text-underline-offset: 3px; }
+  .consent a:hover { color: var(--ink); }
+}

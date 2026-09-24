@@ -4,12 +4,6 @@
 /* Screen titles: 800 + tight tracking (DESIGN-SYSTEM §1). */
 .text-title { letter-spacing: -0.02em; }
 
-/* Master page mobile sticky action bar sits above the floating tab bar. */
-.cta-above-nav { bottom: calc(76px + env(safe-area-inset-bottom)); }
-.pb-cta { padding-bottom: calc(9rem + env(safe-area-inset-bottom)); }
-@media (min-width: 640px) {
-  .pb-cta { padding-bottom: 2rem; }
-}
 
 /* ---------------------------------------------------------------------------
    Отклик / Response (DESIGN-SYSTEM §Отклик). Only transform / opacity / outline,
@@ -72,8 +66,6 @@
 .category-map { position: relative; height: 30rem; overflow: hidden; border-radius: var(--radius-card); }
 @media (min-width: 640px) { .category-map { height: 38rem; } }
 
-/* Detail page «Адрес» mini map: a short, tappable static map. */
-.address-map { position: relative; height: 12rem; }
 
 /* ===========================================================================
    Pre-v2 effects still used by unported components (3D toggle, 3D search,
