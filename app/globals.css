@@ -4,6 +4,7 @@
 @import "./styles/forms.css";
 @import "./styles/overlays.css";
 @import "./styles/transitions.css";
+@import "./styles/home.css";
 @import "./styles/legacy.css";
 
 /* Design system v2 «окно» (DESIGN-SYSTEM.md). Night = dusk, day = paper, one

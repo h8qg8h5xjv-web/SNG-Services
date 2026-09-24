@@ -385,3 +385,7 @@
   .done-list svg { width: 20px; height: 20px; color: var(--mute); flex: none; }
   .done-card .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
 }
+
+@layer components {
+  .tog svg, .dchip svg { width: 18px; height: 18px; flex: none; }
+}

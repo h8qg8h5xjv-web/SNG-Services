@@ -1,5 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import { computeSlots, type Slot } from './compute'
+import { computeSlots, type ExistingBooking, type Slot } from './compute'
+import { freeWindows, type FreeWindow, type WindowProvider } from './windows'
+import { pickProviderContent } from '@/lib/i18n/content'
 
 function dowOf(date: string): number {
   const [y, m, d] = date.split('-').map(Number)
@@ -64,125 +66,96 @@ export async function getSlotsForServiceDate(
   })
 }
 
-export type AvailableTodayProvider = {
+type TodayProviderRow = {
   slug: string
-  categorySlug: string
   name_en: string
   borough: string
-  lat: number | null
-  lng: number | null
-  cover_image: string | null
-  nextSlot: string // ISO
+  booking_enabled: boolean
+  categories: { slug: string } | null
+  provider_translations: { locale: string; name: string | null; description: string | null }[]
+  services: { id: string; name_en: string; name_ru: string | null; duration_min: number; capacity: number; price_pence: number }[]
+  schedules: { day_of_week: number; start_time: string; end_time: string }[]
+  schedule_exceptions: {
+    exception_date: string
+    is_closed: boolean
+    start_time: string | null
+    end_time: string | null
+  }[]
 }
 
-/**
- * Published native_booking providers with at least one free slot left today.
- * Powers the "Available today" block on the home page.
- */
-export async function getAvailableTodayProviders(
-  limit = 6,
-): Promise<AvailableTodayProvider[]> {
+// Everything today's availability needs, in two queries: published
+// native_booking providers with services and schedules, and their bookings
+// around today (±1 day for timezone edges). Service-role read: bookings aren't
+// public; callers return only availability, never booking details.
+async function loadToday() {
   const supabase = createAdminClient()
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(
-    new Date(),
-  )
-  const dow = dowOf(today)
   const now = new Date()
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(now)
+  const dow = dowOf(today)
 
-  const { data: providers } = await supabase
+  const { data } = await supabase
     .from('providers')
     .select(
-      'slug, name_en, borough, lat, lng, cover_image, categories(slug), ' +
-        'services(id,duration_min,capacity), ' +
+      'slug, name_en, borough, booking_enabled, categories(slug), ' +
+        'provider_translations(locale,name,description), ' +
+        'services(id,name_en,name_ru,duration_min,capacity,price_pence), ' +
         'schedules(day_of_week,start_time,end_time), ' +
         'schedule_exceptions(exception_date,is_closed,start_time,end_time)',
     )
     .eq('status', 'published')
     .eq('fulfillment_type', 'native_booking')
-    .returns<
-      {
-        slug: string
-        name_en: string
-        borough: string
-        lat: number | null
-        lng: number | null
-        cover_image: string | null
-        categories: { slug: string } | null
-        services: { id: string; duration_min: number; capacity: number }[]
-        schedules: { day_of_week: number; start_time: string; end_time: string }[]
-        schedule_exceptions: {
-          exception_date: string
-          is_closed: boolean
-          start_time: string | null
-          end_time: string | null
-        }[]
-      }[]
-    >()
+    .returns<TodayProviderRow[]>()
+  const providers = data ?? []
 
-  if (!providers) return []
-
-  type ServiceBooking = {
-    service_id: string
-    starts_at: string
-    ends_at: string
-    party_size: number
-    status: 'pending' | 'confirmed' | 'cancelled'
-  }
   const serviceIds = providers.flatMap((p) => p.services.map((s) => s.id))
-  const bookingsByService = new Map<string, ServiceBooking[]>()
+  const bookingsByService = new Map<string, ExistingBooking[]>()
   if (serviceIds.length) {
-    const { data } = await supabase
+    const { data: rows } = await supabase
       .from('bookings')
       .select('service_id, starts_at, ends_at, party_size, status')
       .in('service_id', serviceIds)
       .gte('starts_at', `${addDays(today, -1)}T00:00:00Z`)
       .lt('starts_at', `${addDays(today, 2)}T00:00:00Z`)
-    for (const b of (data ?? []) as ServiceBooking[]) {
+    for (const b of (rows ?? []) as (ExistingBooking & { service_id: string })[]) {
       const list = bookingsByService.get(b.service_id) ?? []
       list.push(b)
       bookingsByService.set(b.service_id, list)
     }
   }
 
-  const result: AvailableTodayProvider[] = []
-  for (const p of providers) {
-    const weekly = p.schedules
+  const todayRules = (p: TodayProviderRow) => ({
+    weekly: p.schedules
       .filter((s) => s.day_of_week === dow)
-      .map((s) => ({ start_time: s.start_time, end_time: s.end_time }))
-    const exc = p.schedule_exceptions.find((e) => e.exception_date === today) ?? null
+      .map((s) => ({ start_time: s.start_time, end_time: s.end_time })),
+    exception: p.schedule_exceptions.find((e) => e.exception_date === today) ?? null,
+  })
 
-    let earliest: string | null = null
-    for (const service of p.services) {
-      const slots = computeSlots({
-        date: today,
-        durationMin: service.duration_min,
-        capacity: service.capacity,
-        weekly,
-        exception: exc,
-        bookings: bookingsByService.get(service.id) ?? [],
-        now,
-      })
-      for (const slot of slots) {
-        if (slot.capacityRemaining > 0 && (!earliest || slot.start < earliest)) {
-          earliest = slot.start
-        }
-      }
-    }
+  return { today, now, providers, bookingsByService, todayRules }
+}
 
-    if (earliest && p.categories) {
-      result.push({
-        slug: p.slug,
-        categorySlug: p.categories.slug,
-        name_en: p.name_en,
-        borough: p.borough,
-        lat: p.lat,
-        lng: p.lng,
-        cover_image: p.cover_image,
-        nextSlot: earliest,
-      })
-    }
-  }
-
-  result.sort((a, b) => a.nextSlot.localeCompare(b.nextSlot))
-  return result.slice(0, limit)
+/**
+ * Every free window today across bookable providers (booking enabled), names in
+ * the given locale. The single source for the home city, its live counter,
+ * «Свободно сегодня» and category counts.
+ */
+export async function getFreeWindowsToday(locale: string): Promise<FreeWindow[]> {
+  const { today, now, providers, bookingsByService, todayRules } = await loadToday()
+  const input: WindowProvider[] = providers
+    .filter((p) => p.categories)
+    .map((p) => ({
+      slug: p.slug,
+      categorySlug: p.categories!.slug,
+      name: pickProviderContent({ name_en: p.name_en, description_en: null }, p.provider_translations, locale).name,
+      borough: p.borough,
+      bookable: p.booking_enabled,
+      services: p.services.map((s) => ({
+        id: s.id,
+        name: locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en,
+        durationMin: s.duration_min,
+        capacity: s.capacity,
+        pricePence: s.price_pence,
+      })),
+      ...todayRules(p),
+    }))
+  return freeWindows(input, bookingsByService, today, now)
 }

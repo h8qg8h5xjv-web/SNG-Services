@@ -18,19 +18,12 @@ import { Toaster } from '@/components/ui/Toast'
 import { DUSK } from '@/lib/palette'
 import '../../globals.css'
 
-// v2 type: Unbounded 500/600 for display (headings, times, prices), Onest for
-// everything else. Both cover Latin + Cyrillic. Georgian/Armenian (ka/hy, still
+// v2 type: Unbounded (display: headings, times, prices; 500/600) and Onest
+// (text; 400/500/600). Both load as variable fonts — one file per subset
+// instead of one per weight. Latin + Cyrillic; Georgian/Armenian (ka/hy, still
 // disabled) fall back to system fonts until they are self-hosted.
-const onest = Onest({
-  variable: '--font-onest',
-  subsets: ['latin', 'cyrillic'],
-  weight: ['400', '500', '600'],
-})
-const unbounded = Unbounded({
-  variable: '--font-unbounded',
-  subsets: ['latin', 'cyrillic'],
-  weight: ['500', '600'],
-})
+const onest = Onest({ variable: '--font-onest', subsets: ['latin', 'cyrillic'] })
+const unbounded = Unbounded({ variable: '--font-unbounded', subsets: ['latin', 'cyrillic'] })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 

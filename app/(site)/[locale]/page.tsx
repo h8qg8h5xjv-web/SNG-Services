@@ -1,23 +1,25 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconBriefcase } from '@tabler/icons-react'
-import { SectionHeading } from '@/components/ui/Section'
-import { ButtonLink } from '@/components/ui/Button'
+import { Link } from '@/i18n/navigation'
 import DistrictBar from '@/components/DistrictBar'
-import HomeHowItWorks from '@/components/HomeHowItWorks'
 import RecentlyViewed from '@/components/RecentlyViewed'
-import CategoryGrid from '@/components/CategoryGrid'
-import AvailableToday from '@/components/AvailableToday'
-import ServiceNeedBar from '@/components/requests/ServiceNeedBar'
+import HomeLive from '@/components/home/HomeLive'
+import HowItWorks from '@/components/home/HowItWorks'
+import Facade from '@/components/home/Facade'
 import { getHomeCategories } from '@/lib/queries/categories'
 import { getDistinctBoroughs } from '@/lib/queries/providers'
-import { getAvailableTodayProviders } from '@/lib/slots/service'
+import { getFreeWindowsToday } from '@/lib/slots/service'
+import { countByCategory } from '@/lib/slots/windows'
 import { pickCategoryName } from '@/lib/i18n/content'
 
 export const dynamic = 'force-dynamic'
 
-// Home = search (§1). Order (§3): search → categories → available today →
-// recently viewed → how it works → masters. No Услуги/Места tabs — places live in
-// the categories and in "Рядом".
+// The six hero chips, as in the design; any missing category is replaced by the
+// next one with the most providers.
+const CHIP_ORDER = ['beauty', 'health', 'kids', 'education', 'home', 'legal']
+
+// Home (DEMO_MAP §3.1): night hero with the city → «Свободно сегодня» → three
+// steps → categories with today's free windows → recently viewed → business.
+// Every number here comes from getFreeWindowsToday (real availability).
 export default async function HomePage({
   params,
 }: {
@@ -25,64 +27,84 @@ export default async function HomePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations()
-  const [categories, availableToday, boroughs] = await Promise.all([
+  const t = await getTranslations('home.v2')
+  const [categories, windows, boroughs] = await Promise.all([
     getHomeCategories(),
-    getAvailableTodayProviders(),
+    getFreeWindowsToday(locale),
     getDistinctBoroughs(),
   ])
-  const tiles = categories.map(({ category, count }) => ({
-    slug: category.slug,
-    name: pickCategoryName(category, locale),
-    icon: category.icon,
-    count,
-  }))
+
+  const counts = countByCategory(windows)
+  const present = new Set(categories.map((c) => c.category.slug))
+  const chipSlugs = [
+    ...CHIP_ORDER.filter((s) => present.has(s)),
+    ...categories.map((c) => c.category.slug).filter((s) => !CHIP_ORDER.includes(s)),
+  ].slice(0, 6)
+  const bySlug = new Map(categories.map((c) => [c.category.slug, c.category]))
+  const chips = chipSlugs.map((slug) => ({ slug, name: pickCategoryName(bySlug.get(slug)!, locale) }))
+  const categoryNames = Object.fromEntries(
+    categories.map(({ category }) => [category.slug, [category.name_ru, category.name_en]]),
+  )
+  const categoryLabel = Object.fromEntries(
+    categories.map(({ category }) => [category.slug, pickCategoryName(category, locale)]),
+  )
 
   return (
     <>
-      {/* Dark block: title, trust line, search (§3). No gradient, no tabs. */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto w-full max-w-page px-3.5 py-7 sm:px-6">
-          <h1 className="text-title font-extrabold tracking-tight">{t('home.heroTitle')}</h1>
-          <p className="mt-2 text-meta text-blue-200">{t('home.heroSubtitle')}</p>
-          {/* Search lives in the header (§2); the hero keeps title, subtitle, district. */}
+      <HomeLive windows={windows} chips={chips} categoryNames={categoryNames} categoryLabel={categoryLabel} />
+
+      <HowItWorks />
+
+      <section className="cats" aria-labelledby="cats-h">
+        <div className="wrap">
+          <h2 id="cats-h">{t('catsTitle')}</h2>
+          <p className="sec-sub">{t('catsSub')}</p>
+          <div className="cat-list">
+            {categories.map(({ category }) => {
+              const n = counts[category.slug] ?? 0
+              const name = pickCategoryName(category, locale)
+              return (
+                <Link key={category.slug} className="cat" href={`/${category.slug}`}>
+                  {name}
+                  <sup aria-label={n ? undefined : t('catsNone')}>{n || '—'}</sup>
+                </Link>
+              )
+            })}
+          </div>
           {boroughs.length > 0 && <DistrictBar boroughs={boroughs} />}
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 sm:px-6">
-        <div className="py-5">
-          <ServiceNeedBar />
-        </div>
+      <RecentlyViewed />
 
-        <section className="py-2">
-          <SectionHeading>{t('home.categoriesTitle')}</SectionHeading>
-          {tiles.length > 0 ? (
-            <CategoryGrid items={tiles} />
-          ) : (
-            <p className="text-body text-slate-500">{t('empty.noResults')}</p>
-          )}
-        </section>
-
-        <AvailableToday providers={availableToday} locale={locale} />
-
-        <RecentlyViewed />
-
-        <HomeHowItWorks />
-
-        {/* Masters block (§3): dark card with a white button. */}
-        <section className="my-8 flex flex-col gap-3 rounded-card bg-ink p-6 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-badge bg-white text-accent">
-              <IconBriefcase className="h-6 w-6" stroke={1.5} />
-            </span>
-            <p className="text-body font-semibold">{t('home.masters.title')}</p>
+      <section className="night biz" aria-labelledby="biz-h">
+        <div className="wrap biz-grid">
+          <div>
+            <h2 id="biz-h">
+              {t('bizTitle1')}
+              <br />
+              {t('bizTitle2')}
+            </h2>
+            <ul className="biz-points">
+              <li>{t('biz1')}</li>
+              <li>{t('biz2')}</li>
+              <li>{t('biz3')}</li>
+            </ul>
+            <div className="biz-cta">
+              <Link className="btn btn-amber" href="/for-business">
+                {t('bizApply')}
+              </Link>
+              <Link className="btn btn-ghost" href="/cabinet">
+                {t('bizSignIn')}
+              </Link>
+            </div>
           </div>
-          <ButtonLink href="/cabinet/cards" variant="secondary" className="w-full sm:w-auto">
-            {t('cabinet.cards.create')}
-          </ButtonLink>
-        </section>
-      </div>
+          <div>
+            <Facade />
+            <p className="facade-cap">{t('bizCaption')}</p>
+          </div>
+        </div>
+      </section>
     </>
   )
 }

@@ -12,8 +12,8 @@ const LOCALES = localeConfigs
   .sort((a, b) => Number(b.code === 'ru') - Number(a.code === 'ru'))
 
 // Night header (DEMO_MAP §3.0): logo window, section links, search / bookings /
-// cabinet icons, RU/EN switch. Sticky on dusk; home turns it transparent over
-// the hero (added with the home page).
+// cabinet icons, RU/EN switch. Sticky on dusk; on home it is transparent and
+// sits over the hero's city.
 export default function Header() {
   const t = useTranslations()
   const locale = useLocale()
@@ -22,7 +22,7 @@ export default function Header() {
   const current = (s: string) => (section === s ? 'page' : undefined)
 
   return (
-    <header className="top">
+    <header className={section === 'home' ? 'top is-home' : 'top'}>
       <div className="wrap nav">
         <Link href="/" className="logo" aria-label={`${t('common.appName')} — ${t('nav.home')}`}>
           <span className="logo-win" aria-hidden="true" />
