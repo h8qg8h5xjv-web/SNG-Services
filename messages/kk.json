@@ -817,5 +817,16 @@
     "addPhotos": "Add photos",
     "from": "from",
     "to": "to"
+  },
+  "forBusiness2": {
+    "stepsTitle": "How to get listed",
+    "s1h": "Send a request",
+    "s1p": "Your name, a phone or email and a few words about what you do.",
+    "s2h": "We get in touch",
+    "s2p": "We call you and check which languages you work in.",
+    "s3h": "Your card goes live",
+    "s3p": "We publish your card, and client requests arrive in your account.",
+    "okTitle": "Request sent",
+    "again": "Send another request"
   }
 }
