@@ -775,5 +775,20 @@
     "recent": "You searched",
     "nearAll": "All areas",
     "nearAllCats": "All"
+  },
+  "events2": {
+    "all": "All",
+    "whenNav": "When",
+    "count": "{n, plural, one {# event} other {# events}}",
+    "details": "Details",
+    "crumbs": "What’s on",
+    "howToGet": "How to get there",
+    "more": "More on",
+    "entry": "Entry",
+    "priceFrom": "from {price}",
+    "ticketsNote": "Tickets are sold by the organiser.",
+    "goingTitle": "Who’s going",
+    "openMap": "Open in the map",
+    "goToGoing": "I’m going"
   }
 }

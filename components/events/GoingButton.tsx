@@ -70,24 +70,28 @@ export default function GoingButton({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="going">
       <Attendance data={initial} />
       {going ? (
-        <div className="flex items-center gap-3">
-          <span className="text-body font-semibold text-green-700">{t('youAreGoing')}</span>
-          <Button variant="secondary" onClick={leave} disabled={busy}>
+        <div className="going-row items-center">
+          <span className="status taken">
+            <i aria-hidden="true" />
+            {t('youAreGoing')}
+          </span>
+          <Button variant="line" size="sm" onClick={leave} disabled={busy}>
             {t('notGoing')}
           </Button>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="going-row">
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('goingNamePlaceholder')}
-            className="w-48"
+            aria-label={t('goingNamePlaceholder')}
+            autoComplete="given-name"
           />
-          <Button onClick={join} disabled={busy}>
+          <Button variant="ink" onClick={join} disabled={busy}>
             {t('imGoing')}
           </Button>
         </div>

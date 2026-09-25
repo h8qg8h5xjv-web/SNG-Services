@@ -775,5 +775,20 @@
     "recent": "Вы искали",
     "nearAll": "Все районы",
     "nearAllCats": "Все"
+  },
+  "events2": {
+    "all": "Все",
+    "whenNav": "Когда",
+    "count": "{n, plural, one {# событие} few {# события} other {# событий}}",
+    "details": "Подробнее",
+    "crumbs": "Афиша",
+    "howToGet": "Как добраться",
+    "more": "Ещё в афише",
+    "entry": "Вход",
+    "priceFrom": "от {price}",
+    "ticketsNote": "Билеты продаёт организатор.",
+    "goingTitle": "Кто идёт",
+    "openMap": "Открыть на карте",
+    "goToGoing": "Иду"
   }
 }

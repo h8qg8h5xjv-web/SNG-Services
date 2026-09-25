@@ -24,7 +24,7 @@ import OpeningHours from '@/components/site/OpeningHours'
 import RecordRecentView from '@/components/RecordRecentView'
 import ContactButtons from '@/components/ContactButtons'
 import AddressMap from '@/components/map/AddressMap'
-import EventCard from '@/components/EventCard'
+import EventRow from '@/components/events/EventRow'
 import JsonLd from '@/components/JsonLd'
 import ListingWeek from '@/components/booking/ListingWeek'
 import {
@@ -345,11 +345,11 @@ export default async function ProviderPage({
               <h2 id="ev-h" className="h3">
                 {t('events.upcoming')}
               </h2>
-              <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2">
+              <ul className="evlist">
                 {organizerEvents.map((event) => (
-                  <EventCard key={event.id} event={event} locale={locale} />
+                  <EventRow key={event.id} event={event} locale={locale} />
                 ))}
-              </div>
+              </ul>
             </section>
           )}
 

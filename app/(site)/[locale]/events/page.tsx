@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { IconCalendarEvent } from '@tabler/icons-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import EventCard from '@/components/EventCard'
-import { FilterChipLink } from '@/components/ui/FilterChip'
-import { ButtonLink } from '@/components/ui/Button'
+import { Link } from '@/i18n/navigation'
+import NightHeader from '@/components/site/NightHeader'
+import EventRow from '@/components/events/EventRow'
+import FlipList from '@/components/catalog/FlipList'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { listUpcomingEvents } from '@/lib/queries/events'
 import { getEventsAttendance } from '@/lib/events/attendance'
@@ -44,54 +44,62 @@ export default async function EventsPage({
   const allGroups = groupEvents(events, new Date())
   const groups = when ? allGroups.filter((g) => g.key === when) : allGroups
 
+  const shown = groups.reduce((n, g) => n + g.events.length, 0)
+
   return (
     <>
-      <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <div className="pt-6">
-          <h1 className="text-title font-extrabold tracking-tight">{t('events.title')}</h1>
-          <p className="mt-2 text-slate-500">{t('events.subtitle')}</p>
-        </div>
+      <NightHeader>
+        <h1 className="ph1">{t('events.title')}</h1>
+        <p className="sub">{t('events.subtitle')}</p>
+        <nav className="catnav" aria-label={t('events2.whenNav')}>
+          <Link href="/events" className="chip" aria-current={when === '' ? 'page' : undefined} scroll={false}>
+            {t('events2.all')}
+          </Link>
+          {DATE_CHIPS.map((key) => (
+            <Link
+              key={key}
+              href={when === key ? '/events' : `/events?when=${key}`}
+              className="chip"
+              aria-current={when === key ? 'page' : undefined}
+              scroll={false}
+            >
+              {t(`events.${key}`)}
+            </Link>
+          ))}
+        </nav>
+      </NightHeader>
 
-        {/* Sticky date filters. top-16 is off-scale on purpose — it clears the
-            sticky site header (~64px; interface physics, DESIGN-SYSTEM §4). */}
-        <div className="sticky top-16 z-10 -mx-4 mt-4 mb-6 border-b border-slate-200 bg-white px-4 py-3">
-          <div className="-mx-1 flex gap-2 overflow-x-auto px-1">
-            {DATE_CHIPS.map((key) => (
-              <FilterChipLink
-                key={key}
-                active={when === key}
-                href={when === key ? '/events' : `/events?when=${key}`}
-              >
-                {t(`events.${key}`)}
-              </FilterChipLink>
-            ))}
-          </div>
-        </div>
-
+      <div className="wrap page">
         {groups.length === 0 ? (
           <EmptyState
-            icon={IconCalendarEvent}
-            text={t('events.emptyDay')}
-            action={<ButtonLink href="/events">{t('events.seeAll')}</ButtonLink>}
+            className="mt-10"
+            mark="—"
+            title={t('events.emptyDay')}
+            text={t('events.empty')}
+            action={
+              <Link href="/events" className="btn btn-ink">
+                {t('events.seeAll')}
+              </Link>
+            }
           />
         ) : (
-          <div className="space-y-8">
+          <>
+            <div className="res-head mt-6">
+              <h2 className="res-count" aria-live="polite">
+                {t('events2.count', { n: shown })}
+              </h2>
+            </div>
             {groups.map((group) => (
-              <section key={group.key}>
-                <h2 className="mb-4 text-h2 font-semibold">{t(`events.${group.key}`)}</h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <section key={group.key} className="ev-group" aria-labelledby={`evg-${group.key}`}>
+                <h2 id={`evg-${group.key}`}>{t(`events.${group.key}`)}</h2>
+                <FlipList className="evlist">
                   {group.events.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      event={event}
-                      locale={locale}
-                      attendance={attendance.get(event.id)}
-                    />
+                    <EventRow key={event.id} event={event} locale={locale} attendance={attendance.get(event.id)} />
                   ))}
-                </div>
+                </FlipList>
               </section>
             ))}
-          </div>
+          </>
         )}
       </div>
     </>
