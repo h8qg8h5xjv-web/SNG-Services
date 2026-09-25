@@ -87,7 +87,6 @@
       "todaySubFiltered": "Free slots that match, earliest first.",
       "prev": "Previous",
       "next": "Next",
-      "slotLabel": "{name}, {service}, {time}, {price}",
       "emptyTitle": "No free slots for this today.",
       "emptyText": "Post a request and specialists will reply themselves.",
       "emptyNone": "No free slots left today. Post a request, or look at tomorrow in the catalogue.",
@@ -828,5 +827,15 @@
     "s3p": "We publish your card, and client requests arrive in your account.",
     "okTitle": "Request sent",
     "again": "Send another request"
+  },
+  "notFound": {
+    "title": "No window here",
+    "body": "This page doesn’t exist or the link is out of date. Start from the home page or browse the catalogue.",
+    "home": "Home",
+    "catalog": "Catalogue"
+  },
+  "legal2": {
+    "toc": "Contents",
+    "seeAlso": "See also"
   }
 }

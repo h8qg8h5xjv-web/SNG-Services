@@ -1,5 +1,6 @@
-/* LEGACY — the pre-v2 blue system. Only pages not yet ported to v2 use these
-   classes; every block goes as its last user is ported. Nothing new here. */
+/* ADMIN ONLY — what is left of the pre-v2 blue system, kept for /admin, which
+   is outside the v2 redesign. The public site may not use these (check:styles
+   fails on them outside the admin). */
 
 /* Screen titles: 800 + tight tracking (DESIGN-SYSTEM §1). */
 .text-title { letter-spacing: -0.02em; }

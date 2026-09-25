@@ -10,7 +10,8 @@
 @import "./styles/events.css";
 @import "./styles/cabinet.css";
 @import "./styles/business.css";
-@import "./styles/legacy.css";
+@import "./styles/legal.css";
+@import "./styles/admin.css";
 
 /* Design system v2 «окно» (DESIGN-SYSTEM.md). Night = dusk, day = paper, one
    accent: lamp amber, and only for free slots, primary actions and focus.
@@ -54,7 +55,7 @@
   --color-ok: #1F7A4D;
   --color-ok-soft: #E7F3EC;
 
-  /* LEGACY (pre-v2 pages until they are ported). */
+  /* ADMIN ONLY: the pre-v2 tokens /admin still uses (see app/styles/admin.css). */
   --color-accent: var(--color-blue-800);
   --color-accent-soft: var(--color-blue-50);
   --text-title: 1.375rem;

@@ -454,7 +454,6 @@ export default function HomeLive({
                     href={windowHref(w)}
                     className="slot"
                     data-id={w.id}
-                    aria-label={t('slotLabel', { name: w.name, service: w.serviceName, time, price })}
                   >
                     <Pane time={time} />
                     <span className="slot-name">{w.name}</span>

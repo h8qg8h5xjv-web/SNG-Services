@@ -106,8 +106,9 @@
     line-height: 1.04;
     letter-spacing: -.035em;
     overflow-wrap: break-word;
-    hyphens: auto;
-    -webkit-hyphens: auto;
+  }
+  @media (max-width: 720px) {
+    .ph1 { hyphens: auto; -webkit-hyphens: auto; }
   }
   .h2 {
     font-family: var(--display);

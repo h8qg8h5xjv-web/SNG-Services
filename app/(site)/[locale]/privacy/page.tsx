@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import BackButton from '@/components/BackButton'
+import { Link } from '@/i18n/navigation'
+import NightHeader from '@/components/site/NightHeader'
+import LegalDoc from '@/components/site/LegalDoc'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,32 +24,43 @@ export default async function PrivacyPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('privacy')
+  const tl = await getTranslations('legal2')
+  const to = await getTranslations('terms')
 
-  const sections: [string, string][] = [
-    [t('collectTitle'), t('collectBody')],
-    [t('retentionTitle'), t('retentionBody')],
-    [t('shareTitle'), t('shareBody')],
-    [t('rightsTitle'), t('rightsBody')],
-    [t('deleteTitle'), t('deleteBody')],
-  ]
+  const sections = (
+    [
+      ['collect', t('collectTitle'), t('collectBody')],
+      ['retention', t('retentionTitle'), t('retentionBody')],
+      ['share', t('shareTitle'), t('shareBody')],
+      ['rights', t('rightsTitle'), t('rightsBody')],
+      ['delete', t('deleteTitle'), t('deleteBody')],
+    ] as const
+  ).map(([id, title, body]) => ({ id, title, body }))
 
   return (
     <>
-      <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
-        <BackButton />
-        <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
-        <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-meta text-amber-900">
-          {t('draftNote')}
-        </p>
-        <p className="mt-4 text-body text-slate-500">{t('operator')}</p>
-        <div className="mt-6 space-y-6">
-          {sections.map(([title, body]) => (
-            <section key={title}>
-              <h2 className="text-h2 font-semibold">{title}</h2>
-              <p className="mt-1 text-body text-slate-600">{body}</p>
-            </section>
-          ))}
-        </div>
+      <NightHeader>
+        <h1 className="ph1">{t('title')}</h1>
+      </NightHeader>
+      <div className="wrap page">
+        <LegalDoc
+          sections={sections}
+          tocLabel={tl('toc')}
+          intro={
+            <>
+              <p className="notice">{t('draftNote')}</p>
+              <p className="muted">{t('operator')}</p>
+            </>
+          }
+          outro={
+            <p className="also">
+              {tl('seeAlso')}:{' '}
+              <Link href="/terms" className="link">
+                {to('title')}
+              </Link>
+            </p>
+          }
+        />
       </div>
     </>
   )

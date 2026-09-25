@@ -117,7 +117,7 @@ export default function HowItWorks() {
             {step === 0 && (
               <>
                 <div {...line('meta', true, 1)}>{t('home.v2.chatSeen')}</div>
-                <div {...line('typing', true, 2)} aria-label={t('home.v2.chatTyping')}>
+                <div {...line('typing', true, 2)} role="img" aria-label={t('home.v2.chatTyping')}>
                   <i />
                   <i />
                   <i />

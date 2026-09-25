@@ -12,6 +12,7 @@ export function EmptyState({
   action,
   night = false,
   className = '',
+  headingLevel = 2,
 }: {
   icon?: Icon
   mark?: string
@@ -20,7 +21,10 @@ export function EmptyState({
   action?: ReactNode
   night?: boolean
   className?: string
+  // 1 when the empty state is the whole page (it then carries the page's h1).
+  headingLevel?: 1 | 2
 }) {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2'
   if (night) {
     return (
       <div className={`empty-night ${className}`}>
@@ -33,7 +37,7 @@ export function EmptyState({
   return (
     <div className={`empty ${className}`}>
       <Pane off time={IconCmp ? <IconCmp stroke={1.75} aria-hidden="true" /> : (mark ?? '—')} />
-      {title ? <h2>{title}</h2> : null}
+      {title ? <Heading className={headingLevel === 1 ? 'h2' : undefined}>{title}</Heading> : null}
       <p>{text}</p>
       {action && <div className="acts">{action}</div>}
     </div>

@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header className={section === 'home' ? 'top is-home' : 'top'}>
       <div className="wrap nav">
-        <Link href="/" className="logo" aria-label={`${t('common.appName')} — ${t('nav.home')}`}>
+        <Link href="/" className="logo" aria-label={`SNG ${t('common.city')} — ${t('nav.home')}`}>
           <span className="logo-win" aria-hidden="true" />
           SNG <small>{t('common.city')}</small>
         </Link>

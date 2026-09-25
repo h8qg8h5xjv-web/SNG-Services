@@ -49,7 +49,7 @@ export default async function RequestFindPage({
           <span aria-hidden="true">/</span>
           <span aria-current="page">{t('chooseCategory')}</span>
         </nav>
-        <EmptyState mark="?" title={t('chooseCategory')} text={t('notRecognised', { query: q })} />
+        <EmptyState mark="?" headingLevel={1} title={t('chooseCategory')} text={t('notRecognised', { query: q })} />
         <div className="dchips mt-8">
           {categories.map((c) => (
             <Link key={c.slug} href={`/request?category=${c.slug}`} className="dchip">
