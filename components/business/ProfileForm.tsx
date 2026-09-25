@@ -3,9 +3,10 @@
 import { useState, useTransition } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { IconPhoto, IconX, IconStar, IconHome, IconHomeFilled } from '@tabler/icons-react'
+import { IconPhoto, IconX, IconStar, IconHome, IconUpload } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
-import { Input, Textarea } from '@/components/ui/Input'
+import { Input, Textarea, Field } from '@/components/ui/Input'
+import { FilterChip } from '@/components/ui/FilterChip'
 import { saveCabinetProfile, uploadCabinetPhoto } from '@/lib/business/actions'
 import { resolveImageUrl } from '@/lib/images'
 import type { CabinetProfile } from '@/lib/business/data'
@@ -14,6 +15,7 @@ const MAX_PHOTOS = 6
 
 export default function ProfileForm({ profile }: { profile: CabinetProfile }) {
   const t = useTranslations('business.profile')
+  const tc = useTranslations('cabinet2')
   const [descriptionRu, setDescriptionRu] = useState(profile.descriptionRu ?? '')
   const [descriptionEn, setDescriptionEn] = useState(profile.descriptionEn ?? '')
   const [borough, setBorough] = useState(profile.borough)
@@ -77,104 +79,88 @@ export default function ProfileForm({ profile }: { profile: CabinetProfile }) {
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <label className="mb-1 block text-body text-slate-500">{t('descriptionRu')}</label>
-        <Textarea value={descriptionRu} onChange={(e) => setDescriptionRu(e.target.value)} rows={3} className="w-full" />
-      </div>
-      <div>
-        <label className="mb-1 block text-body text-slate-500">{t('descriptionEn')}</label>
-        <Textarea value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} rows={3} className="w-full" />
-      </div>
+    <div className="grid gap-5">
+      <Field id="pf-desc-ru" label={t('descriptionRu')}>
+        <Textarea id="pf-desc-ru" value={descriptionRu} onChange={(e) => setDescriptionRu(e.target.value)} rows={3} />
+      </Field>
+      <Field id="pf-desc-en" label={t('descriptionEn')}>
+        <Textarea id="pf-desc-en" value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} rows={3} />
+      </Field>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('borough')}</label>
-          <Input value={borough} onChange={(e) => setBorough(e.target.value)} className="w-full" />
-        </div>
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('address')}</label>
-          <Input value={address} onChange={(e) => setAddress(e.target.value)} className="w-full" />
-        </div>
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('phone')}</label>
-          <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
-        </div>
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('website')}</label>
-          <Input value={website} onChange={(e) => setWebsite(e.target.value)} className="w-full" />
-        </div>
+      <div className="ed-grid">
+        <Field id="pf-borough" label={t('borough')}>
+          <Input id="pf-borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
+        </Field>
+        <Field id="pf-address" label={t('address')}>
+          <Input id="pf-address" value={address} onChange={(e) => setAddress(e.target.value)} autoComplete="street-address" />
+        </Field>
+        <Field id="pf-phone" label={t('phone')}>
+          <Input id="pf-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />
+        </Field>
+        <Field id="pf-website" label={t('website')}>
+          <Input id="pf-website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} autoComplete="url" />
+        </Field>
       </div>
 
-      {/* 3D toggle (§Эффекты): raised → pressed, icon outline→fill. */}
-      <button
-        type="button"
-        onClick={() => setTravels((v) => !v)}
-        aria-pressed={travels}
-        className={`toggle-3d inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-meta font-semibold ${
-          travels ? 'text-accent' : 'text-slate-700'
-        }`}
-      >
-        {travels ? (
-          <IconHomeFilled className="h-5 w-5" />
-        ) : (
-          <IconHome className="h-5 w-5" stroke={2} />
-        )}
-        {t('travels')}
-      </button>
-
       <div>
-        <label className="mb-1 block text-body text-slate-500">{t('photos', { max: MAX_PHOTOS })}</label>
+        <FilterChip active={travels} onClick={() => setTravels((v) => !v)}>
+          <IconHome stroke={1.75} aria-hidden="true" />
+          {t('travels')}
+        </FilterChip>
+      </div>
+
+      <div className="field">
+        <span className="lbl">{t('photos', { max: MAX_PHOTOS })}</span>
         {photos.length > 0 && (
-          <div className="mb-2 flex flex-wrap gap-2">
+          <div className="photo-grid">
             {photos.map((p, i) => (
-              <div key={p} className="relative">
-                <div className="relative h-24 w-24 overflow-hidden rounded-photo bg-slate-100">
-                  {resolveImageUrl(p) ? (
-                    <Image src={resolveImageUrl(p)!} alt="" fill sizes="96px" className="object-cover" />
-                  ) : (
-                    <span className="flex h-full w-full items-center justify-center text-slate-400">
-                      <IconPhoto className="h-6 w-6" stroke={1.5} />
-                    </span>
-                  )}
-                </div>
-                {i === 0 ? (
-                  <span className="absolute left-1 top-1 rounded-full bg-slate-900 px-1.5 py-0.5 text-label font-semibold text-white">
-                    {t('cover')}
-                  </span>
+              <div key={p} className="ph">
+                {resolveImageUrl(p) ? (
+                  <Image src={resolveImageUrl(p)!} alt="" fill sizes="104px" className="object-cover" />
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => makeCover(i)}
-                    aria-label={t('makeCover')}
-                    className="absolute left-1 top-1 rounded-full bg-slate-900/70 p-1 text-white"
-                  >
-                    <IconStar className="h-4 w-4" stroke={1.5} />
+                  <span className="grid h-full place-items-center text-mute">
+                    <IconPhoto stroke={1.5} aria-hidden="true" />
+                  </span>
+                )}
+                {i === 0 ? (
+                  <span className="tag">{t('cover')}</span>
+                ) : (
+                  <button type="button" onClick={() => makeCover(i)} aria-label={t('makeCover')} className="b-l">
+                    <IconStar stroke={1.75} aria-hidden="true" />
                   </button>
                 )}
-                <button
-                  type="button"
-                  onClick={() => removePhoto(i)}
-                  aria-label={t('removePhoto')}
-                  className="absolute right-1 top-1 rounded-full bg-slate-900/70 p-1 text-white"
-                >
-                  <IconX className="h-4 w-4" stroke={1.5} />
+                <button type="button" onClick={() => removePhoto(i)} aria-label={t('removePhoto')} className="b-r">
+                  <IconX stroke={1.75} aria-hidden="true" />
                 </button>
               </div>
             ))}
           </div>
         )}
         {photos.length < MAX_PHOTOS && (
-          <input type="file" accept="image/*" multiple onChange={onPhotos} disabled={uploading} className="block text-body" />
+          <div>
+            <label className={`btn btn-line btn-sm file-btn ${uploading ? 'is-busy' : ''}`}>
+              <IconUpload stroke={1.75} aria-hidden="true" />
+              {tc('addPhotos')}
+              <input type="file" accept="image/*" multiple onChange={onPhotos} disabled={uploading} className="sr-only" />
+            </label>
+          </div>
         )}
       </div>
 
-      <div className="flex items-center gap-3">
-        <Button onClick={save} disabled={pending || uploading}>
+      <div className="ed-acts">
+        <Button variant="ink" onClick={save} disabled={pending || uploading}>
           {pending ? t('saving') : t('save')}
         </Button>
-        {saved && <span className="text-meta text-green-700">{t('saved')}</span>}
-        {error && <span className="text-meta text-red-700">{error}</span>}
+        {saved && (
+          <span className="msg-ok" role="status">
+            {t('saved')}
+          </span>
+        )}
+        {error && (
+          <span className="msg-err-inline" role="alert">
+            {error}
+          </span>
+        )}
       </div>
     </div>
   )

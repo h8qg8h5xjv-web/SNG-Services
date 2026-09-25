@@ -2,20 +2,26 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { IconCalendarEvent } from '@tabler/icons-react'
+import { Link } from '@/i18n/navigation'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ButtonLink } from '@/components/ui/Button'
+import { Pane } from '@/components/ui/Pane'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { getSavedRequests } from '@/lib/requests/local-store'
 import { getGuestRequestState } from '@/lib/requests/guest'
 import { dateTimeFormat } from '@/lib/intl'
 import { formatPrice } from '@/lib/format'
 
-type Booking = { ref: string; providerName: string; startsAt: string | null; pricePence: number | null }
+type Booking = { ref: string; token: string; providerName: string; startsAt: string | null; pricePence: number | null }
+
+const TZ = 'Europe/London'
 
 // "My bookings": confirmed/matched requests with a scheduled time. Upcoming first,
-// past below. Reads the same guest tokens as My requests (client-only).
+// past below. Reads the same guest tokens as My requests (client-only). Each
+// booking is a dark window — the slot is taken, by you.
 export default function MyBookings() {
   const t = useTranslations('profile')
+  const tc = useTranslations('cabinet2')
   const locale = useLocale()
   const [split, setSplit] = useState<{ upcoming: Booking[]; past: Booking[] } | null>(null)
 
@@ -27,7 +33,7 @@ export default function MyBookings() {
       for (const s of saved) {
         const st = await getGuestRequestState(s.ref, s.token)
         if (st && (st.status === 'confirmed' || st.status === 'matched') && st.match) {
-          out.push({ ref: s.ref, providerName: st.match.providerName, startsAt: st.match.startsAt, pricePence: st.match.pricePence })
+          out.push({ ref: s.ref, token: s.token, providerName: st.match.providerName, startsAt: st.match.startsAt, pricePence: st.match.pricePence })
         }
       }
       const now = Date.now()
@@ -41,59 +47,87 @@ export default function MyBookings() {
   }, [])
 
   if (split === null) {
-    // Skeleton in the shape of the rows — no spinner, no "Loading" text (§5).
     return (
-      <div className="space-y-2">
+      <ul className="bl" aria-hidden="true">
         {[0, 1].map((i) => (
-          <div key={i} className="rounded-card border border-slate-200 bg-white p-3">
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="mt-2 h-3 w-1/3" />
-          </div>
+          <li key={i} className="card bitem">
+            <Pane off />
+            <div>
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="mt-2 h-3 w-1/3" />
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
     )
   }
   const { upcoming, past } = split
   if (upcoming.length === 0 && past.length === 0)
-    return <EmptyState icon={IconCalendarEvent} text={t('bookingsEmpty')} />
+    return (
+      <EmptyState
+        mark="—"
+        title={tc('emptyBookings')}
+        text={tc('emptyBookingsText')}
+        action={
+          <>
+            <ButtonLink href="/request/find" variant="amber">
+              {tc('describeTask')}
+            </ButtonLink>
+            <ButtonLink href="/" variant="line">
+              {tc('seeSlots')}
+            </ButtonLink>
+          </>
+        }
+      />
+    )
 
-  const dtf = dateTimeFormat(locale, {
-    timeZone: 'Europe/London',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  const time = dateTimeFormat(locale, { timeZone: TZ, hour: '2-digit', minute: '2-digit' })
+  const day = dateTimeFormat(locale, { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short' })
 
-  const renderList = (items: Booking[]) => (
-    <div className="space-y-2">
-      {items.map((b) => (
-        <div key={b.ref} className="rounded-lg border border-slate-200 p-3">
-          <p className="text-body font-semibold">{b.providerName}</p>
-          <p className="text-meta text-slate-500">
-            {[b.startsAt ? dtf.format(new Date(b.startsAt)) : null, b.pricePence != null ? formatPrice(b.pricePence) : null]
-              .filter(Boolean)
-              .join(' · ')}
-          </p>
-        </div>
-      ))}
-    </div>
+  const renderList = (items: Booking[], isPast: boolean) => (
+    <ul className="bl">
+      {items.map((b) => {
+        const start = b.startsAt ? new Date(b.startsAt) : null
+        return (
+          <li key={b.ref} className={`card bitem ${isPast ? 'past' : ''}`}>
+            <Pane off time={start ? time.format(start) : '—'} />
+            <div>
+              <b>{b.providerName}</b>
+              <span className="muted">
+                {[start ? day.format(start) : null, b.pricePence != null ? formatPrice(b.pricePence) : null, tc('viaRequest')]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </span>
+            </div>
+            <div className="acts">
+              <ButtonLink href={`/requests/${b.ref}?token=${b.token}`} variant="line" size="sm">
+                {tc('open')}
+              </ButtonLink>
+            </div>
+          </li>
+        )
+      })}
+    </ul>
   )
 
   return (
-    <div className="space-y-4">
-      {upcoming.length > 0 && (
-        <div>
-          <h3 className="mb-2 text-h2 font-semibold">{t('upcoming')}</h3>
-          {renderList(upcoming)}
-        </div>
+    <div>
+      <h3 className="bl-h">{t('upcoming')}</h3>
+      {upcoming.length > 0 ? (
+        renderList(upcoming, false)
+      ) : (
+        <p className="muted">
+          {tc('noUpcoming')}{' '}
+          <Link href="/request/find" className="link">
+            {tc('describeTask')}
+          </Link>
+        </p>
       )}
       {past.length > 0 && (
-        <div>
-          <h3 className="mb-2 text-h2 font-semibold text-slate-500">{t('past')}</h3>
-          {renderList(past)}
-        </div>
+        <>
+          <h3 className="bl-h">{t('past')}</h3>
+          {renderList(past, true)}
+        </>
       )}
     </div>
   )

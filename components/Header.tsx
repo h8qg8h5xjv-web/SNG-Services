@@ -1,38 +1,82 @@
-import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/navigation'
-import LanguageSwitcher from './LanguageSwitcher'
-import SearchBar from './SearchBar'
+'use client'
 
-// DESIGN-SYSTEM §2: dark ink bar. Mobile 52px — wordmark + language. Desktop 56px
-// — wordmark, centered search, catalog/afisha/cabinet links, language.
+import { useLocale, useTranslations } from 'next-intl'
+import { IconSearch, IconCalendarEvent, IconUser } from '@tabler/icons-react'
+import { Link, usePathname } from '@/i18n/navigation'
+import { localeConfigs } from '@/i18n/locales'
+import { navSection } from '@/lib/nav/section'
+
+// RU first: the audience reads Russian first (demo order).
+const LOCALES = localeConfigs
+  .filter((l) => l.enabled)
+  .sort((a, b) => Number(b.code === 'ru') - Number(a.code === 'ru'))
+
+// Night header (DEMO_MAP §3.0): logo window, section links, search / bookings /
+// cabinet icons, RU/EN switch. Sticky on dusk; on home it is transparent and
+// sits over the hero's city.
 export default function Header() {
   const t = useTranslations()
+  const locale = useLocale()
+  const pathname = usePathname()
+  const section = navSection(pathname)
+  const current = (s: string) => (section === s ? 'page' : undefined)
 
   return (
-    <header className="sticky top-0 z-20 bg-ink text-white">
-      <div className="mx-auto flex h-13 max-w-page items-center justify-between gap-4 px-3.5 sm:h-14 sm:px-6">
-        <Link href="/" className="flex items-baseline gap-2">
-          <span className="text-h2 font-extrabold tracking-tight text-white">SNG</span>
-          <span className="hidden text-meta text-blue-200 sm:inline">{t('common.city')}</span>
+    <header className={section === 'home' ? 'top is-home' : 'top'}>
+      <div className="wrap nav">
+        <Link href="/" className="logo" aria-label={`SNG ${t('common.city')} — ${t('nav.home')}`}>
+          <span className="logo-win" aria-hidden="true" />
+          SNG <small>{t('common.city')}</small>
         </Link>
 
-        <div className="hidden flex-1 justify-center sm:flex">
-          <SearchBar />
-        </div>
-
-        <nav className="hidden items-center gap-5 text-body sm:flex">
-          <Link href="/" className="text-blue-100 transition-colors hover:text-white">
+        <nav className="nav-links" aria-label={t('nav.mainMenu')}>
+          <Link href="/catalog" aria-current={current('catalog')}>
             {t('nav.catalog')}
           </Link>
-          <Link href="/events" className="text-blue-100 transition-colors hover:text-white">
+          <Link href="/near" className="opt-link" aria-current={current('near')}>
+            {t('nav.near')}
+          </Link>
+          <Link href="/events" aria-current={current('events')}>
             {t('nav.events')}
           </Link>
-          <Link href="/cabinet" className="text-blue-100 transition-colors hover:text-white">
-            {t('nav.cabinet')}
+          <Link href="/for-business" aria-current={current('business')}>
+            {t('footer.forBusiness')}
           </Link>
         </nav>
 
-        <LanguageSwitcher />
+        <div className="nav-right">
+          <Link href="/search" className="icon-btn" aria-label={t('nav.search')} aria-current={current('search')}>
+            <IconSearch stroke={1.75} aria-hidden="true" />
+          </Link>
+          <Link
+            href="/cabinet/bookings"
+            className="icon-btn desk"
+            aria-label={t('nav.bookings')}
+          >
+            <IconCalendarEvent stroke={1.75} aria-hidden="true" />
+          </Link>
+          <Link href="/cabinet" className="icon-btn desk" aria-label={t('nav.cabinet')} aria-current={current('cabinet')}>
+            <IconUser stroke={1.75} aria-hidden="true" />
+          </Link>
+          {LOCALES.length > 1 && (
+            <nav className="lang" aria-label={t('language.change')}>
+              {LOCALES.map((l) => (
+                <Link
+                  key={l.code}
+                  href={pathname}
+                  locale={l.code}
+                  scroll={false}
+                  data-lang=""
+                  hrefLang={l.code}
+                  lang={l.code}
+                  aria-current={l.code === locale ? 'true' : undefined}
+                >
+                  {l.code.toUpperCase()}
+                </Link>
+              ))}
+            </nav>
+          )}
+        </div>
       </div>
     </header>
   )

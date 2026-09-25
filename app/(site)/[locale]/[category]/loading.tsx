@@ -1,17 +1,19 @@
-import Header from '@/components/Header'
-import { Skeleton, ProviderGridSkeleton } from '@/components/ui/Skeleton'
+import { ProviderGridSkeleton, Skeleton } from '@/components/ui/Skeleton'
 
-export default function CategoryLoading() {
+// Night header strip + grey result rows while the page streams in.
+export default function Loading() {
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <div className="space-y-2 py-6">
-          <Skeleton className="h-8 w-40" />
-          <Skeleton className="h-4 w-24" />
+      <div className="nhead night">
+        <div className="wrap">
+          <Skeleton dark className="h-4 w-40" />
+          <Skeleton dark className="mt-5 h-12 w-72 max-w-full" />
+          <Skeleton dark className="mt-4 h-4 w-96 max-w-full" />
         </div>
-        <ProviderGridSkeleton />
-      </main>
+      </div>
+      <div className="wrap page pt-8">
+        <ProviderGridSkeleton count={4} />
+      </div>
     </>
   )
 }

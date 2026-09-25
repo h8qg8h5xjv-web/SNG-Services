@@ -4,14 +4,14 @@ import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
-import ProviderCard from '@/components/ProviderCard'
+import BusinessRow from '@/components/catalog/BusinessRow'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 import { toMapPoints } from '@/lib/maps/points'
 
 // The map (and maplibre-gl) loads only when «Карта» is selected (§5).
 const ProvidersMap = dynamic(() => import('@/components/map/ProvidersMap'), {
   ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse bg-slate-100" />,
+  loading: () => <div className="skel h-full w-full" />,
 })
 
 // The category «Карта» view: the same providers as the list, on one map with the
@@ -25,7 +25,7 @@ export default function CategoryMapView({ cards }: { cards: ProviderCardVM[] }) 
   const selectedCard = selectedId ? cardById.get(selectedId) ?? null : null
 
   return (
-    <div className="category-map">
+    <div className="map-lg">
       <ProvidersMap
         points={points}
         selectedId={selectedId}
@@ -35,9 +35,9 @@ export default function CategoryMapView({ cards }: { cards: ProviderCardVM[] }) 
         locateLabel={t('locate')}
       />
       {selectedCard && (
-        <div className="near-selected">
-          <ProviderCard card={selectedCard} surface="category" />
-        </div>
+        <ul className="results near-selected">
+          <BusinessRow card={selectedCard} surface="category" />
+        </ul>
       )}
     </div>
   )

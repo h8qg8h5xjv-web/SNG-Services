@@ -1,7 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconHeart, IconChevronRight } from '@tabler/icons-react'
-import { Link } from '@/i18n/navigation'
-import { SectionHeading } from '@/components/ui/Section'
+import { IconHeart, IconBriefcase } from '@tabler/icons-react'
+import { ButtonLink } from '@/components/ui/Button'
 import { getAccount } from '@/lib/cabinet/data'
 import AccountPanel from '@/components/cabinet/AccountPanel'
 import DataControls from '@/components/profile/DataControls'
@@ -18,37 +17,36 @@ export default async function CabinetAccountPage({
   const t = await getTranslations()
   const account = await getAccount()
 
-  const savedLink = (
-    <Link
-      href="/saved"
-      className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 transition-colors hover:border-accent"
-    >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-        <IconHeart className="h-5 w-5" stroke={2} />
-      </span>
-      <span className="flex-1 text-body font-semibold">{t('saved.title')}</span>
-      <IconChevronRight className="h-5 w-5 text-slate-400" stroke={1.5} />
-    </Link>
-  )
-
   return (
-    <div className="space-y-8">
-      <section>
-        <SectionHeading>{t('saved.title')}</SectionHeading>
-        {savedLink}
+    <div className="two">
+      <section aria-labelledby="acc-h">
+        <h2 id="acc-h" className="h3 mb-6">
+          {account ? t('cabinet.tabs.account') : t('profile.dataTitle')}
+        </h2>
+        {account ? <AccountPanel email={account.email} name={account.name} /> : <DataControls />}
       </section>
 
-      {account ? (
-        <section>
-          <SectionHeading>{t('cabinet.tabs.account')}</SectionHeading>
-          <AccountPanel email={account.email} name={account.name} />
-        </section>
-      ) : (
-        <section>
-          <SectionHeading>{t('profile.dataTitle')}</SectionHeading>
-          <DataControls />
-        </section>
-      )}
+      <aside className="aside-stack">
+        <div className="card">
+          <b className="font-semibold">{t('saved.title')}</b>
+          <p className="muted">{t('cabinet2.savedText')}</p>
+          <div>
+            <ButtonLink href="/saved" variant="line" size="sm">
+              <IconHeart stroke={1.75} aria-hidden="true" />
+              {t('saved.title')}
+            </ButtonLink>
+          </div>
+        </div>
+        <div className="card">
+          <b className="font-semibold">{t('cabinet2.areYouBusiness')}</b>
+          <div>
+            <ButtonLink href="/for-business" variant="line" size="sm">
+              <IconBriefcase stroke={1.75} aria-hidden="true" />
+              {t('cabinet2.forBusiness')}
+            </ButtonLink>
+          </div>
+        </div>
+      </aside>
     </div>
   )
 }

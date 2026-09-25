@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { SectionHeading } from '@/components/ui/Section'
 import { getAccount } from '@/lib/cabinet/data'
 import ClaimCard from '@/components/cabinet/ClaimCard'
 
@@ -21,15 +20,17 @@ export default async function CabinetClaimPage({
   const account = await getAccount()
 
   return (
-    <div>
-      <SectionHeading>{t('title')}</SectionHeading>
+    <section className="grid gap-3" aria-labelledby="claim-h">
+      <h2 id="claim-h" className="h3">
+        {t('title')}
+      </h2>
       {!token ? (
-        <p className="text-body text-red-700">{t('invalid')}</p>
+        <p className="msg-err-inline">{t('invalid')}</p>
       ) : !account ? (
-        <p className="text-body text-slate-500">{t('needLogin')}</p>
+        <p className="muted">{t('needLogin')}</p>
       ) : (
         <ClaimCard token={token} />
       )}
-    </div>
+    </section>
   )
 }

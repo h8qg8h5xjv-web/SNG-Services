@@ -1,0 +1,110 @@
+/* v2 cabinet: client tabs, bookings, requests, account; business cards,
+   editors and the inbox (DEMO_MAP §3.11, §3.13, §4 «Booking item», «Request card»). */
+
+@layer components {
+  /* ── Head and tabs ── */
+  .cab-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .tabs .n {
+    display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px;
+    border-radius: 10px; background: var(--ink); color: #fff; font-size: 12px; font-variant-numeric: tabular-nums;
+  }
+  .cab-login { padding: 22px; display: grid; gap: 10px; margin-bottom: 28px; }
+  .cab-login b { font-weight: 600; font-size: 17px; }
+  .cab-login form { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .cab-login .input { flex: 1; min-width: 14rem; }
+  .cab-sec + .cab-sec { margin-top: 44px; }
+  .cab-sec > .h3 { margin-bottom: 16px; }
+
+  /* ── Bookings list ── */
+  .bl { list-style: none; display: grid; gap: 12px; }
+  .bitem { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 14px 20px 14px 14px; }
+  .bitem .pane { height: 78px; border-radius: 50px 50px 8px 8px; }
+  .bitem .pane .time { font-size: 17px; padding: 1px 8px; border-radius: 7px; }
+  .bitem .pane::before { width: 2px; }
+  .bitem .pane::after { height: 2px; }
+  .bitem b { display: block; font-weight: 600; font-size: 17px; }
+  .bitem .muted { font-size: 15px; }
+  .bitem .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .bitem.past { opacity: .7; }
+  .bl-h { font-size: 15px; font-weight: 600; color: var(--mute); margin: 34px 0 12px; }
+  .bl-h:first-child { margin-top: 0; }
+
+  /* Plain link rows (contacted, cards, my requests). */
+  .crow { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; position: relative; }
+  .crow > div { min-width: 0; }
+  .crow b { display: block; font-weight: 600; font-size: 17px; }
+  .crow .muted { font-size: 14.5px; }
+  .crow a.cover::before { content: ""; position: absolute; inset: 0; border-radius: 16px; }
+  .crow a.cover:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .crow a.cover:focus-visible::before { outline: 2px solid var(--lamp); outline-offset: 2px; box-shadow: 0 0 0 2px var(--ink); }
+  .crow a.cover:focus-visible { outline: none; box-shadow: none; }
+  .crow > svg { width: 20px; height: 20px; color: var(--mute); flex: none; }
+
+  /* ── Inbox (business) ── */
+  .inbox { list-style: none; display: grid; gap: 12px; }
+  .req { padding: 18px 22px; display: grid; gap: 12px; }
+  .req-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .req-top b { font-weight: 600; font-size: 17px; }
+  .req-top .muted { font-size: 14px; }
+  .req .txt { font-size: 16.5px; max-width: 44em; white-space: pre-line; }
+  .req .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .req .tags .pill { font-size: 13.5px; }
+  .req .acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .req .photos { display: flex; gap: 8px; flex-wrap: wrap; }
+  .req .photos img { width: 96px; height: 96px; border-radius: 12px; object-fit: cover; }
+  .req .contact { padding: 14px 16px; border-radius: 12px; background: var(--color-ok-soft); display: grid; gap: 2px; font-size: 15.5px; }
+  .req .contact b { color: var(--ok); display: inline-flex; gap: 6px; align-items: center; }
+  .req .contact svg { width: 18px; height: 18px; }
+  .req .offer-f { display: grid; gap: 10px; max-width: 520px; }
+  .req.st-declined { opacity: .6; }
+
+  /* ── Account ── */
+  .acc-form { display: grid; gap: 22px; max-width: 560px; }
+  .acc-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .acc-row .input { flex: 1; min-width: 12rem; }
+  .aside-stack { display: grid; gap: 16px; align-content: start; }
+  .aside-stack .card { padding: 22px; display: grid; gap: 10px; }
+  .danger { border: 1.5px solid var(--color-err-line); border-radius: 16px; padding: 20px; display: grid; gap: 10px; }
+  .danger b { font-weight: 600; }
+  .msg-ok { color: var(--ok); font-size: 14.5px; font-weight: 500; }
+  .msg-err-inline { color: var(--err); font-size: 14.5px; font-weight: 500; }
+
+  /* ── Business editors ── */
+  .ed-sec { padding: 24px; display: grid; gap: 18px; }
+  .ed-sec + .ed-sec { margin-top: 16px; }
+  .ed-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .photo-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+  .photo-grid .ph { position: relative; width: 104px; height: 104px; border-radius: 12px; overflow: hidden; background: var(--paper); }
+  .photo-grid .ph .tag { position: absolute; left: 6px; top: 6px; z-index: 1; padding: 2px 8px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; }
+  .photo-grid .ph button {
+    position: absolute; top: 4px; z-index: 1; width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center; background: rgba(18, 26, 46, .72); color: #fff;
+  }
+  .photo-grid .ph button svg { width: 16px; height: 16px; }
+  .photo-grid .ph .b-l { left: 4px; }
+  .photo-grid .ph .b-r { right: 4px; }
+  .file-btn { cursor: pointer; }
+  .file-btn:focus-within { outline: 2px solid var(--lamp); outline-offset: 2px; box-shadow: 0 0 0 2px var(--ink); }
+  .file-btn.is-busy { opacity: .45; pointer-events: none; }
+  .svc-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px 110px 9.5rem 44px; gap: 10px; align-items: end; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .svc-row .field label { font-size: 14px; font-weight: 500; color: var(--mute); }
+  .lang-row, .sched-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .lang-row b { font-weight: 600; }
+  .sched-row .check { min-width: 8rem; font-weight: 600; }
+  .sched-row .times { display: flex; gap: 8px; align-items: center; }
+  .sched-row .times .input { width: 8.5rem; min-height: 44px; padding: 8px 12px; }
+  .ed-acts { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+  @media (max-width: 720px) {
+    .tabs a { padding: 12px 10px; font-size: 16px; }
+    .bitem { grid-template-columns: 72px minmax(0, 1fr); gap: 14px; }
+    .bitem .pane { height: 60px; }
+    .bitem .acts { grid-column: 1 / 3; justify-content: flex-start; }
+    .ed-grid { grid-template-columns: 1fr; }
+    .svc-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .svc-row .icon-btn { justify-self: start; }
+    .svc-row .field:first-child { grid-column: 1 / 3; }
+    .ed-sec { padding: 18px; }
+    .req { padding: 16px 18px; }
+  }
+}

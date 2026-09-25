@@ -1,0 +1,50 @@
+/* Page transitions (View Transitions API via React <ViewTransition>, DEMO_MAP §6.3).
+   components/site/NavMotion.tsx sets html[data-vt] to the navigation kind before
+   the transition starts and, for a clicked link, the arch origin (--vt-*):
+   push       a clicked link: the new page opens as an arch from the link, 300ms
+   pop        back/forward or programmatic: old fades 140ms, new fades in 180ms
+   step       same flow forward (booking steps, cabinet tabs): slide 12px
+   step-back  same flow backward: slide −12px
+   none       the RU/EN switch: swap without animation
+   Header and tab bar are named groups, so they stay put. */
+
+::view-transition { pointer-events: none; }
+::view-transition-group(*) { animation-duration: .24s; animation-timing-function: var(--ease-out); }
+
+::view-transition-old(root) { animation: vt-out .14s var(--ease-out) both; }
+::view-transition-new(root) { animation: vt-fade .18s var(--ease-out) both; }
+
+html[data-vt="none"]::view-transition-old(root),
+html[data-vt="none"]::view-transition-new(root) { animation: none; }
+
+html[data-vt="push"]::view-transition-old(root) { animation: none; }
+html[data-vt="push"]::view-transition-new(root) { animation: vt-arch .3s var(--ease-out) both; }
+
+html[data-vt="step"]::view-transition-old(root) { animation: vt-out .12s var(--ease-out) both; }
+html[data-vt="step"]::view-transition-new(root) { animation: vt-step .24s var(--ease-out) both; }
+html[data-vt="step-back"]::view-transition-old(root) { animation: vt-out .12s var(--ease-out) both; }
+html[data-vt="step-back"]::view-transition-new(root) { animation: vt-step-back .24s var(--ease-out) both; }
+
+::view-transition-group(top) { z-index: 50; }
+::view-transition-old(top) { display: none; }
+::view-transition-new(top) { animation: none; }
+::view-transition-group(tabbar) { z-index: 50; animation: none; }
+::view-transition-old(tabbar) { display: none; }
+::view-transition-new(tabbar) { animation: none; }
+
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-fade { from { opacity: 0; } }
+@keyframes vt-step { from { opacity: 0; transform: translateX(12px); } }
+@keyframes vt-step-back { from { opacity: 0; transform: translateX(-12px); } }
+@keyframes vt-arch {
+  from {
+    clip-path: inset(var(--vt-t, 45%) var(--vt-r, 45%) var(--vt-b, 45%) var(--vt-l, 45%) round var(--vt-R, 40px) var(--vt-R, 40px) 10px 10px);
+  }
+  to { clip-path: inset(0 round 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), html[data-vt]::view-transition-old(root) { animation: vt-out .15s linear both !important; }
+  ::view-transition-new(root), html[data-vt]::view-transition-new(root) { animation: vt-fade .15s linear both !important; }
+  ::view-transition-group(*) { animation-duration: .15s !important; }
+}

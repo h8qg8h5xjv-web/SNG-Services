@@ -1,0 +1,55 @@
+/* v2 For business (DEMO_MAP §3.12): night hero with the facade, three steps,
+   and the catalogue request form with its lit-window success state. */
+
+@layer components {
+  .bhero { padding: 64px 0 100px; }
+  .bhero .biz-grid { align-items: center; }
+  .bhero .ph1 { font-size: clamp(38px, 5.4vw, 76px); line-height: 1.02; }
+  .bhero .lead { margin-top: 22px; font-size: clamp(17px, 1.35vw, 20px); color: var(--color-night-soft); max-width: 30em; }
+
+  .bsteps { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px; margin-top: 40px; counter-reset: b; }
+  .bsteps li { display: grid; gap: 10px; align-content: start; }
+  .bsteps li::before {
+    counter-increment: b; content: counter(b);
+    width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--lamp);
+    display: grid; place-items: center; font-family: var(--display); font-size: 15px;
+  }
+  .bsteps b { font-size: 19px; font-weight: 600; line-height: 1.3; }
+  .bsteps p { color: var(--mute); font-size: 15.5px; }
+
+  .apply { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; align-items: start; padding: 96px 0 0; scroll-margin-top: calc(var(--hdr) + 16px); }
+  .apply > * { min-width: 0; }
+  .apply .sec-sub { max-width: 26em; }
+  .form-card { padding: clamp(20px, 3vw, 32px); }
+  .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .fgrid .full { grid-column: 1 / -1; }
+  .fgrid .acts { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  .ok-state { display: grid; justify-items: start; gap: 12px; }
+  .ok-state h2:focus { outline: none; }
+  .ok-facade { display: grid; grid-template-columns: repeat(6, 34px); gap: 8px; padding: 18px; background: var(--dusk); border-radius: 14px 14px 4px 4px; margin-bottom: 12px; }
+  .ok-facade i { display: block; height: 48px; border-radius: 17px 17px 3px 3px; background: var(--dusk-3); }
+  .ok-facade i.on { background: var(--lamp); box-shadow: 0 0 18px rgba(255, 181, 71, .6); }
+  .ok-facade i.lighting { animation: win-on .5s linear forwards; }
+  @keyframes win-on {
+    0% { background: var(--dusk-3); }
+    20% { background: var(--lamp); }
+    30% { background: var(--dusk-3); }
+    48% { background: var(--lamp); }
+    60% { background: var(--lamp-lo); }
+    100% { background: var(--lamp); box-shadow: 0 0 18px rgba(255, 181, 71, .6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ok-facade i.lighting { animation: none; background: var(--lamp); }
+  }
+
+  @media (max-width: 980px) {
+    .bsteps { grid-template-columns: 1fr; gap: 28px; }
+    .apply { grid-template-columns: 1fr; gap: 28px; padding-top: 72px; }
+    .fgrid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .bhero { padding: 40px 0 72px; }
+    .ok-facade { grid-template-columns: repeat(6, minmax(0, 34px)); }
+  }
+}

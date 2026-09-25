@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { IconTrash } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Input, Field } from '@/components/ui/Input'
 import { useRouter } from '@/i18n/navigation'
 import { saveCabinetService, deleteCabinetService } from '@/lib/business/actions'
 import type { CabinetService } from '@/lib/business/data'
@@ -18,12 +18,12 @@ export default function ServicesEditor({
 }) {
   const t = useTranslations('business.services')
   return (
-    <div className="space-y-3">
+    <div>
       {services.map((s) => (
         <ServiceRow key={s.id} providerId={providerId} service={s} />
       ))}
       <ServiceRow providerId={providerId} service={null} />
-      <p className="text-meta text-slate-500">{t('priceHint')}</p>
+      <p className="muted mt-3 text-sm">{t('priceHint')}</p>
     </div>
   )
 }
@@ -75,31 +75,36 @@ function ServiceRow({
 
   const valid = name.trim() && Number(price) >= 0 && Number(duration) > 0
 
+  const key = service?.id ?? 'new'
+
   return (
-    <div className="rounded-lg border border-slate-200 p-3">
-      <div className="flex flex-wrap items-end gap-2">
-        <label className="flex-1 text-meta text-slate-500">
-          {t('name')}
-          <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full" />
-        </label>
-        <label className="text-meta text-slate-500">
-          {t('price')}
-          <Input type="number" inputMode="decimal" min={0} value={price} onChange={(e) => setPrice(e.target.value)} className="mt-1 w-24" />
-        </label>
-        <label className="text-meta text-slate-500">
-          {t('duration')}
-          <Input type="number" inputMode="numeric" min={1} value={duration} onChange={(e) => setDuration(e.target.value)} className="mt-1 w-24" />
-        </label>
-        <Button variant="secondary" onClick={save} disabled={pending || !valid}>
+    <div>
+      <div className="svc-row">
+        <Field id={`svc-name-${key}`} label={t('name')}>
+          <Input id={`svc-name-${key}`} value={name} onChange={(e) => setName(e.target.value)} />
+        </Field>
+        <Field id={`svc-price-${key}`} label={t('price')}>
+          <Input id={`svc-price-${key}`} type="number" inputMode="decimal" min={0} value={price} onChange={(e) => setPrice(e.target.value)} />
+        </Field>
+        <Field id={`svc-dur-${key}`} label={t('duration')}>
+          <Input id={`svc-dur-${key}`} type="number" inputMode="numeric" min={1} value={duration} onChange={(e) => setDuration(e.target.value)} />
+        </Field>
+        <Button variant={service ? 'line' : 'ink'} onClick={save} disabled={pending || !valid}>
           {service ? t('save') : t('add')}
         </Button>
-        {service && (
-          <button type="button" onClick={remove} disabled={pending} aria-label={t('delete')} className="min-h-12 px-2 text-slate-400 hover:text-red-700">
-            <IconTrash className="h-5 w-5" stroke={1.5} />
+        {service ? (
+          <button type="button" onClick={remove} disabled={pending} aria-label={t('delete')} className="icon-btn">
+            <IconTrash stroke={1.75} aria-hidden="true" />
           </button>
+        ) : (
+          <span aria-hidden="true" />
         )}
       </div>
-      {error && <p className="mt-1 text-meta text-red-700">{error}</p>}
+      {error && (
+        <p className="msg-err-inline mt-1" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

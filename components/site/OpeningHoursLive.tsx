@@ -29,30 +29,24 @@ export default function OpeningHoursLive({
   }, [hours])
 
   return (
-    <section className="py-6">
-      <div className="mb-2 flex items-center gap-2">
-        <h2 className="text-h2 font-semibold">{labels.title}</h2>
+    <div>
+      <p className="hours-head">
+        <b>{labels.title}</b>
         {live && (
-          <span
-            className={`rounded-full px-2 py-1 text-meta ${
-              live.open
-                ? 'bg-green-100 text-green-700'
-                : 'bg-slate-100 text-slate-500 '
-            }`}
-          >
+          <span className={live.open ? 'status taken' : 'status declined'}>
+            <i aria-hidden="true" />
             {live.open ? labels.openNow : labels.closedNow}
           </span>
         )}
-      </div>
-      <table className="text-body">
+      </p>
+      <table className="hours">
         <tbody>
           {DAY_KEYS.map((day) => {
             const intervals = hours[day] ?? []
-            const isToday = live?.today === day
             return (
-              <tr key={day} className={isToday ? 'font-semibold' : 'text-slate-500'}>
-                <td className="py-1 pr-4 capitalize">{dayLabels[day]}</td>
-                <td className="py-1">
+              <tr key={day} className={live?.today === day ? 'is-today' : undefined}>
+                <td className="capitalize">{dayLabels[day]}</td>
+                <td>
                   {intervals.length === 0
                     ? labels.closed
                     : intervals.map((iv) => `${iv.open}–${iv.close}`).join(', ')}
@@ -62,6 +56,6 @@ export default function OpeningHoursLive({
           })}
         </tbody>
       </table>
-    </section>
+    </div>
   )
 }

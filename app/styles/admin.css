@@ -1,0 +1,20 @@
+/* ADMIN ONLY — what is left of the pre-v2 blue system, kept for /admin, which
+   is outside the v2 redesign. The public site may not use these (check:styles
+   fails on them outside the admin). */
+
+/* Screen titles: 800 + tight tracking (DESIGN-SYSTEM §1). */
+.text-title { letter-spacing: -0.02em; }
+
+
+/* ---------------------------------------------------------------------------
+   Отклик / Response (DESIGN-SYSTEM §Отклик). Only transform / opacity / outline,
+   ≤200ms, no shadows, no libraries. Everything here is disabled under
+   prefers-reduced-motion.
+   --------------------------------------------------------------------------- */
+
+/* Pressable: primary button / chip dips on press. */
+.press { transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .press:active { transform: scale(0.97); }
+}

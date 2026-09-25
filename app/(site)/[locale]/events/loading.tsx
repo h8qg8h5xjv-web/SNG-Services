@@ -1,28 +1,26 @@
-import Header from '@/components/Header'
 import { Skeleton } from '@/components/ui/Skeleton'
 
+// Night header strip + grey event rows while the page streams in.
 export default function EventsLoading() {
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8">
-        <Skeleton className="my-6 h-8 w-32" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="overflow-hidden rounded-lg border border-slate-200"
-            >
-              <Skeleton className="aspect-video w-full rounded-none" />
-              <div className="space-y-2 p-4">
-                <Skeleton className="h-3 w-1/3" />
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-3 w-1/4" />
-              </div>
-            </div>
-          ))}
+      <div className="nhead night">
+        <div className="wrap">
+          <Skeleton dark className="h-12 w-56" />
+          <Skeleton dark className="mt-4 h-4 w-80 max-w-full" />
         </div>
-      </main>
+      </div>
+      <div className="wrap page pt-8">
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={i} className="card erow mb-3">
+            <Skeleton dark className="h-24" />
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-2/3" />
+              <Skeleton className="h-4 w-1/3" />
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   )
 }

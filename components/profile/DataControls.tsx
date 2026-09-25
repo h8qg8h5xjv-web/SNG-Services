@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
+import { IconDownload } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { getSavedRequests, clearRequests } from '@/lib/requests/local-store'
@@ -55,25 +56,37 @@ export default function DataControls() {
     })
   }
 
-  if (done) return <p className="rounded-lg border border-green-200 bg-green-100 p-3 text-body">{t('deleteDone')}</p>
+  if (done)
+    return (
+      <p className="msg-ok" role="status">
+        {t('deleteDone')}
+      </p>
+    )
 
   return (
-    <div className="space-y-4">
+    <div className="acc-form">
       <div>
-        <Button variant="secondary" onClick={download}>
+        <Button variant="line" onClick={download}>
+          <IconDownload stroke={1.75} aria-hidden="true" />
           {t('download')}
         </Button>
       </div>
-      <div className="rounded-lg border border-red-200 p-4">
-        <p className="text-body font-semibold">{t('deleteTitle')}</p>
-        <p className="mt-1 text-meta text-slate-500">{t('deleteHint', { word: confirmWord })}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Input value={word} onChange={(e) => setWord(e.target.value)} placeholder={confirmWord} className="w-40" />
-          <Button variant="secondary" onClick={remove} disabled={pending}>
+      <div className="danger">
+        <b>{t('deleteTitle')}</b>
+        <label htmlFor="data-del" className="muted">
+          {t('deleteHint', { word: confirmWord })}
+        </label>
+        <div className="acc-row">
+          <Input id="data-del" value={word} onChange={(e) => setWord(e.target.value)} placeholder={confirmWord} autoComplete="off" />
+          <Button variant="line" onClick={remove} disabled={pending}>
             {pending ? '…' : t('deleteButton')}
           </Button>
         </div>
-        {error && <p className="mt-2 text-meta text-red-700">{error}</p>}
+        {error && (
+          <p className="msg-err-inline" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   )
