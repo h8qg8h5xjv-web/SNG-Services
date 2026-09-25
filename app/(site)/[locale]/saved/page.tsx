@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import BackButton from '@/components/BackButton'
+import NightHeader from '@/components/site/NightHeader'
 import SavedList from '@/components/SavedList'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { toCard } from '@/lib/catalog/transform'
@@ -15,18 +15,18 @@ export default async function SavedPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations('saved')
+  const t = await getTranslations()
   const providers = await listAllPublishedProviders()
   const cards = providers.map((p) => toCard(p, p.categories?.slug ?? '', locale))
 
   return (
     <>
-      <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pt-4">
-        <BackButton />
-        <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
-        <div className="mt-4">
-          <SavedList cards={cards} />
-        </div>
+      <NightHeader>
+        <h1 className="ph1">{t('saved.title')}</h1>
+        <p className="sub">{t('cabinet2.savedText')}</p>
+      </NightHeader>
+      <div className="wrap page pt-8">
+        <SavedList cards={cards} />
       </div>
     </>
   )

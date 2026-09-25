@@ -8,6 +8,7 @@
 @import "./styles/listing.css";
 @import "./styles/catalog.css";
 @import "./styles/events.css";
+@import "./styles/cabinet.css";
 @import "./styles/legacy.css";
 
 /* Design system v2 «окно» (DESIGN-SYSTEM.md). Night = dusk, day = paper, one
@@ -48,7 +49,9 @@
   --color-notice-line: #F3D9A8;
   --color-pane-ink: #3A2208;
   --color-err: #B42318;
+  --color-err-line: #F1C4BF;
   --color-ok: #1F7A4D;
+  --color-ok-soft: #E7F3EC;
 
   /* LEGACY (pre-v2 pages until they are ported). */
   --color-accent: var(--color-blue-800);

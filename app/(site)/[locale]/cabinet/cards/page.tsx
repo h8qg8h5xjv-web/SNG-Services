@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconBriefcase, IconChevronRight } from '@tabler/icons-react'
+import { IconChevronRight } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { getMyProviders } from '@/lib/business/data'
@@ -26,51 +26,46 @@ export default async function CabinetCardsPage({
     listCategories(),
     listLanguages(),
   ])
+  const form = (
+    <CreateCardForm
+      categories={categories.map((c) => ({ id: c.id, name: c.name_en }))}
+      languages={languages.map((l) => ({ code: l.code, name: l.name_native }))}
+    />
+  )
+
+  if (cards.length === 0) {
+    return (
+      <div className="grid gap-6">
+        <div>
+          <h2 className="h3">{t('emptyTitle')}</h2>
+          <p className="muted mt-2">{t('emptyBody')}</p>
+        </div>
+        {form}
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-6">
-      {cards.length === 0 ? (
-        <div className="rounded-lg bg-accent-soft p-6 text-center">
-          <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-white text-accent">
-            <IconBriefcase className="h-6 w-6" stroke={1.5} />
-          </span>
-          <p className="text-body font-semibold">{t('emptyTitle')}</p>
-          <p className="mt-1 text-meta text-slate-600">{t('emptyBody')}</p>
-          <div className="mt-4 flex justify-center">
-            <CreateCardForm
-              categories={categories.map((c) => ({ id: c.id, name: c.name_en }))}
-              languages={languages.map((l) => ({ code: l.code, name: l.name_native }))}
-            />
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="space-y-2">
-            {cards.map((c) => (
-              <div key={c.id} className="rounded-lg border border-slate-200 p-3">
-                <Link href={`/cabinet/cards/${c.id}`} className="flex items-center gap-3">
-                  <span className="flex-1">
-                    <span className="text-body font-semibold">{c.name}</span>
-                    <span className="ml-2 align-middle">
-                      <StatusBadge tone={c.status === 'published' ? 'success' : 'neutral'}>
-                        {c.status === 'published' ? t('published') : t('draft')}
-                      </StatusBadge>
-                    </span>
-                  </span>
-                  <IconChevronRight className="h-5 w-5 text-slate-400" stroke={1.5} />
+    <div className="grid gap-6">
+      <ul className="bl">
+        {cards.map((c) => (
+          <li key={c.id} className="card crow">
+            <div>
+              <b>
+                <Link href={`/cabinet/cards/${c.id}`} className="cover">
+                  {c.name}
                 </Link>
-                {c.status !== 'published' && (
-                  <p className="mt-2 text-meta text-slate-500">{t('draftNote')}</p>
-                )}
-              </div>
-            ))}
-          </div>
-          <CreateCardForm
-            categories={categories.map((c) => ({ id: c.id, name: c.name_en }))}
-            languages={languages.map((l) => ({ code: l.code, name: l.name_native }))}
-          />
-        </>
-      )}
+              </b>
+              <StatusBadge tone={c.status === 'published' ? 'success' : 'neutral'}>
+                {c.status === 'published' ? t('published') : t('draft')}
+              </StatusBadge>
+              {c.status !== 'published' && <p className="muted">{t('draftNote')}</p>}
+            </div>
+            <IconChevronRight stroke={1.75} aria-hidden="true" />
+          </li>
+        ))}
+      </ul>
+      {form}
     </div>
   )
 }

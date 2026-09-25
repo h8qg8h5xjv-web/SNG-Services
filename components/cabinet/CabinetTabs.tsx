@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, usePathname } from '@/i18n/navigation'
 
@@ -10,7 +11,9 @@ const TABS = [
   { href: '/cabinet/account', key: 'account', authOnly: false },
 ] as const
 
-// Unified cabinet tabs (design-system pills). Cards is hidden when signed out.
+// v2 section tabs (DEMO_MAP §4 «Tabs»): ink underline on the current one. The
+// page slides towards the tab you pick (step / step-back). Cards only when
+// signed in.
 export default function CabinetTabs({
   loggedIn,
   incomingCount,
@@ -18,27 +21,39 @@ export default function CabinetTabs({
   loggedIn: boolean
   incomingCount: number
 }) {
-  const t = useTranslations('cabinet.tabs')
+  const t = useTranslations('cabinet')
+  const tc = useTranslations('cabinet2')
   const pathname = usePathname()
   const tabs = TABS.filter((tab) => loggedIn || !tab.authOnly)
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+  const current = tabs.findIndex((tab) => isActive(tab.href))
+  const navRef = useRef<HTMLElement | null>(null)
+
+  // On a narrow screen the tabs scroll sideways; keep the current one in view.
+  useEffect(() => {
+    const nav = navRef.current
+    const el = nav?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!nav || !el) return
+    const left = el.offsetLeft - nav.offsetLeft
+    if (left < nav.scrollLeft || left + el.offsetWidth > nav.scrollLeft + nav.clientWidth) {
+      nav.scrollLeft = left - (nav.clientWidth - el.offsetWidth) / 2
+    }
+  }, [pathname])
 
   return (
-    <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-      {tabs.map((tab) => {
-        const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`)
+    <nav ref={navRef} className="tabs" aria-label={tc('sections')}>
+      {tabs.map((tab, i) => {
+        const active = i === current
         return (
           <Link
             key={tab.key}
             href={tab.href}
-            className={`inline-flex min-h-11 shrink-0 items-center gap-1 rounded-full px-4 text-meta font-semibold transition-colors ${
-              active ? 'bg-slate-900 text-white' : 'border-medium border-slate-900 text-slate-900'
-            }`}
+            aria-current={active ? 'page' : undefined}
+            data-kind={i < current ? 'step-back' : 'step'}
           >
-            {t(tab.key)}
+            {t(`tabs.${tab.key}`)}
             {tab.key === 'requests' && incomingCount > 0 && (
-              <span
-                className={`rounded-full px-1.5 text-meta ${active ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'}`}
-              >
+              <span className="n" aria-label={tc('newCount', { n: incomingCount })}>
                 {incomingCount}
               </span>
             )}

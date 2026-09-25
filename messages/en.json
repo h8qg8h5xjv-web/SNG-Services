@@ -790,5 +790,32 @@
     "goingTitle": "Who’s going",
     "openMap": "Open in the map",
     "goToGoing": "I’m going"
+  },
+  "cabinet2": {
+    "hello": "Hello, {name}.",
+    "signedInAs": "Signed in as {email}.",
+    "guest": "You’re not signed in — everything is kept in this browser.",
+    "sections": "Account sections",
+    "newCount": "{n} new",
+    "emptyBookings": "No bookings yet",
+    "emptyBookingsText": "When a specialist takes your request, the booking shows up here.",
+    "seeSlots": "See free slots",
+    "browseEvents": "Browse events",
+    "noUpcoming": "No upcoming bookings.",
+    "viaRequest": "via request",
+    "emptyRequests": "No requests yet",
+    "emptyRequestsText": "Describe your task in your own words and specialists will reply with a price and a time.",
+    "describeTask": "Describe your task",
+    "newRequest": "New request",
+    "open": "Open",
+    "loginCta": "Email me a sign-in link",
+    "emailLabel": "Email",
+    "areYouBusiness": "Are you a specialist or a business?",
+    "forBusiness": "For business",
+    "savedText": "Specialists you’ve saved.",
+    "edit": "Edit",
+    "addPhotos": "Add photos",
+    "from": "from",
+    "to": "to"
   }
 }

@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { IconMail, IconArrowRight } from '@tabler/icons-react'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 
 // Soft sign-in prompt shown at the top of the cabinet when signed out. Magic link;
 // on return, browser data auto-links to the account (see AutoLink).
 export default function LoginBlock() {
   const t = useTranslations('cabinet')
+  const tc = useTranslations('cabinet2')
   const locale = useLocale()
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
@@ -33,45 +35,35 @@ export default function LoginBlock() {
   }
 
   return (
-    <div className="rounded-lg bg-accent-soft p-4">
-      <div className="flex items-start gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-accent">
-          <IconMail className="h-6 w-6" stroke={1.5} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-body font-semibold">{t('loginTitle')}</p>
-          <p className="mt-0.5 text-meta text-slate-600">{t('loginBody')}</p>
-          {status === 'sent' ? (
-            <p className="mt-3 text-meta font-semibold text-green-700">{t('loginSent', { email })}</p>
-          ) : (
-            <form onSubmit={onSubmit} className="mt-3">
-              {/* Field with an inner action (§Эффекты). */}
-              <div className="field-action min-h-12">
-                <span className="field-action__icon">
-                  <IconMail className="h-5 w-5" stroke={2} />
-                </span>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="field-action__field min-h-11 text-body"
-                />
-                <button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  className="field-action__btn focus-ring min-h-11 px-4 text-body"
-                >
-                  <span>{status === 'sending' ? t('loginSending') : t('login')}</span>
-                  <IconArrowRight className="field-action__arrow h-5 w-5" stroke={2} />
-                </button>
-              </div>
-              {status === 'error' && <p className="mt-1 text-meta text-red-700">{message}</p>}
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
+    <section className="card cab-login" aria-labelledby="login-h">
+      <p>
+        <b id="login-h">{t('loginTitle')}</b> <span className="muted">— {t('loginBody')}</span>
+      </p>
+      {status === 'sent' ? (
+        <p className="msg-ok" role="status">
+          {t('loginSent', { email })}
+        </p>
+      ) : (
+        <form onSubmit={onSubmit}>
+          <Input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            aria-label={tc('emailLabel')}
+            autoComplete="email"
+          />
+          <Button type="submit" variant="ink" disabled={status === 'sending'}>
+            {status === 'sending' ? t('loginSending') : tc('loginCta')}
+          </Button>
+        </form>
+      )}
+      {status === 'error' && (
+        <p className="msg-err-inline" role="alert">
+          {message}
+        </p>
+      )}
+    </section>
   )
 }
