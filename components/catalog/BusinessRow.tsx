@@ -1,12 +1,13 @@
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { IconLanguage, IconShieldCheck, IconHome, IconBolt } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import SaveHeart from '@/components/SaveHeart'
 import { Pane } from '@/components/ui/Pane'
 import { formatPrice } from '@/lib/format'
 import { resolveImageUrl } from '@/lib/images'
-import { windowHref, type FreeWindow } from '@/lib/slots/windows'
+import { londonDate, windowHref, type FreeWindow } from '@/lib/slots/windows'
+import { dayLabel } from '@/lib/slots/day-label'
 import type { ProviderCardVM } from '@/lib/catalog/transform'
 
 const timeFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' })
@@ -17,21 +18,27 @@ function initialsOf(name: string): string {
 }
 
 // Business row (DEMO_MAP §4): thumb, name, facts, one line of description,
-// trust badges from real data; on the right today's next free windows (real,
-// each a link to the details step) and save / open. The title link covers the
+// trust badges from real data; on the right the next free windows this week
+// (real, each a link to the details step, each labelled with its day) and
+// save / open. The title link covers the
 // whole row; the windows and the heart sit above it.
 export default function BusinessRow({
   card,
   windows = [],
   surface,
   responseMin,
+  today,
 }: {
   card: ProviderCardVM
   windows?: FreeWindow[]
   surface?: string
   responseMin?: number | null
+  today?: string // London date from the server, so labels don't follow the device clock
 }) {
   const t = useTranslations()
+  const locale = useLocale()
+  const day = today ?? londonDate(new Date())
+  const words = { today: t('home.v2.hzToday'), tomorrow: t('home.v2.hzTomorrow') }
   const href = surface ? `/${card.categorySlug}/${card.slug}?from=${surface}` : `/${card.categorySlug}/${card.slug}`
   const image = resolveImageUrl(card.coverImage)
   const bookable = card.fulfillment === 'native_booking' && card.bookingEnabled
@@ -91,17 +98,22 @@ export default function BusinessRow({
       <div className="side">
         {bookable && windows.length > 0 ? (
           <>
-            <span className="next-l">{t('cat2.nextToday')}</span>
+            <span className="next-l">{t('cat2.nextWindows')}</span>
             <div className="next">
-              {windows.slice(0, 3).map((w) => (
-                <Link key={w.id} href={windowHref(w)} className="tbtn" aria-label={`${card.name}, ${timeFmt.format(new Date(w.start))}`}>
-                  <Pane thin time={timeFmt.format(new Date(w.start))} />
-                </Link>
-              ))}
+              {windows.slice(0, 3).map((w) => {
+                const time = timeFmt.format(new Date(w.start))
+                const when = dayLabel(w.day, day, locale, words)
+                return (
+                  <Link key={w.id} href={windowHref(w)} className="tbtn" aria-label={`${card.name}, ${when} ${time}`}>
+                    <Pane thin time={time} />
+                    <small aria-hidden="true">{when}</small>
+                  </Link>
+                )
+              })}
             </div>
           </>
         ) : bookable ? (
-          <span className="none-l">{t('cat2.noneToday')}</span>
+          <span className="none-l">{t('cat2.noneWeek')}</span>
         ) : null}
         <div className="side-acts">
           <SaveHeart slug={card.slug} variant="inline" />

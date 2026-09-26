@@ -5,14 +5,14 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Link } from '@/i18n/navigation'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { getResponseMedians } from '@/lib/queries/response-time'
-import { getFreeWindowsToday } from '@/lib/slots/service'
-import { groupBySlug } from '@/lib/slots/windows'
+import { getFreeWindows } from '@/lib/slots/service'
+import { groupBySlug, londonDate } from '@/lib/slots/windows'
 import { toCard } from '@/lib/catalog/transform'
 
 export const dynamic = 'force-dynamic'
 
 // «Рядом»: providers on the OpenStreetMap map (DEMO_MAP §3.7 layout), with
-// today's real free windows on each row.
+// this week's real free windows on each row.
 export default async function NearPage({
   params,
 }: {
@@ -21,7 +21,7 @@ export default async function NearPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations()
-  const [providers, windows] = await Promise.all([listAllPublishedProviders(), getFreeWindowsToday(locale)])
+  const [providers, windows] = await Promise.all([listAllPublishedProviders(), getFreeWindows({ locale })])
   const cards = providers.map((p) => toCard(p, p.categories?.slug ?? '', locale))
   const mappable = cards.filter((c) => c.lat != null && c.lng != null)
 
@@ -47,5 +47,5 @@ export default async function NearPage({
       </div>
     )
   }
-  return <NearExplorer cards={mappable} responseMins={responseMins} windowsBySlug={groupBySlug(windows)} />
+  return <NearExplorer cards={mappable} responseMins={responseMins} windowsBySlug={groupBySlug(windows, 3)} today={londonDate(new Date())} />
 }

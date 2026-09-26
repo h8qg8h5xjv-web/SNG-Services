@@ -1,5 +1,5 @@
 // Live filter for the home hero (DEMO_MAP §3.1 «Live filter»): typing narrows
-// the city, the counter and «Свободно сегодня» together. Words longer than 2
+// the city, the counter and «Ближайшие окна» together. Words longer than 2
 // letters, crude stem (cut 2 letters off words longer than 5), each word also
 // tried in the other keyboard layout, so "vfybrbh" still finds «маникюр».
 

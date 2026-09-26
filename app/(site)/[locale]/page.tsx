@@ -7,8 +7,8 @@ import HowItWorks from '@/components/home/HowItWorks'
 import Facade from '@/components/home/Facade'
 import { getHomeCategories } from '@/lib/queries/categories'
 import { getDistinctBoroughs } from '@/lib/queries/providers'
-import { getFreeWindowsToday } from '@/lib/slots/service'
-import { countByCategory } from '@/lib/slots/windows'
+import { getFreeWindows } from '@/lib/slots/service'
+import { countByCategory, countsBySlugDay, homePool, londonDate } from '@/lib/slots/windows'
 import { pickCategoryName } from '@/lib/i18n/content'
 
 export const dynamic = 'force-dynamic'
@@ -17,9 +17,10 @@ export const dynamic = 'force-dynamic'
 // next one with the most providers.
 const CHIP_ORDER = ['beauty', 'health', 'kids', 'education', 'home', 'legal']
 
-// Home (DEMO_MAP §3.1): night hero with the city → «Свободно сегодня» → three
-// steps → categories with today's free windows → recently viewed → business.
-// Every number here comes from getFreeWindowsToday (real availability).
+// Home (DEMO_MAP §3.1): night hero with the city → «Ближайшие окна» → three
+// steps → categories with this week's free windows → recently viewed →
+// business. Every number here comes from getFreeWindows (real availability,
+// next 7 days, Europe/London).
 export default async function HomePage({
   params,
 }: {
@@ -30,11 +31,16 @@ export default async function HomePage({
   const t = await getTranslations('home.v2')
   const [categories, windows, boroughs] = await Promise.all([
     getHomeCategories(),
-    getFreeWindowsToday(locale),
+    getFreeWindows({ locale }),
     getDistinctBoroughs(),
   ])
 
+  const today = londonDate(new Date())
   const counts = countByCategory(windows)
+  // The client gets a small pool (what the city lights + each provider's first
+  // window per day) and exact per-day counts, not the whole week.
+  const pool = homePool(windows)
+  const exact = countsBySlugDay(windows, today)
   const present = new Set(categories.map((c) => c.category.slug))
   const chipSlugs = [
     ...CHIP_ORDER.filter((s) => present.has(s)),
@@ -51,7 +57,7 @@ export default async function HomePage({
 
   return (
     <>
-      <HomeLive windows={windows} chips={chips} categoryNames={categoryNames} categoryLabel={categoryLabel} />
+      <HomeLive windows={pool} counts={exact} today={today} chips={chips} categoryNames={categoryNames} categoryLabel={categoryLabel} />
 
       <HowItWorks />
 

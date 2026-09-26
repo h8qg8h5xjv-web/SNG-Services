@@ -1,6 +1,7 @@
 // Night London made of windows (DEMO_MAP §7). Every amber, arched window is one
-// of today's real free windows (lib/slots/windows.ts); rectangular bluish ones
-// are just homes. Bloom on slot windows, the Thames with a planar reflection,
+// real free window in the next 7 days (lib/slots/windows.ts) — today's burn
+// warm and bright, later days paler and dimmer; rectangular bluish ones are
+// just homes. Bloom on slot windows, the Thames with a planar reflection,
 // fog, far skyline layers, landmarks. Paused off-screen, on other routes and in
 // hidden tabs; three quality tiers with a frame-time governor; reduced motion
 // renders single static frames, fully lit. Loaded lazily, home page only.
@@ -13,7 +14,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { Reflector } from 'three/addons/objects/Reflector.js'
 
 export type CityTier = 'high' | 'mid' | 'phone'
-export type CitySlot = { id: string; cat: string | null; free: boolean }
+// day: 0 today, 1 tomorrow … 6.
+export type CitySlot = { id: string; cat: string | null; free: boolean; day: number }
 export type CityHover = { id: string; x: number; y: number }
 export type CityRect = { x: number; y: number; w: number; h: number }
 
@@ -32,6 +34,8 @@ export type CityApi = {
   sync(list: CitySlot[]): void
   setFirst(id: string | null): void
   setEmphasis(cats: string[] | null): void
+  // Only windows with from ≤ day ≤ to stay lit; the rest drop to a faint glow.
+  setHorizon(from: number, to: number): void
   book(id: string): void
   unbook(id: string): void
   setFly(p: number): void
@@ -559,6 +563,12 @@ export function createCity(o: CityOptions): CityApi | null {
   const K = pool.length
   const sMesh = new THREE.InstancedMesh(archGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false }), K)
   const LAMP = ['#FFB547', '#FFC56E', '#FFA43F'].map((c) => new C(c))
+  // Later days: paler, cooler lamp and a lower level, so today reads first.
+  const PALE = new C('#E6D3B0')
+  const dayTint = (day: number) => (day <= 0 ? 0 : day === 1 ? 0.3 : 0.55)
+  const dayGain = (day: number) => (day <= 0 ? 1 : day === 1 ? 0.72 : 0.5)
+  const sHue = new Uint8Array(K)
+  const sDay = new Uint8Array(K)
   const sBase = new Float32Array(K * 3)
   const sLamp = new Float32Array(K * 3)
   const sLevel = new Float32Array(K)
@@ -578,7 +588,8 @@ export function createCity(o: CityOptions): CityApi | null {
     M.compose(P, Q, S)
     sMesh.setMatrixAt(k, M)
     DARK[(rnd() * 3) | 0].toArray(sBase, k * 3)
-    LAMP[(rnd() * 3) | 0].toArray(sLamp, k * 3)
+    sHue[k] = (rnd() * 3) | 0
+    LAMP[sHue[k]].toArray(sLamp, k * 3)
     sMesh.setColorAt(k, tmpC.fromArray(sBase, k * 3))
     sDelay[k] = 0.3 + Math.min(1, Math.hypot(w.x, w.z - 34) / 120) * 2.2 + rnd() * 0.3
   })
@@ -659,8 +670,16 @@ export function createCity(o: CityOptions): CityApi | null {
   buildPost()
   const lampGain = () => (bloomOn ? 1.1 : 1.0)
 
+  function tint(k: number) {
+    tmpC.copy(LAMP[sHue[k]]).lerp(PALE, dayTint(sDay[k])).toArray(sLamp, k * 3)
+    sDrawn[k] = -1
+  }
+
   /* ── State ── */
   let emph: Set<string> | null = null
+  let hFrom = 0
+  let hTo = 6
+  const inView = (k: number) => sDay[k] >= hFrom && sDay[k] <= hTo && (!emph || emph.has(sCat[k] ?? ''))
   let first = -1
   let detachK = 0
   let detached = false
@@ -671,7 +690,9 @@ export function createCity(o: CityOptions): CityApi | null {
         sTarget[k] = 0
         continue
       }
-      sTarget[k] = !emph ? 1 : emph.has(sCat[k] ?? '') ? 1 : 0.12
+      const inHorizon = sDay[k] >= hFrom && sDay[k] <= hTo
+      const inCats = !emph || emph.has(sCat[k] ?? '')
+      sTarget[k] = inHorizon && inCats ? dayGain(sDay[k]) : 0.12 * dayGain(sDay[k])
     }
   }
   function sync(list: CitySlot[]) {
@@ -699,6 +720,10 @@ export function createCity(o: CityOptions): CityApi | null {
       }
       sCat[k] = s.cat
       sFree[k] = s.free ? 1 : 0
+      if (sDay[k] !== s.day) {
+        sDay[k] = s.day
+        tint(k)
+      }
     }
     for (let k = 0; k < K; k++) {
       const id = sId[k]
@@ -717,6 +742,9 @@ export function createCity(o: CityOptions): CityApi | null {
     ;[sFree[a], sFree[b]] = [sFree[b], sFree[a]]
     ;[sLevel[a], sLevel[b]] = [sLevel[b], sLevel[a]]
     ;[sAnim[a], sAnim[b]] = [sAnim[b], sAnim[a]]
+    ;[sDay[a], sDay[b]] = [sDay[b], sDay[a]]
+    tint(a)
+    tint(b)
     const ia = sId[a], ib = sId[b]
     if (ia) idx.set(ia, a)
     if (ib) idx.set(ib, b)
@@ -824,7 +852,8 @@ export function createCity(o: CityOptions): CityApi | null {
   let lastCount = -1
   function countFree() {
     let n = 0
-    for (let k = 0; k < K; k++) if (sId[k] && sFree[k] && (!emph || emph.has(sCat[k] ?? '')) && sLevel[k] > 0.55) n++
+    // A window counts once it has lit (the number climbs with the intro).
+    for (let k = 0; k < K; k++) if (sId[k] && sFree[k] && inView(k) && sLevel[k] > 0.55 * dayGain(sDay[k])) n++
     return n
   }
   function step(now: number, instant: boolean, dt = 16.67) {
@@ -1059,6 +1088,14 @@ export function createCity(o: CityOptions): CityApi | null {
       if (reduce) requestStatic()
       else if (!running) o.onCount?.(countFree())
     },
+    setHorizon(from, to) {
+      hFrom = from
+      hTo = to
+      retarget()
+      lastCount = -1
+      if (reduce) requestStatic()
+      else if (!running) o.onCount?.(countFree())
+    },
     book(id) {
       const k = idx.get(id)
       if (k == null) return
@@ -1072,9 +1109,9 @@ export function createCity(o: CityOptions): CityApi | null {
       if (k == null) {
         const current: CitySlot[] = []
         sId.forEach((x, j) => {
-          if (x) current.push({ id: x, cat: sCat[j], free: !!sFree[j] })
+          if (x) current.push({ id: x, cat: sCat[j], free: !!sFree[j], day: sDay[j] })
         })
-        sync([...current, { id, cat: null, free: true }])
+        sync([...current, { id, cat: null, free: true, day: 0 }])
         k = idx.get(id)
         if (k == null) return
       }

@@ -1,16 +1,18 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { computeSlots, type ExistingBooking, type Slot } from './compute'
-import { freeWindows, type FreeWindow, type WindowProvider } from './windows'
+import {
+  addDays,
+  freeWindowsForDays,
+  HORIZON_DAYS,
+  londonDate,
+  type FreeWindow,
+  type WindowProvider,
+} from './windows'
 import { pickProviderContent } from '@/lib/i18n/content'
 
 function dowOf(date: string): number {
   const [y, m, d] = date.split('-').map(Number)
   return new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay() // 0 = Sunday
-}
-
-function addDays(date: string, days: number): string {
-  const [y, m, d] = date.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, d + days, 12)).toISOString().slice(0, 10)
 }
 
 /**
@@ -66,7 +68,7 @@ export async function getSlotsForServiceDate(
   })
 }
 
-type TodayProviderRow = {
+type WindowProviderRow = {
   slug: string
   name_en: string
   borough: string
@@ -83,15 +85,16 @@ type TodayProviderRow = {
   }[]
 }
 
-// Everything today's availability needs, in two queries: published
-// native_booking providers with services and schedules, and their bookings
-// around today (±1 day for timezone edges). Service-role read: bookings aren't
-// public; callers return only availability, never booking details.
-async function loadToday() {
+// Everything availability over the next `days` London dates needs, in two
+// queries: published native_booking providers with services, schedules and
+// exceptions, and their bookings over the horizon (±1 day for timezone edges).
+// Service-role read: bookings aren't public; callers return only availability,
+// never booking details.
+async function loadWindows(days: number) {
   const supabase = createAdminClient()
   const now = new Date()
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(now)
-  const dow = dowOf(today)
+  const today = londonDate(now)
+  const dates = Array.from({ length: days }, (_, i) => addDays(today, i))
 
   const { data } = await supabase
     .from('providers')
@@ -104,7 +107,7 @@ async function loadToday() {
     )
     .eq('status', 'published')
     .eq('fulfillment_type', 'native_booking')
-    .returns<TodayProviderRow[]>()
+    .returns<WindowProviderRow[]>()
   const providers = data ?? []
 
   const serviceIds = providers.flatMap((p) => p.services.map((s) => s.id))
@@ -115,7 +118,7 @@ async function loadToday() {
       .select('service_id, starts_at, ends_at, party_size, status')
       .in('service_id', serviceIds)
       .gte('starts_at', `${addDays(today, -1)}T00:00:00Z`)
-      .lt('starts_at', `${addDays(today, 2)}T00:00:00Z`)
+      .lt('starts_at', `${addDays(today, days + 1)}T00:00:00Z`)
     for (const b of (rows ?? []) as (ExistingBooking & { service_id: string })[]) {
       const list = bookingsByService.get(b.service_id) ?? []
       list.push(b)
@@ -123,39 +126,58 @@ async function loadToday() {
     }
   }
 
-  const todayRules = (p: TodayProviderRow) => ({
-    weekly: p.schedules
-      .filter((s) => s.day_of_week === dow)
-      .map((s) => ({ start_time: s.start_time, end_time: s.end_time })),
-    exception: p.schedule_exceptions.find((e) => e.exception_date === today) ?? null,
-  })
+  const rulesFor = (p: WindowProviderRow, date: string) => {
+    const dow = dowOf(date)
+    return {
+      weekly: p.schedules
+        .filter((s) => s.day_of_week === dow)
+        .map((s) => ({ start_time: s.start_time, end_time: s.end_time })),
+      exception: p.schedule_exceptions.find((e) => e.exception_date === date) ?? null,
+    }
+  }
 
-  return { today, now, providers, bookingsByService, todayRules }
+  return { dates, now, providers, bookingsByService, rulesFor }
 }
 
 /**
- * Every free window today across bookable providers (booking enabled), names in
- * the given locale. The single source for the home city, its live counter,
- * «Свободно сегодня» and category counts.
+ * Every free window over the next `days` London dates (today first) across
+ * bookable providers (booking enabled), names in the given locale; soonest
+ * first, optionally capped. The single source for the home city (it lights the
+ * WINDOW_CAP soonest), the live counter, «Ближайшие окна», business rows and
+ * category counts.
  */
-export async function getFreeWindowsToday(locale: string): Promise<FreeWindow[]> {
-  const { today, now, providers, bookingsByService, todayRules } = await loadToday()
-  const input: WindowProvider[] = providers
+export async function getFreeWindows({
+  locale,
+  days = HORIZON_DAYS,
+  cap,
+}: {
+  locale: string
+  days?: number
+  cap?: number // e.g. WINDOW_CAP for what the city lights; counts need no cap
+}): Promise<FreeWindow[]> {
+  const { dates, now, providers, bookingsByService, rulesFor } = await loadWindows(days)
+  const base = providers
     .filter((p) => p.categories)
     .map((p) => ({
-      slug: p.slug,
-      categorySlug: p.categories!.slug,
-      name: pickProviderContent({ name_en: p.name_en, description_en: null }, p.provider_translations, locale).name,
-      borough: p.borough,
-      bookable: p.booking_enabled,
-      services: p.services.map((s) => ({
-        id: s.id,
-        name: locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en,
-        durationMin: s.duration_min,
-        capacity: s.capacity,
-        pricePence: s.price_pence,
-      })),
-      ...todayRules(p),
+      row: p,
+      provider: {
+        slug: p.slug,
+        categorySlug: p.categories!.slug,
+        name: pickProviderContent({ name_en: p.name_en, description_en: null }, p.provider_translations, locale).name,
+        borough: p.borough,
+        bookable: p.booking_enabled,
+        services: p.services.map((s) => ({
+          id: s.id,
+          name: locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en,
+          durationMin: s.duration_min,
+          capacity: s.capacity,
+          pricePence: s.price_pence,
+        })),
+      },
     }))
-  return freeWindows(input, bookingsByService, today, now)
+  const perDay = dates.map((date) => ({
+    date,
+    providers: base.map(({ row, provider }): WindowProvider => ({ ...provider, ...rulesFor(row, date) })),
+  }))
+  return freeWindowsForDays(perDay, bookingsByService, now, cap)
 }

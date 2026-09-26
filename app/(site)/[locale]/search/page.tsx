@@ -9,8 +9,8 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
 import { getHomeCategories } from '@/lib/queries/categories'
 import { getResponseMedians } from '@/lib/queries/response-time'
-import { getFreeWindowsToday } from '@/lib/slots/service'
-import { groupBySlug } from '@/lib/slots/windows'
+import { getFreeWindows } from '@/lib/slots/service'
+import { groupBySlug, londonDate } from '@/lib/slots/windows'
 import { matchesQuery, toCard, isServiceCard, isPlaceCard } from '@/lib/catalog/transform'
 import { pickCategoryName } from '@/lib/i18n/content'
 import { rankProviders } from '@/lib/ranking'
@@ -43,7 +43,7 @@ export default async function SearchPage({
   const t = await getTranslations('search')
   const t2 = await getTranslations('cat2')
 
-  const [categories, windows] = await Promise.all([getHomeCategories(), q ? getFreeWindowsToday(locale) : Promise.resolve([])])
+  const [categories, windows] = await Promise.all([getHomeCategories(), q ? getFreeWindows({ locale }) : Promise.resolve([])])
   const cards = q
     ? rankProviders(
         (await listAllPublishedProviders()).filter((p) => matchesQuery(p, q, locale)),
@@ -65,7 +65,7 @@ export default async function SearchPage({
   const medians = await getResponseMedians(serviceCards.map((c) => c.id))
   const responseMins: Record<string, number> = {}
   for (const [id, m] of medians) responseMins[id] = m
-  const windowsBySlug = groupBySlug(windows)
+  const windowsBySlug = groupBySlug(windows, 3)
   const servicesGroup = { key: 'services' as const, title: t('servicesGroup'), cards: serviceCards }
   const placesGroup = { key: 'places' as const, title: t('placesGroup'), cards: placeCards }
   const groups = (placesFirst ? [placesGroup, servicesGroup] : [servicesGroup, placesGroup]).filter(
@@ -117,6 +117,7 @@ export default async function SearchPage({
                   surface="search"
                   responseMins={group.key === 'services' ? responseMins : undefined}
                   windowsBySlug={windowsBySlug}
+                  today={londonDate(new Date())}
                 />
               </section>
             ))}

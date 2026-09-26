@@ -23,10 +23,12 @@ export default function NearExplorer({
   cards,
   responseMins,
   windowsBySlug,
+  today,
 }: {
   cards: ProviderCardVM[]
   responseMins?: Record<string, number>
   windowsBySlug?: Record<string, FreeWindow[]>
+  today?: string
 }) {
   const t = useTranslations()
   const router = useRouter()
@@ -71,6 +73,7 @@ export default function NearExplorer({
                 surface="near"
                 responseMin={responseMins?.[selectedCard.id] ?? null}
                 windows={windowsBySlug?.[selectedCard.slug]}
+                today={today}
               />
             </ul>
           )}
@@ -95,6 +98,7 @@ export default function NearExplorer({
                 surface="near"
                 responseMin={responseMins?.[c.id] ?? null}
                 windows={windowsBySlug?.[c.slug]}
+                today={today}
               />
             ))}
           </FlipList>
