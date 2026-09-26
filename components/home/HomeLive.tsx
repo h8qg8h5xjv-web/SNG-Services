@@ -1,21 +1,22 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { IconChevronLeft, IconChevronRight, IconPhone } from '@tabler/icons-react'
 import { Link, useRouter } from '@/i18n/navigation'
 import { Pane } from '@/components/ui/Pane'
 import { useMagnetic } from '@/components/ui/useMagnetic'
 import { Skyline } from '@/components/city/Skyline'
 import type { CityApi } from '@/components/city/scene'
-import type { FreeWindow } from '@/lib/slots/windows'
-import { earliestPerProvider, windowHref } from '@/lib/slots/windows'
+import type { FreeWindow, Horizon } from '@/lib/slots/windows'
+import { dayOffset, earliestPerProvider, HORIZONS, inHorizon, windowHref } from '@/lib/slots/windows'
+import { dayLabel } from '@/lib/slots/day-label'
 import { applyFilter, filterFor } from '@/lib/home/filter'
 import { searchNavPath } from '@/lib/search/target'
 import { formatPrice } from '@/lib/format'
 
-// Below this many free windows today the live counter is hidden (honesty rule:
-// a tiny number reads as a broken promise; the windows themselves still glow).
+// Below this many free windows in the chosen horizon the live counter is hidden
+// (honesty rule: a tiny number reads as a broken promise; the windows still glow).
 const MIN_LIVE_COUNT = 5
 const ROW_MAX = 12
 const PLACEHOLDERS = ['ph1', 'ph2', 'ph3', 'ph4', 'ph5', 'ph6'] as const
@@ -27,31 +28,42 @@ const smooth = (a: number, b: number, v: number) => {
   return t * t * (3 - 2 * t)
 }
 const easeIO = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+const HZ_RANGE: Record<Horizon, [number, number]> = { today: [0, 0], tomorrow: [1, 1], week: [0, 6] }
+const HZ_KEY = { today: 'Today', tomorrow: 'Tomorrow', week: 'Week' } as const
 
 type Chip = { slug: string; name: string }
 
-// Home hero + «Свободно сегодня» (DEMO_MAP §3.1, §7.8–7.9). One client island
-// because the search, the chips, the city, the live counter and the slot row
-// share one filter, and the scroll-driven fly hands the first window over to
-// the first card. The 3D city is imported after idle, on this page only.
+// Home hero + «Ближайшие окна» (DEMO_MAP §3.1, §7.8–7.9). One client island
+// because the search, the category chips, the time chips (Сегодня · Завтра ·
+// Неделя), the city, the live counter and the slot row share one filter, and
+// the scroll-driven fly hands the first window over to the first card. The 3D
+// city is imported after idle, on this page only.
 export default function HomeLive({
-  windows,
+  windows: all,
+  counts,
+  today,
   chips,
   categoryNames,
   categoryLabel,
 }: {
-  windows: FreeWindow[]
+  windows: FreeWindow[] // the city's soonest windows + each provider's first per day
+  counts: Record<string, number[]> // exact free windows per provider slug and day offset
+  today: string // London date the server computed the windows for
   chips: Chip[]
   categoryNames: Record<string, string[]>
   categoryLabel: Record<string, string>
 }) {
   const t = useTranslations('home.v2')
+  const locale = useLocale()
+  const [horizon, setHorizon] = useState<Horizon>('week')
+  const windows = useMemo(() => all.filter((w) => inHorizon(w, horizon, today)), [all, horizon, today])
+  const words = { today: t('hzToday'), tomorrow: t('hzTomorrow') }
+  const when = t(`when${HZ_KEY[horizon]}`)
   const router = useRouter()
   const [query, setQuery] = useState('')
   const [typed, setTyped] = useState('')
   const [chip, setChip] = useState<string | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
-  const [liveN, setLiveN] = useState<number | null>(null)
   const [city, setCity] = useState<'loading' | 'ready' | 'failed'>('loading')
   const [tip, setTip] = useState<{ id: string; x: number; y: number } | null>(null)
   const [ph, setPh] = useState(0)
@@ -69,7 +81,7 @@ export default function HomeLive({
   const inputRef = useRef<HTMLInputElement | null>(null)
   const findRef = useMagnetic<HTMLButtonElement>()
 
-  const byId = useMemo(() => new Map(windows.map((w) => [w.id, w])), [windows])
+  const byId = useMemo(() => new Map(all.map((w) => [w.id, w])), [all])
   const filter = useMemo(() => filterFor(query, chip, windows, categoryNames), [query, chip, windows, categoryNames])
   const shownFilter = useMemo(
     () => (preview ? filterFor('', preview, windows, categoryNames) : filter),
@@ -83,8 +95,22 @@ export default function HomeLive({
     [filter, windows],
   )
   const firstId = row[0]?.id ?? null
-  const counted = liveN ?? applyFilter(windows, shownFilter).length
-  const showLive = windows.length >= MIN_LIVE_COUNT
+  // The counter is exact: per-provider counts for the chosen days, summed over
+  // the providers the filter keeps (the city itself lights at most 420).
+  const slugCat = useMemo(() => new Map(all.map((w) => [w.slug, w.categorySlug])), [all])
+  const [dayFrom, dayTo] = HZ_RANGE[horizon]
+  const countFor = (keep: (slug: string) => boolean) => {
+    let n = 0
+    for (const [slug, perDay] of Object.entries(counts)) {
+      if (!keep(slug)) continue
+      for (let d = dayFrom; d <= dayTo; d++) n += perDay[d] ?? 0
+    }
+    return n
+  }
+  const counted = countFor((slug) =>
+    shownFilter.slugs ? shownFilter.slugs.has(slug) : shownFilter.cats ? shownFilter.cats.includes(slugCat.get(slug) ?? '') : true,
+  )
+  const showLive = countFor(() => true) >= MIN_LIVE_COUNT
 
   // Latest values for callbacks the city keeps.
   const latest = useRef({ firstId, byId, router })
@@ -196,7 +222,6 @@ export default function HomeLive({
           tier: mod.pickTier(),
           fine: window.matchMedia('(hover: hover) and (pointer: fine)').matches,
           paneH: 156,
-          onCount: (n) => setLiveN(n),
           onHover: (h) => setTip(h),
           onPick: (id) => {
             const w = latest.current.byId.get(id)
@@ -208,7 +233,7 @@ export default function HomeLive({
           return
         }
         cityRef.current = api
-        api.sync(windows.map((w) => ({ id: w.id, cat: w.categorySlug, free: true })))
+        api.sync(all.map((w) => ({ id: w.id, cat: w.categorySlug, free: true, day: dayOffset(w.day, today) })))
         setCity('ready')
       } catch {
         if (!disposed) setCity('failed')
@@ -226,9 +251,15 @@ export default function HomeLive({
       cityRef.current = null
       api?.dispose()
     }
-  }, [windows])
+  }, [all, today])
 
-  // Emphasis, the first window and running state follow the page.
+  // Emphasis, the horizon, the first window and running state follow the page.
+  useEffect(() => {
+    const c = cityRef.current
+    if (!c) return
+    c.setHorizon(...HZ_RANGE[horizon])
+  }, [horizon, city])
+
   useEffect(() => {
     const c = cityRef.current
     if (!c) return
@@ -291,10 +322,19 @@ export default function HomeLive({
   const oneCat = liveCats && liveCats.length === 1 ? categoryLabel[liveCats[0]] : null
   const bold = (chunks: React.ReactNode) => <b>{chunks}</b>
   const liveText = oneCat
-    ? t.rich('liveCat', { cat: oneCat, n: counted, b: bold })
+    ? t.rich('liveCat', { cat: oneCat, n: counted, b: bold, when })
     : liveCats
-      ? t.rich('liveQuery', { n: counted, b: bold })
-      : t.rich('liveAll', { n: counted, b: bold })
+      ? t.rich('liveQuery', { n: counted, b: bold, when })
+      : t.rich('liveAll', { n: counted, b: bold, when })
+  const horizonChips = (id: string) => (
+    <div className="hz" role="group" aria-label={t('hzLabel')} id={id}>
+      {HORIZONS.map((h) => (
+        <button key={h} type="button" className="chip" aria-pressed={horizon === h} onClick={() => setHorizon(h)}>
+          {t(`hz${HZ_KEY[h]}`)}
+        </button>
+      ))}
+    </div>
+  )
 
   const tipWin = tip ? byId.get(tip.id) : undefined
   const requestHref = query.trim()
@@ -322,7 +362,7 @@ export default function HomeLive({
             <canvas ref={canvasRef} aria-hidden="true" />
           </div>
           <div className="hero-fallback" aria-hidden="true">
-            <Skyline lit={windows.length} />
+            <Skyline lit={all.length} />
           </div>
           <div className="hero-shade" ref={shadeRef} />
           <div className="wrap hero-inner">
@@ -332,7 +372,7 @@ export default function HomeLive({
                 <br />
                 {t('title2')}
               </h1>
-              <p className="lede">{windows.length ? t('lede') : t('ledeNoCity')}</p>
+              <p className="lede">{all.length ? t('lede') : t('ledeNoCity')}</p>
               <form
                 className="search"
                 role="search"
@@ -391,15 +431,16 @@ export default function HomeLive({
               </p>
             </div>
             <div className="hero-foot" ref={footRef}>
-              {showLive ? (
-                <p className="live" aria-live="polite">
-                  <span className="live-dot" aria-hidden="true" />
-                  <span ref={liveRef}>{liveText}</span>
-                </p>
-              ) : (
-                <span />
-              )}
-              {city !== 'failed' && windows.length > 0 && (
+              <div className="foot-l">
+                {all.length > 0 && horizonChips('hz-hero')}
+                {showLive && (
+                  <p className="live" aria-live="polite">
+                    <span className="live-dot" aria-hidden="true" />
+                    <span ref={liveRef}>{liveText}</span>
+                  </p>
+                )}
+              </div>
+              {city !== 'failed' && all.length > 0 && (
                 <p className="hero-hint">
                   <span className="hint-fine">{t('hintFine')}</span>
                   <span className="hint-touch">{t('hintTouch')}</span>
@@ -410,28 +451,31 @@ export default function HomeLive({
         </div>
       </section>
 
-      <section className="night free-today" aria-labelledby="today-h">
+      <section className="night free-next" aria-labelledby="next-h">
         <div className="wrap">
           <div className="sec-head">
             <div>
-              <h2 id="today-h">{t('todayTitle')}</h2>
-              <p className="sec-sub">{filter.cats || filter.slugs ? t('todaySubFiltered') : t('todaySub')}</p>
+              <h2 id="next-h">{t('nextTitle')}</h2>
+              <p className="sec-sub">{filter.cats || filter.slugs ? t('nextSubFiltered') : t('nextSub')}</p>
             </div>
-            {row.length > 3 && (
-              <div className="row-ctrl">
-                <button type="button" aria-label={t('prev')} onClick={() => scrollRow(-1)}>
-                  <IconChevronLeft stroke={2} />
-                </button>
-                <button type="button" aria-label={t('next')} onClick={() => scrollRow(1)}>
-                  <IconChevronRight stroke={2} />
-                </button>
-              </div>
-            )}
+            <div className="sec-tools">
+              {all.length > 0 && horizonChips('hz-row')}
+              {row.length > 3 && (
+                <div className="row-ctrl">
+                  <button type="button" aria-label={t('prev')} onClick={() => scrollRow(-1)}>
+                    <IconChevronLeft stroke={2} />
+                  </button>
+                  <button type="button" aria-label={t('next')} onClick={() => scrollRow(1)}>
+                    <IconChevronRight stroke={2} />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <div className="slot-row" ref={rowRef}>
             {row.length === 0 ? (
               <div className="empty-night">
-                <strong>{windows.length ? t('emptyTitle') : t('emptyNone')}</strong>
+                <strong>{windows.length ? t('emptyTitle', { when }) : t('emptyNone', { when })}</strong>
                 {windows.length > 0 && <p>{t('emptyText')}</p>}
                 <div className="acts">
                   <Link className="btn btn-amber" href={requestHref}>
@@ -456,6 +500,7 @@ export default function HomeLive({
                     data-id={w.id}
                   >
                     <Pane time={time} />
+                    <span className="slot-day">{dayLabel(w.day, today, locale, words)}</span>
                     <span className="slot-name">{w.name}</span>
                     <span className="slot-svc">
                       {w.serviceName} · <b>{price}</b>
@@ -480,7 +525,10 @@ export default function HomeLive({
             {tipWin.serviceName} · {formatPrice(tipWin.pricePence)}
           </span>
           <br />
-          <i>{timeFmt.format(new Date(tipWin.start))}</i> <span>· {t('tipBook')}</span>
+          <i>
+            {dayLabel(tipWin.day, today, locale, words)}, {timeFmt.format(new Date(tipWin.start))}
+          </i>{' '}
+          <span>· {t('tipBook')}</span>
         </div>
       )}
     </>

@@ -9,8 +9,8 @@ import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getCategoryBySlug, getHomeCategories } from '@/lib/queries/categories'
-import { getFreeWindowsToday } from '@/lib/slots/service'
-import { groupBySlug } from '@/lib/slots/windows'
+import { getFreeWindows } from '@/lib/slots/service'
+import { groupBySlug, londonDate } from '@/lib/slots/windows'
 import { listProvidersByCategory } from '@/lib/queries/providers'
 import { getResponseMedians } from '@/lib/queries/response-time'
 import { pickCategoryName } from '@/lib/i18n/content'
@@ -85,7 +85,7 @@ export default async function CategoryPage({
 
   const [allRaw, windows, navCats] = await Promise.all([
     listProvidersByCategory(cat.id),
-    getFreeWindowsToday(locale),
+    getFreeWindows({ locale }),
     getHomeCategories(),
   ])
   const all = allRaw.filter(isServiceEligible)
@@ -106,9 +106,9 @@ export default async function CategoryPage({
   const responseMins: Record<string, number> = {}
   for (const [id, m] of medians) responseMins[id] = m
 
-  // Today's real free windows in this category (the same list as the home city).
+  // Real free windows this week in this category (the same list as the home city).
   const catWindows = windows.filter((w) => w.categorySlug === category)
-  const windowsBySlug = groupBySlug(catWindows)
+  const windowsBySlug = groupBySlug(catWindows, 3)
 
   const t = await getTranslations('catalog')
   const t2 = await getTranslations('cat2')
@@ -194,7 +194,7 @@ export default async function CategoryPage({
               <CategoryMapView cards={cards} />
             ) : (
               <>
-                <ProviderGrid cards={cards} surface="category" responseMins={responseMins} windowsBySlug={windowsBySlug} />
+                <ProviderGrid cards={cards} surface="category" responseMins={responseMins} windowsBySlug={windowsBySlug} today={londonDate(new Date())} />
                 <TrackImpressions
                   surface="category"
                   locale={locale}

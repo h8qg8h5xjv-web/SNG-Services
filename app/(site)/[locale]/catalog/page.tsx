@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation'
 import NightHeader from '@/components/site/NightHeader'
 import { getHomeCategories } from '@/lib/queries/categories'
 import { listAllPublishedProviders } from '@/lib/queries/providers'
-import { getFreeWindowsToday } from '@/lib/slots/service'
+import { getFreeWindows } from '@/lib/slots/service'
 import { countByCategory } from '@/lib/slots/windows'
 import { pickCategoryName, pickProviderContent } from '@/lib/i18n/content'
 
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 // Catalogue index (DEMO_MAP §3.4): one row per category — its name, who is
-// listed, and today's real free windows.
+// listed, and real free windows this week.
 export default async function CatalogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   setRequestLocale(locale)
@@ -28,7 +28,7 @@ export default async function CatalogPage({ params }: { params: Promise<{ locale
   const [categories, providers, windows] = await Promise.all([
     getHomeCategories(),
     listAllPublishedProviders(),
-    getFreeWindowsToday(locale),
+    getFreeWindows({ locale }),
   ])
   const counts = countByCategory(windows)
   const byCategory = new Map<string, { slug: string; name: string }[]>()
@@ -80,7 +80,7 @@ export default async function CatalogPage({ params }: { params: Promise<{ locale
                 </p>
                 <span className={count ? 'wn' : 'wn zero'}>
                   <i aria-hidden="true" />
-                  {count ? t('windowsToday', { n: count }) : t('noWindowsToday')}
+                  {count ? t('windowsWeek', { n: count }) : t('noWindowsWeek')}
                 </span>
               </li>
             )

@@ -10,11 +10,13 @@ export default function ProviderGrid({
   surface,
   responseMins,
   windowsBySlug,
+  today,
 }: {
   cards: ProviderCardVM[]
   surface?: string
   responseMins?: Record<string, number>
   windowsBySlug?: Record<string, FreeWindow[]>
+  today?: string
 }) {
   return (
     <FlipList className="results">
@@ -25,6 +27,7 @@ export default function ProviderGrid({
           surface={surface}
           responseMin={responseMins?.[card.id] ?? null}
           windows={windowsBySlug?.[card.slug]}
+          today={today}
         />
       ))}
     </FlipList>
