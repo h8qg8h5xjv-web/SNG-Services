@@ -1,7 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { getMyProviderIds, getBusinessRequests } from '@/lib/business/data'
 import { getAccount } from '@/lib/cabinet/data'
-import { SectionHeading } from '@/components/ui/Section'
 import MyRequests from '@/components/requests/MyRequests'
 import RequestCard from '@/components/business/RequestCard'
 
@@ -23,21 +22,27 @@ export default async function CabinetRequestsPage({
   const answeredIncoming = incoming.filter((r) => !r.active)
 
   return (
-    <div className="space-y-8">
+    <div>
       {hasCards && incoming.length > 0 && (
-        <section className="space-y-3">
-          <SectionHeading>{t('incoming')}</SectionHeading>
-          {activeIncoming.map((r) => (
-            <RequestCard key={r.requestId} request={r} locale={locale} />
-          ))}
-          {answeredIncoming.map((r) => (
-            <RequestCard key={r.requestId} request={r} locale={locale} />
-          ))}
+        <section className="cab-sec" aria-labelledby="inbox-h">
+          <h2 id="inbox-h" className="h3">
+            {t('incoming')}
+          </h2>
+          <ul className="inbox">
+            {activeIncoming.map((r) => (
+              <RequestCard key={r.requestId} request={r} locale={locale} />
+            ))}
+            {answeredIncoming.map((r) => (
+              <RequestCard key={r.requestId} request={r} locale={locale} />
+            ))}
+          </ul>
         </section>
       )}
 
-      <section>
-        <SectionHeading>{t('myRequests')}</SectionHeading>
+      <section className="cab-sec" aria-labelledby="my-rq-h">
+        <h2 id="my-rq-h" className="h3">
+          {t('myRequests')}
+        </h2>
         <MyRequests />
       </section>
     </div>

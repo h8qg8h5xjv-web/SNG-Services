@@ -4,8 +4,8 @@ import { IconPhoto } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { resolveImageUrl } from '@/lib/images'
 
-// DESIGN-SYSTEM §5: ONE card for the whole project. Provider, event, booking and
-// request all use it — media on top (optional) and a 12px-padded body.
+// v2 card (DEMO_MAP §4): white surface, 16px radius, hairline plus a long soft
+// shadow. Media on top (optional) and a padded body.
 export function Card({
   href,
   external = false,
@@ -17,9 +17,7 @@ export function Card({
   className?: string
   children: ReactNode
 }) {
-  const cls = `block overflow-hidden rounded-card border border-slate-200 bg-white ${
-    href ? 'transition-colors hover:border-accent active:bg-slate-50' : ''
-  } ${className}`
+  const cls = `card block overflow-hidden ${href ? 'card-link' : ''} ${className}`
   if (href && external) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
@@ -55,7 +53,7 @@ export function CardMedia({
   const url = resolveImageUrl(src)
   const aspect = ratio === 'video' ? 'aspect-video' : 'aspect-photo'
   return (
-    <div className={`relative w-full bg-slate-100 ${aspect}`}>
+    <div className={`ph-media relative w-full ${aspect}`}>
       {url ? (
         <Image
           src={url}
@@ -66,8 +64,8 @@ export function CardMedia({
           priority={priority}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-slate-400">
-          <IconPhoto className="h-8 w-8" stroke={1.5} />
+        <div className="flex h-full w-full items-center justify-center text-mute-night">
+          <IconPhoto className="h-8 w-8" stroke={1.5} aria-hidden="true" />
         </div>
       )}
       {overlay}
@@ -76,5 +74,5 @@ export function CardMedia({
 }
 
 export function CardBody({ className = '', children }: { className?: string; children: ReactNode }) {
-  return <div className={`p-3 ${className}`}>{children}</div>
+  return <div className={`p-4 ${className}`}>{children}</div>
 }

@@ -62,6 +62,7 @@ export type ProviderCardVM = {
   categorySlug: string
   categoryName: string
   name: string
+  description: string | null
   borough: string
   address: string | null
   // Geo for the map; null when the provider has no coordinates (not shown on map).
@@ -143,7 +144,7 @@ export function toCard(
   categorySlug: string,
   locale: string,
 ): ProviderCardVM {
-  const { name } = pickProviderContent(provider, provider.provider_translations, locale)
+  const { name, description } = pickProviderContent(provider, provider.provider_translations, locale)
   const now = Date.now()
   // Only 'verified' and not expired counts as a trust badge (DESIGN §5).
   const verifiedLanguages = provider.provider_languages
@@ -160,6 +161,7 @@ export function toCard(
     categorySlug,
     categoryName: provider.categories ? pickCategoryName(provider.categories, locale) : '',
     name,
+    description: description?.trim() || null,
     borough: provider.borough,
     address: provider.address,
     lat: provider.lat,

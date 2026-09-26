@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconCalendarCheck } from '@tabler/icons-react'
-import { Link } from '@/i18n/navigation'
+import { IconPlus } from '@tabler/icons-react'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ButtonLink } from '@/components/ui/Button'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { getSavedRequests } from '@/lib/requests/local-store'
 import { getGuestRequestState, type GuestRequestState } from '@/lib/requests/guest'
@@ -25,6 +26,7 @@ const TONE: Record<GuestRequestState['status'], 'success' | 'neutral' | 'error'>
 
 export default function MyRequests() {
   const t = useTranslations('request')
+  const tc = useTranslations('cabinet2')
   const [rows, setRows] = useState<Row[] | null>(null)
 
   useEffect(() => {
@@ -42,35 +44,62 @@ export default function MyRequests() {
     load()
   }, [])
 
-  if (rows === null) return <p className="text-body text-slate-500">…</p>
+  if (rows === null) {
+    return (
+      <ul className="bl" aria-hidden="true">
+        {[0, 1].map((i) => (
+          <li key={i} className="card crow">
+            <div className="w-1/2">
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="mt-2 h-3 w-1/3" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
   if (rows.length === 0) {
-    return <EmptyState icon={IconCalendarCheck} text={t('myRequestsEmpty')} />
+    return (
+      <EmptyState
+        mark="?"
+        title={tc('emptyRequests')}
+        text={tc('emptyRequestsText')}
+        action={
+          <ButtonLink href="/request/find" variant="amber">
+            {tc('describeTask')}
+          </ButtonLink>
+        }
+      />
+    )
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      {rows.map(({ ref, token, state }) => {
-        const s = state!
-        const active = s.status === 'broadcasting' || s.status === 'matched'
-        const inner = (
-          <div className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 p-3">
-            <div>
-              <p className="text-body font-semibold">
-                {s.match ? s.match.providerName : t('requestRef', { ref })}
-              </p>
-              <p className="text-meta text-slate-500">{t(`status.${s.status}`)}</p>
-            </div>
-            <StatusBadge tone={TONE[s.status]}>{t(`status.${s.status}`)}</StatusBadge>
-          </div>
-        )
-        return active ? (
-          <Link key={ref} href={`/requests/${ref}?token=${token}`} className="block">
-            {inner}
-          </Link>
-        ) : (
-          <div key={ref}>{inner}</div>
-        )
-      })}
+    <div className="grid gap-4">
+      <ul className="bl">
+        {rows.map(({ ref, token, state }) => {
+          const s = state!
+          const active = s.status === 'broadcasting' || s.status === 'matched'
+          return (
+            <li key={ref} className={`card crow ${active ? '' : 'opacity-80'}`}>
+              <div>
+                <b>{s.match ? s.match.providerName : t('requestRef', { ref })}</b>
+                <StatusBadge tone={TONE[s.status]}>{t(`status.${s.status}`)}</StatusBadge>
+              </div>
+              {active && (
+                <ButtonLink href={`/requests/${ref}?token=${token}`} variant="line" size="sm">
+                  {tc('open')}
+                </ButtonLink>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+      <div>
+        <ButtonLink href="/request/find" variant="plain" className="px-0">
+          <IconPlus stroke={1.75} aria-hidden="true" />
+          {tc('newRequest')}
+        </ButtonLink>
+      </div>
     </div>
   )
 }

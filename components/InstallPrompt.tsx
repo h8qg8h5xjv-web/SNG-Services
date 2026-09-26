@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconX, IconDownload, IconShare2 } from '@tabler/icons-react'
+import { IconX, IconShare2 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 
 // Chrome fires this before showing its own install UI; we defer it and drive our
@@ -87,39 +87,28 @@ export default function InstallPrompt() {
   if (!mode) return null
 
   return (
-    <div className="floating-bottom fixed inset-x-3 bottom-24 z-30 rounded-lg border border-slate-200 bg-white p-4 sm:mx-auto sm:max-w-md">
-      <div className="flex items-start gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-          <IconDownload className="h-6 w-6" stroke={1.5} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-body font-semibold">{t('installTitle')}</p>
-          {mode === 'install' ? (
-            <p className="mt-0.5 text-meta text-slate-500">{t('installBody')}</p>
-          ) : (
-            <p className="mt-0.5 flex flex-wrap items-center gap-1 text-meta text-slate-500">
-              {t('iosBefore')}
-              <IconShare2 className="inline h-4 w-4" stroke={1.5} />
-              {t('iosAfter')}
-            </p>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={close}
-          aria-label={t('close')}
-          className="-mr-1 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 hover:text-slate-900"
-        >
-          <IconX className="h-5 w-5" stroke={1.5} />
-        </button>
-      </div>
-      {mode === 'install' && (
-        <div className="mt-3">
-          <Button onClick={install} className="w-full">
+    <div className="install" role="dialog" aria-labelledby="install-h">
+      <span className="logo-win" aria-hidden="true" />
+      <div className="min-w-0 flex-1">
+        <p id="install-h" className="font-semibold">
+          {t('installTitle')}
+        </p>
+        {mode === 'install' ? (
+          <p className="install-sub">{t('installBody')}</p>
+        ) : (
+          <p className="install-sub">
+            {t('iosBefore')} <IconShare2 className="inline h-4 w-4" stroke={1.75} aria-hidden="true" /> {t('iosAfter')}
+          </p>
+        )}
+        {mode === 'install' && (
+          <Button variant="amber" size="sm" onClick={install} className="mt-3">
             {t('installButton')}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
+      <button type="button" onClick={close} aria-label={t('close')} className="icon-btn">
+        <IconX stroke={1.75} aria-hidden="true" />
+      </button>
     </div>
   )
 }

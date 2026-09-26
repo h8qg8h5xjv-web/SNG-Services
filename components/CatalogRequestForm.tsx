@@ -4,15 +4,14 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { submitCatalogRequest } from '@/lib/catalog-requests/actions'
 import { Button } from '@/components/ui/Button'
-import { Input, Textarea } from '@/components/ui/Input'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { IconCircleCheck } from '@tabler/icons-react'
+import { Input, Textarea, Field } from '@/components/ui/Input'
 import Consent from '@/components/Consent'
 
 // "Get into the catalog" lead form. Registration is invite-only — this only
 // sends a request to the admin, it never creates a card (CABINETS §3).
 export default function CatalogRequestForm() {
   const t = useTranslations('forBusiness')
+  const t2 = useTranslations('forBusiness2')
   const [businessName, setBusinessName] = useState('')
   const [contactName, setContactName] = useState('')
   const [email, setEmail] = useState('')
@@ -42,26 +41,85 @@ export default function CatalogRequestForm() {
     else setError(res.error === 'needContact' ? t('needContact') : t('formError'))
   }
 
-  if (done) {
-    return <EmptyState icon={IconCircleCheck} text={t('sent')} />
+  function again() {
+    setBusinessName('')
+    setMessage('')
+    setDone(false)
   }
 
-  return (
-    <form onSubmit={onSubmit} className="space-y-3">
-      <Input required placeholder={t('businessName')} value={businessName} onChange={(e) => setBusinessName(e.target.value)} className="w-full" />
-      <Input required placeholder={t('contactName')} value={contactName} onChange={(e) => setContactName(e.target.value)} className="w-full" />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Input type="email" placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
-        <Input type="tel" placeholder={t('phone')} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
-        <Input placeholder={t('category')} value={category} onChange={(e) => setCategory(e.target.value)} className="w-full" />
-        <Input placeholder={t('borough')} value={borough} onChange={(e) => setBorough(e.target.value)} className="w-full" />
+  if (done) {
+    return (
+      <div className="ok-state">
+        <div className="ok-facade" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, i) => (
+            <i key={i} className={i === 3 || i === 8 ? 'on' : i === 10 ? 'lighting' : undefined} />
+          ))}
+        </div>
+        <h2 ref={focusOnMount} tabIndex={-1} className="h3">
+          {t2('okTitle')}
+        </h2>
+        <p className="muted">{t('sent')}</p>
+        <Button variant="plain" className="px-0" onClick={again}>
+          {t2('again')}
+        </Button>
       </div>
-      <Textarea rows={3} placeholder={t('message')} value={message} onChange={(e) => setMessage(e.target.value)} className="w-full" />
-      {error && <p className="text-body text-red-700">{error}</p>}
-      <Button type="submit" disabled={pending} className="w-full sm:w-auto">
-        {pending ? t('sending') : t('send')}
-      </Button>
-      <Consent />
+    )
+  }
+
+  const needContact = error === t('needContact')
+
+  return (
+    <form onSubmit={onSubmit} className="fgrid">
+      <Field id="cr-contact" label={t('contactName')}>
+        <Input id="cr-contact" required value={contactName} onChange={(e) => setContactName(e.target.value)} autoComplete="name" />
+      </Field>
+      <Field id="cr-business" label={t('businessName')}>
+        <Input id="cr-business" required value={businessName} onChange={(e) => setBusinessName(e.target.value)} autoComplete="organization" />
+      </Field>
+      <Field id="cr-category" label={t('category')}>
+        <Input id="cr-category" value={category} onChange={(e) => setCategory(e.target.value)} />
+      </Field>
+      <Field id="cr-borough" label={t('borough')}>
+        <Input id="cr-borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
+      </Field>
+      <Field id="cr-phone" label={t('phone')}>
+        <Input
+          id="cr-phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          autoComplete="tel"
+          aria-invalid={needContact || undefined}
+        />
+      </Field>
+      <Field id="cr-email" label={t('email')}>
+        <Input
+          id="cr-email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          aria-invalid={needContact || undefined}
+        />
+      </Field>
+      <Field id="cr-message" label={t('message')} className="full">
+        <Textarea id="cr-message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
+      </Field>
+      {error && (
+        <p className="msg-err-inline full" role="alert">
+          {error}
+        </p>
+      )}
+      <Consent className="full" />
+      <div className="acts full">
+        <Button type="submit" variant="amber" disabled={pending}>
+          {pending ? t('sending') : t('send')}
+        </Button>
+      </div>
     </form>
   )
+}
+
+function focusOnMount(el: HTMLHeadingElement | null) {
+  el?.focus()
 }

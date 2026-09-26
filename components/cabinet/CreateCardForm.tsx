@@ -2,9 +2,11 @@
 
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
+import { IconPlus } from '@tabler/icons-react'
 import { useRouter } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Input, Field } from '@/components/ui/Input'
+import { FilterChip } from '@/components/ui/FilterChip'
 import Select from '@/components/ui/Select'
 import { createMyCard } from '@/lib/cabinet/actions'
 
@@ -18,6 +20,7 @@ export default function CreateCardForm({
   languages: { code: string; name: string }[]
 }) {
   const t = useTranslations('cabinet.cards')
+  const tt = useTranslations('business.tabs')
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
@@ -44,61 +47,76 @@ export default function CreateCardForm({
 
   if (!open) {
     return (
-      <Button onClick={() => setOpen(true)}>{t('create')}</Button>
+      <div>
+        <Button variant="ink" onClick={() => setOpen(true)}>
+          <IconPlus stroke={1.75} aria-hidden="true" />
+          {t('create')}
+        </Button>
+      </div>
     )
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 p-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Input placeholder={t('name')} value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
-        <Select
-          value={categoryId}
-          onChange={setCategoryId}
-          options={categories.map((c) => ({ value: c.id, label: c.name }))}
-          ariaLabel={t('category')}
-          title={t('category')}
-          placeholder={t('category')}
-          className="w-full"
-        />
-        <Input placeholder={t('borough')} value={borough} onChange={(e) => setBorough(e.target.value)} className="w-full" />
-        <Input type="tel" placeholder={t('phone')} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
+    <div className="card ed-sec">
+      <div className="ed-grid">
+        <Field id="cc-name" label={t('name')}>
+          <Input id="cc-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="organization" />
+        </Field>
+        <div className="field">
+          <span className="lbl">{t('category')}</span>
+          <Select
+            value={categoryId}
+            onChange={setCategoryId}
+            options={categories.map((c) => ({ value: c.id, label: c.name }))}
+            ariaLabel={t('category')}
+            title={t('category')}
+            placeholder={t('category')}
+            className="w-full"
+          />
+        </div>
+        <Field id="cc-borough" label={t('borough')}>
+          <Input id="cc-borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
+        </Field>
+        <Field id="cc-phone" label={t('phone')}>
+          <Input id="cc-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />
+        </Field>
       </div>
 
-      <div className="mt-3">
-        <p className="mb-1 text-meta text-slate-500">{t('languages')}</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="field">
+        <span className="lbl" id="cc-langs">
+          {t('languages')}
+        </span>
+        <div className="dchips" role="group" aria-labelledby="cc-langs">
           {languages.map((l) => (
-            <button
-              key={l.code}
-              type="button"
-              onClick={() => toggleLang(l.code)}
-              className={`min-h-9 rounded-full border px-3 text-meta transition-colors ${langs.includes(l.code) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-300'}`}
-            >
+            <FilterChip key={l.code} look="dchip" active={langs.includes(l.code)} onClick={() => toggleLang(l.code)}>
               {l.name}
-            </button>
+            </FilterChip>
           ))}
         </div>
       </div>
 
-      <div className="mt-3">
+      <Field id="cc-services" label={tt('services')} hint={t('servicesHint')}>
         <Input
+          id="cc-services"
           value={servicesLine}
           onChange={(e) => setServicesLine(e.target.value)}
           placeholder={t('servicesPlaceholder')}
-          className="w-full"
+          aria-describedby="cc-services-hint"
         />
-        <p className="mt-1 text-meta text-slate-500">{t('servicesHint')}</p>
-      </div>
+      </Field>
 
-      <div className="mt-4 flex items-center gap-3">
-        <Button onClick={submit} disabled={pending || !name.trim() || !borough.trim()}>
+      <div className="ed-acts">
+        <Button variant="ink" onClick={submit} disabled={pending || !name.trim() || !borough.trim()}>
           {pending ? t('creating') : t('createSubmit')}
         </Button>
-        <Button variant="secondary" onClick={() => setOpen(false)} disabled={pending}>
+        <Button variant="line" onClick={() => setOpen(false)} disabled={pending}>
           {t('cancel')}
         </Button>
-        {error && <span className="text-meta text-red-700">{error}</span>}
+        {error && (
+          <span className="msg-err-inline" role="alert">
+            {error}
+          </span>
+        )}
       </div>
     </div>
   )

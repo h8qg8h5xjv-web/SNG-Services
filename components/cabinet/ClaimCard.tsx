@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/navigation'
+import { ButtonLink } from '@/components/ui/Button'
 import { acceptCardInvite } from '@/lib/cabinet/invite-actions'
 
 // Runs the invite claim once the page loads (user is already signed in here).
@@ -20,14 +20,26 @@ export default function ClaimCard({ token }: { token: string }) {
     })()
   }, [token])
 
-  if (state === 'working') return <p className="text-body text-slate-500">{t('working')}</p>
-  if (state === 'error') return <p className="text-body text-red-700">{t('invalid')}</p>
+  if (state === 'working')
+    return (
+      <p className="muted" role="status">
+        {t('working')}
+      </p>
+    )
+  if (state === 'error')
+    return (
+      <p className="msg-err-inline" role="alert">
+        {t('invalid')}
+      </p>
+    )
   return (
-    <div className="space-y-3">
-      <p className="text-body font-semibold text-green-700">{t('success')}</p>
-      <Link href="/cabinet/cards" className="text-body font-semibold text-accent hover:underline">
+    <div className="grid justify-items-start gap-3">
+      <p className="msg-ok" role="status">
+        {t('success')}
+      </p>
+      <ButtonLink href="/cabinet/cards" variant="ink">
         {t('toCards')}
-      </Link>
+      </ButtonLink>
     </div>
   )
 }

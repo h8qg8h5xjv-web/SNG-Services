@@ -1,19 +1,27 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { IconHeart, IconHeartFilled } from '@tabler/icons-react'
+import { IconHeart } from '@tabler/icons-react'
 import { useSaved } from '@/lib/saved/use-saved'
 import { toggleSaved } from '@/lib/saved/store'
+import { toast } from '@/components/ui/Toast'
 
-// The "save" heart on photos. Toggles a provider slug in localStorage (no account,
-// see lib/saved/store). It's a real button — stopPropagation + preventDefault so a
-// tap saves instead of opening the card it sits on. Filled + accent when saved.
-export default function SaveHeart({ slug, big = false }: { slug: string; big?: boolean }) {
+// Save a provider (localStorage, no account — see lib/saved/store). A real
+// button: stopPropagation + preventDefault so a tap on a card saves instead of
+// opening it. `overlay` sits on a photo; `inline` sits in a row of actions.
+// Toggling toasts, with «Вернуть» after a removal (DEMO_MAP §3.2).
+export default function SaveHeart({
+  slug,
+  variant = 'overlay',
+}: {
+  slug: string
+  variant?: 'overlay' | 'inline'
+}) {
   const t = useTranslations('saved')
+  const tl = useTranslations('listing')
+  const tc = useTranslations('common')
   const saved = useSaved()
   const active = saved.includes(slug)
-  const box = big ? 'h-10 w-10' : 'h-8 w-8'
-  const icon = big ? 'h-6 w-6' : 'h-5 w-5'
 
   return (
     <button
@@ -24,12 +32,12 @@ export default function SaveHeart({ slug, big = false }: { slug: string; big?: b
         e.preventDefault()
         e.stopPropagation()
         toggleSaved(slug)
+        if (active) toast(tl('unsaved'), { label: tc('undo'), onClick: () => toggleSaved(slug) })
+        else toast(tl('saved'))
       }}
-      className={`toggle-3d ${active ? 'is-on' : ''} absolute right-2 top-2 flex ${box} items-center justify-center rounded-full ${
-        active ? 'text-accent' : 'text-slate-900'
-      }`}
+      className={`icon-btn lined save-btn ${variant === 'overlay' ? 'save-overlay' : ''}`}
     >
-      {active ? <IconHeartFilled className={icon} /> : <IconHeart className={icon} stroke={2} />}
+      <IconHeart stroke={1.75} aria-hidden="true" />
     </button>
   )
 }

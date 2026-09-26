@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
+import { Link } from '@/i18n/navigation'
+import NightHeader from '@/components/site/NightHeader'
+import LegalDoc from '@/components/site/LegalDoc'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,29 +24,37 @@ export default async function TermsPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('terms')
+  const tl = await getTranslations('legal2')
+  const to = await getTranslations('privacy')
 
-  const sections: [string, string][] = [
-    [t('platformTitle'), t('platformBody')],
-    [t('responsibilityTitle'), t('responsibilityBody')],
-    [t('cancellationsTitle'), t('cancellationsBody')],
-    [t('complaintsTitle'), t('complaintsBody')],
-  ]
+  const sections = (
+    [
+      ['platform', t('platformTitle'), t('platformBody')],
+      ['responsibility', t('responsibilityTitle'), t('responsibilityBody')],
+      ['cancellations', t('cancellationsTitle'), t('cancellationsBody')],
+      ['complaints', t('complaintsTitle'), t('complaintsBody')],
+    ] as const
+  ).map(([id, title, body]) => ({ id, title, body }))
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
-        <BackButton />
-        <h1 className="text-title font-extrabold tracking-tight">{t('title')}</h1>
-        <div className="mt-6 space-y-6">
-          {sections.map(([title, body]) => (
-            <section key={title}>
-              <h2 className="text-h2 font-semibold">{title}</h2>
-              <p className="mt-1 text-body text-slate-600">{body}</p>
-            </section>
-          ))}
-        </div>
-      </main>
+      <NightHeader>
+        <h1 className="ph1">{t('title')}</h1>
+      </NightHeader>
+      <div className="wrap page">
+        <LegalDoc
+          sections={sections}
+          tocLabel={tl('toc')}
+          outro={
+            <p className="also">
+              {tl('seeAlso')}:{' '}
+              <Link href="/privacy" className="link">
+                {to('title')}
+              </Link>
+            </p>
+          }
+        />
+      </div>
     </>
   )
 }

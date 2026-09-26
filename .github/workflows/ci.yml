@@ -24,3 +24,14 @@ jobs:
       - run: npm run check:messages
       - run: npm run lint
       - run: npx tsc --noEmit
+      - run: npm run check:styles
+      - run: npm test
+      # Build with placeholder public values: no secrets in CI. The build does
+      # not query Supabase (data pages render on demand), so an unreachable URL
+      # is enough; a build that starts fetching at build time will fail here.
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:1
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_TELEMETRY_DISABLED: 1

@@ -1,36 +1,53 @@
 import type { ReactNode } from 'react'
 import { Link } from '@/i18n/navigation'
 
-// DESIGN-SYSTEM §1/§Отклик: flat buttons, 10px radius (no pills). Primary = dark
-// ink fill; secondary = white with a slate border; link = accent text. 44px tall.
-// Press dips to 0.97; keyboard focus shows an accent ring; hover darkens.
-type Variant = 'primary' | 'secondary' | 'link'
+// v2 buttons (DEMO_MAP §4). amber = the one primary action on a screen (book,
+// find, send); ink = strong secondary on day; line = outline on day; ghost =
+// outline on night; plain = text. Legacy names map onto them: primary → ink,
+// secondary → line, link → an underlined text link.
+type Variant = 'amber' | 'ink' | 'line' | 'ghost' | 'plain' | 'primary' | 'secondary' | 'link'
 
-const BASE =
-  'press focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-5 text-body font-semibold transition-colors'
 const VARIANT: Record<Variant, string> = {
-  // Primary CTAs carry the running-border effect (globals.css §Эффекты).
-  primary: 'btn-runner bg-ink text-white',
-  secondary: 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50',
-  link: 'min-h-0 rounded-none px-0 text-accent hover:underline',
+  amber: 'btn btn-amber',
+  ink: 'btn btn-ink',
+  line: 'btn btn-line',
+  ghost: 'btn btn-ghost',
+  plain: 'btn btn-plain',
+  primary: 'btn btn-ink',
+  secondary: 'btn btn-line',
+  link: 'link',
 }
 
-type CommonProps = { variant?: Variant; className?: string; children: ReactNode }
+type CommonProps = {
+  variant?: Variant
+  size?: 'md' | 'sm'
+  block?: boolean
+  className?: string
+  children: ReactNode
+}
+
+function classes(variant: Variant, size: 'md' | 'sm', block: boolean, className: string) {
+  return [VARIANT[variant], size === 'sm' && variant !== 'link' ? 'btn-sm' : '', block ? 'btn-block' : '', className]
+    .filter(Boolean)
+    .join(' ')
+}
 
 export function Button({
   variant = 'primary',
+  size = 'md',
+  block = false,
   className = '',
   type = 'button',
   ...rest
 }: CommonProps & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button type={type} className={`${BASE} ${VARIANT[variant]} ${className}`} {...rest} />
-  )
+  return <button type={type} className={classes(variant, size, block, className)} {...rest} />
 }
 
 export function ButtonLink({
   href,
   variant = 'primary',
+  size = 'md',
+  block = false,
   external = false,
   className = '',
   children,
@@ -38,8 +55,8 @@ export function ButtonLink({
 }: CommonProps & {
   href: string
   external?: boolean
-} & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const cls = `${BASE} ${VARIANT[variant]} ${className}`
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>) {
+  const cls = classes(variant, size, block, className)
   if (external) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={cls} {...rest}>
@@ -48,7 +65,7 @@ export function ButtonLink({
     )
   }
   return (
-    <Link href={href} className={cls}>
+    <Link href={href} className={cls} {...rest}>
       {children}
     </Link>
   )

@@ -9,15 +9,15 @@ import { Link } from '@/i18n/navigation'
 export default function Consent({ className = '' }: { className?: string }) {
   const t = useTranslations('legal')
   return (
-    <p className={`text-meta text-slate-500 ${className}`}>
+    <p className={`consent ${className}`}>
       {t.rich('consent', {
         terms: (chunks) => (
-          <Link href="/terms" className="underline hover:text-slate-900">
+          <Link href="/terms">
             {chunks}
           </Link>
         ),
         privacy: (chunks) => (
-          <Link href="/privacy" className="underline hover:text-slate-900">
+          <Link href="/privacy">
             {chunks}
           </Link>
         ),

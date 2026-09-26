@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconExternalLink, IconMapPin, IconCalendarEvent } from '@tabler/icons-react'
+import { IconExternalLink, IconMapPin, IconCalendarEvent, IconTag } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
-import { ButtonLink } from '@/components/ui/Button'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
 import JsonLd from '@/components/JsonLd'
-import { getEventBySlug } from '@/lib/queries/events'
+import NightHeader from '@/components/site/NightHeader'
+import EventRow from '@/components/events/EventRow'
+import AddressMap from '@/components/map/AddressMap'
+import { getEventBySlug, listUpcomingEvents } from '@/lib/queries/events'
 import { getEventAttendance } from '@/lib/events/attendance'
 import GoingButton from '@/components/events/GoingButton'
 import {
@@ -55,7 +55,8 @@ export default async function EventPage({
   const event = await getEventBySlug(slug)
   if (!event) notFound()
 
-  const attendance = await getEventAttendance(event.id)
+  const [attendance, upcoming] = await Promise.all([getEventAttendance(event.id), listUpcomingEvents()])
+  const more = upcoming.filter((e) => e.id !== event.id).slice(0, 3)
   const t = await getTranslations()
   const title = pickEventTitle(event, locale)
   const description = pickEventDescription(event, locale)
@@ -98,92 +99,128 @@ export default async function EventPage({
       : {}),
   }
 
+  const free = event.price_from_pence == null
+  const priceLabel = free ? t('events.free') : t('events2.priceFrom', { price: formatPrice(event.price_from_pence!) })
+  const hasMap = event.lat != null && event.lng != null
   const tickets = event.ticket_url ? (
-    <ButtonLink href={event.ticket_url} external className="w-full sm:w-auto">
+    <a href={event.ticket_url} target="_blank" rel="noopener noreferrer" className="btn btn-amber">
       {t('events.tickets')}
-      <IconExternalLink className="h-5 w-5" stroke={2} />
-    </ButtonLink>
+      <IconExternalLink stroke={1.75} aria-hidden="true" />
+    </a>
   ) : null
 
   return (
     <>
-      <Header />
       <JsonLd data={eventLd} />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-4 sm:pb-8">
-        <BackButton />
-        <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
-          {image && (
-            <Image
-              src={image}
-              alt=""
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-cover"
-              priority
-            />
-          )}
-        </div>
-
-        <div className="py-6">
-          <p className="text-body font-semibold text-slate-500">
-            {t(`eventCategory.${eventCategorySlug(event.category)}`)} ·{' '}
+      <NightHeader>
+        <nav className="crumbs" aria-label={t('listing.crumbsLabel')}>
+          <Link href="/events">{t('events2.crumbs')}</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{title}</span>
+        </nav>
+        <h1 className="ph1">{title}</h1>
+        <p className="ev-facts">
+          <span>
+            <IconCalendarEvent stroke={1.75} aria-hidden="true" />
             {formatEventDateTime(event.starts_at, locale)}
-          </p>
-          <h1 className="mt-1 text-title font-extrabold tracking-tight">{title}</h1>
-          {place && <p className="mt-1 text-slate-500">{place}</p>}
-          <p className="mt-3 font-semibold">
-            {event.price_from_pence == null
-              ? t('events.free')
-              : `${t('catalog.from')} ${formatPrice(event.price_from_pence)}`}
-          </p>
-
-          {description && (
-            <p className="mt-4 whitespace-pre-line text-slate-900">
-              {description}
-            </p>
+          </span>
+          {place && (
+            <span>
+              <IconMapPin stroke={1.75} aria-hidden="true" />
+              {place}
+            </span>
           )}
+          <span>
+            <IconTag stroke={1.75} aria-hidden="true" />
+            {t(`eventCategory.${eventCategorySlug(event.category)}`)}
+          </span>
+        </p>
+      </NightHeader>
 
-          {/* §4: who is going, and a guest "I'm going" toggle (no chat). */}
-          <div className="mt-6">
-            <GoingButton eventId={event.id} initial={attendance} />
+      <div className={`wrap page ${tickets ? 'has-cta' : ''}`}>
+        <div className="two pt-9">
+          <div>
+            {image && (
+              <div className="ev-cover ph-media">
+                <Image src={image} alt="" fill sizes="(max-width: 980px) 100vw, 60vw" className="object-cover" priority />
+              </div>
+            )}
+            {description && <p className="ev-desc">{description}</p>}
+
+            {event.organizer && event.organizer.categories && (
+              <p className="lst-note">
+                {t('events.organizer')}:{' '}
+                <Link href={`/${event.organizer.categories.slug}/${event.organizer.slug}`} className="link">
+                  {event.organizer.name_en}
+                </Link>
+              </p>
+            )}
+
+            {(hasMap || event.address || place) && (
+              <section className="ev-sec" aria-labelledby="ev-where">
+                <h2 id="ev-where" className="h3">
+                  {t('events2.howToGet')}
+                </h2>
+                <div className="where">
+                  {hasMap && <AddressMap lat={event.lat!} lng={event.lng!} />}
+                  <div className="addr">
+                    {hasMap ? (
+                      <a
+                        href={`https://www.openstreetmap.org/?mlat=${event.lat}&mlon=${event.lng}#map=15/${event.lat}/${event.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IconMapPin stroke={1.75} aria-hidden="true" />
+                        {event.address ?? place}
+                      </a>
+                    ) : (
+                      <span>
+                        <IconMapPin stroke={1.75} aria-hidden="true" />
+                        {event.address ?? place}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )}
           </div>
 
-          {tickets && <div className="mt-6 hidden sm:block">{tickets}</div>}
+          <aside className="card tix" aria-label={t('events2.entry')}>
+            <div className="total-row">
+              <span className="muted">{t('events2.entry')}</span>
+              <b>{priceLabel}</b>
+            </div>
+            {tickets}
+            {tickets && <p className="hint muted text-small">{t('events2.ticketsNote')}</p>}
+            <hr />
+            <p className="font-semibold" id="going">
+              {t('events2.goingTitle')}
+            </p>
+            {/* Guest "I'm going" with who's going (initials only). No chat. */}
+            <GoingButton eventId={event.id} initial={attendance} />
+          </aside>
         </div>
 
-        {event.organizer && event.organizer.categories && (
-          <section className="border-t border-slate-200 py-6">
-            <h2 className="mb-2 text-body font-semibold text-slate-500">
-              {t('events.organizer')}
+        {more.length > 0 && (
+          <section className="ev-sec" aria-labelledby="ev-more">
+            <h2 id="ev-more" className="h3">
+              {t('events2.more')}
             </h2>
-            <Link
-              href={`/${event.organizer.categories.slug}/${event.organizer.slug}`}
-              className="inline-flex items-center gap-2 font-semibold hover:underline"
-            >
-              <IconCalendarEvent className="h-5 w-5" stroke={1.5} />
-              {event.organizer.name_en}
-            </Link>
+            <ul className="evlist">
+              {more.map((e) => (
+                <EventRow key={e.id} event={e} locale={locale} />
+              ))}
+            </ul>
           </section>
         )}
+      </div>
 
-        {event.lat != null && event.lng != null && (
-          <section className="border-t border-slate-200 py-6">
-            <a
-              href={`https://www.openstreetmap.org/?mlat=${event.lat}&mlon=${event.lng}#map=15/${event.lat}/${event.lng}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 hover:underline"
-            >
-              <IconMapPin className="h-5 w-5" stroke={1.5} />
-              {event.address ?? place}
-            </a>
-          </section>
-        )}
-      </main>
-
-      {/* bottom-14 is off-scale on purpose — sits just above the fixed bottom nav. */}
       {tickets && (
-        <div className="fixed inset-x-0 bottom-14 z-20 border-t border-slate-200 bg-white p-3 sm:hidden">
+        <div className="cta-bar">
+          <div className="min-w-0">
+            <b className="truncate">{title}</b>
+            <span>{priceLabel}</span>
+          </div>
           {tickets}
         </div>
       )}

@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 import { saveCabinetSchedule } from '@/lib/business/actions'
 import type { CabinetScheduleRow } from '@/lib/business/data'
 
@@ -19,6 +20,7 @@ export default function ScheduleEditor({
 }) {
   const t = useTranslations('business.schedule')
   const tDays = useTranslations('days')
+  const tc = useTranslations('cabinet2')
   const init: Record<number, DayState> = {}
   for (const d of DAY_ORDER) {
     const found = rows.find((r) => r.dayOfWeek === d)
@@ -51,31 +53,51 @@ export default function ScheduleEditor({
   }
 
   return (
-    <div className="space-y-3">
-      <p className="text-meta text-slate-500">{t('hint')}</p>
-      <div className="space-y-2">
+    <div>
+      <p className="muted">{t('hint')}</p>
+      <ul className="mt-2">
         {DAY_ORDER.map((d) => (
-          <div key={d} className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 p-3">
-            <label className="flex min-w-28 items-center gap-2 text-body font-semibold">
+          <li key={d} className="sched-row">
+            <label className="check">
               <input type="checkbox" checked={state[d].open} onChange={(e) => set(d, { open: e.target.checked })} />
               {tDays(String(d))}
             </label>
             {state[d].open && (
-              <div className="flex items-center gap-2 text-body">
-                <input type="time" value={state[d].start} onChange={(e) => set(d, { start: e.target.value })} className="min-h-11 rounded-full border border-slate-300 px-3" />
-                <span className="text-slate-400">—</span>
-                <input type="time" value={state[d].end} onChange={(e) => set(d, { end: e.target.value })} className="min-h-11 rounded-full border border-slate-300 px-3" />
+              <div className="times">
+                <Input
+                  type="time"
+                  value={state[d].start}
+                  onChange={(e) => set(d, { start: e.target.value })}
+                  aria-label={`${tDays(String(d))} · ${tc('from')}`}
+                />
+                <span className="muted" aria-hidden="true">
+                  —
+                </span>
+                <Input
+                  type="time"
+                  value={state[d].end}
+                  onChange={(e) => set(d, { end: e.target.value })}
+                  aria-label={`${tDays(String(d))} · ${tc('to')}`}
+                />
               </div>
             )}
-          </div>
+          </li>
         ))}
-      </div>
-      <div className="flex items-center gap-3">
-        <Button onClick={save} disabled={pending}>
+      </ul>
+      <div className="ed-acts mt-5">
+        <Button variant="ink" onClick={save} disabled={pending}>
           {pending ? t('saving') : t('save')}
         </Button>
-        {saved && <span className="text-meta text-green-700">{t('saved')}</span>}
-        {error && <span className="text-meta text-red-700">{error}</span>}
+        {saved && (
+          <span className="msg-ok" role="status">
+            {t('saved')}
+          </span>
+        )}
+        {error && (
+          <span className="msg-err-inline" role="alert">
+            {error}
+          </span>
+        )}
       </div>
     </div>
   )

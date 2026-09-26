@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
-import { Inter } from 'next/font/google'
+import { Onest, Unbounded } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -10,25 +10,25 @@ import { ogLocale } from '@/i18n/locales'
 import { buildLanguageAlternates } from '@/lib/i18n/alternates'
 import BottomNav from '@/components/BottomNav'
 import Footer from '@/components/Footer'
+import Header from '@/components/Header'
 import InstallPrompt from '@/components/InstallPrompt'
 import SessionStart from '@/components/SessionStart'
-import { BLUE_800 } from '@/lib/palette'
+import NavMotion from '@/components/site/NavMotion'
+import { Toaster } from '@/components/ui/Toast'
+import { DUSK } from '@/lib/palette'
 import '../../globals.css'
 
-// Weights 400/600 for body + UI, 700 for list-card names, 800 for showcase
-// headings (DESIGN-SYSTEM §2). Inter covers the enabled locales (Latin + Cyrillic).
-// Georgian/Armenian (ka/hy) are disabled for now; when enabled they'll be
-// self-hosted via next/font/local. Until then they fall back to system fonts.
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin', 'cyrillic'],
-  weight: ['400', '600', '700', '800'],
-})
+// v2 type: Unbounded (display: headings, times, prices; 500/600) and Onest
+// (text; 400/500/600). Both load as variable fonts — one file per subset
+// instead of one per weight. Latin + Cyrillic; Georgian/Armenian (ka/hy, still
+// disabled) fall back to system fonts until they are self-hosted.
+const onest = Onest({ variable: '--font-onest', subsets: ['latin', 'cyrillic'] })
+const unbounded = Unbounded({ variable: '--font-unbounded', subsets: ['latin', 'cyrillic'] })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
-// Accent theme colour for the browser UI / installed app (PWA, idea #8).
-export const viewport: Viewport = { themeColor: BLUE_800 }
+// Browser UI / installed app colour: the night header (PWA).
+export const viewport: Viewport = { themeColor: DUSK, viewportFit: 'cover' }
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -89,20 +89,25 @@ export default async function LocaleLayout({
   }
   // Enable static rendering for this locale.
   setRequestLocale(locale)
+  const t = await getTranslations({ locale })
 
   return (
-    <html
-      lang={locale}
-      className={`${inter.variable} h-full antialiased`}
-    >
-      {/* has-bottom-nav: bottom clearance for the sticky mobile nav (§2). */}
-      <body className="has-bottom-nav flex min-h-full flex-col">
+    <html lang={locale} className={`${onest.variable} ${unbounded.variable}`}>
+      <body>
         <NextIntlClientProvider>
-          {children}
+          <a href="#main" className="skip">
+            {t('common.skipToContent')}
+          </a>
+          <Header />
+          <main id="main" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
           <BottomNav />
           <InstallPrompt />
           <SessionStart />
+          <NavMotion />
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

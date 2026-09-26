@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
+import { Link } from '@/i18n/navigation'
 import RequestForm from '@/components/requests/RequestForm'
 import { createClient } from '@/lib/supabase/server'
 import { getProviderDetail } from '@/lib/queries/providers'
@@ -24,6 +23,7 @@ export default async function RequestPage({
   setRequestLocale(locale)
   const sp = await searchParams
   const t = await getTranslations('request')
+  const tAll = await getTranslations()
   const supabase = await createClient()
 
   if (!sp.category) notFound()
@@ -59,15 +59,14 @@ export default async function RequestPage({
     })) ?? []
 
   return (
-    <>
-      <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 pt-4">
-        <BackButton />
-        <h1 className="mb-6 text-title font-extrabold tracking-tight">
-          {provider
-            ? t('titleSpecific')
-            : t('titleAny')}
-        </h1>
+    <div className="wrap page">
+      <nav className="crumbs" aria-label={tAll('listing.crumbsLabel')}>
+        <Link href="/">{tAll('nav.home')}</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{provider ? t('titleSpecific') : t('titleAny')}</span>
+      </nav>
+      <h1 className="ph1">{provider ? t('titleSpecific') : t('titleAny')}</h1>
+      <div className="two">
         <RequestForm
           categoryId={category.id}
           type={requestType}
@@ -76,14 +75,38 @@ export default async function RequestPage({
           services={services}
           targetProviderId={provider?.id ?? null}
           providerName={
-            provider
-              ? pickProviderContent(provider, provider.provider_translations, locale).name
-              : undefined
+            provider ? pickProviderContent(provider, provider.provider_translations, locale).name : undefined
           }
           priceGuide={guide}
           regulatedApplies={regulatedApplies}
         />
-      </main>
-    </>
+        {/* What happens next: the same three steps as on the home page. */}
+        <aside className="card aside-card" aria-labelledby="next-h">
+          <h2 id="next-h" className="h3">
+            {tAll('home.how.title')}
+          </h2>
+          <ol>
+            <li>
+              <span>
+                <b>{tAll('home.how.step1')}</b>
+                <span>{tAll('home.v2.step1p')}</span>
+              </span>
+            </li>
+            <li>
+              <span>
+                <b>{tAll('home.how.step2')}</b>
+                <span>{tAll('home.v2.step2p')}</span>
+              </span>
+            </li>
+            <li>
+              <span>
+                <b>{tAll('home.how.step3')}</b>
+                <span>{tAll('home.v2.step3p')}</span>
+              </span>
+            </li>
+          </ol>
+        </aside>
+      </div>
+    </div>
   )
 }

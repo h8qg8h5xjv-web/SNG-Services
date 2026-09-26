@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SectionHeading } from '@/components/ui/Section'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
@@ -14,27 +13,25 @@ import {
   IconLanguage,
   IconCircleCheck,
   IconBrandWhatsapp,
+  IconHome,
+  IconPhoto,
 } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
-import NoPhoto from '@/components/NoPhoto'
-import { ButtonLink } from '@/components/ui/Button'
-import { InfoBlock } from '@/components/ui/InfoBlock'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
 import SaveHeart from '@/components/SaveHeart'
 import OpenNowInline from '@/components/OpenNowInline'
 import ProviderHours from '@/components/ProviderHours'
 import OpeningHours from '@/components/site/OpeningHours'
-import VenueGallery from '@/components/site/VenueGallery'
 import RecordRecentView from '@/components/RecordRecentView'
 import ContactButtons from '@/components/ContactButtons'
 import AddressMap from '@/components/map/AddressMap'
-import EventCard from '@/components/EventCard'
+import EventRow from '@/components/events/EventRow'
 import JsonLd from '@/components/JsonLd'
+import ListingWeek from '@/components/booking/ListingWeek'
 import {
   getProviderDetail,
   providerCredentials,
   verifiedLanguageSummary,
+  serviceLanguageBadges,
 } from '@/lib/queries/providers'
 import { listEventsByOrganizer } from '@/lib/queries/events'
 import { recordEvents } from '@/lib/tracking/events'
@@ -73,6 +70,9 @@ export async function generateMetadata({
   }
 }
 
+// Listing (DEMO_MAP §3.2): gallery, name, facts, trust badges from real data,
+// services, where & when, the organiser's events, contacts; the aside holds the
+// real free windows (or the right non-booking action); a CTA bar on phones.
 export default async function ProviderPage({
   params,
   searchParams,
@@ -102,45 +102,41 @@ export default async function ProviderPage({
     provider.provider_translations,
     locale,
   )
-  // A place's first venue photo is its cover (DESIGN); fall back to cover_image.
-  const image = resolveImageUrl(provider.venue_photos?.[0] ?? provider.cover_image)
+  const categoryName = provider.categories ? pickCategoryName(provider.categories, locale) : ''
+  const photos = [
+    ...(provider.venue_photos ?? []),
+    ...(!provider.venue_photos?.length && provider.cover_image ? [provider.cover_image] : []),
+  ]
+    .map((p) => resolveImageUrl(p))
+    .filter((u): u is string => Boolean(u))
+  const image = photos[0] ?? null
   const credentials = providerCredentials(provider)
-  // Verified, non-expired service languages → the trust InfoBlock (DESIGN §5).
   const verified = verifiedLanguageSummary(provider.provider_languages)
   const verifiedOn = verified.verifiedAt
     ? dateTimeFormat(locale, { timeZone: 'Europe/London', day: 'numeric', month: 'short', year: 'numeric' }).format(
         new Date(verified.verifiedAt),
       )
     : null
-  const langLabel =
-    verified.names.length === 1
-      ? t('trust.oneVerified', { lang: verified.names[0] })
-      : verified.names.length > 1
-        ? t('trust.manyVerified', { langs: verified.names.join(', ') })
-        : null
+  const languageNames = serviceLanguageBadges(provider.provider_languages).map((l) => l.name)
   const isExternal = provider.fulfillment_type === 'external_order'
   // A place that opts out of bookings (booking_enabled=false) is a listing only.
-  const isNative = provider.fulfillment_type === 'native_booking' && provider.booking_enabled
-
+  const isNative =
+    provider.fulfillment_type === 'native_booking' && provider.booking_enabled && provider.services.length > 0
   const durationLabels = { hour: t('units.hour'), min: t('units.min') }
+  const todayIso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date())
+  const todayDow = new Date(`${todayIso}T12:00:00Z`).getUTCDay()
+  const base = `/${category}/${slug}`
 
-  // §6 sticky bar: "from" price, and a WhatsApp link with a prefilled message.
   const priceFrom =
     !isExternal && provider.services.length > 0
       ? Math.min(...provider.services.map((s) => s.price_pence))
       : null
   const waNumber = provider.phone ? provider.phone.replace(/[^0-9]/g, '') : ''
   const waText = t('provider.whatsappText', { name })
-  const waHref = waNumber
-    ? `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`
-    : null
+  const waHref = waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}` : null
+  const hasMap = provider.lat != null && provider.lng != null
   const hasContacts = Boolean(
-    provider.phone ||
-      provider.telegram ||
-      provider.instagram ||
-      provider.website ||
-      provider.address ||
-      (provider.lat != null && provider.lng != null),
+    provider.phone || provider.telegram || provider.instagram || provider.website || provider.address || hasMap,
   )
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
@@ -159,317 +155,300 @@ export default async function ProviderPage({
       addressCountry: 'GB',
       ...(provider.address ? { streetAddress: provider.address } : {}),
     },
-    ...(provider.lat != null && provider.lng != null
-      ? {
-          geo: {
-            '@type': 'GeoCoordinates',
-            latitude: provider.lat,
-            longitude: provider.lng,
-          },
-        }
+    ...(hasMap
+      ? { geo: { '@type': 'GeoCoordinates', latitude: provider.lat, longitude: provider.lng } }
       : {}),
   }
 
-  // Primary CTA reused inline and in the mobile sticky bar.
-  const cta = isNative ? (
-    <ButtonLink href={`/${category}/${slug}/book`} className="w-full sm:w-auto">
-      {t('provider.book')}
-    </ButtonLink>
-  ) : isExternal && provider.external_order_url ? (
-    <ButtonLink href={provider.external_order_url} external className="w-full sm:w-auto">
-      {t('provider.orderOn', { platform: platformName(provider.external_order_url) })}
-      <IconExternalLink className="h-5 w-5" stroke={2} />
-    </ButtonLink>
-  ) : provider.entity_type === 'pro' ? (
-    // A pro without an instant schedule → the path is a request to this specific
-    // master (REQUESTS 12.2), so the card always shows the available path.
-    <ButtonLink
-      href={`/request?category=${category}&provider=${slug}`}
-      className="w-full sm:w-auto"
-    >
-      {t('request.askThisMaster')}
-    </ButtonLink>
-  ) : null
+  const services = provider.services.map((s) => ({
+    id: s.id,
+    name: locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en,
+    durationMin: s.duration_min,
+    pricePence: s.price_pence,
+    capacity: s.capacity,
+  }))
+
+  // The primary action for non-booking providers (also in the phone CTA bar).
+  const altCta =
+    isExternal && provider.external_order_url ? (
+      <a href={provider.external_order_url} target="_blank" rel="noopener noreferrer" className="btn btn-amber">
+        {t('provider.orderOn', { platform: platformName(provider.external_order_url) })}
+        <IconExternalLink stroke={1.75} aria-hidden="true" />
+      </a>
+    ) : !isNative && provider.entity_type === 'pro' ? (
+      // A pro without an instant schedule → a request to this specific master.
+      <Link href={`/request?category=${category}&provider=${slug}`} className="btn btn-amber">
+        {t('request.askThisMaster')}
+      </Link>
+    ) : null
 
   return (
-    <>
-      <Header />
+    <div className={`wrap page ${isNative || altCta ? 'has-cta' : ''}`}>
       <JsonLd data={businessLd} />
-      {/* pb-cta: reserves room below content for the mobile CTA + floating nav. */}
-      <main className={`mx-auto w-full max-w-3xl flex-1 px-4 ${cta ? 'pb-cta' : 'pb-8'} sm:pb-8`}>
-        <RecordRecentView
-          item={{
-            slug: provider.slug,
-            categorySlug: category,
-            name,
-            borough: provider.borough,
-            coverImage: provider.cover_image,
-          }}
-        />
+      <RecordRecentView
+        item={{ slug: provider.slug, categorySlug: category, name, borough: provider.borough, coverImage: provider.cover_image }}
+      />
+      <nav className="crumbs" aria-label={t('listing.crumbsLabel')}>
+        <Link href="/catalog">{t('listing.catalog')}</Link>
+        <span aria-hidden="true">/</span>
+        <Link href={`/${category}`}>{categoryName}</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{name}</span>
+      </nav>
 
-        {/* Full-width photo (~210px) with overlay controls (DESIGN §7). Full-bleed
-            on mobile (-mx-4), inset + rounded on desktop. */}
-        <div className="relative -mx-4 h-52 overflow-hidden bg-slate-100 sm:mx-0 sm:mt-4 sm:rounded-lg">
-          {image ? (
-            <Image
-              src={image}
-              alt=""
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-cover"
-              priority
-            />
-          ) : (
-            // No photo (e.g. an unclaimed place — we don't take others' images).
-            <NoPhoto categorySlug={category} className="h-full w-full" iconClassName="h-12 w-12" />
-          )}
-          <div className="absolute left-3 top-3">
-            <BackButton floating />
+      <div className="lst">
+        <div>
+          {/* Real photos; an honest dusk placeholder when there are none. */}
+          <div className={`gal ${photos.length < 3 ? 'one' : ''}`}>
+            {photos.length === 0 ? (
+              <div className="ph">
+                <span className="ph-name">{name}</span>
+                <span className="ph-arches" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <IconPhoto stroke={1.5} aria-hidden="true" />
+                {t('listing.noPhotos')}
+              </div>
+            ) : (
+              photos.slice(0, photos.length < 3 ? 1 : 3).map((src, i) => (
+                <div key={src} className="ph-media">
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes={i === 0 ? '(max-width: 980px) 100vw, 60vw' : '(max-width: 980px) 50vw, 25vw'}
+                    className="object-cover"
+                    priority={i === 0}
+                  />
+                  {i === 0 && photos.length > 3 && (
+                    <span className="gal-count">{t('provider.photoCount', { current: 1, total: photos.length })}</span>
+                  )}
+                </div>
+              ))
+            )}
           </div>
-          <SaveHeart big slug={provider.slug} />
-          {(provider.venue_photos?.length ?? 0) > 1 && (
-            <span className="absolute bottom-3 right-3 rounded-full bg-slate-900/70 px-2 py-1 text-meta font-semibold text-white">
-              {t('provider.photoCount', { current: 1, total: provider.venue_photos!.length })}
-            </span>
-          )}
-        </div>
 
-        <div className="py-6">
-          <h1 className="text-title font-extrabold tracking-tight">{name}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-x-2 text-slate-500">
-            <span>{[provider.categories ? pickCategoryName(provider.categories, locale) : '', provider.borough].filter(Boolean).join(' · ')}</span>
+          <h1 className="ph1">{name}</h1>
+          <p className="lst-meta">
+            <span>
+              {categoryName} · {provider.borough}
+            </span>
+            {priceFrom != null && (
+              <>
+                <span className="dot-sep" aria-hidden="true" />
+                <span>{t('listing.from', { price: formatPrice(priceFrom) })}</span>
+              </>
+            )}
             {provider.entity_type === 'place' && provider.opening_hours != null && (
               <>
-                <span aria-hidden>·</span>
+                <span className="dot-sep" aria-hidden="true" />
                 <OpenNowInline hours={parseOpeningHours(provider.opening_hours)} />
               </>
             )}
           </p>
 
-          {/* Trust, not rating (DESIGN §5): verified service language + when. */}
-          {langLabel && (
-            <div className="mt-4">
-              <InfoBlock
-                icon={IconLanguage}
-                title={langLabel}
-                subtitle={verifiedOn ? t('trust.checkedOn', { date: verifiedOn }) : t('trust.checkedByUs')}
-              />
-            </div>
+          <div className="badges">
+            {verified.names.length > 0 && (
+              <span className="pill">
+                <IconLanguage stroke={1.75} aria-hidden="true" />
+                {t('listing.langChecked')}
+              </span>
+            )}
+            {credentials.insuranceVerified && (
+              <span className="pill">
+                <IconCircleCheck stroke={1.75} aria-hidden="true" />
+                {t('provider.insuranceVerified')}
+              </span>
+            )}
+            {credentials.dbsVerified && (
+              <span className="pill">
+                <IconCircleCheck stroke={1.75} aria-hidden="true" />
+                {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
+              </span>
+            )}
+            {provider.travels_to_client && (
+              <span className="pill">
+                <IconHome stroke={1.75} aria-hidden="true" />
+                {t('listing.travels')}
+              </span>
+            )}
+          </div>
+
+          {description && description.trim() && <p className="lst-desc">{description}</p>}
+
+          {languageNames.length > 0 && (
+            <p className="lst-note">
+              {t('listing.languages', { langs: languageNames.join(', ') })}
+              {verified.names.length > 0 &&
+                ` · ${verifiedOn ? t('trust.checkedOn', { date: verifiedOn }) : t('trust.checkedByUs')}`}
+            </p>
           )}
 
-          {(credentials.insuranceVerified || credentials.dbsVerified) && (
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-body">
-              {credentials.insuranceVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
-                  <IconCircleCheck className="h-5 w-5" stroke={2} />
-                  {t('provider.insuranceVerified')}
-                </span>
-              )}
-              {credentials.dbsVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-green-700">
-                  <IconCircleCheck className="h-5 w-5" stroke={2} />
-                  {t('provider.dbsVerified', { type: credentials.dbsType ?? '' })}
-                </span>
-              )}
-            </div>
-          )}
-          {description && description.trim() && (
-            <p className="mt-4 whitespace-pre-line text-slate-900">{description}</p>
-          )}
-
-          {/* Honest source note for cards entered from public data (idea #7 / §12). */}
           {provider.claim_status === 'unclaimed' && (
-            <p className="mt-4 text-meta text-slate-400">
+            <p className="lst-note">
               {t('provider.unclaimed')}{' '}
-              <Link href="/for-business" className="font-semibold text-accent hover:underline">
+              <Link href="/for-business" className="link">
                 {t('provider.claimCta')}
               </Link>
             </p>
           )}
 
-          {cta && <div className="mt-6 hidden sm:block">{cta}</div>}
-        </div>
+          {!isExternal && (
+            <section aria-labelledby="svc-h">
+              <h2 id="svc-h" className="h3">
+                {t('provider.services')}
+              </h2>
+              {services.length === 0 ? (
+                <p className="muted">{t('provider.servicesUnknown')}</p>
+              ) : (
+                <ul className="svc">
+                  {services.map((s) => (
+                    <li key={s.id}>
+                      <span>
+                        <b>{s.name}</b>
+                        <small>{formatDuration(s.durationMin, durationLabels)}</small>
+                      </span>
+                      <span className="price">{formatPrice(s.pricePence)}</span>
+                      {isNative && (
+                        <Link href={`${base}/book?svc=${encodeURIComponent(s.id)}`} className="btn btn-line btn-sm">
+                          {t('listing.choose')}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
 
-        {/* No services on a non-external provider → tell the client to ask (§13). */}
-        {!isExternal && provider.services.length === 0 && (
-          <section className="border-t border-slate-200 py-6">
-            <SectionHeading>{t('provider.services')}</SectionHeading>
-            <p className="text-body text-slate-500">{t('provider.servicesUnknown')}</p>
-          </section>
-        )}
+          {(provider.schedules.length > 0 || hasMap || provider.entity_type === 'place') && (
+            <section aria-labelledby="where-h">
+              <h2 id="where-h" className="h3">
+                {t('listing.whereWhen')}
+              </h2>
+              <div className="where">
+                {hasMap ? <AddressMap lat={provider.lat!} lng={provider.lng!} /> : null}
+                <div>
+                  {provider.schedules.length > 0 && <ProviderHours schedules={provider.schedules} today={todayDow} />}
+                  {provider.entity_type === 'place' && <OpeningHours hours={provider.opening_hours} locale={locale} />}
+                </div>
+              </div>
+            </section>
+          )}
 
-        {/* Services — hidden entirely for external_order (no prices shown at all). */}
-        {!isExternal && provider.services.length > 0 && (
-          <section className="border-t border-slate-200 py-6">
-            <SectionHeading>{t('provider.services')}</SectionHeading>
-            <ul className="divide-y divide-slate-100">
-              {provider.services.map((s) => {
-                const serviceName =
-                  locale === 'ru' ? (s.name_ru ?? s.name_en) : s.name_en
-                return (
-                  <li key={s.id} className="flex items-center justify-between gap-4 py-3">
-                    <div>
-                      <p className="font-semibold">{serviceName}</p>
-                      <p className="text-body text-slate-500">
-                        {formatDuration(s.duration_min, durationLabels)}
-                      </p>
-                    </div>
-                    <p className="whitespace-nowrap font-semibold">
-                      {formatPrice(s.price_pence)}
-                    </p>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-        )}
+          {organizerEvents.length > 0 && (
+            <section aria-labelledby="ev-h">
+              <h2 id="ev-h" className="h3">
+                {t('events.upcoming')}
+              </h2>
+              <ul className="evlist">
+                {organizerEvents.map((event) => (
+                  <EventRow key={event.id} event={event} locale={locale} />
+                ))}
+              </ul>
+            </section>
+          )}
 
-        {provider.schedules.length > 0 && (
-          <section className="border-t border-slate-200 py-6">
-            <SectionHeading>{t('provider.hours')}</SectionHeading>
-            <ProviderHours schedules={provider.schedules} />
-          </section>
-        )}
-
-        {/* Place-only: informational opening hours (DESIGN §2в). */}
-        {provider.entity_type === 'place' && (
-          <div className="border-t border-slate-200">
-            <OpeningHours hours={provider.opening_hours} locale={locale} />
-          </div>
-        )}
-
-        {/* Gallery (§6): shown for any provider with more than the cover photo. */}
-        {(provider.venue_photos?.length ?? 0) > 1 && (
-          <section className="border-t border-slate-200 py-6">
-            <SectionHeading>{t('provider.gallery')}</SectionHeading>
-            <VenueGallery photos={provider.venue_photos} />
-          </section>
-        )}
-
-        {/* Upcoming events organised by this provider (DESIGN §2а / §3). */}
-        {organizerEvents.length > 0 && (
-          <section className="border-t border-slate-200 py-6">
-            <SectionHeading>{t('events.upcoming')}</SectionHeading>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {organizerEvents.map((event) => (
-                <EventCard key={event.id} event={event} locale={locale} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {(hasContacts || provider.fulfillment_type === 'enquiry') && (
-        <section className="border-t border-slate-200 py-6">
-          <SectionHeading>{t('provider.contacts')}</SectionHeading>
-          <div className="mb-4">
-            <ContactButtons
-              providerId={provider.id}
-              locale={locale}
-              phone={provider.phone}
-              website={provider.website}
-              waText={waText}
-            />
-          </div>
-          <ul className="space-y-2 text-body">
-            {provider.phone && (
-              <li>
-                <a href={`tel:${provider.phone}`} className="inline-flex items-center gap-2 hover:underline">
-                  <IconPhone className="h-5 w-5" stroke={1.5} /> {provider.phone}
-                </a>
-              </li>
-            )}
-            {provider.telegram && (
-              <li>
-                <a
-                  href={`https://t.me/${provider.telegram.replace(/^@/, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <IconBrandTelegram className="h-5 w-5" stroke={1.5} /> {provider.telegram}
-                </a>
-              </li>
-            )}
-            {provider.instagram && (
-              <li>
-                <a
-                  href={`https://instagram.com/${provider.instagram.replace(/^@/, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <IconBrandInstagram className="h-5 w-5" stroke={1.5} /> {provider.instagram}
-                </a>
-              </li>
-            )}
-            {provider.website && (
-              <li>
-                <a
-                  href={provider.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <IconWorld className="h-5 w-5" stroke={1.5} /> {t('provider.website')}
-                </a>
-              </li>
-            )}
-            {(provider.address || (provider.lat != null && provider.lng != null)) && (
-              <li>
-                {provider.lat != null && provider.lng != null ? (
+          {(hasContacts || provider.fulfillment_type === 'enquiry') && (
+            <section aria-labelledby="contacts-h">
+              <h2 id="contacts-h" className="h3">
+                {t('provider.contacts')}
+              </h2>
+              <ContactButtons
+                providerId={provider.id}
+                locale={locale}
+                phone={provider.phone}
+                website={provider.website}
+                waText={waText}
+              />
+              <div className="addr">
+                {provider.phone && (
+                  <a href={`tel:${provider.phone}`}>
+                    <IconPhone stroke={1.75} aria-hidden="true" /> {provider.phone}
+                  </a>
+                )}
+                {provider.telegram && (
+                  <a href={`https://t.me/${provider.telegram.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer">
+                    <IconBrandTelegram stroke={1.75} aria-hidden="true" /> {provider.telegram}
+                  </a>
+                )}
+                {provider.instagram && (
                   <a
-                    href={`https://www.openstreetmap.org/?mlat=${provider.lat}&mlon=${provider.lng}#map=15/${provider.lat}/${provider.lng}`}
+                    href={`https://instagram.com/${provider.instagram.replace(/^@/, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:underline"
                   >
-                    <IconMapPin className="h-5 w-5" stroke={1.5} />
-                    {provider.address ?? provider.borough}
+                    <IconBrandInstagram stroke={1.75} aria-hidden="true" /> {provider.instagram}
                   </a>
-                ) : (
-                  <span className="inline-flex items-center gap-2">
-                    <IconMapPin className="h-5 w-5" stroke={1.5} /> {provider.address}
-                  </span>
                 )}
-              </li>
-            )}
-          </ul>
-          {provider.lat != null && provider.lng != null && (
-            <AddressMap lat={provider.lat} lng={provider.lng} />
-          )}
-          {provider.fulfillment_type === 'enquiry' && (
-            <p className="mt-3 text-body text-slate-500">{t('provider.enquiryHint')}</p>
-          )}
-        </section>
-        )}
-      </main>
-
-      {/* Mobile sticky bar (§6): from-price + primary CTA + square WhatsApp button,
-          pinned above the floating bottom nav. */}
-      {(cta || waHref) && (
-        <div className="cta-above-nav fixed inset-x-0 z-20 border-t border-slate-200 bg-white px-3 py-2 sm:hidden">
-          <div className="flex items-center gap-2">
-            {priceFrom != null && (
-              <div className="flex shrink-0 flex-col leading-tight">
-                <span className="text-label text-slate-500">{t('catalog.from')}</span>
-                <span className="text-body font-bold text-slate-900">{formatPrice(priceFrom)}</span>
+                {provider.website && (
+                  <a href={provider.website} target="_blank" rel="noopener noreferrer">
+                    <IconWorld stroke={1.75} aria-hidden="true" /> {t('provider.website')}
+                  </a>
+                )}
+                {(provider.address || hasMap) &&
+                  (hasMap ? (
+                    <a
+                      href={`https://www.openstreetmap.org/?mlat=${provider.lat}&mlon=${provider.lng}#map=15/${provider.lat}/${provider.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconMapPin stroke={1.75} aria-hidden="true" />
+                      {provider.address ?? provider.borough}
+                    </a>
+                  ) : (
+                    <span>
+                      <IconMapPin stroke={1.75} aria-hidden="true" /> {provider.address}
+                    </span>
+                  ))}
               </div>
-            )}
-            {cta && <div className="min-w-0 flex-1">{cta}</div>}
+              {provider.fulfillment_type === 'enquiry' && <p className="lst-note">{t('provider.enquiryHint')}</p>}
+            </section>
+          )}
+        </div>
+
+        {isNative ? (
+          <ListingWeek base={base} slug={provider.slug} services={services} todayIso={todayIso} />
+        ) : (
+          <aside className="card week" aria-labelledby="alt-h">
+            <h2 id="alt-h" className="h3">
+              {t('listing.otherWays')}
+            </h2>
+            {!isExternal && <p className="week-sub">{t('provider.enquiryHint')}</p>}
+            <div className="week-cta">
+              {altCta}
+              <SaveHeart slug={provider.slug} variant="inline" />
+            </div>
+          </aside>
+        )}
+      </div>
+
+      {(isNative || altCta) && (
+        <div className="cta-bar">
+          <div className="min-w-0">
+            <b className="truncate">{name}</b>
+            {priceFrom != null && <span>{t('listing.from', { price: formatPrice(priceFrom) })}</span>}
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
             {waHref && (
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t('provider.message')}
-                className="press focus-ring flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-green-600 text-white"
-              >
-                <IconBrandWhatsapp className="h-6 w-6" stroke={2} />
+              <a href={waHref} target="_blank" rel="noopener noreferrer" aria-label={t('provider.message')} className="icon-btn lined">
+                <IconBrandWhatsapp stroke={1.75} aria-hidden="true" />
               </a>
+            )}
+            {isNative ? (
+              <Link href={`${base}/book`} className="btn btn-amber btn-sm">
+                {t('listing.bookCta')}
+              </Link>
+            ) : (
+              altCta
             )}
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

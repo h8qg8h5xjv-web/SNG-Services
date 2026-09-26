@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { IconChevronLeft } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
-import { SectionHeading } from '@/components/ui/Section'
 import {
   getCabinetProfile,
   getCabinetServices,
@@ -35,40 +34,44 @@ export default async function CabinetCardEditPage({
   ])
 
   return (
-    <div className="space-y-8">
-      <Link href="/cabinet/cards" className="inline-flex items-center gap-1 text-body text-slate-500 hover:text-slate-900">
-        <IconChevronLeft className="h-5 w-5" stroke={1.5} />
+    <div>
+      <Link href="/cabinet/cards" className="btn btn-plain btn-sm px-0" data-kind="step-back">
+        <IconChevronLeft stroke={1.75} aria-hidden="true" />
         {t('backToCards')}
       </Link>
 
-      <div>
-        <h2 className="text-title font-extrabold tracking-tight">{profile.name}</h2>
-        {profile.status !== 'published' && (
-          <p className="mt-1 text-meta text-slate-500">{t('draftNote')}</p>
-        )}
+      <div className="mt-4 mb-8">
+        <h2 className="h2">{profile.name}</h2>
+        {profile.status !== 'published' && <p className="muted mt-2">{t('draftNote')}</p>}
       </div>
 
-      <section>
-        <SectionHeading>{tt('profile')}</SectionHeading>
+      <section className="card ed-sec" aria-labelledby="ed-profile">
+        <h3 id="ed-profile" className="h3">
+          {tt('profile')}
+        </h3>
         <ProfileForm profile={profile} />
       </section>
 
-      <section>
-        <SectionHeading>{tt('services')}</SectionHeading>
+      <section className="card ed-sec" aria-labelledby="ed-services">
+        <h3 id="ed-services" className="h3">
+          {tt('services')}
+        </h3>
         <ServicesEditor providerId={id} services={services} />
       </section>
 
-      <section>
-        <SectionHeading>{tt('languages')}</SectionHeading>
+      <section className="card ed-sec" aria-labelledby="ed-langs">
+        <h3 id="ed-langs" className="h3">
+          {tt('languages')}
+        </h3>
         <LanguagesEditor providerId={id} all={langs.all} claimed={langs.claimed} />
       </section>
 
-      <details className="rounded-lg border border-slate-200 p-4">
-        <summary className="cursor-pointer text-section font-extrabold tracking-tight">{tt('schedule')}</summary>
-        <div className="mt-4">
-          <ScheduleEditor providerId={id} rows={schedule} />
-        </div>
-      </details>
+      <section className="card ed-sec" aria-labelledby="ed-schedule">
+        <h3 id="ed-schedule" className="h3">
+          {tt('schedule')}
+        </h3>
+        <ScheduleEditor providerId={id} rows={schedule} />
+      </section>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { IconSearch, IconClock } from '@tabler/icons-react'
+import { IconSearch, IconClock, IconX } from '@tabler/icons-react'
 import { searchNavPath } from '@/lib/search/target'
 import type { Suggestion } from '@/lib/search/suggest'
 
@@ -24,12 +24,13 @@ function pushRecent(q: string) {
   }
 }
 
-// DESIGN-SYSTEM §2 / §11: flat field + visible "Найти". A NATIVE GET form (so
+// v2 search box (DEMO_MAP §3.6 `.sbox`) + visible "Найти". A NATIVE GET form (so
 // Найти and Enter always navigate, even without JS — next-intl's router mangles
 // query strings, which broke search). Suggestions and the best-category jump use
 // window.location with locale-prefixed paths.
 export default function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
   const t = useTranslations('home')
+  const tc = useTranslations('cat2')
   const locale = useLocale()
   const [query, setQuery] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
@@ -83,9 +84,9 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
   const showSuggestions = open && suggestions.length > 0
 
   return (
-    <div ref={boxRef} className="relative w-full max-w-xl">
-      {/* 3D search capsule (§Эффекты): raised light edge, blue submit circle. */}
-      <form role="search" action={`/${locale}/search`} method="get" onSubmit={onSubmit} className="search-3d flex w-full items-center">
+    <div ref={boxRef} className="sbox-wrap">
+      <form role="search" action={`/${locale}/search`} method="get" onSubmit={onSubmit} className="sbox">
+        <IconSearch stroke={1.75} aria-hidden="true" />
         <input
           type="search"
           name="q"
@@ -97,51 +98,57 @@ export default function SearchBar({ initialQuery = '' }: { initialQuery?: string
           }}
           placeholder={t('searchPlaceholder')}
           aria-label={t('searchPlaceholder')}
-          className="search-3d__field min-h-11 pl-4 pr-14 text-body"
+          enterKeyHint="search"
+          autoComplete="off"
         />
-        <button
-          type="submit"
-          aria-label={t('search')}
-          className="search-3d__go focus-ring h-11 w-11"
-        >
-          <IconSearch className="h-5 w-5" stroke={2} />
+        {query && (
+          <button type="button" className="clear" aria-label={tc('clear')} onClick={() => setQuery('')}>
+            <IconX stroke={2} aria-hidden="true" />
+          </button>
+        )}
+        <button type="submit" className="btn btn-amber btn-sm">
+          {t('search')}
         </button>
       </form>
 
       {(showSuggestions || showRecent) && (
-        <div className="drop-in absolute left-0 right-0 top-full z-40 mt-1 overflow-hidden rounded-control border border-slate-200 bg-white">
-          {showRecent &&
-            recent.map((r) => (
-              <button
-                key={r}
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  pushRecent(r)
-                  goto(`/search?q=${encodeURIComponent(r)}`)
-                }}
-                className="flex min-h-11 w-full items-center gap-2 px-3 text-left text-body text-slate-700 hover:bg-slate-50"
-              >
-                <IconClock className="h-4 w-4 text-slate-400" stroke={1.5} />
-                {r}
-              </button>
-            ))}
-          {showSuggestions &&
-            suggestions.map((s) => (
-              <button
-                key={`${s.kind}-${s.href}`}
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  pushRecent(s.label)
-                  goto(s.href)
-                }}
-                className="flex min-h-11 w-full items-center justify-between gap-2 px-3 text-left hover:bg-slate-50"
-              >
-                <span className="truncate text-body text-slate-900">{s.label}</span>
-                <span className="shrink-0 text-label text-slate-400">{s.sub ?? t(`suggestKind.${s.kind}`)}</span>
-              </button>
-            ))}
+        <div className="sel-panel sbox-drop">
+          <div className="sel-list">
+            {showRecent &&
+              recent.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    pushRecent(r)
+                    goto(`/search?q=${encodeURIComponent(r)}`)
+                  }}
+                  className="sel-opt w-full"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <IconClock stroke={1.75} aria-hidden="true" />
+                    {r}
+                  </span>
+                </button>
+              ))}
+            {showSuggestions &&
+              suggestions.map((s) => (
+                <button
+                  key={`${s.kind}-${s.href}`}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    pushRecent(s.label)
+                    goto(s.href)
+                  }}
+                  className="sel-opt w-full text-left"
+                >
+                  <span className="truncate">{s.label}</span>
+                  <small>{s.sub ?? t(`suggestKind.${s.kind}`)}</small>
+                </button>
+              ))}
+          </div>
         </div>
       )}
     </div>

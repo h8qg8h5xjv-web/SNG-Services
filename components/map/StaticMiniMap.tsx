@@ -3,12 +3,12 @@
 import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
 import { OSM_STYLE } from '@/lib/maps/style'
-import { BLUE_800 } from '@/lib/palette'
+import { INK } from '@/lib/palette'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-const ACCENT = BLUE_800
+const MARKER = INK
 
-// A non-interactive map with a single marker for the «Адрес» block. All gestures
+// A non-interactive map with a single marker for «Где и когда». All gestures
 // are disabled — the surrounding link opens the full OSM map (§3).
 export default function StaticMiniMap({ lat, lng }: { lat: number; lng: number }) {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -25,8 +25,12 @@ export default function StaticMiniMap({ lat, lng }: { lat: number; lng: number }
       attributionControl: { compact: true },
     })
     mapRef.current = map
-    new maplibregl.Marker({ color: ACCENT }).setLngLat([lng, lat]).addTo(map)
+    // The container can settle its size after the map is created (grid cells).
+    const ro = new ResizeObserver(() => map.resize())
+    ro.observe(containerRef.current)
+    new maplibregl.Marker({ color: MARKER }).setLngLat([lng, lat]).addTo(map)
     return () => {
+      ro.disconnect()
       map.remove()
       mapRef.current = null
     }

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { IconClock, IconMoodSad } from '@tabler/icons-react'
 import { Link } from '@/i18n/navigation'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { SuccessScreen } from '@/components/ui/SuccessScreen'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import {
@@ -94,14 +94,14 @@ export default function RequestStatus({
           price: state.match.pricePence != null ? formatPrice(state.match.pricePence) : '—',
         })}
         action={
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button onClick={onConfirm} disabled={busy}>
+          <>
+            <Button variant="amber" onClick={onConfirm} disabled={busy}>
               {t('confirm')}
             </Button>
-            <Button variant="secondary" onClick={onCancel} disabled={busy}>
+            <Button variant="line" onClick={onCancel} disabled={busy}>
               {t('cancel')}
             </Button>
-          </div>
+          </>
         }
       />
     )
@@ -113,7 +113,7 @@ export default function RequestStatus({
         title={t('confirmedTitle')}
         message={t('confirmedBody')}
         action={
-          <ButtonLink href="/bookings" className="w-full sm:w-auto">
+          <ButtonLink href="/bookings" variant="ink">
             {t('goToBookings')}
           </ButtonLink>
         }
@@ -127,9 +127,9 @@ export default function RequestStatus({
         title={t('manualTitle')}
         message={t('manualBody', { ref: ref_ })}
         action={
-          <Link href="/" className="text-body font-semibold text-accent hover:underline">
+          <ButtonLink href="/" variant="line">
             {t('backHome')}
-          </Link>
+          </ButtonLink>
         }
       />
     )
@@ -137,55 +137,48 @@ export default function RequestStatus({
 
   if (state.status === 'expired' || state.status === 'cancelled') {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-lg border border-slate-200 p-8 text-center">
-        <IconMoodSad className="h-6 w-6 text-slate-400" stroke={1.5} />
-        <p className="text-body text-slate-500">
-          {state.status === 'expired' ? t('expiredHelp') : t('cancelledBody')}
-        </p>
-        <Link href="/" className="text-body font-semibold text-accent hover:underline">
-          {t('backHome')}
-        </Link>
-      </div>
+      <EmptyState
+        mark="—"
+        text={state.status === 'expired' ? t('expiredHelp') : t('cancelledBody')}
+        action={
+          <Link href="/" className="btn btn-ink">
+            {t('backHome')}
+          </Link>
+        }
+      />
     )
   }
 
-  // broadcasting / draft
+  // broadcasting / draft: a state, not a spinner.
   return (
-    <div className="rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center gap-2">
-        <IconClock className="h-6 w-6 text-accent" stroke={1.5} />
-        <h1 className="text-h2 font-semibold">{t('asking', { n: state.askedCount })}</h1>
-      </div>
-      <p className="mt-2 text-body text-slate-500">{t('usuallyMinutes')}</p>
-      {state.maxWave >= 2 && (
-        <p className="mt-2 text-meta text-slate-500">{t('expandedNeighbours')}</p>
-      )}
+    <div className="thread">
+      <h1 className="ph1">{t('asking', { n: state.askedCount })}</h1>
+      <p className="muted">{t('usuallyMinutes')}</p>
+      {state.maxWave >= 2 && <p className="meta">{t('expandedNeighbours')}</p>}
 
       {/* Quote: offers the client chooses from (REQUESTS §2 / 12.2). */}
       {state.offers.length > 0 && (
-        <div className="mt-4 space-y-2">
-          <h2 className="text-body font-semibold">{t('offersTitle')}</h2>
+        <>
+          <h2 className="h3 mt-4">{t('offersTitle')}</h2>
           {state.offers.map((o) => (
-            <div
-              key={o.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 p-3"
-            >
-              <div>
-                <p className="text-body font-semibold">
-                  {o.providerName} · {formatPrice(o.pricePence)}
-                </p>
-                {o.message && <p className="text-meta text-slate-500">{o.message}</p>}
+            <article key={o.id} className="rep">
+              <div className="rep-top">
+                <b>{o.providerName}</b>
+                <span className="price">{formatPrice(o.pricePence)}</span>
               </div>
-              <Button onClick={() => onChoose(o.id)} disabled={busy}>
-                {t('chooseOffer')}
-              </Button>
-            </div>
+              {o.message && <p>{o.message}</p>}
+              <div>
+                <Button variant="ink" size="sm" onClick={() => onChoose(o.id)} disabled={busy}>
+                  {t('chooseOffer')}
+                </Button>
+              </div>
+            </article>
           ))}
-        </div>
+        </>
       )}
 
       <div className="mt-4">
-        <Button variant="secondary" onClick={onCancel} disabled={busy}>
+        <Button variant="line" onClick={onCancel} disabled={busy}>
           {t('cancelRequest')}
         </Button>
       </div>

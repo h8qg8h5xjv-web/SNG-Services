@@ -161,26 +161,26 @@ export default function RequestForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
-      {providerName && <p className="text-body text-slate-500">{t('forMaster', { name: providerName })}</p>}
+    <form onSubmit={onSubmit} className="rq-form" noValidate>
+      {providerName && <p className="notice">{t('forMaster', { name: providerName })}</p>}
 
-      <div>
-        <label className="mb-2 block text-body font-semibold">{t('windows')}</label>
-        <div className="flex flex-wrap gap-2">
+      <div className="field">
+        <span className="lbl" id="rq-windows">{t('windows')}</span>
+        <div className="chipset" role="group" aria-labelledby="rq-windows">
           {WINDOW_KEYS.map((key) => (
-            <FilterChip key={key} active={selected.includes(key)} onClick={() => toggle(key)}>
+            <FilterChip key={key} look="dchip" active={selected.includes(key)} onClick={() => toggle(key)}>
               {t(`window.${key}`)}
             </FilterChip>
           ))}
         </div>
-        <p className="mt-2 text-meta text-slate-500">{speedHint}</p>
+        <p className="hint">{speedHint}</p>
       </div>
 
-      <div>
-        <label className="mb-2 block text-body font-semibold">{t('urgency')}</label>
-        <div className="flex flex-wrap gap-2">
+      <div className="field">
+        <span className="lbl" id="rq-urgency">{t('urgency')}</span>
+        <div className="chipset" role="group" aria-labelledby="rq-urgency">
           {URGENCY_KEYS.map((key) => (
-            <FilterChip key={key} active={urgency === key} onClick={() => setUrgency(key)}>
+            <FilterChip key={key} look="dchip" active={urgency === key} onClick={() => setUrgency(key)}>
               {t(`urgencyOption.${key}`)}
             </FilterChip>
           ))}
@@ -188,44 +188,44 @@ export default function RequestForm({
       </div>
 
       {type === 'fixed' && targetProviderId && services.length > 0 && (
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('service')}</label>
+        <div className="field">
+          <label className="lbl">{t('service')}</label>
           <Select
             value={serviceId}
             onChange={setServiceId}
             options={services.map((s) => ({ value: s.id, label: s.name }))}
             ariaLabel={t('service')}
             title={t('service')}
-            className="w-full"
+            
           />
         </div>
       )}
 
       {type === 'quote' && (
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('describe')}</label>
+        <div className="field">
+          <label className="lbl">{t('describe')}</label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full"
+            
           />
         </div>
       )}
 
       {type === 'quote' && (
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('photos')}</label>
+        <div className="field">
+          <label className="lbl">{t('photos')}</label>
           {previews.length > 0 && (
-            <div className="mb-2 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {previews.map((src, i) => (
                 <div key={src} className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" className="h-20 w-20 rounded-lg object-cover" />
+                  <img src={src} alt="" className="h-20 w-20 rounded-xl object-cover" />
                   <button
                     type="button"
                     onClick={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
-                    className="absolute right-1 top-1 rounded-lg bg-slate-900 px-2 text-meta text-white"
+                    className="x-btn"
                     aria-label={t('removePhoto')}
                   >
                     ×
@@ -242,30 +242,31 @@ export default function RequestForm({
               accept="image/*"
               multiple
               onChange={onPhotos}
-              className="block text-body"
+              className="block text-ui"
             />
           )}
-          <p className="mt-1 text-meta text-slate-500">{t('photosHint', { max: MAX_PHOTOS })}</p>
+          <p className="hint">{t('photosHint', { max: MAX_PHOTOS })}</p>
         </div>
       )}
 
       {!fixedBorough && (
-        <div>
-          <label className="mb-1 block text-body text-slate-500">{t('borough')}</label>
+        <div className="field">
+          <label className="lbl">{t('borough')}</label>
           <Select
             value={borough}
             onChange={setBorough}
             options={boroughs.map((b) => ({ value: b, label: b }))}
             ariaLabel={t('borough')}
             title={t('borough')}
-            className="w-full"
+            
           />
         </div>
       )}
 
-      <div>
-        <label className="mb-1 block text-body text-slate-500">{t('postcode')}</label>
+      <div className="field">
+        <label className="lbl" htmlFor="rq-postcode">{t('postcode')}</label>
         <Input
+          id="rq-postcode"
           required
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
@@ -273,43 +274,44 @@ export default function RequestForm({
           autoCapitalize="characters"
           className="w-40"
         />
-        <p className="mt-1 text-meta text-slate-500">{t('postcodeHint')}</p>
+        <p className="hint">{t('postcodeHint')}</p>
       </div>
 
       {regulatedApplies && (
-        <div className="rounded-lg border border-slate-200 p-4">
-          <p className="text-body font-semibold">{t('regulatedQuestion')}</p>
-          <p className="mt-1 text-meta text-slate-500">{t('regulatedWhy')}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <FilterChip active={!regulated} onClick={() => setRegulated(false)}>
+        <div className="card p-5">
+          <p className="lbl">{t('regulatedQuestion')}</p>
+          <p className="hint mt-1">{t('regulatedWhy')}</p>
+          <div className="chipset mt-3">
+            <FilterChip look="dchip" active={!regulated} onClick={() => setRegulated(false)}>
               {t('regulatedNo')}
             </FilterChip>
-            <FilterChip active={regulated} onClick={() => setRegulated(true)}>
+            <FilterChip look="dchip" active={regulated} onClick={() => setRegulated(true)}>
               {t('regulatedYes')}
             </FilterChip>
           </div>
           {regulated && (
-            <div className="mt-3">
-              <label className="mb-1 block text-body text-slate-500">{t('regulatedKind')}</label>
+            <div className="field mt-4">
+              <label className="lbl">{t('regulatedKind')}</label>
               <Select
                 value={regulatedKind}
                 onChange={(v) => setRegulatedKind(v as RegulatedKind)}
                 options={REGULATED_KINDS.map((k) => ({ value: k, label: t(`regulatedKindOption.${k}`) }))}
                 ariaLabel={t('regulatedKind')}
                 title={t('regulatedKind')}
-                className="w-full"
+                
               />
-              <p className="mt-1 text-meta text-slate-500">{t('regulatedNote')}</p>
+              <p className="hint">{t('regulatedNote')}</p>
             </div>
           )}
         </div>
       )}
 
-      <div>
-        <label className="mb-1 block text-body text-slate-500">
-          {t('budget')} <span className="text-slate-400">{t('budgetOptional')}</span>
+      <div className="field">
+        <label className="lbl" htmlFor="rq-budget">
+          {t('budget')} <span className="muted font-normal">{t('budgetOptional')}</span>
         </label>
         <Input
+          id="rq-budget"
           type="number"
           inputMode="numeric"
           min={0}
@@ -318,7 +320,7 @@ export default function RequestForm({
           className="w-40"
         />
         {priceGuide && (
-          <p className="mt-1 text-meta text-slate-500">
+          <p className="hint">
             {t('priceGuide', {
               p10: formatPrice(priceGuide.p10),
               p90: formatPrice(priceGuide.p90),
@@ -327,15 +329,19 @@ export default function RequestForm({
         )}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Input required placeholder={t('name')} value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
-        <Input required type="tel" placeholder={t('phone')} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
-        <Input type="email" placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full sm:col-span-2" />
+      <div className="grid gap-3 tablet:grid-cols-2">
+        <Input required aria-label={t('name')} autoComplete="name" placeholder={t('name')} value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
+        <Input required type="tel" aria-label={t('phone')} autoComplete="tel" placeholder={t('phone')} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full" />
+        <Input type="email" aria-label={t('email')} autoComplete="email" placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} className="tablet:col-span-2" />
       </div>
 
-      {error && <p className="text-body text-red-700">{error}</p>}
+      {error && (
+        <p className="notice" role="alert">
+          {error}
+        </p>
+      )}
 
-      <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+      <Button type="submit" variant="amber" disabled={pending} className="justify-self-start">
         {pending ? t('submitting') : t('submit')}
       </Button>
       <Consent />

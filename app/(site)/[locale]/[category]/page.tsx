@@ -1,17 +1,16 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconMoodSad, IconBriefcase } from '@tabler/icons-react'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
-import { ButtonLink } from '@/components/ui/Button'
-import { InfoBlock } from '@/components/ui/InfoBlock'
-import CategoryFilters from '@/components/CategoryFilters'
+import { Link } from '@/i18n/navigation'
+import NightHeader from '@/components/site/NightHeader'
+import CategoryToolbar from '@/components/catalog/CategoryToolbar'
 import CategoryMapView from '@/components/map/CategoryMapView'
 import ProviderGrid from '@/components/ProviderGrid'
 import TrackImpressions from '@/components/TrackImpressions'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { getCategoryBySlug } from '@/lib/queries/categories'
+import { getCategoryBySlug, getHomeCategories } from '@/lib/queries/categories'
+import { getFreeWindowsToday } from '@/lib/slots/service'
+import { groupBySlug } from '@/lib/slots/windows'
 import { listProvidersByCategory } from '@/lib/queries/providers'
 import { getResponseMedians } from '@/lib/queries/response-time'
 import { pickCategoryName } from '@/lib/i18n/content'
@@ -84,7 +83,12 @@ export default async function CategoryPage({
   const cat = await getCategoryBySlug(category)
   if (!cat) notFound()
 
-  const all = (await listProvidersByCategory(cat.id)).filter(isServiceEligible)
+  const [allRaw, windows, navCats] = await Promise.all([
+    listProvidersByCategory(cat.id),
+    getFreeWindowsToday(locale),
+    getHomeCategories(),
+  ])
+  const all = allRaw.filter(isServiceEligible)
   const boroughList = boroughsOf(all)
   const boroughs = parseBoroughs(sp.borough, boroughList)
   const sort = parseSort(sp.sort)
@@ -102,51 +106,95 @@ export default async function CategoryPage({
   const responseMins: Record<string, number> = {}
   for (const [id, m] of medians) responseMins[id] = m
 
+  // Today's real free windows in this category (the same list as the home city).
+  const catWindows = windows.filter((w) => w.categorySlug === category)
+  const windowsBySlug = groupBySlug(catWindows)
+
   const t = await getTranslations('catalog')
+  const t2 = await getTranslations('cat2')
+  const tl = await getTranslations('listing')
   const tr = await getTranslations('request')
+  const name = pickCategoryName(cat, locale)
   const isEmpty = all.length === 0
+  const n = (chunks: React.ReactNode) => <span className="n">{chunks}</span>
 
   return (
     <>
-      <Header />
-      <main className="mx-auto w-full max-w-page flex-1 px-3.5 pb-8 pt-4 sm:px-6">
-        <BackButton />
-        <div className="py-5">
-          <h1 className="text-title font-extrabold tracking-tight">{pickCategoryName(cat, locale)}</h1>
-          <p className="mt-1 text-meta text-slate-500">{t('providersCount', { count: all.length })}</p>
-          {all.length > 0 && <p className="mt-1 text-label text-slate-400">{t('orderNote')}</p>}
-        </div>
+      <NightHeader>
+        <nav className="crumbs" aria-label={tl('crumbsLabel')}>
+          <Link href="/catalog">{tl('catalog')}</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{name}</span>
+        </nav>
+        <h1 className="ph1">{name}</h1>
+        <p className="sub">
+          {catWindows.length > 0
+            ? t2.rich('categorySub', { places: all.length, windows: catWindows.length, n })
+            : t2('categorySubNone', { places: all.length })}
+        </p>
+        <nav className="catnav" aria-label={t2('categoriesNav')}>
+          {navCats.map(({ category: c }) => (
+            <Link key={c.slug} href={`/${c.slug}`} className="chip" aria-current={c.slug === category ? 'page' : undefined}>
+              {pickCategoryName(c, locale)}
+            </Link>
+          ))}
+        </nav>
+      </NightHeader>
 
-        <div className="sm:flex sm:gap-6">
-          {all.length > 0 && (
-            <div className="mb-4 sm:mb-0">
-              <CategoryFilters boroughs={boroughList} facets={facets} current={{ boroughs, sort, travels, verifiedOnly, view }} />
+      <div className="wrap page">
+        {!isEmpty && (
+          <CategoryToolbar boroughs={boroughList} facets={facets} current={{ boroughs, sort, travels, verifiedOnly, view }} />
+        )}
+
+        {isEmpty ? (
+          <EmptyState
+            className="mt-10"
+            mark="—"
+            title={t2('emptyCategoryTitle')}
+            text={t('emptyCallBody')}
+            action={
+              <>
+                <Link href={`/request?category=${category}`} className="btn btn-amber">
+                  {t2('postRequest')}
+                </Link>
+                <Link href="/for-business" className="btn btn-line">
+                  {t('emptyCallCta')}
+                </Link>
+              </>
+            }
+          />
+        ) : (
+          <>
+            <div className="res-head">
+              <h2 className="res-count" aria-live="polite">
+                {t2('count', { n: cards.length })}
+              </h2>
+              <Link href={`/request?category=${category}`} className="btn btn-line btn-sm">
+                {tr('submit')}
+              </Link>
             </div>
-          )}
-
-          <div className="min-w-0 flex-1">
-            {/* Request path — main route for "any master". */}
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-slate-200 bg-white p-4">
-              <p className="text-body text-slate-500">{tr('leaveRequest')}</p>
-              <ButtonLink href={`/request?category=${category}`}>{tr('submit')}</ButtonLink>
-            </div>
-
-            {isEmpty ? (
-              <div className="rounded-card border border-slate-200 bg-white p-4">
-                <InfoBlock icon={IconBriefcase} title={t('emptyCallTitle')} subtitle={t('emptyCallBody')} />
-                <div className="mt-3">
-                  <ButtonLink href="/for-business" className="w-full sm:w-auto">
-                    {t('emptyCallCta')}
-                  </ButtonLink>
-                </div>
-              </div>
-            ) : cards.length === 0 ? (
-              <EmptyState icon={IconMoodSad} text={t('emptyFiltered')} />
+            {cards.length === 0 ? (
+              <EmptyState
+                className="mt-6"
+                mark="—"
+                title={t2('emptyTitle')}
+                text={t('emptyFiltered')}
+                action={
+                  <>
+                    <Link href={`/${category}`} className="btn btn-ink" scroll={false}>
+                      {t2('resetFilters')}
+                    </Link>
+                    <Link href={`/request?category=${category}`} className="btn btn-line">
+                      {t2('postRequest')}
+                    </Link>
+                  </>
+                }
+              />
             ) : view === 'map' ? (
               <CategoryMapView cards={cards} />
             ) : (
               <>
-                <ProviderGrid cards={cards} surface="category" responseMins={responseMins} />
+                <ProviderGrid cards={cards} surface="category" responseMins={responseMins} windowsBySlug={windowsBySlug} />
                 <TrackImpressions
                   surface="category"
                   locale={locale}
@@ -154,9 +202,9 @@ export default async function CategoryPage({
                 />
               </>
             )}
-          </div>
-        </div>
-      </main>
+          </>
+        )}
+      </div>
     </>
   )
 }

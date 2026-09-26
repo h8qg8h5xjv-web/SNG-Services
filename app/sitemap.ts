@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // No DB at build / missing env — emit static routes only.
   }
 
-  const entries: MetadataRoute.Sitemap = [entry(''), entry('/events')]
+  const entries: MetadataRoute.Sitemap = [entry(''), entry('/catalog'), entry('/events')]
   for (const p of providers) {
     entries.push(entry(`/${p.categorySlug}/${p.slug}`, p.updated_at))
   }

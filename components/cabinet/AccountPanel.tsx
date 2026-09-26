@@ -2,10 +2,11 @@
 
 import { useState, useTransition } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
+import { IconDownload } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Input, Field } from '@/components/ui/Input'
 import { saveAccountName, deleteMyAccount } from '@/lib/cabinet/actions'
 import { getSavedRequests, clearRequests } from '@/lib/requests/local-store'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
@@ -78,41 +79,57 @@ export default function AccountPanel({
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <label className="mb-1 block text-body text-slate-500">{t('name')}</label>
-        <div className="flex flex-wrap items-center gap-2">
-          <Input value={nameValue} onChange={(e) => setNameValue(e.target.value)} placeholder={t('namePlaceholder')} className="w-64" />
-          <Button variant="secondary" onClick={saveName} disabled={savingName}>
+    <div className="acc-form">
+      <Field id="acc-name" label={t('name')} hint={t('nameHint')}>
+        <div className="acc-row">
+          <Input
+            id="acc-name"
+            value={nameValue}
+            onChange={(e) => setNameValue(e.target.value)}
+            placeholder={t('namePlaceholder')}
+            autoComplete="name"
+            aria-describedby="acc-name-hint"
+          />
+          <Button variant="ink" onClick={saveName} disabled={savingName}>
             {t('save')}
           </Button>
-          {nameSaved && <span className="text-meta text-green-700">{t('saved')}</span>}
         </div>
-        <p className="mt-1 text-meta text-slate-500">{t('nameHint')}</p>
+      </Field>
+      {nameSaved && (
+        <p className="msg-ok" role="status">
+          {t('saved')}
+        </p>
+      )}
+
+      <div className="field">
+        <span className="lbl">{t('email')}</span>
+        <p>{email}</p>
       </div>
 
       <div>
-        <label className="mb-1 block text-body text-slate-500">{t('email')}</label>
-        <p className="text-body">{email}</p>
-      </div>
-
-      <div>
-        <Button variant="secondary" onClick={download}>
+        <Button variant="line" onClick={download}>
+          <IconDownload stroke={1.75} aria-hidden="true" />
           {t('download')}
         </Button>
       </div>
 
-      <div className="rounded-lg border border-red-200 p-4">
-        <p className="text-body font-semibold">{t('deleteTitle')}</p>
-        <p className="mt-1 text-meta text-slate-500">{t('deleteWhat')}</p>
-        <p className="mt-1 text-meta text-slate-500">{t('deleteHint', { word: confirmWord })}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Input value={word} onChange={(e) => setWord(e.target.value)} placeholder={confirmWord} className="w-40" />
-          <Button variant="secondary" onClick={remove} disabled={deleting}>
+      <div className="danger">
+        <b>{t('deleteTitle')}</b>
+        <p className="muted">{t('deleteWhat')}</p>
+        <label htmlFor="acc-del" className="muted">
+          {t('deleteHint', { word: confirmWord })}
+        </label>
+        <div className="acc-row">
+          <Input id="acc-del" value={word} onChange={(e) => setWord(e.target.value)} placeholder={confirmWord} autoComplete="off" />
+          <Button variant="line" onClick={remove} disabled={deleting}>
             {deleting ? '…' : t('deleteButton')}
           </Button>
         </div>
-        {error && <p className="mt-2 text-meta text-red-700">{error}</p>}
+        {error && (
+          <p className="msg-err-inline" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   )
