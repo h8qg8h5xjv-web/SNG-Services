@@ -73,17 +73,18 @@ select lives_ok(
   'slot freed by a cancellation can be booked again'
 );
 
--- 7–8. Group capacity 2: two single seats fit, a third is rejected.
+-- 7–8. Group capacity 2: two single seats fit, a third is rejected. At 14:00:
+-- since …36 the provider (capacity 1) is busy at 10:00 with the single service.
 select lives_ok(
   $$insert into bookings (service_id, starts_at, ends_at, customer_name, customer_phone) values
-      ('00000000-0000-0000-0000-0000000000e2', '2030-01-07 10:00Z', '2030-01-07 11:00Z', 'Guest G', '07123456785'),
-      ('00000000-0000-0000-0000-0000000000e2', '2030-01-07 10:00Z', '2030-01-07 11:00Z', 'Guest H', '07123456786')$$,
+      ('00000000-0000-0000-0000-0000000000e2', '2030-01-07 14:00Z', '2030-01-07 15:00Z', 'Guest G', '07123456785'),
+      ('00000000-0000-0000-0000-0000000000e2', '2030-01-07 14:00Z', '2030-01-07 15:00Z', 'Guest H', '07123456786')$$,
   'group slot accepts bookings up to its capacity'
 );
 select throws_ok(
   $$insert into bookings (service_id, starts_at, ends_at, customer_name, customer_phone)
     values ('00000000-0000-0000-0000-0000000000e2',
-            '2030-01-07 10:00Z', '2030-01-07 11:00Z', 'Guest I', '07123456787')$$,
+            '2030-01-07 14:00Z', '2030-01-07 15:00Z', 'Guest I', '07123456787')$$,
   '23514', null,
   'group slot rejects a booking beyond its capacity'
 );
