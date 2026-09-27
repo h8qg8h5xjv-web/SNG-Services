@@ -70,6 +70,7 @@ export default function ProviderForm({
     entity_type: provider?.entity_type ?? 'place',
     claim_status: provider?.claim_status ?? 'unclaimed',
     travel_radius_km: provider?.travel_radius_km?.toString() ?? '',
+    parallel_capacity: provider?.parallel_capacity?.toString() ?? '1',
   })
   const [bookingEnabled, setBookingEnabled] = useState(provider?.booking_enabled ?? true)
   const [travelsToClient, setTravelsToClient] = useState(provider?.travels_to_client ?? false)
@@ -145,6 +146,7 @@ export default function ProviderForm({
       entity_type: f.entity_type,
       claim_status: f.claim_status,
       booking_enabled: bookingEnabled,
+      parallel_capacity: numOrNull(f.parallel_capacity) ?? 1,
       travels_to_client: travelsToClient,
       travel_radius_km: f.entity_type === 'pro' ? numOrNull(f.travel_radius_km) : null,
       opening_hours: f.entity_type === 'place' ? openingHours : null,
@@ -376,6 +378,16 @@ export default function ProviderForm({
           Выезд на дом
         </label>
       </div>
+
+      {f.fulfillment_type === 'native_booking' && (
+        <Field
+          label="Parallel capacity"
+          value={f.parallel_capacity}
+          onChange={(v) => set('parallel_capacity', v)}
+          error={errors['parallel_capacity']}
+          hint="Сколько клиентов одновременно (кресла, мастера). 1 — мастер-одиночка. Индивидуальные записи всех услуг и групповые занятия делят это число."
+        />
+      )}
 
       {f.entity_type === 'pro' && (
         <Field
