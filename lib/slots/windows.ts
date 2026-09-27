@@ -4,6 +4,7 @@
 // caller loads providers and bookings (lib/slots/service.ts).
 
 import { computeSlots, type ExistingBooking, type ScheduleException, type WeeklyInterval } from './compute.ts'
+import type { ProviderLoad } from './provider-load.ts'
 
 export type WindowProvider = {
   slug: string
@@ -14,6 +15,7 @@ export type WindowProvider = {
   services: { id: string; name: string; durationMin: number; capacity: number; pricePence: number }[]
   weekly: WeeklyInterval[] // rows for this date's weekday
   exception: ScheduleException | null // this date's exception, if any
+  load?: ProviderLoad // bookings across all the provider's services (parallel capacity)
 }
 
 // One free window = one provider at one start time. Several services starting
@@ -51,6 +53,7 @@ export function freeWindows(
         exception: p.exception,
         bookings: bookingsByService.get(s.id) ?? [],
         now,
+        provider: p.load ? { load: p.load, serviceId: s.id, group: s.capacity > 1 } : undefined,
       })
       for (const slot of slots) {
         if (slot.capacityRemaining <= 0) continue
