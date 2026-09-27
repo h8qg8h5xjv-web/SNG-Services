@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { setProviderCredential, DBS_TYPES } from '@/lib/admin/credential-actions'
+import { setProviderCredential } from '@/lib/admin/credential-actions'
+import { DBS_TYPES } from '@/lib/admin/constants'
 import Select from '@/components/ui/Select'
 import type { AdminProviderDetail } from '@/lib/admin/data'
 import type { CredentialStatus, DbsType } from '@/types/database'

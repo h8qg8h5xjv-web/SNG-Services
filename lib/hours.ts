@@ -17,8 +17,10 @@ const intervalSchema = z
   .object({ open: z.string().regex(HHMM), close: z.string().regex(HHMM) })
   .refine((i) => i.close > i.open, { message: 'close must be after open' })
 
+// partialRecord: a place lists only the days it opens. Zod 4's z.record with an
+// enum key demands every key, which rejected any week with a day off (and {}).
 export const openingHoursSchema = z
-  .record(z.enum(DAY_KEYS), z.array(intervalSchema).max(2))
+  .partialRecord(z.enum(DAY_KEYS), z.array(intervalSchema).max(2))
   .nullable()
 
 // Map JS getDay() / Intl weekday to our keys.
