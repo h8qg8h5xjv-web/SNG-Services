@@ -27,6 +27,8 @@ name after it is the logical step.
 | `…18_entity_type` | `place`\|`pro` axis, `claim_status`, `booking_enabled`, place/pro fields, insurance + DBS credentials (admin-verified) |
 | `…19_nullable_description` | `description_en` optional for `claim_status='unclaimed'` (public-data places) |
 | `…20_booking_price_snapshot` | `bookings.price_pence`/`duration_min` snapshotted at creation, immutable after |
+| `…35_booking_capacity_holds` | Capacity guard counts pending + confirmed again (regression from …20) |
+| `…36_provider_parallel_capacity` | `providers.parallel_capacity` (admin-only); the guard shares it across all the provider's services |
 
 ## Local development (Docker required)
 
@@ -91,10 +93,16 @@ and a non-null `verified_by`.
   bypasses RLS. Anonymous users only ever read published content; all writes are
   admin-only. An admin is an authenticated user whose JWT carries
   `app_metadata.is_admin = true`.
-- **Slot overflow** is enforced in `enforce_booking_rules()`: it locks the
-  service row (`SELECT ... FOR UPDATE`) to serialize concurrent bookings, then
-  rejects any `confirmed` booking whose `party_size`, summed with other confirmed
-  bookings overlapping the slot, would exceed the service `capacity`.
+- **Slot overflow** is enforced in `enforce_booking_rules()` (pending +
+  confirmed count, cancelled never). It locks the provider row to serialize
+  concurrent bookings, then checks two things: the service's own seats
+  (`party_size` summed over overlapping bookings of the service ≤ `capacity`),
+  and the provider's `parallel_capacity` — each individual booking is one unit,
+  each booked group session (same service and start) is one unit, and at no
+  moment may more units be busy than allowed (peak, not a count of overlaps).
+  `lib/slots/provider-load.ts` applies the same rule when the site computes
+  slots. `supabase/queries/provider_overlaps_readonly.sql` lists existing
+  bookings that break it.
 - **Types.** Regenerate `types/database.ts` after a schema change with
   `supabase gen types typescript --local > types/database.ts`.
 - **Admin access.** The admin panel (`/admin`) and all writes require an

@@ -15,6 +15,7 @@ import {
   homePool,
   type WindowProvider,
 } from './windows.ts'
+import { providerUnits } from './provider-load.ts'
 
 // A winter date (London = UTC), so wall-clock times equal UTC in assertions.
 const DATE = '2030-01-07'
@@ -149,4 +150,18 @@ test('home pool: the soonest N plus every provider-day first; exact counts kept 
     Object.fromEntries(Object.entries(groupBySlug(all, 2)).map(([k, v]) => [k, v.length])),
     { kavkaz: 2, dina: 2 },
   )
+})
+
+test('provider capacity: a solo master booked for one service has no window then; a salon still does', () => {
+  const booked = [{ service_id: 'beard', group: false, starts_at: '2030-01-07T10:00:00Z', ends_at: '2030-01-07T11:00:00Z', party_size: 1, status: 'pending' as const }]
+  const bookings = new Map([['beard', booked]])
+  const solo = provider({ load: { parallelCapacity: 1, units: providerUnits(booked) } })
+  assert.deepEqual(
+    freeWindows([solo], bookings, DATE, NOW).map((x) => x.start.slice(11, 16)),
+    ['11:00', '12:00'],
+  )
+  const salon = provider({ load: { parallelCapacity: 2, units: providerUnits(booked) } })
+  const w = freeWindows([salon], bookings, DATE, NOW)
+  assert.equal(w[0].start.slice(11, 16), '10:00')
+  assert.equal(w[0].serviceId, 'cut') // beard itself is full; the other chair can do a cut
 })

@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  setLanguageVerification,
-  VERIFICATION_METHODS,
-} from '@/lib/admin/language-actions'
+import { setLanguageVerification } from '@/lib/admin/language-actions'
+import { VERIFICATION_METHODS } from '@/lib/admin/constants'
 import Select from '@/components/ui/Select'
 import type { AdminProviderLanguage } from '@/lib/admin/data'
 import type { Language } from '@/types'

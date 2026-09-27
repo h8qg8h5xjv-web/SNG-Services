@@ -116,6 +116,7 @@ export interface Database {
           entity_type: EntityType
           claim_status: ClaimStatus
           booking_enabled: boolean
+          parallel_capacity: number
           travels_to_client: boolean
           opening_hours: Json | null
           venue_photos: string[] | null
@@ -170,6 +171,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          parallel_capacity?: number
           travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null
@@ -224,6 +226,7 @@ export interface Database {
           entity_type?: EntityType
           claim_status?: ClaimStatus
           booking_enabled?: boolean
+          parallel_capacity?: number
           travels_to_client?: boolean
           opening_hours?: Json | null
           venue_photos?: string[] | null

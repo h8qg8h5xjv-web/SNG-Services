@@ -3,7 +3,11 @@
 // Given a service (duration + capacity), a date, the provider's weekly schedule
 // for that weekday, an optional schedule exception, and the existing bookings,
 // it produces the bookable time slots — with past slots removed and occupancy
-// (confirmed + pending party sizes) subtracted from capacity.
+// (confirmed + pending party sizes) subtracted from capacity. With `provider`,
+// a slot is also closed when the provider has no free parallel capacity then
+// (lib/slots/provider-load.ts — the same rule as the booking trigger).
+
+import { providerFits, type ProviderLoad } from './provider-load.ts'
 
 const TZ = 'Europe/London'
 
@@ -28,6 +32,8 @@ export type SlotInput = {
   exception: ScheduleException | null // exception for this date, if any
   bookings: ExistingBooking[]
   now: Date
+  // The provider's other bookings as units; omit to check the service alone.
+  provider?: { load: ProviderLoad; serviceId: string; group: boolean }
 }
 
 export type Slot = {
@@ -86,7 +92,7 @@ function occupancy(bookings: ExistingBooking[], startMs: number, endMs: number):
 }
 
 export function computeSlots(input: SlotInput): Slot[] {
-  const { date, durationMin, capacity, weekly, exception, bookings, now } = input
+  const { date, durationMin, capacity, weekly, exception, bookings, now, provider } = input
 
   let intervals: WeeklyInterval[]
   if (exception) {
@@ -108,7 +114,8 @@ export function computeSlots(input: SlotInput): Slot[] {
     for (let s = openMs; s + durationMs <= closeMs; s += durationMs) {
       const e = s + durationMs
       if (s <= nowMs) continue // hide past slots
-      const remaining = capacity - occupancy(bookings, s, e)
+      const fits = !provider || providerFits(provider.load, provider.serviceId, provider.group, s, e)
+      const remaining = fits ? capacity - occupancy(bookings, s, e) : 0
       slots.push({
         start: new Date(s).toISOString(),
         end: new Date(e).toISOString(),

@@ -4,10 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/admin/auth'
+import { VERIFICATION_METHODS } from '@/lib/admin/constants'
 
-// Real verification methods only — 'seed' is reserved for demo data written by
-// the seed script and can never be chosen here.
-export const VERIFICATION_METHODS = ['call', 'voice_sample', 'video_call'] as const
 
 // A real verification defaults to a 12-month validity (DESIGN «Проверка языка»:
 // «Ставим срок 12 месяцев, дальше язык возвращается в claimed»). Expiry is

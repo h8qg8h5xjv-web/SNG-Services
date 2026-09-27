@@ -5,10 +5,9 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/admin/auth'
 import type { Database } from '@/types/database'
+import { DBS_TYPES } from '@/lib/admin/constants'
 
 type ProviderUpdate = Database['public']['Tables']['providers']['Update']
-
-export const DBS_TYPES = ['basic', 'standard', 'enhanced'] as const
 
 const credentialSchema = z.object({
   providerId: z.string().uuid(),
