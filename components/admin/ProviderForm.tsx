@@ -41,10 +41,12 @@ export default function ProviderForm({
   provider,
   categories,
   languages,
+  boroughs,
 }: {
   provider: AdminProviderDetail | null
   categories: Category[]
   languages: Language[]
+  boroughs: string[]
 }) {
   const router = useRouter()
   const [pending, setPending] = useState(false)
@@ -284,7 +286,28 @@ export default function ProviderForm({
             />
           </div>
         </label>
-        <Field label="Borough" value={f.borough} onChange={(v) => set('borough', v)} required />
+        <label className="block text-body">
+          <span className="text-slate-500">Borough</span>
+          <div className="mt-1">
+            <Select
+              value={f.borough}
+              onChange={(v) => set('borough', v)}
+              options={[
+                // An older card may carry a district spelt off the reference list;
+                // keep it selectable so unrelated edits still save.
+                ...(f.borough && !boroughs.includes(f.borough) ? [{ value: f.borough, label: `${f.borough} (not in list)` }] : []),
+                ...boroughs.map((b) => ({ value: b, label: b })),
+              ]}
+              placeholder="Pick a borough"
+              ariaLabel="Borough"
+              title="Borough"
+              searchable
+              invalid={!!errors['borough']}
+              className="w-full"
+            />
+          </div>
+          {errors['borough'] && <span className="mt-1 block text-meta text-red-700">{errors['borough']}</span>}
+        </label>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

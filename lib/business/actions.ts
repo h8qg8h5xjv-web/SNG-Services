@@ -72,7 +72,8 @@ export async function saveCabinetProfile(input: unknown): Promise<BusinessAction
   const { error } = await admin
     .from('providers')
     .update({
-      description_en: d.descriptionEn,
+      // Never null on a claimed card (chk_description_required); empty = none.
+      description_en: d.descriptionEn ?? '',
       borough: d.borough,
       address: d.address,
       phone: d.phone,

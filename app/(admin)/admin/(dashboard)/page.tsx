@@ -2,16 +2,18 @@ import Link from 'next/link'
 import { listAdminProviders, countUpcomingEvents, listCategories, listLanguages } from '@/lib/admin/data'
 import { getAdminOverview } from '@/lib/admin/dashboard'
 import QuickMaster from '@/components/admin/QuickMaster'
+import { getBoroughOptions } from '@/lib/onboarding/reference'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const [providers, upcoming, overview, categories, languages] = await Promise.all([
+  const [providers, upcoming, overview, categories, languages, boroughs] = await Promise.all([
     listAdminProviders(),
     countUpcomingEvents(),
     getAdminOverview(7),
     listCategories(),
     listLanguages(),
+    getBoroughOptions(),
   ])
 
   const missingRu = providers.filter(
@@ -55,6 +57,7 @@ export default async function AdminDashboard() {
       <QuickMaster
         categories={categories.map((c) => ({ id: c.id, name_en: c.name_en }))}
         languages={languages.map((l) => ({ code: l.code, name_native: l.name_native }))}
+        boroughs={boroughs}
       />
 
       <div className="grid gap-8 sm:grid-cols-2">

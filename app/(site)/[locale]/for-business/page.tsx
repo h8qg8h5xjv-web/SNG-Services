@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation'
 import Facade from '@/components/home/Facade'
 import ApplyLink from '@/components/business/ApplyLink'
 import CatalogRequestForm from '@/components/CatalogRequestForm'
+import { getBoroughOptions, getCategoryOptions } from '@/lib/onboarding/reference'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,6 +28,7 @@ export default async function ForBusinessPage({
   const t = await getTranslations('forBusiness')
   const t2 = await getTranslations('forBusiness2')
   const th = await getTranslations('home.v2')
+  const [categories, boroughs] = await Promise.all([getCategoryOptions(locale), getBoroughOptions()])
   const steps = [
     [t2('s1h'), t2('s1p')],
     [t2('s2h'), t2('s2p')],
@@ -87,7 +89,7 @@ export default async function ForBusinessPage({
             <p className="sec-sub">{t('joinIntro')}</p>
           </div>
           <div className="card form-card">
-            <CatalogRequestForm />
+            <CatalogRequestForm categories={categories} boroughs={boroughs} />
           </div>
         </section>
       </div>

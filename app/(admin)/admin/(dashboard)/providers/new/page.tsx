@@ -1,15 +1,17 @@
 import { listCategories, listLanguages } from '@/lib/admin/data'
 import ProviderForm from '@/components/admin/ProviderForm'
+import { getBoroughOptions } from '@/lib/onboarding/reference'
 
 export default async function NewProviderPage() {
-  const [categories, languages] = await Promise.all([
+  const [categories, languages, boroughs] = await Promise.all([
     listCategories(),
     listLanguages(),
+    getBoroughOptions(),
   ])
   return (
     <div className="space-y-6">
       <h1 className="text-h2 font-semibold">New provider</h1>
-      <ProviderForm provider={null} categories={categories} languages={languages} />
+      <ProviderForm provider={null} categories={categories} languages={languages} boroughs={boroughs} />
     </div>
   )
 }

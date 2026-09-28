@@ -10,13 +10,15 @@ import Select from '@/components/ui/Select'
 export default function QuickMaster({
   categories,
   languages,
+  boroughs,
 }: {
   categories: { id: string; name_en: string }[]
   languages: { code: string; name_native: string }[]
+  boroughs: string[]
 }) {
   const router = useRouter()
   const [name, setName] = useState('')
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? '')
+  const [categoryId, setCategoryId] = useState('')
   const [borough, setBorough] = useState('')
   const [phone, setPhone] = useState('')
   const [langs, setLangs] = useState<string[]>([])
@@ -61,9 +63,19 @@ export default function QuickMaster({
           options={categories.map((c) => ({ value: c.id, label: c.name_en }))}
           ariaLabel="Category"
           title="Category"
+          placeholder="Category"
           className="w-full"
         />
-        <input className={field} placeholder="Borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
+        <Select
+          value={borough}
+          onChange={setBorough}
+          options={boroughs.map((b) => ({ value: b, label: b }))}
+          ariaLabel="Borough"
+          title="Borough"
+          placeholder="Borough"
+          searchable
+          className="w-full"
+        />
         <input className={field} placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
       </div>
 

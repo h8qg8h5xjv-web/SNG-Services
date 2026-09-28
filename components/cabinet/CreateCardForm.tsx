@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { IconPlus } from '@tabler/icons-react'
-import { useRouter } from '@/i18n/navigation'
+import { Link, useRouter } from '@/i18n/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input, Field } from '@/components/ui/Input'
 import { FilterChip } from '@/components/ui/FilterChip'
@@ -14,17 +14,20 @@ import { createMyCard } from '@/lib/cabinet/actions'
 // line). Creates a draft and opens it for editing.
 export default function CreateCardForm({
   categories,
+  boroughs,
   languages,
 }: {
   categories: { id: string; name: string }[]
+  boroughs: string[]
   languages: { code: string; name: string }[]
 }) {
   const t = useTranslations('cabinet.cards')
   const tt = useTranslations('business.tabs')
+  const to = useTranslations('onboarding')
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? '')
+  const [categoryId, setCategoryId] = useState('')
   const [borough, setBorough] = useState('')
   const [phone, setPhone] = useState('')
   const [langs, setLangs] = useState<string[]>([])
@@ -41,6 +44,7 @@ export default function CreateCardForm({
     startTransition(async () => {
       const res = await createMyCard({ name, categoryId, borough, phone, languages: langs, servicesLine })
       if (res.ok) router.push(`/cabinet/cards/${res.id}`)
+      else if (res.error === 'badCategory' || res.error === 'badBorough') setError(to(res.error))
       else setError(res.error)
     })
   }
@@ -70,13 +74,28 @@ export default function CreateCardForm({
             options={categories.map((c) => ({ value: c.id, label: c.name }))}
             ariaLabel={t('category')}
             title={t('category')}
-            placeholder={t('category')}
+            placeholder={to('categoryPlaceholder')}
+            className="w-full"
+          />
+          <Link href="/for-business#apply" className="link justify-self-start text-sm">
+            {to('noCategoryLink')}
+          </Link>
+        </div>
+        <div className="field">
+          <span className="lbl">{t('borough')}</span>
+          <Select
+            id="cc-borough"
+            value={borough}
+            onChange={setBorough}
+            options={boroughs.map((b) => ({ value: b, label: b }))}
+            ariaLabel={t('borough')}
+            title={t('borough')}
+            placeholder={to('boroughPlaceholder')}
+            searchable
+            searchPlaceholder={to('boroughSearch')}
             className="w-full"
           />
         </div>
-        <Field id="cc-borough" label={t('borough')}>
-          <Input id="cc-borough" value={borough} onChange={(e) => setBorough(e.target.value)} />
-        </Field>
         <Field id="cc-phone" label={t('phone')}>
           <Input id="cc-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />
         </Field>
@@ -106,7 +125,7 @@ export default function CreateCardForm({
       </Field>
 
       <div className="ed-acts">
-        <Button variant="ink" onClick={submit} disabled={pending || !name.trim() || !borough.trim()}>
+        <Button variant="ink" onClick={submit} disabled={pending || !name.trim() || !categoryId || !borough}>
           {pending ? t('creating') : t('createSubmit')}
         </Button>
         <Button variant="line" onClick={() => setOpen(false)} disabled={pending}>

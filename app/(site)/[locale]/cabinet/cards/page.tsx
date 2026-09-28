@@ -5,7 +5,8 @@ import { Link } from '@/i18n/navigation'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { getMyProviders } from '@/lib/business/data'
 import { getAccount } from '@/lib/cabinet/data'
-import { listCategories, listLanguages } from '@/lib/admin/data'
+import { listLanguages } from '@/lib/admin/data'
+import { getBoroughOptions, getCategoryOptions } from '@/lib/onboarding/reference'
 import CreateCardForm from '@/components/cabinet/CreateCardForm'
 
 export const dynamic = 'force-dynamic'
@@ -21,14 +22,16 @@ export default async function CabinetCardsPage({
   if (!account) redirect(`/${locale}/cabinet/requests`)
 
   const t = await getTranslations('cabinet.cards')
-  const [cards, categories, languages] = await Promise.all([
+  const [cards, categories, boroughs, languages] = await Promise.all([
     getMyProviders(),
-    listCategories(),
+    getCategoryOptions(locale),
+    getBoroughOptions(),
     listLanguages(),
   ])
   const form = (
     <CreateCardForm
-      categories={categories.map((c) => ({ id: c.id, name: c.name_en }))}
+      categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+      boroughs={boroughs}
       languages={languages.map((l) => ({ code: l.code, name: l.name_native }))}
     />
   )

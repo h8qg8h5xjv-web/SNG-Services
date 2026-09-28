@@ -546,8 +546,6 @@
     "contactName": "Ваше ім’я",
     "email": "Email",
     "phone": "Телефон",
-    "category": "Категорія (необов’язково)",
-    "borough": "Район (необов’язково)",
     "message": "Кілька слів про себе (необов’язково)",
     "send": "Надіслати заявку",
     "sending": "Надсилаємо…",
@@ -844,5 +842,19 @@
   "legal2": {
     "toc": "Contents",
     "seeAlso": "See also"
+  },
+  "onboarding": {
+    "category": "Category",
+    "categoryPlaceholder": "Choose a category",
+    "noCategory": "My category isn’t listed",
+    "noCategoryLink": "My category isn’t listed?",
+    "suggestion": "What is your category?",
+    "suggestionHint": "We’ll review it and match you to a category or add a new one. It doesn’t create a category by itself.",
+    "borough": "Area",
+    "boroughPlaceholder": "Choose an area",
+    "boroughSearch": "Find an area",
+    "badCategory": "Choose a category from the list.",
+    "needSuggestion": "Tell us what your category is.",
+    "badBorough": "Choose an area from the list."
   }
 }
