@@ -41,3 +41,13 @@ test('broken storage content reads as empty, not a crash', () => {
   mem.set('sng_requests', JSON.stringify([{ ref: 1 }, null, { ref: 'A', token: 'x', at: '' }]))
   assert.deepEqual(store.getSavedItems().map((i) => i.ref), ['A'])
 })
+
+test('after "delete my data" only the kept upcoming bookings remain', () => {
+  store.saveRequest('RQ1', 'tr')
+  store.saveBooking('PAST', 'tp')
+  store.saveBooking('NEXT', 'tn')
+  store.keepOnlyBookings(['NEXT', 'RQ1'])
+  assert.deepEqual(store.getSavedItems().map((i) => i.ref), ['NEXT'])
+  store.keepOnlyBookings([])
+  assert.equal(mem.has('sng_requests'), false)
+})

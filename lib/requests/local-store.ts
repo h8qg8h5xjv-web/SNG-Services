@@ -70,6 +70,20 @@ export function mergeRequests(incoming: { ref: string; token: string; at?: strin
   }
 }
 
+// "Delete my data": drop every pointer except the direct bookings that stay
+// with the specialist (upcoming), so the guest still sees where and when to go.
+export function keepOnlyBookings(refs: string[]): void {
+  if (typeof window === 'undefined') return
+  const keep = new Set(refs)
+  const list = getSavedItems().filter((i) => isBooking(i) && keep.has(i.ref))
+  try {
+    if (list.length) localStorage.setItem(KEY, JSON.stringify(list))
+    else localStorage.removeItem(KEY)
+  } catch {
+    // ignore
+  }
+}
+
 // §3 GDPR: wipe the local pointers on "delete my data".
 export function clearRequests(): void {
   if (typeof window === 'undefined') return

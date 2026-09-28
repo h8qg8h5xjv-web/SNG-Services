@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { pickProviderContent } from '@/lib/i18n/content'
+import { splitForForget } from './forget'
 
 // A guest's own direct bookings, read by (public_ref, guest_token) — the same
 // gate as guest requests (lib/requests/guest.ts). Guests have no session and no
@@ -97,4 +98,35 @@ function toGuestBooking(b: Row, locale: string): GuestBooking {
     categorySlug: b.providers?.categories?.slug ?? null,
     serviceName: locale === 'ru' ? (b.services?.name_ru ?? b.services?.name_en ?? '') : (b.services?.name_en ?? ''),
   }
+}
+
+// "Delete my data" for the guest's direct bookings, by exact (ref, token)
+// pairs: past or cancelled ones lose name, phone and email (the rest stays for
+// statistics); upcoming ones stay whole — the specialist expects the visit.
+// Returns which refs were kept, so the browser can keep showing them. Relies on
+// …39 (contact-only updates skip the capacity checks).
+export async function forgetGuestBookings(input: unknown): Promise<{ wiped: number; kept: string[] }> {
+  const parsed = pairsSchema.safeParse(input)
+  if (!parsed.success || parsed.data.length === 0) return { wiped: 0, kept: [] }
+  const tokenByRef = new Map(parsed.data.map((p) => [p.ref, p.token]))
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('bookings')
+    .select('public_ref, guest_token, ends_at, status')
+    .in('public_ref', [...tokenByRef.keys()])
+  const mine = (data ?? []).filter((b) => tokenByRef.get(b.public_ref) === b.guest_token)
+  const { wipe, keep } = splitForForget(
+    mine.map((b) => ({ ref: b.public_ref, endsAt: b.ends_at, status: b.status })),
+    new Date(),
+  )
+  let wiped = 0
+  if (wipe.length) {
+    const { data: done } = await supabase
+      .from('bookings')
+      .update({ customer_name: '', customer_phone: '', customer_email: null })
+      .in('public_ref', wipe)
+      .select('public_ref')
+    wiped = done?.length ?? 0
+  }
+  return { wiped, kept: keep }
 }
