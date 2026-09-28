@@ -896,6 +896,23 @@ export interface Database {
           },
         ]
       }
+      boroughs: {
+        Row: {
+          name: string
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          name: string
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       catalog_requests: {
         Row: {
           id: string
@@ -904,6 +921,8 @@ export interface Database {
           contact_email: string | null
           contact_phone: string | null
           category: string | null
+          category_id: string | null
+          category_suggestion: string | null
           borough: string | null
           message: string | null
           status: CatalogRequestStatus
@@ -916,6 +935,8 @@ export interface Database {
           contact_email?: string | null
           contact_phone?: string | null
           category?: string | null
+          category_id?: string | null
+          category_suggestion?: string | null
           borough?: string | null
           message?: string | null
           status?: CatalogRequestStatus
@@ -923,6 +944,7 @@ export interface Database {
         }
         Update: {
           status?: CatalogRequestStatus
+          category_id?: string | null
         }
         Relationships: []
       }

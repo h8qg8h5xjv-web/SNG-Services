@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { slugify, parseServices } from '@/lib/providers/quick'
 import type { SyncPayload } from '@/lib/sync/actions'
+import { loadReferences } from '@/lib/onboarding/reference'
+import { checkCard } from '@/lib/onboarding/validate'
 
 type Result = { ok: true } | { ok: false; error: string }
 
@@ -37,6 +39,9 @@ export async function createMyCard(
   const user = await requireUser()
   if (!user) return { ok: false, error: 'Not signed in.' }
   const d = parsed.data
+  // Category and district only from the reference tables, never the client's word.
+  const refError = checkCard({ categoryId: d.categoryId, borough: d.borough }, await loadReferences())
+  if (refError) return { ok: false, error: refError }
   const admin = createAdminClient()
 
   const { data: provider, error } = await admin
@@ -44,6 +49,9 @@ export async function createMyCard(
     .insert({
       slug: slugify(d.name),
       name_en: d.name,
+      // A claimed card needs description_en (chk_description_required); the
+      // owner writes the real one in the editor. Empty reads as "no description".
+      description_en: '',
       category_id: d.categoryId,
       borough: d.borough,
       phone: d.phone.trim() || null,
@@ -79,6 +87,7 @@ export async function createMyCard(
     kind: 'new_draft',
     subject: `New card to review: ${d.name}`,
     body: `A master created a card "${d.name}" (${d.borough}). Review the language and publish in the admin.`,
+    cta_path: `/admin/providers/${provider.id}`,
     status: 'unsent',
   })
 

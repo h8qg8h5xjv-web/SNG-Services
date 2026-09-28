@@ -283,7 +283,10 @@ export type AdminCatalogRequest = {
   contact_name: string
   contact_email: string | null
   contact_phone: string | null
-  category: string | null
+  category: string | null // legacy free text (rows before migration …37)
+  category_id: string | null
+  category_suggestion: string | null // «Моей категории нет»
+  categories: { name_ru: string; name_en: string } | null
   borough: string | null
   message: string | null
   status: CatalogRequestStatus
@@ -295,7 +298,10 @@ export async function listCatalogRequests(): Promise<AdminCatalogRequest[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('catalog_requests')
-    .select('id, business_name, contact_name, contact_email, contact_phone, category, borough, message, status, created_at')
+    .select(
+      'id, business_name, contact_name, contact_email, contact_phone, category, category_id, category_suggestion, ' +
+        'categories(name_ru, name_en), borough, message, status, created_at',
+    )
     .order('created_at', { ascending: false })
     .returns<AdminCatalogRequest[]>()
   if (error) throw error

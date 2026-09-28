@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/admin/auth'
 import { providerInputSchema } from '@/lib/admin/schemas'
+import { loadReferences } from '@/lib/onboarding/reference'
+import { checkCard } from '@/lib/onboarding/validate'
 
 export type ActionResult =
   | { ok: true; id: string }
@@ -37,6 +39,18 @@ export async function saveProvider(
     data: { user },
   } = await supabase.auth.getUser()
   if (!isAdmin(user)) return { ok: false, formError: 'Not authorized.' }
+
+  // Category and district from the reference tables only. An existing card may
+  // keep the district it already has (older rows can be spelt off-list), so
+  // unrelated edits aren't blocked; changing it must pick from the list.
+  const refs = await loadReferences()
+  if (id) {
+    const { data: current } = await supabase.from('providers').select('borough').eq('id', id).maybeSingle()
+    if (current?.borough) refs.boroughs.add(current.borough)
+  }
+  const refError = checkCard({ categoryId: d.category_id, borough: d.borough }, refs)
+  if (refError === 'badCategory') return { ok: false, fieldErrors: { category_id: 'Pick a category from the list.' } }
+  if (refError === 'badBorough') return { ok: false, fieldErrors: { borough: 'Pick a borough from the list.' } }
 
   const scalar = {
     slug: d.slug,
