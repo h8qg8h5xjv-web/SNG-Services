@@ -29,6 +29,7 @@ name after it is the logical step.
 | `…20_booking_price_snapshot` | `bookings.price_pence`/`duration_min` snapshotted at creation, immutable after |
 | `…35_booking_capacity_holds` | Capacity guard counts pending + confirmed again (regression from …20) |
 | `…36_provider_parallel_capacity` | `providers.parallel_capacity` (admin-only); the guard shares it across all the provider's services |
+| `…37_onboarding_references` | `boroughs` reference table (33 London districts); `catalog_requests.category_id` + `category_suggestion` (old free-text `category` kept) |
 
 ## Local development (Docker required)
 
