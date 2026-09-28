@@ -23,6 +23,7 @@
   .bitem .pane::before { width: 2px; }
   .bitem .pane::after { height: 2px; }
   .bitem b { display: block; font-weight: 600; font-size: 17px; }
+  .bitem > div > .status { display: flex; margin-top: 6px; }
   .bitem .muted { font-size: 15px; }
   .bitem .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
   .bitem.past { opacity: .7; }

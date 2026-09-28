@@ -98,7 +98,14 @@ export async function createMyCard(
 const linkSchema = z.object({
   saved: z.array(z.string()).max(500).default([]),
   requests: z
-    .array(z.object({ ref: z.string(), token: z.string(), at: z.string().optional() }))
+    .array(
+      z.object({
+        ref: z.string(),
+        token: z.string(),
+        at: z.string().optional(),
+        kind: z.enum(['request', 'booking']).optional(),
+      }),
+    )
     .max(500)
     .default([]),
 })
@@ -115,13 +122,15 @@ export async function linkBrowserData(
   if (!user) return { ok: false, error: 'Not signed in.' }
   const admin = createAdminClient()
 
-  // Attach each guest request to the account, proving ownership by (ref, token).
+  // Attach each guest request and direct booking to the account, proving
+  // ownership by (ref, token). Never overwrite another account's link.
   for (const r of parsed.data.requests) {
     await admin
-      .from('requests')
+      .from(r.kind === 'booking' ? 'bookings' : 'requests')
       .update({ customer_id: user.id })
       .eq('public_ref', r.ref)
       .eq('guest_token', r.token)
+      .is('customer_id', null)
   }
 
   const supabase = await createClient()
@@ -132,7 +141,7 @@ export async function linkBrowserData(
     .maybeSingle()
 
   const savedSet = new Set<string>([...(existing?.saved ?? []), ...parsed.data.saved])
-  const reqMap = new Map<string, { ref: string; token: string; at?: string }>()
+  const reqMap = new Map<string, SyncPayload['requests'][number]>()
   const prev = Array.isArray(existing?.requests) ? (existing!.requests as SyncPayload['requests']) : []
   for (const r of [...prev, ...parsed.data.requests]) {
     if (r && typeof r.ref === 'string') reqMap.set(r.ref, r)

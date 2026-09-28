@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { IconDownload } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { getSavedRequests, clearRequests } from '@/lib/requests/local-store'
+import { getSavedBookings, getSavedRequests, clearRequests } from '@/lib/requests/local-store'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
 import { getGuestRequestState, deleteGuestData } from '@/lib/requests/guest'
 
@@ -31,6 +31,7 @@ export default function DataControls() {
       saved: [...getSavedSnapshot()],
       requests,
       requestStates: states,
+      bookings: getSavedBookings(),
     }
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
