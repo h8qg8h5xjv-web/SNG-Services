@@ -1,29 +1,53 @@
 /* v2 forms: fields, option cards, checkboxes, the custom Select (DEMO_MAP §4). */
 
+/* Field tokens: the ONE source for how a form field looks. Text inputs
+   (.input) and form Selects (.sel.fld) both read them, so they can't drift
+   apart. A context (e.g. the admin) restyles its fields by setting the tokens,
+   never by styling one control. */
+:root {
+  --field-h: 52px;
+  --field-r: 12px;
+  --field-bw: 1.5px;
+  --field-bg: var(--color-card);
+  --field-border: var(--color-line);
+  --field-hover-border: var(--color-soft-line);
+  --field-focus-border: var(--color-ink);
+  --field-focus-ring: 0 0 0 3px rgba(18, 26, 46, .1);
+  --field-color: var(--color-ink);
+  --field-placeholder: var(--color-placeholder);
+  --field-fs: 17px;
+  --field-lh: 1.55;
+  --field-py: 13px;
+  --field-px: 16px;
+}
+@media (max-width: 720px) {
+  :root { --field-fs: 16px; }
+}
+
 @layer components {
   .form { display: grid; gap: 18px; max-width: 560px; }
-  .field { display: grid; gap: 6px; }
+  /* align-content: start — in a grid row next to a taller field (e.g. a Select
+     with a link under it) the control keeps its height instead of stretching. */
+  .field { display: grid; gap: 6px; align-content: start; }
   .field > label, .field .lbl { font-weight: 600; font-size: 15px; }
   .field .hint { font-size: 14px; color: var(--mute); }
   .input {
-    width: 100%; min-height: 52px; padding: 13px 16px; border-radius: 12px;
-    border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
-    font-size: 17px; transition: border-color .2s, box-shadow .2s; caret-color: var(--ink);
+    width: 100%; min-height: var(--field-h); padding: var(--field-py) var(--field-px); border-radius: var(--field-r);
+    border: var(--field-bw) solid var(--field-border); background: var(--field-bg); color: var(--field-color);
+    font-size: var(--field-fs); line-height: var(--field-lh);
+    transition: border-color .2s, box-shadow .2s; caret-color: var(--field-color);
   }
-  .input::placeholder { color: var(--color-placeholder); }
+  .input::placeholder { color: var(--field-placeholder); }
   textarea.input { min-height: 110px; resize: vertical; line-height: 1.5; }
-  .input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(18, 26, 46, .1); }
-  .input:focus-visible { outline: none; border-radius: 12px; }
+  .input:focus { border-color: var(--field-focus-border); box-shadow: var(--field-focus-ring); }
+  .input:focus-visible { outline: none; border-radius: var(--field-r); }
   .input[aria-invalid="true"], .field.err .input { border-color: var(--err); }
   .msg-err { font-size: 14px; color: var(--err); font-weight: 500; transition: opacity .16s var(--ease-out), transform .16s var(--ease-out); }
   @starting-style { .msg-err { opacity: 0; transform: translateY(-4px); } }
   @media (hover: hover) and (pointer: fine) {
-    .input:hover { border-color: var(--color-soft-line); }
-    .input:focus:hover { border-color: var(--ink); }
+    .input:hover { border-color: var(--field-hover-border); }
+    .input:focus:hover { border-color: var(--field-focus-border); }
     .opt:hover { border-color: var(--color-soft-line); }
-  }
-  @media (max-width: 720px) {
-    .input { font-size: 16px; }
   }
 
   .check { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; cursor: pointer; }
@@ -47,7 +71,10 @@
   .opt .price { font-family: var(--display); font-size: 18px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 
   /* Select: a custom listbox. Trigger = pill (.sel) in toolbars, field (.sel.fld)
-     inside forms. Panel on desktop, bottom sheet on phones. */
+     inside forms. Panel on desktop, bottom sheet on phones. Every inner class is
+     sel-* so no page style can reach inside. A form Select IS a field: it reads
+     the same --field-* tokens as .input. The dark look is opt-in only
+     (tone="night" → .sel-night), for controls on dark surfaces. */
   .sel { position: relative; }
   .sel-trigger {
     display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
@@ -57,22 +84,32 @@
   }
   .sel-trigger svg { width: 16px; height: 16px; flex: none; transition: transform .2s var(--ease-out); }
   .sel-trigger[aria-expanded="true"] svg { transform: rotate(180deg); }
-  .sel-trigger .ph { color: var(--color-placeholder); }
+  .sel-trigger .sel-ph { color: var(--field-placeholder); }
   .sel-trigger:disabled { opacity: .55; }
   .sel.on .sel-trigger { border-color: var(--ink); }
-  .sel.fld .sel-trigger { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 400; padding: 13px 14px 13px 16px; }
-  .sel.fld .sel-trigger:focus-visible { border-radius: 12px; }
+  .sel.fld .sel-trigger {
+    min-height: var(--field-h); padding: var(--field-py) calc(var(--field-px) - 2px) var(--field-py) var(--field-px);
+    border-radius: var(--field-r); border: var(--field-bw) solid var(--field-border);
+    background: var(--field-bg); color: var(--field-color);
+    font-size: var(--field-fs); line-height: var(--field-lh); font-weight: 400;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .sel.fld .sel-trigger:focus-visible, .sel.fld .sel-trigger[aria-expanded="true"] {
+    outline: none; border-color: var(--field-focus-border); box-shadow: var(--field-focus-ring);
+  }
   .field.err .sel-trigger, .sel[data-invalid="true"] .sel-trigger { border-color: var(--err); }
-  .night .sel-trigger { background: rgba(15, 24, 48, .4); border-color: rgba(255, 255, 255, .2); color: var(--night-text); }
+  .sel-night .sel-trigger { background: rgba(15, 24, 48, .4); border-color: rgba(255, 255, 255, .2); color: var(--night-text); }
+  .sel-night .sel-trigger .sel-ph { color: var(--mute-night); }
   @media (hover: hover) and (pointer: fine) {
     .sel-trigger:hover { border-color: var(--color-soft-line); }
+    .sel.fld .sel-trigger:hover { border-color: var(--field-hover-border); }
+    .sel.fld .sel-trigger[aria-expanded="true"]:hover { border-color: var(--field-focus-border); }
     .sel.on .sel-trigger:hover { border-color: var(--ink); }
+    .sel-night .sel-trigger:hover { border-color: rgba(255, 255, 255, .4); }
   }
   @media (pointer: coarse) {
     .sel-trigger { min-height: 44px; }
-  }
-  @media (max-width: 720px) {
-    .sel.fld .sel-trigger { font-size: 16px; }
+    .sel.fld .sel-trigger { min-height: max(44px, var(--field-h)); }
   }
 
   .sel-panel {
