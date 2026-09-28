@@ -3,10 +3,10 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { linkBrowserData } from '@/lib/cabinet/actions'
-import { getSavedRequests, mergeRequests } from '@/lib/requests/local-store'
+import { getSavedItems, mergeRequests } from '@/lib/requests/local-store'
 import { getSavedSnapshot, setSaved } from '@/lib/saved/store'
 
-// §ONE-CABINET: on sign-in, browser data (saved + requests) is attached to the
+// §ONE-CABINET: on sign-in, browser data (saved, requests, direct bookings) is attached to the
 // account automatically — no buttons. Pushes this device's data up, then adopts
 // the merged set (so data from other devices appears here too). Runs once.
 export default function AutoLink() {
@@ -19,7 +19,7 @@ export default function AutoLink() {
     ;(async () => {
       const res = await linkBrowserData({
         saved: [...getSavedSnapshot()],
-        requests: getSavedRequests(),
+        requests: getSavedItems(), // requests and direct bookings alike
       })
       if (res.ok) {
         setSaved(res.data.saved)

@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { getSlotsForServiceDate } from '@/lib/slots/service'
 import { bookingInputSchema } from '@/lib/booking/schema'
 import { recordEvents } from '@/lib/tracking/events'
@@ -33,7 +34,8 @@ export async function getSlotParticipants(
 }
 
 export type CreateBookingResult =
-  | { ok: true; startsAt: string; endsAt: string; partySize: number }
+  // ref + token: the guest's read key, remembered in the browser like a request's.
+  | { ok: true; startsAt: string; endsAt: string; partySize: number; ref: string; token: string }
   | { ok: false; error: string }
 
 export async function createBooking(input: unknown): Promise<CreateBookingResult> {
@@ -61,7 +63,13 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
   }
   const endsAt = new Date(startsAt.getTime() + service.duration_min * 60000)
 
-  const { error } = await supabase.from('bookings').insert({
+  // Signed in → the booking belongs to the account (from the session, never the
+  // client). A guest's booking is linked later, on sign-in, by (ref, token).
+  const {
+    data: { user },
+  } = await (await createClient()).auth.getUser()
+
+  const { data: created, error } = await supabase.from('bookings').insert({
     service_id: d.service_id,
     starts_at: startsAt.toISOString(),
     ends_at: endsAt.toISOString(),
@@ -75,11 +83,15 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
     // never rewrites this booking's history (the trigger also enforces this).
     price_pence: service.price_pence,
     duration_min: service.duration_min,
+    customer_id: user?.id ?? null,
   })
+    .select('public_ref, guest_token')
+    .single()
 
-  if (error) {
-    // The DB trigger raises check_violation when the slot is full.
-    const overflow = /capacity exceeded/i.test(error.message)
+  if (error || !created) {
+    // The DB trigger raises check_violation when the slot (service seats) or the
+    // provider (parallel capacity, …36) is full.
+    const overflow = error ? /capacity exceeded|fully booked/i.test(error.message) : false
     return {
       ok: false,
       error: overflow
@@ -99,5 +111,7 @@ export async function createBooking(input: unknown): Promise<CreateBookingResult
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),
     partySize: d.party_size,
+    ref: created.public_ref,
+    token: created.guest_token,
   }
 }

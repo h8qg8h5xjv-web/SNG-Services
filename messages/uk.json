@@ -588,7 +588,7 @@
     "dataTitle": "Мої дані",
     "download": "Завантажити мої дані",
     "deleteTitle": "Видалити мої дані",
-    "deleteHint": "Видалить заявки, записи та збережене. Введіть {word} для підтвердження.",
+    "deleteHint": "Deletes your requests and saved items, and erases your name, phone and email from past bookings. Type {word} to confirm.",
     "deleteWord": "ВИДАЛИТИ",
     "deleteMismatch": "Введіть {word} точно для підтвердження.",
     "deleteButton": "Видалити",
@@ -601,7 +601,9 @@
     "restore": "Відновити на цей пристрій",
     "signOut": "Вийти",
     "syncDone": "Збережено в обліковий запис.",
-    "restoreDone": "Відновлено на цей пристрій."
+    "restoreDone": "Відновлено на цей пристрій.",
+    "deleteBookingsNote": "Upcoming bookings stay with the specialist until the visit. To cancel, contact the specialist.",
+    "deleteDoneKept": "Still with the specialist: {n, plural, one {# upcoming booking} other {# upcoming bookings}}. See Bookings."
   },
   "legal": {
     "consent": "Надсилаючи, ви погоджуєтесь з <terms>Умовами</terms> та <privacy>Політикою конфіденційності</privacy>."
@@ -802,7 +804,7 @@
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
-    "emptyBookingsText": "When a specialist takes your request, the booking shows up here.",
+    "emptyBookingsText": "The glowing windows on the home page are free time in the days ahead. Pick any one and the booking will appear here.",
     "seeSlots": "See free slots",
     "browseEvents": "Browse events",
     "noUpcoming": "No upcoming bookings.",
@@ -820,7 +822,11 @@
     "edit": "Edit",
     "addPhotos": "Add photos",
     "from": "from",
-    "to": "to"
+    "to": "to",
+    "statusPending": "Awaiting confirmation",
+    "statusConfirmed": "Confirmed",
+    "statusCancelled": "Cancelled",
+    "toProvider": "View place"
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",

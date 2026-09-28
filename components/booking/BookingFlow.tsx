@@ -10,6 +10,7 @@ import { useMagnetic } from '@/components/ui/useMagnetic'
 import Consent from '@/components/Consent'
 import WeekPicker, { londonDate } from '@/components/booking/WeekPicker'
 import { createBooking, getSlotParticipants, getSlots } from '@/lib/booking/actions'
+import { saveBooking } from '@/lib/requests/local-store'
 import { formatDuration, formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import { icsFor } from '@/lib/booking/ics'
@@ -367,6 +368,8 @@ function DetailsStep({
       is_visible_to_group: isGroup && visible,
     })
     if (result.ok) {
+      // Remembered like a guest request, so «Записи» shows it without sign-in.
+      saveBooking(result.ref, result.token)
       const participants = isGroup && visible ? await getSlotParticipants(service.id, result.startsAt) : []
       onDone({ start: result.startsAt, partySize: result.partySize, name, participants, serviceId: service.id })
       return

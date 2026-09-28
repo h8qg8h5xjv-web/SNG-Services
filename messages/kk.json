@@ -588,7 +588,7 @@
     "dataTitle": "Менің деректерім",
     "download": "Деректерімді жүктеу",
     "deleteTitle": "Деректерімді жою",
-    "deleteHint": "Өтінімдерді, жазбаларды және сақталғанды жояды. Растау үшін {word} деп теріңіз.",
+    "deleteHint": "Deletes your requests and saved items, and erases your name, phone and email from past bookings. Type {word} to confirm.",
     "deleteWord": "ЖОЮ",
     "deleteMismatch": "Растау үшін {word} дәл теріңіз.",
     "deleteButton": "Жою",
@@ -601,7 +601,9 @@
     "restore": "Осы құрылғыға қалпына келтіру",
     "signOut": "Шығу",
     "syncDone": "Аккаунтқа сақталды.",
-    "restoreDone": "Осы құрылғыға қалпына келтірілді."
+    "restoreDone": "Осы құрылғыға қалпына келтірілді.",
+    "deleteBookingsNote": "Upcoming bookings stay with the specialist until the visit. To cancel, contact the specialist.",
+    "deleteDoneKept": "Still with the specialist: {n, plural, one {# upcoming booking} other {# upcoming bookings}}. See Bookings."
   },
   "legal": {
     "consent": "Жіберу арқылы сіз <terms>Шарттармен</terms> және <privacy>Құпиялылық саясатымен</privacy> келісесіз."
@@ -802,7 +804,7 @@
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
-    "emptyBookingsText": "When a specialist takes your request, the booking shows up here.",
+    "emptyBookingsText": "The glowing windows on the home page are free time in the days ahead. Pick any one and the booking will appear here.",
     "seeSlots": "See free slots",
     "browseEvents": "Browse events",
     "noUpcoming": "No upcoming bookings.",
@@ -820,7 +822,11 @@
     "edit": "Edit",
     "addPhotos": "Add photos",
     "from": "from",
-    "to": "to"
+    "to": "to",
+    "statusPending": "Awaiting confirmation",
+    "statusConfirmed": "Confirmed",
+    "statusCancelled": "Cancelled",
+    "toProvider": "View place"
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",
