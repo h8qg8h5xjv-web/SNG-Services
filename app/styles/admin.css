@@ -18,3 +18,22 @@
 @media (prefers-reduced-motion: no-preference) {
   .press:active { transform: scale(0.97); }
 }
+
+/* Admin fields: the same --field-* tokens as the site, set to the admin's own
+   input look (min-h-11 rounded-lg border-slate-200 bg-transparent px-3
+   text-body), so a Select sits flush with the text inputs next to it. */
+.admin-ui {
+  --field-h: 2.75rem;
+  --field-r: 0.5rem;
+  --field-bw: 1px;
+  --field-bg: transparent;
+  --field-border: var(--color-slate-200, #e2e8f0);
+  --field-hover-border: var(--color-slate-300, #cbd5e1);
+  --field-focus-border: var(--color-slate-900, #0f172a);
+  --field-focus-ring: none;
+  --field-color: inherit;
+  --field-fs: var(--text-body);
+  --field-lh: var(--text-body--line-height);
+  --field-py: 0.5rem;
+  --field-px: 0.75rem;
+}

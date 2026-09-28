@@ -50,7 +50,7 @@ export default function QuickMaster({
     })
   }
 
-  const field = 'min-h-9 rounded-lg border border-slate-300 px-3 text-body'
+  const field = 'min-h-11 rounded-lg border border-slate-200 bg-transparent px-3 text-body'
 
   return (
     <section className="rounded-lg border border-slate-200 p-4">

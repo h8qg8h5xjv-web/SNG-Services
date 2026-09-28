@@ -71,7 +71,7 @@
 | Окно | `.pane` (`.off`, `.switching`, `.relighting`, `.thin`) | `Pane` |
 | Карточка | `.card`, `.card-link` | `Card`, `CardMedia`, `CardBody` |
 | Поле | `.field`, `.input`, `.hint`, `.msg-err`, `.check` | `Input`, `Textarea`, `Field` |
-| Выбор | `.sel` (+`.fld`, `.on`), панель `.sel-panel`, шторка `.sel-sheet` | `Select` (`variant="pill"|"field"`) |
+| Выбор | `.sel` (+`.fld`, `.on`, `.sel-night`), панель `.sel-panel`, шторка `.sel-sheet` | `Select` (`variant="pill"|"field"`, `tone="day"|"night"`) |
 | Опция | `.opts` / `.opt` (радио-карточка) | — |
 | Чипы | `.chip` (ночь), `.dchip`, `.tog` (день) | `FilterChip`, `FilterChipLink` |
 | Пусто | `.empty`, `.empty-night` | `EmptyState` |
@@ -80,6 +80,19 @@
 | Статус | `.status` (точка + подпись) | `StatusBadge` |
 | Шапка страницы | `.nhead`, `.crumbs`, `.catnav` | — |
 | Хром | `.top`, `.foot`, `.tabbar`, `.cta-bar`, `.skip` | `Header`, `Footer`, `BottomNav` |
+
+**Поля и Select — одно и то же поле.** Как выглядит поле формы, задают
+токены `--field-*` (`app/styles/forms.css`: высота, скругление, толщина и цвет
+границы, фон, цвет текста и подсказки, размер текста, отступы, фокус). Их
+читают и `.input`, и `Select` в варианте `field`, поэтому Select рядом с
+текстовым полем выглядит так же. Контекст меняет вид полей только через
+токены: админка задаёт свои на `body.admin-ui`. Правила:
+
+- все внутренние классы Select — `sel-*`: стили страницы внутрь не попадают
+  (глобальный `.ph` галереи однажды покрасил подсказку Select в тёмный);
+- тёмный вид — только явно, `tone="night"` (`.sel-night`) для контролов на
+  тёмной поверхности; от предка `.night` он больше не наследуется;
+- `.field` не растягивает поле по высоте соседней ячейки сетки.
 
 Скелетоны — статичные: серые строки и тёмные окна (`.skel`, `.skel.dark`), без
 мерцания на янтаре.

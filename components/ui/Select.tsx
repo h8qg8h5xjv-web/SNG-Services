@@ -22,6 +22,10 @@ type SelectProps = {
   variant?: 'pill' | 'field'
   // A filter with a non-default value gets an ink border (.sel.on).
   active?: boolean
+  // 'day' (default): a form Select looks exactly like the text inputs (the
+  // --field-* tokens). 'night' only for a control sitting on a dark surface.
+  // Never inferred from ancestors, so a dark section can't restyle a form.
+  tone?: 'day' | 'night'
   invalid?: boolean
   describedBy?: string
 }
@@ -63,6 +67,7 @@ export default function Select({
   disabled = false,
   variant = 'field',
   active: isOn = false,
+  tone = 'day',
   invalid = false,
   describedBy,
 }: SelectProps) {
@@ -241,7 +246,7 @@ export default function Select({
   return (
     <div
       ref={rootRef}
-      className={`sel ${variant === 'field' ? 'fld' : ''} ${isOn ? 'on' : ''} ${className}`}
+      className={`sel ${variant === 'field' ? 'fld' : ''} ${isOn ? 'on' : ''} ${tone === 'night' ? 'sel-night' : ''} ${className}`}
       data-invalid={invalid || undefined}
     >
       <button
@@ -260,7 +265,7 @@ export default function Select({
         onKeyDown={onTriggerKeyDown}
         className="sel-trigger"
       >
-        <span className={`truncate ${selected ? '' : 'ph'}`}>{triggerLabel}</span>
+        <span className={`truncate ${selected ? '' : 'sel-ph'}`}>{triggerLabel}</span>
         <IconChevronDown stroke={2} aria-hidden="true" />
       </button>
 
