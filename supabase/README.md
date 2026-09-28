@@ -31,6 +31,7 @@ name after it is the logical step.
 | `…36_provider_parallel_capacity` | `providers.parallel_capacity` (admin-only); the guard shares it across all the provider's services |
 | `…37_onboarding_references` | `boroughs` reference table (33 London districts); `catalog_requests.category_id` + `category_suggestion` (old free-text `category` kept) |
 | `…38_booking_guest_refs` | `bookings.public_ref` + `guest_token` (guest read key, like requests); customers can no longer UPDATE bookings |
+| `…39_booking_contact_updates` | Capacity checks re-run only when occupancy can change; contact-only edits (e.g. wiping contacts) always pass |
 
 ## Local development (Docker required)
 

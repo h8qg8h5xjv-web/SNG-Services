@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl'
 import { IconDownload } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { getSavedBookings, getSavedRequests, clearRequests } from '@/lib/requests/local-store'
+import { getSavedBookings, getSavedRequests, keepOnlyBookings } from '@/lib/requests/local-store'
+import { forgetGuestBookings } from '@/lib/booking/guest'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
 import { getGuestRequestState, deleteGuestData } from '@/lib/requests/guest'
 
@@ -15,7 +16,7 @@ import { getGuestRequestState, deleteGuestData } from '@/lib/requests/guest'
 export default function DataControls() {
   const t = useTranslations('profile')
   const [word, setWord] = useState('')
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState<{ kept: number } | null>(null)
   const [error, setError] = useState('')
   const [pending, startTransition] = useTransition()
   const confirmWord = t('deleteWord')
@@ -51,17 +52,24 @@ export default function DataControls() {
     startTransition(async () => {
       const refs = getSavedRequests().map((r) => ({ ref: r.ref, token: r.token }))
       await deleteGuestData(refs)
-      clearRequests()
+      // Past bookings lose the contacts; upcoming ones stay with the specialist.
+      const { kept } = await forgetGuestBookings(getSavedBookings().map((b) => ({ ref: b.ref, token: b.token })))
+      keepOnlyBookings(kept)
       clearSaved()
-      setDone(true)
+      setDone({ kept: kept.length })
     })
   }
 
   if (done)
     return (
-      <p className="msg-ok" role="status">
-        {t('deleteDone')}
-      </p>
+      <div className="grid gap-2" role="status">
+        <p className="msg-ok">{t('deleteDone')}</p>
+        {done.kept > 0 && (
+          <p className="muted">
+            {t('deleteDoneKept', { n: done.kept })} {t('deleteBookingsNote')}
+          </p>
+        )}
+      </div>
     )
 
   return (
@@ -74,6 +82,7 @@ export default function DataControls() {
       </div>
       <div className="danger">
         <b>{t('deleteTitle')}</b>
+        <p className="muted">{t('deleteBookingsNote')}</p>
         <label htmlFor="data-del" className="muted">
           {t('deleteHint', { word: confirmWord })}
         </label>
