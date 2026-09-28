@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 import { Input, Field } from '@/components/ui/Input'
 import { saveAccountName, deleteMyAccount } from '@/lib/cabinet/actions'
-import { getSavedRequests, clearRequests } from '@/lib/requests/local-store'
+import { getSavedBookings, getSavedRequests, clearRequests } from '@/lib/requests/local-store'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
 import { getGuestRequestState } from '@/lib/requests/guest'
 
@@ -44,7 +44,7 @@ export default function AccountPanel({
     const requests = getSavedRequests()
     const states: Record<string, unknown> = {}
     for (const r of requests) states[r.ref] = await getGuestRequestState(r.ref, r.token)
-    const payload = { exportedAt: new Date().toISOString(), email, name: nameValue, saved: [...getSavedSnapshot()], requests, requestStates: states }
+    const payload = { exportedAt: new Date().toISOString(), email, name: nameValue, saved: [...getSavedSnapshot()], requests, requestStates: states, bookings: getSavedBookings() }
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')

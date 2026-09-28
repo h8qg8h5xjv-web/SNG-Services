@@ -802,7 +802,7 @@
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
-    "emptyBookingsText": "When a specialist takes your request, the booking shows up here.",
+    "emptyBookingsText": "The glowing windows on the home page are free time in the days ahead. Pick any one and the booking will appear here.",
     "seeSlots": "See free slots",
     "browseEvents": "Browse events",
     "noUpcoming": "No upcoming bookings.",
@@ -820,7 +820,11 @@
     "edit": "Edit",
     "addPhotos": "Add photos",
     "from": "from",
-    "to": "to"
+    "to": "to",
+    "statusPending": "Awaiting confirmation",
+    "statusConfirmed": "Confirmed",
+    "statusCancelled": "Cancelled",
+    "toProvider": "View place"
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",
