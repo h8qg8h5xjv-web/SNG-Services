@@ -41,7 +41,7 @@ import { dateTimeFormat } from '@/lib/intl'
 import { parseOpeningHours } from '@/lib/hours'
 import { resolveImageUrl } from '@/lib/images'
 import { platformName } from '@/lib/url'
-import { BRAND_NAME, SITE_URL } from '@/lib/brand'
+import { BRAND_NAME, OG_IMAGE, SITE_URL } from '@/lib/brand'
 
 type Params = { locale: string; category: string; slug: string }
 
@@ -66,7 +66,7 @@ export async function generateMetadata({
       type: 'website',
       title: name,
       description: description?.slice(0, 200) ?? undefined,
-      images: image ? [image] : undefined,
+      images: image ? [image] : [OG_IMAGE],
     },
   }
 }
