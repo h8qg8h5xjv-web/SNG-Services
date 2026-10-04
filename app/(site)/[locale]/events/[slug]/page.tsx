@@ -19,6 +19,7 @@ import {
 import { formatEventDateTime } from '@/lib/events/format'
 import { formatPrice } from '@/lib/format'
 import { resolveImageUrl } from '@/lib/images'
+import { OG_IMAGE } from '@/lib/brand'
 
 type Params = { locale: string; slug: string }
 
@@ -39,7 +40,7 @@ export async function generateMetadata({
       type: 'website',
       title: pickEventTitle(event, locale),
       description: description?.slice(0, 200) ?? undefined,
-      images: image ? [image] : undefined,
+      images: image ? [image] : [OG_IMAGE],
     },
   }
 }

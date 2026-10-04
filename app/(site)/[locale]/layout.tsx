@@ -17,7 +17,7 @@ import NavMotion from '@/components/site/NavMotion'
 import { Toaster } from '@/components/ui/Toast'
 import { DUSK } from '@/lib/palette'
 import '../../globals.css'
-import { BRAND_NAME, SITE_URL, brandTagline } from '@/lib/brand'
+import { BRAND_NAME, OG_IMAGE, SITE_URL, brandTagline } from '@/lib/brand'
 
 // v2 type: Unbounded (display: headings, times, prices; 500/600) and Onest
 // (text; 400/500/600). Both load as variable fonts — one file per subset
@@ -71,6 +71,7 @@ export async function generateMetadata({
       title: `${BRAND_NAME} — ${brandTagline(locale)}`,
       description: t('description'),
       locale: ogLocale(locale),
+      images: [OG_IMAGE],
     },
     twitter: { card: 'summary_large_image' },
   }

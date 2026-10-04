@@ -47,6 +47,7 @@ npm run build    # production-сборка
 npm run lint     # ESLint
 npm run seed     # залить демо-данные из seed-data.json (нужен .env.local)
 npm run seed:dry # проверить данные без записи в БД
+npm run brand:assets # перерисовать иконки, favicon и OG-картинку из лампы и цветов палитры
 npm run seed:test-master   # создать тестового мастера, привязанного к твоему аккаунту
 npm run requests:advance   # прогнать одну итерацию волн вручную (нужен запущенный dev)
 ```

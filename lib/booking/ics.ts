@@ -4,7 +4,38 @@
 
 import { BRAND_NAME } from '../brand.ts'
 
-const fold = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
+// RFC 5545 §3.3.11 TEXT: backslash first (so the escapes added after it stay
+// single), then semicolon, comma and line breaks.
+export function escapeText(s: string): string {
+  return s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r\n|\r|\n/g, '\\n')
+}
+
+const utf8Length = (cp: number) => (cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4)
+
+// RFC 5545 §3.1: a content line is at most 75 octets; longer ones continue on
+// the next line after CRLF + one space (which counts towards that line). Cut
+// between characters only — never inside a UTF-8 sequence. Cyrillic is 2 octets
+// a letter, so a title of ~35 letters already needs this.
+export function foldLine(line: string): string {
+  const parts: string[] = []
+  let current = ''
+  let octets = 0
+  let limit = 75
+  for (const ch of line) {
+    const n = utf8Length(ch.codePointAt(0) ?? 0)
+    if (octets + n > limit) {
+      parts.push(current)
+      current = ''
+      octets = 0
+      limit = 74
+    }
+    current += ch
+    octets += n
+  }
+  parts.push(current)
+  return parts.join('\r\n ')
+}
+
 const stamp = (iso: string) => iso.replace(/[-:]/g, '').replace(/\.\d{3}/, '')
 
 export function icsFor(e: { start: string; durationMin: number; title: string; location: string; now?: Date }): string {
@@ -20,12 +51,13 @@ export function icsFor(e: { start: string; durationMin: number; title: string; l
     `DTSTAMP:${stamp(created)}`,
     `DTSTART:${stamp(start)}`,
     `DURATION:PT${Math.max(1, Math.round(e.durationMin))}M`,
-    `SUMMARY:${fold(e.title)}`,
-    `LOCATION:${fold(e.location)}`,
+    `SUMMARY:${escapeText(e.title)}`,
+    `LOCATION:${escapeText(e.location)}`,
     'END:VEVENT',
     'END:VCALENDAR',
-    '',
-  ].join('\r\n')
+  ]
+    .map(foldLine)
+    .join('\r\n') + '\r\n'
 }
 
 function hash(s: string): number {
