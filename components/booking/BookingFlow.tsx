@@ -15,6 +15,7 @@ import { formatDuration, formatPrice } from '@/lib/format'
 import { dateTimeFormat } from '@/lib/intl'
 import { icsFor } from '@/lib/booking/ics'
 import { setNavKind } from '@/components/site/NavMotion'
+import { BRAND_NAME } from '@/lib/brand'
 
 const TZ = 'Europe/London'
 const STEPS = ['service', 'time', 'details', 'done'] as const
@@ -504,7 +505,7 @@ function DoneScreen({
     const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))
     const a = document.createElement('a')
     a.href = url
-    a.download = 'sng-booking.ics'
+    a.download = `${BRAND_NAME.toLowerCase()}-booking.ics`
     a.click()
     window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }

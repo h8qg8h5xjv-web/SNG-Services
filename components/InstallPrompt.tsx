@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { IconX, IconShare2 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
+import { BRAND_NAME } from '@/lib/brand'
 
 // Chrome fires this before showing its own install UI; we defer it and drive our
 // own gentle prompt (idea #2). Minimal shape — the platform type isn't in lib.dom.
@@ -94,7 +95,7 @@ export default function InstallPrompt() {
           {t('installTitle')}
         </p>
         {mode === 'install' ? (
-          <p className="install-sub">{t('installBody')}</p>
+          <p className="install-sub">{t('installBody', { brand: BRAND_NAME })}</p>
         ) : (
           <p className="install-sub">
             {t('iosBefore')} <IconShare2 className="inline h-4 w-4" stroke={1.75} aria-hidden="true" /> {t('iosAfter')}

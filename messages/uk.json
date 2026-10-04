@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "title": "SNG Services",
     "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
   },
   "common": {
-    "appName": "SNG Services",
     "city": "London",
     "back": "Назад",
     "viewAll": "View all",
@@ -195,7 +193,7 @@
     "unclaimed": "Складено за відкритими джерелами",
     "claimCta": "Це ви? Заберіть картку",
     "servicesUnknown": "Уточніть у майстра.",
-    "whatsappText": "Вітаю! Знайшов вас на SNG Services ({name}). Підкажіть, будь ласка, щодо запису."
+    "whatsappText": "Вітаю! Знайшов вас на {brand} ({name}). Підкажіть, будь ласка, щодо запису."
   },
   "search": {
     "title": "Search",
@@ -571,7 +569,7 @@
   },
   "pwa": {
     "installTitle": "Встановити застосунок",
-    "installBody": "Додайте SNG Services на екран «Домівка» для швидкого доступу.",
+    "installBody": "Додайте {brand} на екран «Домівка» для швидкого доступу.",
     "installButton": "Встановити",
     "close": "Закрити",
     "iosBefore": "Встановити: натисніть",
@@ -626,7 +624,7 @@
   "terms": {
     "title": "Умови використання",
     "platformTitle": "Майданчик, а не сторона угоди",
-    "platformBody": "SNG Services зʼєднує клієнтів з незалежними майстрами. Ми не є стороною угоди між вами та майстром.",
+    "platformBody": "{brand} зʼєднує клієнтів з незалежними майстрами. Ми не є стороною угоди між вами та майстром.",
     "responsibilityTitle": "Відповідальність майстра",
     "responsibilityBody": "Майстер відповідає за послугу, її якість і ціну, а також за потрібну реєстрацію чи страхування.",
     "cancellationsTitle": "Скасування",

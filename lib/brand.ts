@@ -1,0 +1,23 @@
+// The brand, in one place. The name is always Latin "Okno" in every locale —
+// never transliterated. Translation strings carry {brand} and get it from here;
+// no message file contains the name itself (scripts/check-brand.mts enforces
+// that, and that the old name doesn't come back).
+
+export const BRAND_NAME = 'Okno'
+
+export const BRAND_TAGLINE: Record<string, string> = {
+  en: 'Find your window',
+  ru: 'Найди своё окно',
+  uk: 'Знайди своє вікно',
+  kk: 'Өз терезеңді тап',
+  ka: 'იპოვე შენი ფანჯარა',
+  hy: 'Գտիր քո պատուհանը',
+}
+
+export function brandTagline(locale: string): string {
+  return BRAND_TAGLINE[locale] ?? BRAND_TAGLINE.en
+}
+
+// The public site address. Comes from the environment only; the domain is
+// switched there, not in code.
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'

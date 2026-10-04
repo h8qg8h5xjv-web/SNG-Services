@@ -5,6 +5,7 @@ import { IconSearch, IconCalendarEvent, IconUser } from '@tabler/icons-react'
 import { Link, usePathname } from '@/i18n/navigation'
 import { localeConfigs } from '@/i18n/locales'
 import { navSection } from '@/lib/nav/section'
+import { BRAND_NAME } from '@/lib/brand'
 
 // RU first: the audience reads Russian first (demo order).
 const LOCALES = localeConfigs
@@ -24,9 +25,9 @@ export default function Header() {
   return (
     <header className={section === 'home' ? 'top is-home' : 'top'}>
       <div className="wrap nav">
-        <Link href="/" className="logo" aria-label={`SNG ${t('common.city')} — ${t('nav.home')}`}>
+        <Link href="/" className="logo" aria-label={`${BRAND_NAME} ${t('common.city')} — ${t('nav.home')}`}>
           <span className="logo-win" aria-hidden="true" />
-          SNG <small>{t('common.city')}</small>
+          {BRAND_NAME} <small>{t('common.city')}</small>
         </Link>
 
         <nav className="nav-links" aria-label={t('nav.mainMenu')}>

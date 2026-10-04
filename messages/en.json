@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "title": "SNG Services",
     "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
   },
   "common": {
-    "appName": "SNG Services",
     "city": "London",
     "back": "Back",
     "viewAll": "View all",
@@ -195,7 +193,7 @@
     "unclaimed": "Compiled from public sources",
     "claimCta": "Is this you? Claim the card",
     "servicesUnknown": "Ask the master.",
-    "whatsappText": "Hello! I found you on SNG Services ({name}). Could you tell me about booking?"
+    "whatsappText": "Hello! I found you on {brand} ({name}). Could you tell me about booking?"
   },
   "search": {
     "title": "Search",
@@ -571,7 +569,7 @@
   },
   "pwa": {
     "installTitle": "Install the app",
-    "installBody": "Add SNG Services to your home screen for quick access.",
+    "installBody": "Add {brand} to your home screen for quick access.",
     "installButton": "Install",
     "close": "Close",
     "iosBefore": "To install: tap",
@@ -626,7 +624,7 @@
   "terms": {
     "title": "Terms of use",
     "platformTitle": "A platform, not a party",
-    "platformBody": "SNG Services connects clients with independent masters. We are not a party to the deal between you and a master.",
+    "platformBody": "{brand} connects clients with independent masters. We are not a party to the deal between you and a master.",
     "responsibilityTitle": "The master’s responsibility",
     "responsibilityBody": "The master is responsible for the service, its quality and price, and any required registration or insurance.",
     "cancellationsTitle": "Cancellations",

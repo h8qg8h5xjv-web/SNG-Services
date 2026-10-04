@@ -34,6 +34,7 @@ Next.js (App Router) + Supabase + Tailwind, деплой на Vercel.
 | `SUPABASE_SERVICE_ROLE_KEY` | сервисный ключ, только сервер, обходит RLS |
 | `NEXT_PUBLIC_SITE_URL` | базовый URL сайта |
 | `CRON_SECRET` | секрет для защищённого роута планировщика волн (любая длинная случайная строка) |
+| `NOMINATIM_CONTACT_EMAIL` | необязательно: контактный email для User-Agent геокодера OpenStreetMap (их правила просят идентифицировать приложение) |
 
 `.env.local` в git не попадает.
 

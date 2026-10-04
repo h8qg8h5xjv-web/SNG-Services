@@ -11,6 +11,7 @@ import { saveAccountName, deleteMyAccount } from '@/lib/cabinet/actions'
 import { getSavedBookings, getSavedRequests, clearRequests } from '@/lib/requests/local-store'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
 import { getGuestRequestState } from '@/lib/requests/guest'
+import { BRAND_NAME } from '@/lib/brand'
 
 // Signed-in account controls: public name, email, data export, delete account.
 export default function AccountPanel({
@@ -49,7 +50,7 @@ export default function AccountPanel({
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'sng-my-data.json'
+    a.download = `${BRAND_NAME.toLowerCase()}-my-data.json`
     a.click()
     URL.revokeObjectURL(url)
   }

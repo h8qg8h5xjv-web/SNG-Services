@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "title": "SNG Services",
     "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
   },
   "common": {
-    "appName": "SNG Services",
     "city": "London",
     "back": "უკან",
     "viewAll": "View all",
@@ -195,7 +193,7 @@
     "unclaimed": "შედგენილია ღია წყაროებიდან",
     "claimCta": "ეს თქვენ ხართ? წაიღეთ ბარათი",
     "servicesUnknown": "დააზუსტეთ ოსტატთან.",
-    "whatsappText": "გამარჯობა! გნახეთ SNG Services-ზე ({name}). შემიძლიათ ჩავეწერო?"
+    "whatsappText": "გამარჯობა! გნახეთ {brand}-ზე ({name}). შემიძლიათ ჩავეწერო?"
   },
   "search": {
     "title": "Search",
@@ -571,7 +569,7 @@
   },
   "pwa": {
     "installTitle": "აპლიკაციის დაყენება",
-    "installBody": "დაამატეთ SNG Services მთავარ ეკრანზე სწრაფი წვდომისთვის.",
+    "installBody": "დაამატეთ {brand} მთავარ ეკრანზე სწრაფი წვდომისთვის.",
     "installButton": "დაყენება",
     "close": "დახურვა",
     "iosBefore": "დასაყენებლად: შეეხეთ",
@@ -626,7 +624,7 @@
   "terms": {
     "title": "გამოყენების წესები",
     "platformTitle": "პლატფორმა, და არა გარიგების მხარე",
-    "platformBody": "SNG Services აკავშირებს კლიენტებს დამოუკიდებელ ოსტატებთან. ჩვენ არ ვართ გარიგების მხარე თქვენსა და ოსტატს შორის.",
+    "platformBody": "{brand} აკავშირებს კლიენტებს დამოუკიდებელ ოსტატებთან. ჩვენ არ ვართ გარიგების მხარე თქვენსა და ოსტატს შორის.",
     "responsibilityTitle": "ოსტატის პასუხისმგებლობა",
     "responsibilityBody": "ოსტატი პასუხისმგებელია სერვისზე, მის ხარისხსა და ფასზე, ასევე საჭირო რეგისტრაციასა თუ დაზღვევაზე.",
     "cancellationsTitle": "გაუქმება",
