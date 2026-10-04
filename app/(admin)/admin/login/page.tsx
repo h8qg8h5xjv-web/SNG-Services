@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { BRAND_NAME } from '@/lib/brand'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
@@ -31,7 +32,7 @@ export default function AdminLoginPage() {
 
   return (
     <main className="mx-auto flex min-h-full max-w-sm flex-col justify-center px-6 py-8">
-      <h1 className="text-title font-semibold">SNG Services — Admin</h1>
+      <h1 className="text-title font-semibold">{BRAND_NAME} — Admin</h1>
       <p className="mt-2 text-body text-slate-500">
         Sign in with a magic link sent to your email.
       </p>

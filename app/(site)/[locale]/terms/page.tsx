@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import NightHeader from '@/components/site/NightHeader'
 import LegalDoc from '@/components/site/LegalDoc'
+import { BRAND_NAME } from '@/lib/brand'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +30,7 @@ export default async function TermsPage({
 
   const sections = (
     [
-      ['platform', t('platformTitle'), t('platformBody')],
+      ['platform', t('platformTitle'), t('platformBody', { brand: BRAND_NAME })],
       ['responsibility', t('responsibilityTitle'), t('responsibilityBody')],
       ['cancellations', t('cancellationsTitle'), t('cancellationsBody')],
       ['complaints', t('complaintsTitle'), t('complaintsBody')],

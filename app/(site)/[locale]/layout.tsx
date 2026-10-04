@@ -17,6 +17,7 @@ import NavMotion from '@/components/site/NavMotion'
 import { Toaster } from '@/components/ui/Toast'
 import { DUSK } from '@/lib/palette'
 import '../../globals.css'
+import { BRAND_NAME, SITE_URL, brandTagline } from '@/lib/brand'
 
 // v2 type: Unbounded (display: headings, times, prices; 500/600) and Onest
 // (text; 400/500/600). Both load as variable fonts — one file per subset
@@ -25,7 +26,7 @@ import '../../globals.css'
 const onest = Onest({ variable: '--font-onest', subsets: ['latin', 'cyrillic'] })
 const unbounded = Unbounded({ variable: '--font-unbounded', subsets: ['latin', 'cyrillic'] })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+const siteUrl = SITE_URL
 
 // Browser UI / installed app colour: the night header (PWA).
 export const viewport: Viewport = { themeColor: DUSK, viewportFit: 'cover' }
@@ -52,10 +53,9 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(siteUrl),
-    title: { default: t('title'), template: `%s · ${t('title')}` },
+    title: { default: `${BRAND_NAME} — ${brandTagline(locale)}`, template: `%s · ${BRAND_NAME}` },
     description: t('description'),
     alternates: { languages },
-    manifest: '/manifest.webmanifest',
     icons: {
       icon: [
         { url: '/icons/favicon-16.png', sizes: '16x16', type: 'image/png' },
@@ -64,11 +64,11 @@ export async function generateMetadata({
       ],
       apple: '/icons/apple-touch-icon.png',
     },
-    appleWebApp: { capable: true, title: t('title'), statusBarStyle: 'default' },
+    appleWebApp: { capable: true, title: BRAND_NAME, statusBarStyle: 'default' },
     openGraph: {
       type: 'website',
-      siteName: t('title'),
-      title: t('title'),
+      siteName: BRAND_NAME,
+      title: `${BRAND_NAME} — ${brandTagline(locale)}`,
       description: t('description'),
       locale: ogLocale(locale),
     },

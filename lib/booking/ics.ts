@@ -2,6 +2,8 @@
 // the browser from the real booking; times in UTC so every calendar app places
 // it correctly.
 
+import { BRAND_NAME } from '../brand.ts'
+
 const fold = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
 const stamp = (iso: string) => iso.replace(/[-:]/g, '').replace(/\.\d{3}/, '')
 
@@ -11,10 +13,10 @@ export function icsFor(e: { start: string; durationMin: number; title: string; l
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//SNG Services//Booking//EN',
+    `PRODID:-//${BRAND_NAME}//Booking//EN`,
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
-    `UID:${stamp(start)}-${Math.abs(hash(e.title + e.location))}@sng-services`,
+    `UID:${stamp(start)}-${Math.abs(hash(e.title + e.location))}@${BRAND_NAME.toLowerCase()}`,
     `DTSTAMP:${stamp(created)}`,
     `DTSTART:${stamp(start)}`,
     `DURATION:PT${Math.max(1, Math.round(e.durationMin))}M`,

@@ -1,12 +1,12 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { formatPrice } from '@/lib/format'
 import { getNotificationChannel, type ProviderNotification } from './channel'
+import { SITE_URL } from '@/lib/brand'
 
 // Builds and dispatches provider notifications, and records the fact in
 // request_targets (notified_at + channel) exactly as a real send would. All
 // content is broadcast-safe: never the client's name, phone, email or address.
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 type RequestSummary = {
   public_ref: string

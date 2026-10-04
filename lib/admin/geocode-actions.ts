@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/admin/auth'
+import { BRAND_NAME } from '@/lib/brand'
 
 export type GeocodeHit = { label: string; lat: number; lng: number }
 export type GeocodeResult =
@@ -16,6 +17,14 @@ const MIN_INTERVAL_MS = 1100
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+// OpenStreetMap's Nominatim policy asks every app to identify itself. The
+// contact address comes only from the environment (never hardcoded) and is
+// appended when set.
+function nominatimUserAgent(): string {
+  const contact = process.env.NOMINATIM_CONTACT_EMAIL?.trim()
+  return contact ? `${BRAND_NAME}/1.0 (${contact})` : `${BRAND_NAME}/1.0`
 }
 
 export async function geocodeAddress(query: string): Promise<GeocodeResult> {
@@ -38,7 +47,7 @@ export async function geocodeAddress(query: string): Promise<GeocodeResult> {
   try {
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'SNG-Services/1.0 (services catalog for the CIS community in the UK)',
+        'User-Agent': nominatimUserAgent(),
         'Accept-Language': 'ru,en',
       },
       cache: 'no-store',

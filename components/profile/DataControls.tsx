@@ -9,6 +9,7 @@ import { getSavedBookings, getSavedRequests, keepOnlyBookings } from '@/lib/requ
 import { forgetGuestBookings } from '@/lib/booking/guest'
 import { getSavedSnapshot, clearSaved } from '@/lib/saved/store'
 import { getGuestRequestState, deleteGuestData } from '@/lib/requests/guest'
+import { BRAND_NAME } from '@/lib/brand'
 
 // §3 GDPR + App Store: export everything we hold about this user as JSON, and
 // delete it (requests + bookings on the server, saved locally) behind a typed
@@ -38,7 +39,7 @@ export default function DataControls() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'sng-my-data.json'
+    a.download = `${BRAND_NAME.toLowerCase()}-my-data.json`
     a.click()
     URL.revokeObjectURL(url)
   }

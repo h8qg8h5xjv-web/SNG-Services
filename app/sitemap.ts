@@ -1,12 +1,13 @@
 import type { MetadataRoute } from 'next'
 import { enabledLocales, defaultLocale } from '@/i18n/locales'
 import { createAnonClient } from '@/lib/supabase/anon'
+import { SITE_URL } from '@/lib/brand'
 
 // Generated per-request so it reflects live published content (and needs no DB
 // at build time).
 export const dynamic = 'force-dynamic'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+const siteUrl = SITE_URL
 
 function languages(suffix: string): Record<string, string> {
   return Object.fromEntries(

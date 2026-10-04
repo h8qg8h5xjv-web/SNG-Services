@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { loadMatchPool } from '@/lib/requests/advance'
 import { eligibleProviderIds } from '@/lib/requests/match'
 import { formatPrice } from '@/lib/format'
+import { BRAND_NAME, SITE_URL } from '@/lib/brand'
 
 // §1 admin queue. All requests, newest first, each with the client's contacts and
 // the masters who would fit — so an admin can hand a manual request off by hand.
@@ -54,11 +55,11 @@ type RequestRow = {
     | null
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+const siteUrl = SITE_URL
 
 function buildMessage(r: RequestRow, contactName: string, contactPhone: string): string {
   const lines = [
-    'Здравствуйте! Заявка через SNG Services.',
+    `Здравствуйте! Заявка через ${BRAND_NAME}.`,
     `Категория/район: ${r.borough}`,
     r.description ? `Задача: ${r.description}` : null,
     r.budget_max_pence != null ? `Бюджет: до ${formatPrice(r.budget_max_pence)}` : null,

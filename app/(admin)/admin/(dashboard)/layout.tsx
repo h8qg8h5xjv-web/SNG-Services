@@ -5,6 +5,7 @@ import { getCurrentUser, isAdmin } from '@/lib/admin/auth'
 import { getManualRequestCount } from '@/lib/admin/requests'
 import { getUnsentNotificationCount } from '@/lib/admin/notifications'
 import { countDraftProviders } from '@/lib/admin/review'
+import { BRAND_NAME } from '@/lib/brand'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard' },
@@ -52,7 +53,7 @@ export default async function DashboardLayout({
       <header className="border-b border-slate-200">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
           <nav className="flex items-center gap-4 text-body">
-            <span className="font-semibold">SNG Admin</span>
+            <span className="font-semibold">{BRAND_NAME} Admin</span>
             {NAV.map((item) => (
               <Link key={item.href} href={item.href} className="text-slate-500 hover:text-slate-900">
                 {item.label}

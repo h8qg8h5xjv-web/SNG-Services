@@ -41,6 +41,7 @@ import { dateTimeFormat } from '@/lib/intl'
 import { parseOpeningHours } from '@/lib/hours'
 import { resolveImageUrl } from '@/lib/images'
 import { platformName } from '@/lib/url'
+import { BRAND_NAME, SITE_URL } from '@/lib/brand'
 
 type Params = { locale: string; category: string; slug: string }
 
@@ -132,14 +133,14 @@ export default async function ProviderPage({
       ? Math.min(...provider.services.map((s) => s.price_pence))
       : null
   const waNumber = provider.phone ? provider.phone.replace(/[^0-9]/g, '') : ''
-  const waText = t('provider.whatsappText', { name })
+  const waText = t('provider.whatsappText', { name, brand: BRAND_NAME })
   const waHref = waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}` : null
   const hasMap = provider.lat != null && provider.lng != null
   const hasContacts = Boolean(
     provider.phone || provider.telegram || provider.instagram || provider.website || provider.address || hasMap,
   )
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const siteUrl = SITE_URL
   const businessLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',

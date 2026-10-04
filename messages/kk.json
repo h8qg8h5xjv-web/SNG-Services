@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "title": "SNG Services",
     "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
   },
   "common": {
-    "appName": "SNG Services",
     "city": "London",
     "back": "Артқа",
     "viewAll": "View all",
@@ -195,7 +193,7 @@
     "unclaimed": "Ашық дереккөздер бойынша жасалған",
     "claimCta": "Бұл сіз бе? Картаны алыңыз",
     "servicesUnknown": "Маманнан сұраңыз.",
-    "whatsappText": "Сәлеметсіз бе! Сізді SNG Services-тен таптым ({name}). Жазылу туралы айтып жіберіңізші."
+    "whatsappText": "Сәлеметсіз бе! Сізді {brand}-тен таптым ({name}). Жазылу туралы айтып жіберіңізші."
   },
   "search": {
     "title": "Search",
@@ -571,7 +569,7 @@
   },
   "pwa": {
     "installTitle": "Қолданбаны орнату",
-    "installBody": "Жылдам қол жеткізу үшін SNG Services-ті негізгі экранға қосыңыз.",
+    "installBody": "Жылдам қол жеткізу үшін {brand}-ті негізгі экранға қосыңыз.",
     "installButton": "Орнату",
     "close": "Жабу",
     "iosBefore": "Орнату: басыңыз",
@@ -626,7 +624,7 @@
   "terms": {
     "title": "Пайдалану шарттары",
     "platformTitle": "Алаң, мәміле тарапы емес",
-    "platformBody": "SNG Services клиенттерді тәуелсіз мамандармен байланыстырады. Біз сіз бен маман арасындағы мәміленің тарапы емеспіз.",
+    "platformBody": "{brand} клиенттерді тәуелсіз мамандармен байланыстырады. Біз сіз бен маман арасындағы мәміленің тарапы емеспіз.",
     "responsibilityTitle": "Маманның жауапкершілігі",
     "responsibilityBody": "Маман қызметке, оның сапасы мен бағасына, сондай-ақ қажетті тіркеу немесе сақтандыруға жауапты.",
     "cancellationsTitle": "Бас тарту",

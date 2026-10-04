@@ -25,6 +25,8 @@ jobs:
       - run: npm run lint
       - run: npx tsc --noEmit
       - run: npm run check:styles
+      # The old name must not come back; the brand lives in lib/brand.ts.
+      - run: npm run check:brand
       - run: npm test
       # Build with placeholder public values: no secrets in CI. The build does
       # not query Supabase (data pages render on demand), so an unreachable URL

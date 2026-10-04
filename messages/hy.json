@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "title": "SNG Services",
     "description": "Catalogue and booking for CIS services in the UK — salons, tutors, doctors and more, in your language."
   },
   "common": {
-    "appName": "SNG Services",
     "city": "London",
     "back": "Հետ",
     "viewAll": "View all",
@@ -195,7 +193,7 @@
     "unclaimed": "Կազմված է բաց աղբյուրներից",
     "claimCta": "Սա դո՞ւք եք։ Ստացեք քարտը",
     "servicesUnknown": "Ճշտեք վարպետի մոտ.",
-    "whatsappText": "Բարև ձեզ! Գտա ձեզ SNG Services-ում ({name})։ Կասե՞ք գրանցման մասին։"
+    "whatsappText": "Բարև ձեզ! Գտա ձեզ {brand}-ում ({name})։ Կասե՞ք գրանցման մասին։"
   },
   "search": {
     "title": "Search",
@@ -571,7 +569,7 @@
   },
   "pwa": {
     "installTitle": "Տեղադրել հավելվածը",
-    "installBody": "Ավելացրեք SNG Services գլխավոր էկրանին՝ արագ մուտքի համար.",
+    "installBody": "Ավելացրեք {brand} գլխավոր էկրանին՝ արագ մուտքի համար.",
     "installButton": "Տեղադրել",
     "close": "Փակել",
     "iosBefore": "Տեղադրելու համար՝ սեղմեք",
@@ -626,7 +624,7 @@
   "terms": {
     "title": "Օգտագործման պայմաններ",
     "platformTitle": "Հարթակ, ոչ գործարքի կողմ",
-    "platformBody": "SNG Services-ը կապում է հաճախորդներին անկախ վարպետների հետ. Մենք ձեր և վարպետի միջև գործարքի կողմ չենք.",
+    "platformBody": "{brand}-ը կապում է հաճախորդներին անկախ վարպետների հետ. Մենք ձեր և վարպետի միջև գործարքի կողմ չենք.",
     "responsibilityTitle": "Վարպետի պատասխանատվությունը",
     "responsibilityBody": "Վարպետը պատասխանատու է ծառայության, դրա որակի ու գնի, ինչպես նաև անհրաժեշտ գրանցման կամ ապահովագրության համար.",
     "cancellationsTitle": "Չեղարկումներ",
