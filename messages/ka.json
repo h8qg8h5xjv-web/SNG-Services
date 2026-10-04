@@ -635,8 +635,8 @@
   "cabinet": {
     "title": "კაბინეტი",
     "signOut": "გასვლა",
-    "loginTitle": "შედით ფოსტით",
-    "loginBody": "თქვენი განაცხადები და შენახული ნებისმიერ მოწყობილობაზე დაგრჩებათ.",
+    "loginTitle": "შესვლა ან კაბინეტის შექმნა",
+    "loginBody": "მხოლოდ ფოსტა, პაროლის გარეშე. გამოგიგზავნით ბმულს — დააჭერთ და კაბინეტი მზადაა.",
     "login": "შესვლა",
     "loginSending": "იგზავნება…",
     "loginSent": "შეამოწმეთ ფოსტა — ბმული გაიგზავნა {email}-ზე.",
@@ -798,7 +798,6 @@
   "cabinet2": {
     "hello": "Hello, {name}.",
     "signedInAs": "Signed in as {email}.",
-    "guest": "You’re not signed in — everything is kept in this browser.",
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
@@ -812,7 +811,7 @@
     "describeTask": "Describe your task",
     "newRequest": "New request",
     "open": "Open",
-    "loginCta": "Email me a sign-in link",
+    "loginCta": "შესვლის ბმულის მიღება",
     "emailLabel": "Email",
     "areYouBusiness": "Are you a specialist or a business?",
     "forBusiness": "For business",
@@ -824,7 +823,18 @@
     "statusPending": "Awaiting confirmation",
     "statusConfirmed": "Confirmed",
     "statusCancelled": "Cancelled",
-    "toProvider": "View place"
+    "toProvider": "View place",
+    "perksLabel": "რა იქნება კაბინეტში",
+    "perkDevices": "განაცხადები და ჯავშნები ნებისმიერ მოწყობილობაზე",
+    "perkSaved": "შენახული ოსტატები",
+    "perkMaster": "ოსტატებისთვის — საკუთარი ბარათი და კლიენტების განაცხადები",
+    "browserOnly": "ახლა ყველაფერი ამ ბრაუზერში ინახება",
+    "startTitle": "კაბინეტი მზადაა. საიდან დავიწყოთ?",
+    "startSeeker": "ოსტატს ვეძებ",
+    "startSeekerSub": "განაცხადები, ჯავშნები და შენახული ოსტატები აქ იქნება",
+    "startMaster": "ოსტატი ვარ — მინდა კატალოგში",
+    "startMasterSub": "პირდაპირ ბარათზე გადავალთ: სახელი, კატეგორია, უბანი",
+    "startNote": "არჩევანი არაფერს ზღუდავს: ერთ კაბინეტში შეგიძლიათ ოსტატებიც მოძებნოთ და საკუთარი ბარათიც მართოთ."
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",

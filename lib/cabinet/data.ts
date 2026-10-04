@@ -1,7 +1,21 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-export type CabinetAccount = { userId: string; email: string | null; name: string | null } | null
+export type StartChoice = 'seeker' | 'master'
+
+export type CabinetAccount = {
+  userId: string
+  email: string | null
+  name: string | null
+  // null until the one-time choice after the first sign-in (see saveStartChoice).
+  startChoice: StartChoice | null
+} | null
+
+function readStartChoice(metadata: unknown): StartChoice | null {
+  if (typeof metadata !== 'object' || metadata === null) return null
+  const v: unknown = (metadata as Record<string, unknown>).start_choice
+  return v === 'seeker' || v === 'master' ? v : null
+}
 
 export async function getAccount(): Promise<CabinetAccount> {
   const supabase = await createClient()
@@ -14,7 +28,12 @@ export async function getAccount(): Promise<CabinetAccount> {
     .select('display_name')
     .eq('user_id', user.id)
     .maybeSingle()
-  return { userId: user.id, email: user.email ?? null, name: data?.display_name ?? null }
+  return {
+    userId: user.id,
+    email: user.email ?? null,
+    name: data?.display_name ?? null,
+    startChoice: readStartChoice(user.user_metadata),
+  }
 }
 
 export type ContactedProvider = { slug: string; name: string; categorySlug: string | null; at: string }

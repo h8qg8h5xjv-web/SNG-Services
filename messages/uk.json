@@ -635,8 +635,8 @@
   "cabinet": {
     "title": "Кабінет",
     "signOut": "Вийти",
-    "loginTitle": "Увійдіть поштою",
-    "loginBody": "заявки та збережене залишаться з вами на будь-якому пристрої.",
+    "loginTitle": "Увійти або створити кабінет",
+    "loginBody": "Лише пошта, без пароля. Надішлемо посилання — натиснете, і кабінет готовий.",
     "login": "Увійти",
     "loginSending": "Надсилаю…",
     "loginSent": "Перевірте пошту — посилання надіслано на {email}.",
@@ -798,7 +798,6 @@
   "cabinet2": {
     "hello": "Hello, {name}.",
     "signedInAs": "Signed in as {email}.",
-    "guest": "You’re not signed in — everything is kept in this browser.",
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
@@ -812,7 +811,7 @@
     "describeTask": "Describe your task",
     "newRequest": "New request",
     "open": "Open",
-    "loginCta": "Email me a sign-in link",
+    "loginCta": "Отримати посилання для входу",
     "emailLabel": "Email",
     "areYouBusiness": "Are you a specialist or a business?",
     "forBusiness": "For business",
@@ -824,7 +823,18 @@
     "statusPending": "Awaiting confirmation",
     "statusConfirmed": "Confirmed",
     "statusCancelled": "Cancelled",
-    "toProvider": "View place"
+    "toProvider": "View place",
+    "perksLabel": "Що буде в кабінеті",
+    "perkDevices": "Заявки та записи на будь-якому пристрої",
+    "perkSaved": "Збережені майстри",
+    "perkMaster": "Для майстрів — власна картка і заявки клієнтів",
+    "browserOnly": "Зараз усе зберігається в цьому браузері",
+    "startTitle": "Кабінет готовий. З чого почнемо?",
+    "startSeeker": "Шукаю майстра",
+    "startSeekerSub": "Заявки, записи та збережені майстри будуть тут",
+    "startMaster": "Я майстер — хочу в каталог",
+    "startMasterSub": "Одразу перейдемо до картки: ім’я, категорія, район",
+    "startNote": "Вибір нічого не обмежує: в одному кабінеті можна і шукати майстрів, і вести свою картку."
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",

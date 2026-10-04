@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { IconLogout } from '@tabler/icons-react'
+import { IconBrowser, IconLogout } from '@tabler/icons-react'
 import { getMyProviderIds, getNewRequestCount } from '@/lib/business/data'
 import { getAccount } from '@/lib/cabinet/data'
 import NightHeader from '@/components/site/NightHeader'
 import CabinetTabs from '@/components/cabinet/CabinetTabs'
 import LoginBlock from '@/components/cabinet/LoginBlock'
 import AutoLink from '@/components/cabinet/AutoLink'
+import StartChoice from '@/components/cabinet/StartChoice'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,8 +27,10 @@ export default async function CabinetLayout({
   const providerIds = loggedIn ? await getMyProviderIds() : []
   const incomingCount = providerIds.length > 0 ? await getNewRequestCount() : 0
 
+  // Signed out: no greeting — the sign-in block and the hint above the tabs
+  // say it.
   const greeting = !account
-    ? t('cabinet2.guest')
+    ? null
     : account.name
       ? t('cabinet2.hello', { name: account.name })
       : account.email
@@ -56,6 +59,13 @@ export default async function CabinetLayout({
       <div className="wrap page pt-8">
         {loggedIn && <AutoLink />}
         {!loggedIn && <LoginBlock />}
+        {account && account.startChoice === null && providerIds.length === 0 && <StartChoice />}
+        {!loggedIn && (
+          <p className="cab-local">
+            <IconBrowser stroke={1.75} aria-hidden="true" />
+            {t('cabinet2.browserOnly')}
+          </p>
+        )}
         <CabinetTabs loggedIn={loggedIn} incomingCount={incomingCount} />
         {children}
       </div>

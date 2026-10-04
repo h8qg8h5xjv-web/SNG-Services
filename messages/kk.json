@@ -635,8 +635,8 @@
   "cabinet": {
     "title": "Кабинет",
     "signOut": "Шығу",
-    "loginTitle": "Пошта арқылы кіріңіз",
-    "loginBody": "өтінімдер мен сақталған кез келген құрылғыда сізбен қалады.",
+    "loginTitle": "Кіру немесе кабинет ашу",
+    "loginBody": "Тек пошта, құпиясөзсіз. Сілтеме жібереміз — басасыз, кабинет дайын.",
     "login": "Кіру",
     "loginSending": "Жіберілуде…",
     "loginSent": "Поштаңызды тексеріңіз — сілтеме {email} мекенжайына жіберілді.",
@@ -798,7 +798,6 @@
   "cabinet2": {
     "hello": "Hello, {name}.",
     "signedInAs": "Signed in as {email}.",
-    "guest": "You’re not signed in — everything is kept in this browser.",
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
@@ -812,7 +811,7 @@
     "describeTask": "Describe your task",
     "newRequest": "New request",
     "open": "Open",
-    "loginCta": "Email me a sign-in link",
+    "loginCta": "Кіру сілтемесін алу",
     "emailLabel": "Email",
     "areYouBusiness": "Are you a specialist or a business?",
     "forBusiness": "For business",
@@ -824,7 +823,18 @@
     "statusPending": "Awaiting confirmation",
     "statusConfirmed": "Confirmed",
     "statusCancelled": "Cancelled",
-    "toProvider": "View place"
+    "toProvider": "View place",
+    "perksLabel": "Кабинетте не болады",
+    "perkDevices": "Өтінімдер мен жазбалар кез келген құрылғыда",
+    "perkSaved": "Сақталған мамандар",
+    "perkMaster": "Мамандарға — өз картасы және клиенттердің өтінімдері",
+    "browserOnly": "Қазір бәрі осы браузерде сақталады",
+    "startTitle": "Кабинет дайын. Неден бастаймыз?",
+    "startSeeker": "Маман іздеймін",
+    "startSeekerSub": "Өтінімдер, жазбалар және сақталған мамандар осында болады",
+    "startMaster": "Мен маманмын — каталогқа кіргім келеді",
+    "startMasterSub": "Бірден картаға көшеміз: аты, санаты, ауданы",
+    "startNote": "Таңдау ештеңені шектемейді: бір кабинетте маман іздеуге де, өз картаңызды жүргізуге де болады."
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",

@@ -635,8 +635,8 @@
   "cabinet": {
     "title": "Cabinet",
     "signOut": "Sign out",
-    "loginTitle": "Sign in by email",
-    "loginBody": "your requests and saved items stay with you on any device.",
+    "loginTitle": "Sign in or create your cabinet",
+    "loginBody": "Just your email, no password. We’ll send a link — tap it and your cabinet is ready.",
     "login": "Sign in",
     "loginSending": "Sending…",
     "loginSent": "Check your inbox — a link went to {email}.",
@@ -798,7 +798,6 @@
   "cabinet2": {
     "hello": "Hello, {name}.",
     "signedInAs": "Signed in as {email}.",
-    "guest": "You’re not signed in — everything is kept in this browser.",
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
@@ -824,7 +823,18 @@
     "statusPending": "Awaiting confirmation",
     "statusConfirmed": "Confirmed",
     "statusCancelled": "Cancelled",
-    "toProvider": "View place"
+    "toProvider": "View place",
+    "perksLabel": "What you get",
+    "perkDevices": "Requests and bookings on any device",
+    "perkSaved": "Saved specialists",
+    "perkMaster": "For specialists — your own card and client requests",
+    "browserOnly": "For now, everything is kept in this browser",
+    "startTitle": "Your cabinet is ready. Where shall we start?",
+    "startSeeker": "I’m looking for a specialist",
+    "startSeekerSub": "Your requests, bookings and saved specialists live here",
+    "startMaster": "I’m a specialist — list me in the catalogue",
+    "startMasterSub": "We’ll go straight to your card: name, category, borough",
+    "startNote": "This doesn’t limit your account: one cabinet can both find specialists and run your own card."
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",
