@@ -170,6 +170,22 @@ export async function saveAccountName(name: string): Promise<Result> {
   return { ok: true }
 }
 
+// The one-time «Ищу мастера» / «Я мастер» choice after the first sign-in. Only
+// remembers that it was asked (auth user_metadata, which the user may edit —
+// never used for access); it doesn't limit the account either way.
+const startChoiceSchema = z.enum(['seeker', 'master'])
+
+export async function saveStartChoice(choice: unknown): Promise<Result> {
+  const parsed = startChoiceSchema.safeParse(choice)
+  if (!parsed.success) return { ok: false, error: 'invalid' }
+  const user = await requireUser()
+  if (!user) return { ok: false, error: 'Not signed in.' }
+  const supabase = await createClient()
+  const { error } = await supabase.auth.updateUser({ data: { start_choice: parsed.data } })
+  if (error) return { ok: false, error: error.message }
+  return { ok: true }
+}
+
 // Delete the account and the data tied to it: requests, sync row, membership, and
 // any draft cards the user solely owned. Published cards stay (membership drops).
 // Finally removes the auth user. The client clears localStorage and signs out.

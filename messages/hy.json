@@ -635,8 +635,8 @@
   "cabinet": {
     "title": "Կաբինետ",
     "signOut": "Դուրս գալ",
-    "loginTitle": "Մուտք գործեք փոստով",
-    "loginBody": "ձեր հայտերն ու պահպանվածը կմնան ձեզ հետ ցանկացած սարքում.",
+    "loginTitle": "Մուտք գործել կամ ստեղծել կաբինետ",
+    "loginBody": "Միայն փոստ, առանց գաղտնաբառի։ Կուղարկենք հղում — կսեղմեք, և կաբինետը պատրաստ է։",
     "login": "Մուտք",
     "loginSending": "Ուղարկվում է…",
     "loginSent": "Ստուգեք փոստը — հղումն ուղարկվել է {email}-ին.",
@@ -798,7 +798,6 @@
   "cabinet2": {
     "hello": "Hello, {name}.",
     "signedInAs": "Signed in as {email}.",
-    "guest": "You’re not signed in — everything is kept in this browser.",
     "sections": "Account sections",
     "newCount": "{n} new",
     "emptyBookings": "No bookings yet",
@@ -812,7 +811,7 @@
     "describeTask": "Describe your task",
     "newRequest": "New request",
     "open": "Open",
-    "loginCta": "Email me a sign-in link",
+    "loginCta": "Ստանալ մուտքի հղումը",
     "emailLabel": "Email",
     "areYouBusiness": "Are you a specialist or a business?",
     "forBusiness": "For business",
@@ -824,7 +823,18 @@
     "statusPending": "Awaiting confirmation",
     "statusConfirmed": "Confirmed",
     "statusCancelled": "Cancelled",
-    "toProvider": "View place"
+    "toProvider": "View place",
+    "perksLabel": "Ինչ կլինի կաբինետում",
+    "perkDevices": "Հայտերն ու գրառումները ցանկացած սարքում",
+    "perkSaved": "Պահպանված վարպետները",
+    "perkMaster": "Վարպետների համար՝ սեփական քարտ և հաճախորդների հայտեր",
+    "browserOnly": "Հիմա ամեն ինչ պահվում է այս դիտարկիչում",
+    "startTitle": "Կաբինետը պատրաստ է։ Ինչի՞ց սկսենք",
+    "startSeeker": "Վարպետ եմ փնտրում",
+    "startSeekerSub": "Հայտերը, գրառումները և պահպանված վարպետներն այստեղ կլինեն",
+    "startMaster": "Ես վարպետ եմ — ուզում եմ լինել կատալոգում",
+    "startMasterSub": "Անմիջապես կանցնենք քարտին՝ անուն, կատեգորիա, թաղամաս",
+    "startNote": "Ընտրությունը ոչինչ չի սահմանափակում․ մեկ կաբինետում կարելի է և՛ վարպետներ փնտրել, և՛ սեփական քարտը վարել։"
   },
   "forBusiness2": {
     "stepsTitle": "How to get listed",
