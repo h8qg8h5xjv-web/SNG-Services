@@ -6,13 +6,22 @@ import { createClient } from '@/lib/supabase/server'
 // §3 optional cross-device sync. Runs under the signed-in user's session; RLS
 // (user_sync_owner_all) confines every row to that user. Guests never reach here.
 
-const refSchema = z.object({ ref: z.string(), token: z.string(), at: z.string().optional() })
+// kind: 'booking' for a direct booking; absent = a request (the older format).
+const refSchema = z.object({
+  ref: z.string(),
+  token: z.string(),
+  at: z.string().optional(),
+  kind: z.enum(['request', 'booking']).optional(),
+})
 const syncSchema = z.object({
   saved: z.array(z.string()).max(500).default([]),
   requests: z.array(refSchema).max(500).default([]),
 })
 
-export type SyncPayload = { saved: string[]; requests: { ref: string; token: string; at?: string }[] }
+export type SyncPayload = {
+  saved: string[]
+  requests: { ref: string; token: string; at?: string; kind?: 'request' | 'booking' }[]
+}
 
 async function currentUserId() {
   const supabase = await createClient()
