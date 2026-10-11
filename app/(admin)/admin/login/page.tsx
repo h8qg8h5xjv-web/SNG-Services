@@ -16,7 +16,11 @@ export default function AdminLoginPage() {
     const supabase = createClient()
     const params = new URLSearchParams(window.location.search)
     const next = params.get('next') ?? '/admin'
-    const redirectTo = `${window.location.origin}/admin/auth/confirm?next=${encodeURIComponent(next)}`
+    // The email link appends ?token_hash=&type= to this URL (supabase/templates),
+    // so it carries no query of its own; where to go next rides in a cookie.
+    const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+    document.cookie = `admin_next=${encodeURIComponent(next)}; Path=/admin/auth; Max-Age=3600; SameSite=Lax${secure}`
+    const redirectTo = `${window.location.origin}/admin/auth/confirm`
 
     const { error } = await supabase.auth.signInWithOtp({
       email,

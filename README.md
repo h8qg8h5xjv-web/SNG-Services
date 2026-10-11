@@ -88,12 +88,39 @@ next-intl, база `en`, префикс в URL всегда явный (`/en`, 
    `supabase db push`. Локально — `supabase start` + `supabase db reset`. Детали —
    в `supabase/README.md`.
 4. Выдай себе права админа (`app_metadata.is_admin = true`), включи Email-провайдер
-   (magic link) и добавь в Redirect URLs Supabase: `<домен>/admin/auth/confirm`
-   и `<домен>/*/business/auth/confirm` (вход мастеров в кабинет).
+   (magic link), задай Site URL и Redirect URLs и вставь шаблоны писем — см.
+   «Письма входа» ниже.
 5. Залей демо-данные при необходимости: `npm run seed` (нужен
    `SUPABASE_SERVICE_ROLE_KEY`).
 6. Задай `CRON_SECRET` и настрой планировщик волн (см. «Планировщик волн» ниже).
 7. Deploy. Домен `NEXT_PUBLIC_SITE_URL` должен совпадать с реальным.
+
+## Письма входа
+
+Шаблоны писем Supabase Auth лежат в `supabase/templates/` (собираются из
+`scripts/build-email-templates.mts`: `npm run email:templates`). Локально их
+использует Mailpit через `supabase/config.toml`; в hosted-проект их вставляют
+руками в дашборде.
+
+Ссылки в письмах ведут прямо на маршруты приложения с `?token_hash=…&type=…`
+(`/[locale]/cabinet/auth/confirm`, `/admin/auth/confirm`, оба вызывают
+`verifyOtp`). Стандартный `{{ .ConfirmationURL }}` не подходит: клиент работает
+по PKCE, и Supabase вернул бы `?code=`, который маршруты не читают.
+
+| Письмо | Ссылка |
+|---|---|
+| Magic link, Confirm signup | `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email` — назад на confirm-маршрут, который передало приложение (с локалью или админский) |
+| Invite, Reset password, Change email | `{{ .SiteURL }}/ru/cabinet/auth/confirm?token_hash={{ .TokenHash }}&type=invite` / `recovery` / `email_change` — их может отправить дашборд, без адреса возврата |
+
+Поэтому `emailRedirectTo` в приложении всегда без query-строки (админский `next`
+передаётся в cookie `admin_next`).
+
+В дашборде Supabase (Authentication → URL Configuration):
+
+- **Site URL** — продовый адрес без `/` в конце.
+- **Redirect URLs** — `<домен>/**` (и маска preview-доменов Vercel, если входить
+  на preview). Если адреса нет в списке, Supabase подставит Site URL и ссылка из
+  письма никуда не приведёт.
 
 ## Уведомления (мастерам о заявках)
 
