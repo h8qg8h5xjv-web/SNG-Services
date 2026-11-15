@@ -113,10 +113,17 @@ next-intl, база `en`, префикс в URL всегда явный (`/en`, 
 | Письмо | Ссылка |
 |---|---|
 | Magic link, Confirm signup | `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email` — назад на confirm-маршрут, который передало приложение (с локалью или админский) |
-| Invite, Reset password, Change email | `{{ .SiteURL }}/ru/cabinet/auth/confirm?token_hash={{ .TokenHash }}&type=invite` / `recovery` / `email_change` — их может отправить дашборд, без адреса возврата |
+| Reset password | `{{ .RedirectTo }}`, если он не равен `{{ .SiteURL }}` (приложение передаёт confirm-маршрут с локалью), иначе `{{ .SiteURL }}/ru/cabinet/auth/confirm` — дашборд шлёт без адреса возврата, и Supabase подставляет в `RedirectTo` Site URL. Дальше `?token_hash=…&type=recovery`; маршрут ведёт на `/[locale]/new-password` |
+| Invite, Change email | `{{ .SiteURL }}/ru/cabinet/auth/confirm?token_hash={{ .TokenHash }}&type=invite` / `email_change` — их может отправить дашборд, без адреса возврата |
 
 Поэтому `emailRedirectTo` в приложении всегда без query-строки (админский `next`
 передаётся в cookie `admin_next`).
+
+Вход в кабинет — по почте и паролю (`lib/auth/`), ссылка на почту — запасной
+вариант. В hosted-проекте должны совпадать с `supabase/config.toml`:
+минимальная длина пароля **10** (`password_min_length`) и подтверждение почты
+включено (`mailer_autoconfirm = false`) — без него кабинет откроется до
+подтверждения.
 
 В дашборде Supabase (Authentication → URL Configuration):
 

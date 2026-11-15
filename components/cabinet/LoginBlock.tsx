@@ -1,42 +1,46 @@
 'use client'
 
-import { useState } from 'react'
-import { useTranslations, useLocale } from 'next-intl'
+import { useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { IconDevices, IconHeart, IconId } from '@tabler/icons-react'
-import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import SignInForm from '@/components/cabinet/auth/SignInForm'
+import SignUpForm from '@/components/cabinet/auth/SignUpForm'
+import EmailLinkForm from '@/components/cabinet/auth/EmailLinkForm'
 
-// Sign-in prompt at the top of the cabinet when signed out. Signing in IS
-// creating the cabinet (magic link, shouldCreateUser), so the copy says so and
-// lists what you get. On return, browser data auto-links (see AutoLink).
+type Tab = 'signIn' | 'signUp'
+// «Забыли пароль?» and the email link live under the «Войти» tab.
+type SignInView = 'password' | 'reset' | 'magic'
+
+const TABS: Tab[] = ['signIn', 'signUp']
+
+// Sign-in prompt at the top of the cabinet when signed out: email + password,
+// or a new account, with the email link kept as a fallback. On return, browser
+// data auto-links (see AutoLink).
 export default function LoginBlock() {
   const t = useTranslations('cabinet')
+  const ta = useTranslations('cabinetAuth')
   const tc = useTranslations('cabinet2')
-  const locale = useLocale()
+  const params = useSearchParams()
   // Set by auth/confirm when the email link didn't sign in.
-  const linkFailed = useSearchParams().get('error') === 'link'
+  const linkFailed = params.get('error') === 'link'
+  const [tab, setTab] = useState<Tab>('signIn')
+  // ?auth=forgot: «Запросить новую ссылку» from an expired reset link.
+  const [view, setView] = useState<SignInView>(params.get('auth') === 'forgot' ? 'reset' : 'password')
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [message, setMessage] = useState('')
+  const tabRefs = useRef<Record<Tab, HTMLButtonElement | null>>({ signIn: null, signUp: null })
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setStatus('sending')
-    setMessage('')
-    const supabase = createClient()
-    const redirectTo = `${window.location.origin}/${locale}/cabinet/auth/confirm`
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
-    })
-    if (error) {
-      setStatus('error')
-      setMessage(error.message)
-    } else {
-      setStatus('sent')
-    }
+  function select(next: Tab) {
+    setTab(next)
+    setView('password')
+  }
+
+  // Arrow keys move between tabs (WAI-ARIA tabs pattern).
+  function onTabKey(e: React.KeyboardEvent) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
+    const next = TABS[(TABS.indexOf(tab) + 1) % TABS.length]
+    select(next)
+    tabRefs.current[next]?.focus()
   }
 
   return (
@@ -47,36 +51,46 @@ export default function LoginBlock() {
         </h2>
         <p className="muted">{t('loginBody')}</p>
       </div>
-      {status === 'sent' ? (
-        <p className="msg-ok" role="status">
-          {t('loginSent', { email })}
-        </p>
-      ) : (
-        <form onSubmit={onSubmit}>
-          <Input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            aria-label={tc('emailLabel')}
-            autoComplete="email"
-          />
-          <Button type="submit" variant="ink" disabled={status === 'sending'}>
-            {status === 'sending' ? t('loginSending') : tc('loginCta')}
-          </Button>
-        </form>
-      )}
-      {status === 'idle' && linkFailed && (
-        <p className="msg-err-inline" role="alert">
-          {t('loginLinkFailed')}
-        </p>
-      )}
-      {status === 'error' && (
-        <p className="msg-err-inline" role="alert">
-          {message}
-        </p>
-      )}
+      <div className="cab-auth">
+        <div className="auth-tabs" role="tablist" aria-label={ta('tabsLabel')} onKeyDown={onTabKey}>
+          {TABS.map((id) => (
+            <button
+              key={id}
+              ref={(el) => {
+                tabRefs.current[id] = el
+              }}
+              type="button"
+              role="tab"
+              id={`auth-tab-${id}`}
+              aria-selected={tab === id}
+              aria-controls="auth-panel"
+              tabIndex={tab === id ? 0 : -1}
+              onClick={() => select(id)}
+            >
+              {id === 'signIn' ? ta('tabSignIn') : ta('tabSignUp')}
+            </button>
+          ))}
+        </div>
+        <div role="tabpanel" id="auth-panel" aria-labelledby={`auth-tab-${tab}`}>
+          {linkFailed && (
+            <p className="msg-err-inline" role="alert">
+              {t('loginLinkFailed')}
+            </p>
+          )}
+          {tab === 'signUp' ? (
+            <SignUpForm email={email} onEmail={setEmail} />
+          ) : view === 'password' ? (
+            <SignInForm
+              email={email}
+              onEmail={setEmail}
+              onForgot={() => setView('reset')}
+              onMagicLink={() => setView('magic')}
+            />
+          ) : (
+            <EmailLinkForm key={view} kind={view} email={email} onEmail={setEmail} onBack={() => setView('password')} />
+          )}
+        </div>
+      </div>
       <ul className="cab-perks" aria-label={tc('perksLabel')}>
         <li>
           <IconDevices stroke={1.75} aria-hidden="true" />
