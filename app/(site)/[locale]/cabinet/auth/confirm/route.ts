@@ -2,8 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
 
-// Magic-link callback for the unified cabinet. Verifies the OTP and returns to
-// /cabinet (only), where browser data auto-links to the account.
+// Email-link callback for the unified cabinet (sign-in, signup confirmation,
+// recovery, invite, email change). Verifies the OTP and returns to /cabinet,
+// where browser data auto-links to the account — or, for recovery, to
+// /new-password.
 // Accepts both link shapes: ?token_hash=&type= (our templates, verifyOtp) and
 // ?code= (Supabase's default {{ .ConfirmationURL }} under PKCE), so sign-in
 // doesn't depend on which template the hosted dashboard has.
@@ -21,7 +23,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       tokenHash && type
         ? await supabase.auth.verifyOtp({ type, token_hash: tokenHash })
         : await supabase.auth.exchangeCodeForSession(code ?? '')
-    if (!error) return NextResponse.redirect(new URL(dest, request.url))
+    if (!error) {
+      // Reset password email: the session is there, now choose the password.
+      const next = type === 'recovery' ? `/${locale}/new-password` : dest
+      return NextResponse.redirect(new URL(next, request.url))
+    }
   }
   // Expired, already used, or (for ?code=) opened in another browser — say so
   // instead of landing on the signed-out cabinet as if nothing happened.

@@ -7,14 +7,18 @@
 // входа») and used by local Mailpit through supabase/config.toml.
 //
 // Links. Both confirm routes (/[locale]/cabinet/auth/confirm and
-// /admin/auth/confirm) take ?token_hash=&type= and call verifyOtp. The default
-// {{ .ConfirmationURL }} doesn't work here: the browser client uses PKCE, so
-// Supabase would redirect with ?code=, which neither route reads.
+// /admin/auth/confirm) take ?token_hash=&type= and call verifyOtp. They also
+// read the ?code= that the default {{ .ConfirmationURL }} yields under PKCE,
+// but that works only in the browser that asked for the link — hence these.
 // - Sign-in and signup: {{ .RedirectTo }} is the confirm route the app passed
 //   (with the right locale, or the admin one), so the link goes back there.
 //   The app keeps that URL free of a query string, so "?token_hash" is safe.
-// - Invite, recovery, email change can be sent from the dashboard, which passes
-//   no redirect: they use the Russian cabinet route on {{ .SiteURL }}.
+// - Recovery: the app passes its confirm route too (keeps the locale), but the
+//   dashboard can send it with no redirect — Supabase then fills RedirectTo
+//   with the Site URL, so a plain {{ if .RedirectTo }} is always true. Use it
+//   only when it differs from {{ .SiteURL }}; otherwise the Russian route.
+// - Invite, email change: sent from the dashboard / admin, no redirect: the
+//   Russian cabinet route on {{ .SiteURL }}.
 //
 // Email-safe: tables, inline styles, no web fonts, a VML button for Outlook,
 // colour-scheme meta + a prefers-color-scheme block for clients that honour it.
@@ -53,6 +57,8 @@ type Template = {
 const cabinet = (type: string) =>
   `{{ .SiteURL }}/ru/cabinet/auth/confirm?token_hash={{ .TokenHash }}&amp;type=${type}`
 const back = `{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email`
+const backOrCabinet = (type: string) =>
+  `{{ if and .RedirectTo (ne .RedirectTo .SiteURL) }}{{ .RedirectTo }}{{ else }}{{ .SiteURL }}/ru/cabinet/auth/confirm{{ end }}?token_hash={{ .TokenHash }}&amp;type=${type}`
 
 export const TEMPLATES: Template[] = [
   {
@@ -92,18 +98,18 @@ export const TEMPLATES: Template[] = [
   {
     file: 'reset-password.html',
     configKey: 'recovery',
-    subject: 'Доступ к Okno · Get back into Okno',
-    link: cabinet('recovery'),
-    button: 'Войти · Sign in',
+    subject: 'Новый пароль для Okno · Set a new Okno password',
+    link: backOrCabinet('recovery'),
+    button: 'Задать пароль · Set password',
     ru: {
-      title: 'Вернём доступ',
-      body: 'В Okno нет паролей — вход только по ссылке. Нажмите кнопку, и вы снова в кабинете.',
-      ignore: 'Если вы ничего не запрашивали, просто удалите это письмо.',
+      title: 'Новый пароль',
+      body: 'Нажмите кнопку и задайте новый пароль для кабинета. Ссылка сработает один раз и действует один час.',
+      ignore: 'Если вы ничего не запрашивали, просто удалите это письмо — пароль останется прежним.',
     },
     en: {
-      title: 'Let’s get you back in',
-      body: 'Okno has no passwords — you sign in with a link. Tap the button and you’re back in your cabinet.',
-      ignore: 'Didn’t ask for this? Just delete this email.',
+      title: 'Set a new password',
+      body: 'Tap the button and choose a new password for your cabinet. The link works once and expires in an hour.',
+      ignore: 'Didn’t ask for this? Just delete this email — your password stays the same.',
     },
   },
   {
