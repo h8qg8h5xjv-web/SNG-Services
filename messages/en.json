@@ -640,6 +640,7 @@
     "login": "Sign in",
     "loginSending": "Sending…",
     "loginSent": "Check your inbox — a link went to {email}.",
+    "loginLinkFailed": "That link didn’t work — it expired, was already used, or was opened in a different browser. Enter your email again and we’ll send a new one.",
     "incoming": "Incoming",
     "myRequests": "My requests",
     "myBookings": "My bookings",

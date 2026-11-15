@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import { IconDevices, IconHeart, IconId } from '@tabler/icons-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
@@ -14,6 +15,8 @@ export default function LoginBlock() {
   const t = useTranslations('cabinet')
   const tc = useTranslations('cabinet2')
   const locale = useLocale()
+  // Set by auth/confirm when the email link didn't sign in.
+  const linkFailed = useSearchParams().get('error') === 'link'
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [message, setMessage] = useState('')
@@ -63,6 +66,11 @@ export default function LoginBlock() {
             {status === 'sending' ? t('loginSending') : tc('loginCta')}
           </Button>
         </form>
+      )}
+      {status === 'idle' && linkFailed && (
+        <p className="msg-err-inline" role="alert">
+          {t('loginLinkFailed')}
+        </p>
       )}
       {status === 'error' && (
         <p className="msg-err-inline" role="alert">
